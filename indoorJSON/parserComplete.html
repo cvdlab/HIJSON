@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head> 
+    <title>geoJSON</title> 
+    <style>
+        body{
+            margin: 0;
+            overflow: hidden;
+        }
+        
+        #stats {  /* Align stats top-left */
+            position: absolute;
+            left: 0px;
+            top: 0px;
+        }
+    </style> 
+</head>
+<body> 
+    <!-- JavaScript libraries -->
+    <script src="libs/three.min.js"></script> 
+    <script src="libs/jquery-2.1.1.js"></script>
+    <script src="libs/Stats.min.js"></script>
+    <script src="libs/dat.gui.min.js"></script>
+    <script src="libs/TrackballControls.js"></script>
+    
+    <!-- custom geoJSON libraries -->
+    <script src="indoorJSONtoThree.js"></script>
+    <script src="furnitureJSONtoThree.js"></script>    
+    <!-- Javascript code that runs our Three.js examples --> 
+    <script>
+        
+        // once everything is loaded, we run our Three.js stuff.
+        $(function () 
+        {
+            var stats = initStats();
+            // create a scene, that will hold all our elements such as objects, cameras and lights.
+            var scene = new THREE.Scene();
+            // create a camera, which defines where we're looking at.
+            var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+            // create a render and set the size
+            var renderer = new THREE.WebGLRenderer();
+            
+            var trackballControls = new THREE.TrackballControls(camera);
+            
+            renderer.setClearColor(new THREE.Color(0xEEEEEE, 1.0));
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.shadowMapEnabled = true;
+            
+            // position and point the camera to the center of the scene
+            camera.position.set(-40,-40,40);
+            camera.up = new THREE.Vector3(0,0,1);
+            camera.lookAt(scene.position);
+            
+            // add subtle ambient lighting
+            var ambiColor = "#1c1c1c";
+            var ambientLight = new THREE.AmbientLight(ambiColor);
+            scene.add(ambientLight);
+            
+            // add axis helper
+            var axisHelper = new THREE.AxisHelper(3);
+            scene.add(axisHelper);
+            
+            
+            
+            /* --------- CODE STARTS HERE --------- */
+            
+            
+            
+            
+                
+            parseGeoJSON(scene, 'mapN.json');
+            parsefurnitureJSON(scene, 'mapFurniture.json');
+                
+            
+            
+            
+            
+             /* --------- CODE ENDS HERE --------- */
+            
+            
+            
+            // add the output of the renderer to the html element
+            $('body').append(renderer.domElement);
+            
+            var controls = new function () {
+                this.showAxisHelper = true;
+                this.enableTrackball = false;
+            };
+            
+            var enableTrackball = false;
+            var gui = new dat.GUI();
+            
+            gui.add(controls, 'showAxisHelper').onChange(function (value) {
+                axisHelper.visible = value;
+            });
+            
+            gui.add(controls, 'enableTrackball').onChange(function (value) {
+                enableTrackball = value;
+            });
+            
+            render();
+            
+            function render() {
+                stats.update();
+                if (enableTrackball) trackballControls.update();
+                
+                requestAnimationFrame(render);
+                renderer.render(scene, camera);
+            }
+            
+            function initStats() {
+                var stats = new Stats();
+                stats.setMode(0); // 0: fps, 1: ms
+                $('body').append(stats.domElement);
+                return stats;
+            }
+        });
+    </script>
+</body>
+</html>
