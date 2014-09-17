@@ -1,20 +1,27 @@
-C3D
-===
+# C3D@CVDLab
 
-C3D - Project thesis
+## 3D server farm monitoring and navigation
+In una server farm sono collocati in un unico ambiente numerosi server al fine di centralizzarne la gestione, la manutenzione e la sicurezza.
 
+La tesi congiunta (2 laureandi) ha l'obiettivo di realizzare un ambiente web di monitoraggio 3D per una server farm.
 
-# Link rapidi
+Il gestore/controllore della server farm ha infatti la necessità di avere in un unico punto una panoramica sullo stato operativo dei sistemi ottenendo in tempo reale e in una modalità grafica di facile fruizione (un modello 3D dell'ambiente, adatta quindi anche a personale non tecnico ma con responsabilità sull'operatività dei sistemi) informazioni di eventuali malfunzionamenti, la possibilità di individuare la relazione tra macchina fisica e applicativi in esecuzione e, laddove la sicurezza fisica risulta importante, avere un tracciamento e localizzazione dei visitatori/operatori.
 
-## JSON vari
+Il lavoro di tesi proposto deve rispondere a queste necessità studiando e realizzando un ambiente web *desktop* in cui sia possibile visualizzare e navigare un modello 3D interattivo di una server farm, e visualizzare in appositi pannelli le informazioni e le notifiche circa lo stato delle macchine in essa presenti.
 
-[GeoJSON](http://geojson.org "GeoJSON")
+Dualmente l'operatore ha la necessità di essere guidato negli interventi all'interno della server farm, la cui regolarità e ripetitività delle strutture rende complesso l'orientamento e la navigazione tra i rack.
+Il lavoro di tesi proposto deve rispondere a queste necessità studiando e realizzando un ambiente web *mobile* in cui sia possibile visualizzare e navigare un modello interattivo 2D/2.5D di una server farm, e visualizzare e calcolare percorsi tra punti del modello, tracciando la posizione del visitatore grazie alle recenti tecnologie di localizzazione indoro.
 
-[indoorJSON](https://github.com/asaarinen/indoor-json "indoorJSON")
+Tra le tecnologie coinvolte figurano:
 
-[API indoorJSON](http://indoor.io/indoor.js/1.1.0/apidocs/ "API indoorJSON")
+- visualizzazione 3D - HTML5 WebGL, Three.js
 
-- - - - -
+- comunicazione client-server realtime - HTML5 WebSocket, HTML5 ServerSentEvent
 
-## 3D develop
-[Documentazione three.js](http://threejs.org/docs/ "Documentazione three.js")
+- client-side mvc - Backbone.js, Angular.js
+
+- disegno su piattaforma mobile - HTML5 Canvas, Leaflet
+
+***
+
+_C3D - CVDLab - Università degli Studi Roma Tre_
