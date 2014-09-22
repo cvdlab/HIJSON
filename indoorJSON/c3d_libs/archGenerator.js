@@ -29,10 +29,10 @@ function parseLineString(map, coordinates, properties) {
     
     switch (properties.geomType) {
         case "wall":
-            var material = new THREE.LineBasicMaterial({ color: 0x333333, linewidth: 5 });
+            var material = new THREE.LineBasicMaterial({ color: 0x5898A4, linewidth: 5 });
             break;
         case "door":
-            var material = new THREE.LineBasicMaterial({ color: 0xBBBBBB, linewidth: 5 });
+            var material = new THREE.LineBasicMaterial({ color: 0x052744, linewidth: 5 });
             break;
         case "perimeter_wall":
             var material = new THREE.LineBasicMaterial({ color:0x00ffff, linewidth: properties.depth });
@@ -76,7 +76,7 @@ function parsePolygon(map, coordinates, properties) {
         shape.holes.push(hole);
     }
     
-    var polygon = new THREE.Mesh(shape.makeGeometry(), new THREE.MeshBasicMaterial({color: 0x000000, transparent: true, opacity: 0.3, side: THREE.DoubleSide}));
+    var polygon = new THREE.Mesh(shape.makeGeometry(), new THREE.MeshBasicMaterial({color: 0x367289, transparent: true, opacity: 0.3, side: THREE.DoubleSide}));
     
     polygon.position.z = zLevel(properties.level);  // imposta il piano di altezza
     map.add(polygon);

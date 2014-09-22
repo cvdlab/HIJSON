@@ -46,7 +46,7 @@ furnitureGen['server'] = function parseServer(furnitures, feature) {
     }
     
     var geometry = new THREE.BoxGeometry(dimensions[0], dimensions[1], dimensions[2]);
-    var material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
+    var material = new THREE.MeshBasicMaterial( {color: 0x008080} );
     
     var server = new THREE.Mesh( geometry, material );
     
