@@ -11,7 +11,8 @@
       "properties": {
         "level": 0,
         "geomType": "server",
-        "name": "server1"
+        "name": "server1",
+        "dimensions": [2, 3, 4]
       }
     },
 
@@ -82,11 +83,11 @@
     {
       "type": "Feature",
       "geometry": {
-        "type": "Point",
-        "coordinates": [7, 6]
+        "type": "MultiPoint",
+        "coordinates": [ [7, 6] , [3, 6], [9, 9] ]
       },
       "properties": {
-        "level": 0,
+        "level": 2,
         "geomType": "hotspot",
         "category": "hotspot"
       }

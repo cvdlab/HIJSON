@@ -15,7 +15,7 @@ function architectureParsing(scene, pathname) {
     $.getJSON(pathname, function(data) { 
         if (data.type == "FeatureCollection") 
         {
-            console.log('FeatureCollection detected');
+            console.log('FeatureCollection detected for Architecture.');
             
             //foreach data.features invocare in base al geometry.type uno dei metodi descritti in seguito, una o più volte (multi-*)
             $.each( data.features, function( key, feature ) 
@@ -48,7 +48,7 @@ function furnitureParsing(scene, pathname) {
     $.getJSON(pathname, function(data) { 
         if (data.type == "FeatureCollection") 
         {
-            console.log('FeatureCollection detected');
+            console.log('FeatureCollection detected for Furnitures.');
             
             //foreach data.features invocare in base al geometry.type uno dei metodi descritti in seguito, una o più volte (multi-*)
             $.each( data.features, function( key, feature ) 
