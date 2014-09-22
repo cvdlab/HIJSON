@@ -77,3 +77,11 @@ simpleFurnitures['hotspot'] = function hotspot() {
     hotspot.add(model);
     return hotspot;
 };
+
+/*
+simpleFurnitures['name_furniture'] = function parseMulti**Name_furniture**(furnitures, feature) {
+    $.each(feature.geometry.coordinates, function (key, furnitureCoordinates) {
+        simpleFurnitureAdd(furnitures, feature);
+    });
+}
+ */
