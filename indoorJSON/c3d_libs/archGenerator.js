@@ -1,3 +1,5 @@
+var archGen = {}
+
 /* set floor height */
 var levelHeight = 5;
 
@@ -5,69 +7,6 @@ var levelHeight = 5;
 function zLevel(level) {
     return level*levelHeight;
 }
-
-function getMaxlevel(pathname) {
-    var maxLevel = 0;
-    $.getJSON(pathname, function(data) { 
-        if (data.type == "FeatureCollection") {
-            console.log('FeatureCollection detected');
-            $.each( data.features, function( key, feature ) {
-                if(feature.properties.level > maxLevel)
-                    maxLevel = feature.properties.level;
-            });
-        } else {
-            console.log('ERROR: No FeatureCollection detected');
-        }
-
-    });
-}
-/* main parsing function */
-function parseGeoJSON(scene, pathname) {
-    
-    var map = new THREE.Object3D();
-
-    $.getJSON(pathname, function(data) { 
-        if (data.type == "FeatureCollection") {
-            console.log('FeatureCollection detected');
-            
-            //foreach data.features invocare in base al geometry.type uno dei metodi descritti in seguito, una o più volte (multi-*)
-            $.each( data.features, function( key, feature ) {
-                switch (feature.geometry.type) {
-                    case "Point":
-                        parsePoint(map, feature.geometry.coordinates, feature.properties);
-                        break;
-                    case "LineString":
-                        parseLine(map, feature.geometry.coordinates, feature.properties);
-                        break;
-                    case "Polygon":
-                        parsePolygon(map, feature.geometry.coordinates, feature.properties);
-                        break;
-                    case "MultiPoint":
-                        $.each( feature.geometry.coordinates, function ( key, pointCoordinates ) {
-                            parsePoint(map, pointCoordinates, feature.properties);
-                        });
-                        break;
-                    case "MultiLineString":
-                        $.each( feature.geometry.coordinates, function ( key, pointCoordinates ) {
-                            parseLine(map, pointCoordinates, feature.properties);
-                        });
-                        break;
-                    case "MultiPolygon":
-                        $.each( feature.geometry.coordinates, function ( key, pointCoordinates ) {
-                            parsePolygon(map, pointCoordinates, feature.properties);
-                        });
-                        break;
-                }
-            });
-        } else {
-            console.log('ERROR: No FeatureCollection detected');
-        }
-    });
-    
-    scene.add(map);
-}
-
-/* auxiliary parsing functions for points, lines and polygons */
 
 function parsePoint(map, coordinates, properties) {
     // creo l'oggetto THREE punto a partire dai dati della feature (feature.geometry.coordinates) e lo aggiungo alla map
@@ -86,7 +25,7 @@ function parsePoint(map, coordinates, properties) {
     map.add(point);
 }
 
-function parseLine(map, coordinates, properties) {
+function parseLineString(map, coordinates, properties) {
     
     switch (properties.geomType) {
         case "wall":
@@ -141,4 +80,29 @@ function parsePolygon(map, coordinates, properties) {
     
     polygon.position.z = zLevel(properties.level);  // imposta il piano di altezza
     map.add(polygon);
+}
+
+
+archGen['Point'] = parsePoint;
+
+archGen['LineString'] = parseLineString;
+
+archGen['Polygon'] = parsePolygon;
+
+archGen['MultiPoint'] = function parseMultiPoint(planimetry,coordinates,properties) {
+	$.each(coordinates, function (key, pointCoordinates) {
+		parsePoint(planimetry, pointCoordinates, properties);
+	});
+}
+
+archGen['MultiLineString'] = function parseMultiLineString(planimetry,coordinates,properties) {
+	$.each(coordinates, function (key, lineStringCoordinates) {
+		parseLineString(planimetry, lineStringCoordinates, properties);
+	});
+}
+
+archGen['MultiPolygon'] = function parseMultiPolygon(planimetry,coordinates,properties) {
+	$.each(coordinates, function (key, polygonCoordinates) {
+		parsePolygon(planimetry, polygonCoordinates, properties);
+	});
 }

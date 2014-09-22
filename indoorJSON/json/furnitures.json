@@ -1,13 +1,12 @@
 {
   "type": "FeatureCollection",
+  "description": "architecture",
   "features": [
     {
       "type": "Feature",
       "geometry": {
-        "type": "server",
-        "coordinates": [
-            [ [3, 3], [8, 3], [8, 5], [3, 5], [3, 3] ]
-        ]
+        "type": "Point",
+        "coordinates": [2, 2]
       },
       "properties": {
         "level": 0,
@@ -19,10 +18,8 @@
     {
       "type": "Feature",
       "geometry": {
-        "type": "server",
-        "coordinates": [
-            [ [3, 6], [8, 6], [8, 8], [3, 8], [3, 6] ]
-        ]
+        "type": "Point",
+        "coordinates": [2, 5]
       },
       "properties": {
         "level": 0,
@@ -34,10 +31,8 @@
     {
       "type": "Feature",
       "geometry": {
-        "type": "server",
-        "coordinates": [
-            [ [3, 9], [8, 9], [8, 11], [3, 11], [3, 9] ]
-        ]
+        "type": "Point",
+        "coordinates": [2, 8]
       },
       "properties": {
         "level": 0,
@@ -49,10 +44,8 @@
     {
       "type": "Feature",
       "geometry": {
-        "type": "server",
-        "coordinates": [
-            [ [3, 12], [8, 12], [8, 14], [3, 14], [3, 12] ]
-        ]
+        "type": "Point",
+        "coordinates": [2, 11]
       },
       "properties": {
         "level": 0,
@@ -64,10 +57,8 @@
     {
       "type": "Feature",
       "geometry": {
-        "type": "server",
-        "coordinates": [
-            [ [3, 15], [8, 15], [8, 17], [3, 17], [3, 15] ]
-        ]
+        "type": "Point",
+        "coordinates": [2, 14]
       },
       "properties": {
         "level": 0,
@@ -78,36 +69,34 @@
     {
       "type": "Feature",
       "geometry": {
-        "type": "camera",
+        "type": "Point",
         "coordinates": [7, 6]
       },
       "properties": {
         "level": 0,
-        "geomType": "camera",
-        "category": "cameraLevel0"
+        "geomType": "surveillanceCamera",
+        "category": "surveillanceCameraLevel0"
       }
     },
 
     {
       "type": "Feature",
       "geometry": {
-        "type": "repeaterWifi",
+        "type": "Point",
         "coordinates": [7, 6]
       },
       "properties": {
         "level": 0,
-        "geomType": "repeaterWifi",
-        "category": "repeaterWifi"
+        "geomType": "hotspot",
+        "category": "hotspot"
       }
     },
 
     {
       "type": "Feature",
       "geometry": {
-        "type": "server",
-        "coordinates": [
-            [ [2, 2], [6, 2], [6, 6], [2, 6], [2, 2] ]
-        ]
+        "type": "Point",
+        "coordinates": [2, 9]
       },
       "properties": {
         "level": 1,
@@ -119,10 +108,8 @@
     {
       "type": "Feature",
       "geometry": {
-        "type": "server",
-        "coordinates": [
-            [ [2, 7], [6, 7], [6, 11], [2, 11], [2, 7] ]
-        ]
+        "type": "Point",
+        "coordinates": [4, 4]
       },
       "properties": {
         "level": 1,
@@ -134,13 +121,37 @@
     {
       "type": "Feature",
       "geometry": {
-        "type": "repeaterWifi",
+        "type": "Point",
         "coordinates": [3, 3]
       },
       "properties": {
         "level": 1,
-        "geomType": "repeaterWifi",
-        "category": "repeaterWifi"
+        "geomType": "hotspot",
+        "category": "hotspot"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [10, 10]
+      },
+      "properties": {
+        "level": 2,
+        "geomType": "hotspot",
+        "category": "hotspot"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [8, 8]
+      },
+      "properties": {
+        "level": 2,
+        "geomType": "surveillanceCamera",
+        "category": "hotspot"
       }
     }
   ]

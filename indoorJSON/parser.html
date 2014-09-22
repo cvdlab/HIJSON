@@ -24,8 +24,10 @@
     <script src="libs/TrackballControls.js"></script>
     
     <!-- custom geoJSON libraries -->
-    <script src="indoorJSONtoThree.js"></script>
-    
+    <script src="c3d_libs/archGenerator.js"></script> 
+    <script src="c3d_libs/furnitureGenerator.js"></script>
+    <script src="c3d_libs/c3d.js"></script>
+      
     <!-- Javascript code that runs our Three.js examples --> 
     <script>
         
@@ -68,7 +70,8 @@
             
             
                 
-            parseGeoJSON(scene, 'mapN.json');
+            architectureParsing(scene, 'json/architecture.json');
+            furnitureParsing(scene, 'json/furnitures.json');
                 
             
             
