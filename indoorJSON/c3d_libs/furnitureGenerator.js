@@ -101,6 +101,24 @@ simpleFurnitures['hotspot'] = function hotspot() {
     return hotspot;
 };
 
+simpleFurnitures['light'] = function light() {
+    var radius = 0.05;
+    var width = 0.1;
+    var depth = 0.2;
+    var height = 0.3;
+    
+    var geometry = new THREE.CylinderGeometry( radius, radius, 2, 32);
+    var material = new THREE.MeshBasicMaterial( {color: 0xffffff} );
+    var model = new THREE.Mesh( geometry, material);
+    
+    model.position.z = model.position.z + levelHeight - radius;
+
+    var light = new THREE.Object3D();
+
+    light.add(model);
+    return light;
+};
+
 /*
 simpleFurnitures['name_furniture'] = function parseMulti**Name_furniture**(furnitures, feature) {
     $.each(feature.geometry.coordinates, function (key, furnitureCoordinates) {
