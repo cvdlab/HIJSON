@@ -2,7 +2,6 @@
 
 /* set floor height */
 var levelHeight = 5;
-var error = false;
 
 /* convert Floor level to actual height */
 function zLevel(level) {
@@ -33,7 +32,6 @@ function architectureParsing(scene, pathname) {
         } 
         else 
         {
-            error = true;
             console.log('ERROR: No FeatureCollection detected');
     	}
     });
@@ -67,7 +65,6 @@ function furnitureParsing(scene, pathname) {
         } 
         else 
         {
-            error = true;
             console.log('ERROR: No FeatureCollection detected');
     	}
     });
@@ -87,11 +84,4 @@ function furnitureParsing(scene, pathname) {
 function parsing(parsing_object) {
     architectureParsing(parsing_object.scene, parsing_object.architecturePathname);
     furnitureParsing(parsing_object.scene, parsing_object.furniturePathname);
-    
-    if(error) {
-        console.log("Errori nella creazione del modello 3D.");
-    }
-    else {
-        console.log("Modello generato correttamente.");
-    }
 }
