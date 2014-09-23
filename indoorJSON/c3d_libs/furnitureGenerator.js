@@ -106,8 +106,9 @@ simpleFurnitures['light'] = function light() {
     var width = 0.1;
     var depth = 0.2;
     var height = 0.3;
-    
-    var geometry = new THREE.CylinderGeometry( radius, radius, 2, 32);
+    var length  = 2;
+
+    var geometry = new THREE.CylinderGeometry( radius, radius, length, 32);
     var material = new THREE.MeshBasicMaterial( {color: 0xffffff} );
     var model = new THREE.Mesh( geometry, material);
     
@@ -119,6 +120,27 @@ simpleFurnitures['light'] = function light() {
     return light;
 };
 
+simpleFurnitures['antenna'] = function antenna() {
+    var radius_down = 0.02;
+    var radius_up = 0.01;
+    var length = 0.3;
+    var width = 0.1;
+    var depth = 0.2;
+    var height = 0.3;
+    
+    var geometry = new THREE.CylinderGeometry( radius_down, radius_up, length, 32);
+    var material = new THREE.MeshBasicMaterial( {color: 0xff0000} );
+    var model = new THREE.Mesh( geometry, material);
+
+    model.rotation.x = Math.PI/2;
+    
+    model.position.z = model.position.z + levelHeight - length;
+
+    var antenna = new THREE.Object3D();
+
+    antenna.add(model);
+    return antenna;
+};
 /*
 simpleFurnitures['name_furniture'] = function parseMulti**Name_furniture**(furnitures, feature) {
     $.each(feature.geometry.coordinates, function (key, furnitureCoordinates) {
