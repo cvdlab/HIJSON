@@ -72,3 +72,8 @@ function furnitureParsing(scene, pathname) {
     scene.add(furnitures);
 
 }
+
+function parsing(scene, pathname_architecture, pathname_furnitures) {
+    architectureParsing(scene, pathname_architecture);
+    furnitureParsing(scene, pathname_furnitures);
+}

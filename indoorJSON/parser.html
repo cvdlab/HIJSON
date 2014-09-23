@@ -44,7 +44,8 @@
             
             var trackballControls = new THREE.TrackballControls(camera);
             
-            renderer.setClearColor(new THREE.Color(0x2C3848, 1.0));
+            renderer.setClearColor(new THREE.Color(0x092D52, 1.0)); 
+            //renderer.setClearColor(new THREE.Color(0x2C3848, 1.0));
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.shadowMapEnabled = true;
             
@@ -68,11 +69,14 @@
             
             
             
-            
-                
+            var architectureParsing_pathname = 'json/architecture.json';
+            var furnitureParsing_pathname = 'json/furnitures.json';
+
+            parsing(scene, architectureParsing_pathname, furnitureParsing_pathname);
+            /*    
             architectureParsing(scene, 'json/architecture.json');
             furnitureParsing(scene, 'json/furnitures.json');
-                
+            */    
             
             
             

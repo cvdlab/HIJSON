@@ -59,9 +59,32 @@ furnitureGen['server'] = function parseServer(furnitures, feature) {
 
 
 /* Oggetti semplici */
+/*
 simpleFurnitures['surveillanceCamera'] = function surveillanceCamera() {
 	return new THREE.Mesh( new THREE.CircleGeometry( 0.25, 20 ), new THREE.MeshBasicMaterial( {color: 0xff0000, side: THREE.DoubleSide} ));
 };
+*/
+
+simpleFurnitures['surveillanceCamera'] = function surveillanceCamera() {
+    var radius = 0.2;
+    var widthSegments = 32;
+    var heightSegments = 32;
+    var phiStart = 0;
+    var phiLength = -Math.PI;
+    var thetaStart = 0;
+    var thetaLength = Math.PI;
+
+    var geometry = new THREE.SphereGeometry( radius, widthSegments, heightSegments, phiStart, phiLength, thetaStart, thetaLength);
+    var material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
+    
+    var model = new THREE.Mesh( geometry, material );
+
+    model.position.z = model.position.z + levelHeight - radius/2;
+    
+    var surveillanceCamera = new THREE.Object3D();
+    surveillanceCamera.add(model);
+    return surveillanceCamera;
+}
 
 simpleFurnitures['hotspot'] = function hotspot() {
     var width = 0.1;
