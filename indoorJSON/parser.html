@@ -67,12 +67,13 @@
             
             /* --------- CODE STARTS HERE --------- */
             
-            
-            
-            var architectureParsing_pathname = 'json/architecture.json';
-            var furnitureParsing_pathname = 'json/furnitures.json';
+            var parsingObject = {
+                scene: scene,
+                architecturePathname: 'json/architecture.json',
+                furniturePathname: 'json/furnitures.json'
+            };
 
-            parsing(scene, architectureParsing_pathname, furnitureParsing_pathname);
+            parsing(parsingObject);
                 
             //architectureParsing(scene, architectureParsing_pathname);
             //furnitureParsing(scene, furnitureParsing_pathname);
