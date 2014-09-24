@@ -1,7 +1,7 @@
 function fromJSONtoSVGConverter() {
 
-	var pathname_input = 'json/architecture.json';
-	var pathname_output = 'svg/floor0.svg';
+	var pathname_input = 'json_input/architecture.json';
+	var pathname_output = 'svg_output/floor0.svg';
 
     $.getJSON(pathname_input, function(data) { 
         if (data.type == "FeatureCollection") 
