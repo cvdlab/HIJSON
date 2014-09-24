@@ -30,7 +30,7 @@
       
     <!-- Javascript code that runs our Three.js examples --> 
     <script>
-        
+        var C3D = {};
         // once everything is loaded, we run our Three.js stuff.
         $(function () 
         {
@@ -62,13 +62,13 @@
             // add axis helper
             var axisHelper = new THREE.AxisHelper(3);
             scene.add(axisHelper);
-            
+            C3D.scene = scene;
             
             
             /* --------- CODE STARTS HERE --------- */
             
             var parsingObject = {
-                scene: scene,
+                scene: C3D.scene,
                 architecturePathname: 'json/architecture.json',
                 furniturePathname: 'json/furnitures.json'
             };
