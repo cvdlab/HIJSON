@@ -85,20 +85,26 @@
             
             /* --------- CODE STARTS HERE --------- */
             
+/*
             var parsingObject = {
                 scene: C3D.scene,
                 architecturePathname: 'json_input/architecture.json',
                 furniturePathname: 'json_input/furnitures.json'
             };
+*/
 
-            parsing(parsingObject);
+            //parsing(parsingObject);
                 
             //architectureParsing(scene, architectureParsing_pathname);
             //furnitureParsing(scene, furnitureParsing_pathname);
                 
+            var mapAndPaths = {
+                map: {},
+                path_architecture: 'json_input/architecture_new.json',
+                path_furniture: 'json_input/furnitures.json'    
+            };
             
-            
-            
+            parseJSON(mapAndPaths);
             
              /* --------- CODE ENDS HERE --------- */
             

@@ -8,6 +8,39 @@ function zLevel(level) {
     return level*levelHeight;
 }
 
+function parseJSON(mapAndPaths) {
+    var map = mapAndPaths.map;
+    var path_architecture = mapAndPaths.path_architecture;
+    var path_furnitures = mapAndPaths.path_furnitures;
+    
+    $.getJSON(path_architecture, function(data) { 
+        if (data.type == "FeatureCollection") 
+        {
+            console.log('FeatureCollection detected for Architecture.');
+            
+            map.children = [];
+            var index = {};
+            index['map'] = map;
+            
+            //foreach data.features
+            $.each( data.features, function( key, feature ) 
+            {
+                var obj = {};
+                obj.parent = index[feature.properties.parent];
+                obj.parent.children.push(obj);
+                obj.children = [];
+                obj.geometry = feature.geometry;
+                obj.properties = feature.properties;
+                index[feature.id] = obj;
+            });
+        } 
+        else 
+        {
+            console.log('ERROR: No FeatureCollection detected');
+    	}
+    });
+}
+
 function architectureParsing(scene, pathname) {
     
     var planimetry = new THREE.Object3D();
