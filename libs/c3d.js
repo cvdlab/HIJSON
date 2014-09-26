@@ -26,6 +26,7 @@ function parseJSON(mapAndPaths) {
             $.each( data.features, function( key, feature ) 
             {
                 var obj = {};
+                obj.id = feature.id;
                 obj.parent = index[feature.properties.parent];
                 obj.parent.children.push(obj);
                 obj.children = [];

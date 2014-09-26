@@ -97,14 +97,16 @@
                 
             //architectureParsing(scene, architectureParsing_pathname);
             //furnitureParsing(scene, furnitureParsing_pathname);
-                
+            var map = {};
+            
             var mapAndPaths = {
-                map: {},
+                map: map,
                 path_architecture: 'json_input/architecture_new.json',
                 path_furniture: 'json_input/furnitures.json'    
             };
             
             parseJSON(mapAndPaths);
+            console.log(map);
             
              /* --------- CODE ENDS HERE --------- */
             
