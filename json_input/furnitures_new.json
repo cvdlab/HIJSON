@@ -1,29 +1,33 @@
 {
+  "id": "furnitures",
   "type": "FeatureCollection",
   "features": 
   [
     {
-      "type": "Feature",
       "id": "server_1_room_1",
-      "geometry": {
+      "type": "Feature",
+      "geometry": 
+      {
         "type": "Point",
         "coordinates": [2, 2]
       },
-      "properties": {
+      "properties": 
+      {
         "parent": "room_1",
         "class": "server",
         "dimensions": [2, 3, 4]
       }
     },
-
     {
       "id": "server_1_room_2",
       "type": "Feature",
-      "geometry": {
+      "geometry":
+      {
         "type": "Point",
         "coordinates": [2, 5]
       },
-      "properties": {
+      "properties": 
+      {
         "parent": "room_2",
         "class": "server"
       }
