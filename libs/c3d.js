@@ -32,16 +32,20 @@ function JSONtoJS(indexMapPaths) {
     var path_architecture = indexMapPaths.path_architecture;
     var path_furnitures = indexMapPaths.path_furnitures;
     
-    map.id = data.id;
-    map.coordinates = data.coordinates;
+    
     map.children = [];
     index['map'] = map;
     
-    function readJSON(type, path) {
+    function readJSON(typeJSON, path) {
         $.getJSON(path, function(data) { 
             if (data.type == "FeatureCollection") 
             {
-                console.log('FeatureCollection detected for '+type+'.');
+                console.log('FeatureCollection detected for '+typeJSON+'.');
+                if (typeJSON === "architecture") {
+                    map.id = data.id;
+                    map.coordinates = data.coordinates;
+                }
+                
                 //foreach data.features
                 $.each( data.features, function( key, feature ) 
                 {
