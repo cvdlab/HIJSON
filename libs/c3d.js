@@ -18,7 +18,7 @@ C3D.parseJSON = function() {
         index: index,
         map: map,
         path_architecture: 'json_input/architecture_new.json',
-        path_furniture: 'json_input/furnitures_new.json'    
+        path_furnitures: 'json_input/furnitures_new.json'    
     };
     
     JSONtoJS(indexMapPaths);
@@ -32,16 +32,19 @@ function JSONtoJS(indexMapPaths) {
     var path_architecture = indexMapPaths.path_architecture;
     var path_furnitures = indexMapPaths.path_furnitures;
     
-    
     map.children = [];
     index['map'] = map;
+    
+    readJSON('architecture', path_architecture);
+    readJSON('furnitures', path_furnitures);
     
     function readJSON(typeJSON, path) {
         $.getJSON(path, function(data) { 
             if (data.type == "FeatureCollection") 
             {
                 console.log('FeatureCollection detected for '+typeJSON+'.');
-                if (typeJSON === "architecture") {
+                if (typeJSON === "architecture") 
+                {
                     map.id = data.id;
                     map.coordinates = data.coordinates;
                 }
@@ -65,9 +68,6 @@ function JSONtoJS(indexMapPaths) {
         	}
         });
     }
-    
-    readJSON('architecture', path_architecture);
-    readJSON('furnitures', path_furnitures);
 }
 
 function architectureParsing(scene, pathname) {
