@@ -45,6 +45,11 @@
     
     <!-- Bootstrap -->
     <script src="assets/js/bootstrap.min.js"></script>
+    
+    <script>
+        C3D.parseJSON();
+    </script>
+
       
     <!-- Javascript code that runs our Three.js examples --> 
     <script>
@@ -52,6 +57,7 @@
         // once everything is loaded, we run our Three.js stuff.
         $(function () 
         {
+            
             var stats = initStats();
             // create a scene, that will hold all our elements such as objects, cameras and lights.
             var scene = new THREE.Scene();
@@ -97,18 +103,7 @@
                 
             //architectureParsing(scene, architectureParsing_pathname);
             //furnitureParsing(scene, furnitureParsing_pathname);
-            var map = {};
-            var index = {};
-            
-            var indexMapPaths = {
-                index: index,
-                map: map,
-                path_architecture: 'json_input/architecture_new.json',
-                path_furniture: 'json_input/furnitures.json'    
-            };
-            
-            parseJSON(indexMapPaths);
-            console.log(map);
+
             
              /* --------- CODE ENDS HERE --------- */
             

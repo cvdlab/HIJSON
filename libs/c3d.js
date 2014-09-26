@@ -8,41 +8,62 @@ function zLevel(level) {
     return level*levelHeight;
 }
 
-function parseJSON(indexMapPaths) {
+var C3D = {};
+
+C3D.parseJSON = function() {
+    var map = {};
+    var index = {};
+    
+    var indexMapPaths = {
+        index: index,
+        map: map,
+        path_architecture: 'json_input/architecture_new.json',
+        path_furniture: 'json_input/furnitures_new.json'    
+    };
+    
+    JSONtoJS(indexMapPaths);
+    console.log(map);
+    console.log(index);
+};
+
+function JSONtoJS(indexMapPaths) {
     var index = indexMapPaths.index;
     var map = indexMapPaths.map;
     var path_architecture = indexMapPaths.path_architecture;
     var path_furnitures = indexMapPaths.path_furnitures;
     
-    $.getJSON(path_architecture, function(data) { 
-        if (data.type == "FeatureCollection") 
-        {
-            console.log('FeatureCollection detected for Architecture.');
-            
-            map.id = data.id;
-            map.coordinates = data.coordinates;
-            map.children = [];
-            
-            index['map'] = map;
-            
-            //foreach data.features
-            $.each( data.features, function( key, feature ) 
+    map.id = data.id;
+    map.coordinates = data.coordinates;
+    map.children = [];
+    index['map'] = map;
+    
+    function readJSON(type, path) {
+        $.getJSON(path, function(data) { 
+            if (data.type == "FeatureCollection") 
             {
-                var obj = {};
-                obj.id = feature.id;
-                obj.parent = index[feature.properties.parent];
-                obj.parent.children.push(obj);
-                obj.children = [];
-                obj.geometry = feature.geometry;
-                obj.properties = feature.properties;
-                index[feature.id] = obj;
-            });
-        } 
-        else 
-        {
-            console.log('ERROR: No FeatureCollection detected');
-    	}
-    });
+                console.log('FeatureCollection detected for '+type+'.');
+                //foreach data.features
+                $.each( data.features, function( key, feature ) 
+                {
+                    var obj = {};
+                    obj.id = feature.id;
+                    obj.parent = index[feature.properties.parent];
+                    obj.parent.children.push(obj);
+                    obj.children = [];
+                    obj.geometry = feature.geometry;
+                    obj.properties = feature.properties;
+                    index[feature.id] = obj;
+                });
+            } 
+            else 
+            {
+                console.log('ERROR: No FeatureCollection detected');
+        	}
+        });
+    }
+    
+    readJSON('architecture', path_architecture);
+    readJSON('furnitures', path_furnitures);
 }
 
 function architectureParsing(scene, pathname) {
