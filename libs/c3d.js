@@ -8,18 +8,21 @@ function zLevel(level) {
     return level*levelHeight;
 }
 
-function parseJSON(mapAndPaths) {
-    var map = mapAndPaths.map;
-    var path_architecture = mapAndPaths.path_architecture;
-    var path_furnitures = mapAndPaths.path_furnitures;
+function parseJSON(indexMapPaths) {
+    var index = indexMapPaths.index;
+    var map = indexMapPaths.map;
+    var path_architecture = indexMapPaths.path_architecture;
+    var path_furnitures = indexMapPaths.path_furnitures;
     
     $.getJSON(path_architecture, function(data) { 
         if (data.type == "FeatureCollection") 
         {
             console.log('FeatureCollection detected for Architecture.');
             
+            map.id = data.id;
+            map.coordinates = data.coordinates;
             map.children = [];
-            var index = {};
+            
             index['map'] = map;
             
             //foreach data.features
