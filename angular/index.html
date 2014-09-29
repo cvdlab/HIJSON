@@ -1,0 +1,63 @@
+<html ng-app="C3DApp">
+    <head>
+        <title>C3D</title>
+        <!--Boostrap file-->
+        <link rel="stylesheet" href="../assets/css/bootstrap.min.css" />
+
+        <!--Angularjs files-->
+        <script src="../assets/angular/angular.min.js"></script>
+        <script src="../assets/angular/angular-route.js"></script>
+        <script src="script.js"></script>
+
+        <!-- JavaScript libraries -->
+        <script src="../assets/js/three.min.js"></script> 
+        <script src="../assets/js/jquery-2.1.1.js"></script>
+        <script src="../assets/js/Stats.min.js"></script>
+        <script src="../assets/js/dat.gui.min.js"></script>
+        <script src="../assets/js/TrackballControls.js"></script>
+        <script src="../assets/js/bootstrap.min.js"></script>
+
+        <!-- custom geoJSON libraries -->
+        <script src="../libs/archGenerator.js"></script> 
+        <script src="../libs/furnitureGenerator.js"></script>
+        <script src="../libs/c3d.js"></script>
+
+    </head>
+
+    <body ng-controller="mainController">
+        <ul class="nav nav-tabs">
+            <li class="active">
+                <a href="#" data-toggle="tab">
+                    Overview
+                </a>
+            </li>
+
+            <li>
+                <a href="#2DModel" data-toggle="tab">
+                    2D Model
+                </a>
+            </li>
+            
+            <li>
+                <a href="#3DModel" data-toggle="tab">
+                    3D Model
+                </a>
+            </li>
+            
+            <li>
+                <a href="#about" data-toggle="tab">
+                    About
+                </a>
+            </li> 
+        </ul>
+        <div class="tab-content">
+            <div id="main">
+                <div ng-view>
+
+                </div>
+            </div>
+        </div>
+
+    </body>
+
+</html>
