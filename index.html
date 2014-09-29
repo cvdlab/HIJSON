@@ -48,11 +48,12 @@
     
     <script>
 
-        C3D.parseJSON();
+        C3D.parseJSON(function() {
+            C3D.init3D();
+            C3D.generate3DModel();
+        });
 
-        C3D.init3D();
         
-        C3D.generate3DModel();
     </script>
 
 

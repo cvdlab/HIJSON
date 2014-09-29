@@ -19,21 +19,20 @@ var C3D = {
     scene: new THREE.Scene()
 }
 
-C3D.parseJSON = function() {
-    this.index['building'] = this.tree;
+C3D.parseJSON = function(callback) {
+    var self = this;
+    self.index['building'] = this.tree;
     
-    readJSON('architecture', this.path_architecture, this.tree, this.index);
-    readJSON('furnitures', this.path_furnitures, this.tree, this.index);
-    
-    function readJSON(typeJSON, path, tree, index) {
+    function readJSON(typeJSON, path, read_callback) {
+        console.log('readJson called with'+path);
         $.getJSON(path, function(data) { 
             if (data.type == "FeatureCollection") 
             {
                 console.log('FeatureCollection detected for '+typeJSON+'.');
                 if (typeJSON === "architecture") 
                 {
-                    tree.id = data.id;
-                    tree.coordinates = data.coordinates;
+                    self.tree.id = data.id;
+                    self.tree.coordinates = data.coordinates;
                 }
                 
                 //THREE.FogExp2( hex, density );reach data.features
@@ -41,13 +40,16 @@ C3D.parseJSON = function() {
                 {
                     var obj = {};
                     obj.id = feature.id;
-                    obj.parent = index[feature.properties.parent];
+                    obj.parent = self.index[feature.properties.parent];
                     obj.parent.children.push(obj);
                     obj.children = [];
                     obj.geometry = feature.geometry;
                     obj.properties = feature.properties;
-                    index[feature.id] = obj;
+                    self.index[feature.id] = obj;
                 });
+                
+                read_callback();
+
             } 
             else 
             {
@@ -55,6 +57,15 @@ C3D.parseJSON = function() {
             }
         });
     };
+
+
+    readJSON('architecture', self.path_architecture, function(){
+        readJSON('furnitures', self.path_furnitures, function(){
+            callback();
+        });
+    });
+    
+
 
 }; // Chiude il this.parseJSON
 
@@ -130,7 +141,7 @@ C3D.init3D = function() {
 C3D.generate3DModel = function() {
     var queue = [];
     var feature;
-    console.log(this.tree + '-' + this.tree.children);
+    console.log(this.tree, this.tree.children);
     $.each(this.tree.children, function(key, child) {
         queue.push(child);
     });
