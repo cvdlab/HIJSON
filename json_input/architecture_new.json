@@ -23,7 +23,7 @@
           "properties": 
           {
                 "class": "level",
-                "parent": "map",
+                "parent": "building",
                 "description": "Mura perimetrali",
                 "label": "Mura perimetrali box_0",
                 "z": 5
@@ -279,7 +279,7 @@
           "properties": 
           {
                 "class": "level",
-                "parent": "map",
+                "parent": "building",
                 "description": "Mura perimetrali",
                 "label": "Mura perimetrali box_0",
                 "z": 10

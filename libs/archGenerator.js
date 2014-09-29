@@ -8,53 +8,56 @@ function zLevel(level) {
     return level*levelHeight;
 }
 
-function parsePoint(map, coordinates, properties) {
+function parsePoint(feature) {
     // creo l'oggetto THREE punto a partire dai dati della feature (feature.geometry.coordinates) e lo aggiungo alla map
     var pointPosition = new THREE.Vector3(
-                        coordinates[0], 
-                        coordinates[1], 
-                        zLevel(properties.level)
+                        feature.geometry.coordinates[0], 
+                        feature.geometry.coordinates[1]
                         );
     
     var point = new THREE.Object3D();
+    
     point.position = pointPosition;
     
     // aggiungo all'object3D un cerchietto per segnarlo sulla mappa
     point.add(new THREE.Mesh( new THREE.CircleGeometry( 0.25, 20 ), new THREE.MeshBasicMaterial( {color: 0xff0000, side: THREE.DoubleSide} ) ));
     
-    map.add(point);
+    return point;
+    //map.add(point);
 }
 
-function parseLineString(map, coordinates, properties) {
+function parseLineString(feature) {
     
-    switch (properties.geomType) {
-        case "wall":
+    switch (feature.properties.class) {
+        case "internal_wall":
             var material = new THREE.LineBasicMaterial({ color: 0x5898A4, linewidth: 5 });
             break;
         case "door":
             var material = new THREE.LineBasicMaterial({ color: 0x052744, linewidth: 5 });
             break;
-        case "perimeter_wall":
-            var material = new THREE.LineBasicMaterial({ color:0x00ffff, linewidth: properties.depth });
+        case "level":
+            var material = new THREE.LineBasicMaterial({ color:0x00ffff, linewidth: 5 });
             break;
         default:
             var material = new THREE.LineBasicMaterial({ color: 0x000000 });
     }
     
     var geometry = new THREE.Geometry();
-    $.each(coordinates, function (key, pointCoordinates){
-        geometry.vertices.push( new THREE.Vector3( pointCoordinates[0], pointCoordinates[1], zLevel(properties.level) ) );
+    $.each(feature.geometry.coordinates, function (key, pointCoordinates){
+        geometry.vertices.push( new THREE.Vector3( pointCoordinates[0], pointCoordinates[1] ) );
     });
     
     var line = new THREE.Line( geometry, material );
-    map.add( line );
+    
+    return line;
+    //map.add( line );
 }
 
-function parsePolygon(map, coordinates, properties) {
+function parsePolygon(feature) {
     // probabilmente l'utilizzo di una shape risulta l'opzione migliore, specialmente per la creazione degli holes (vedi docs geoJson)
     
     var shape = new THREE.Shape();
-    
+    var coordinates = feature.geometry.coordinates;
     for (var j = 0; j < coordinates[0].length; j++) //scorro le singole coordinate del perimetro esterno
     { 
         if (j == 0) { // primo punto
@@ -78,8 +81,10 @@ function parsePolygon(map, coordinates, properties) {
     
     var polygon = new THREE.Mesh(shape.makeGeometry(), new THREE.MeshBasicMaterial({color: 0x367289, transparent: true, opacity: 0.3, side: THREE.DoubleSide}));
     
-    polygon.position.z = zLevel(properties.level);  // imposta il piano di altezza
-    map.add(polygon);
+    //polygon.position.z = 0;  // imposta il piano di altezza
+    
+    return polygon;
+    //map.add(polygon);
 }
 
 

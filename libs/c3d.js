@@ -8,48 +8,35 @@ function zLevel(level) {
     return level*levelHeight;
 }
 
-var C3D = {};
+var C3D = {
+    tree: {
+        id: '',
+        children: []
+    },
+    index: {},
+    path_architecture:  'json_input/architecture_new.json',
+    path_furnitures: 'json_input/furnitures_new.json',
+    scene: new THREE.Scene()
+}
 
 C3D.parseJSON = function() {
-    var map = {};
-    var index = {};
+    this.index['building'] = this.tree;
     
-    var indexMapPaths = {
-        index: index,
-        map: map,
-        path_architecture: 'json_input/architecture_new.json',
-        path_furnitures: 'json_input/furnitures_new.json'    
-    };
+    readJSON('architecture', this.path_architecture, this.tree, this.index);
+    readJSON('furnitures', this.path_furnitures, this.tree, this.index);
     
-    JSONtoJS(indexMapPaths);
-    console.log(map);
-    console.log(index);
-};
-
-function JSONtoJS(indexMapPaths) {
-    var index = indexMapPaths.index;
-    var map = indexMapPaths.map;
-    var path_architecture = indexMapPaths.path_architecture;
-    var path_furnitures = indexMapPaths.path_furnitures;
-    
-    map.children = [];
-    index['map'] = map;
-    
-    readJSON('architecture', path_architecture);
-    readJSON('furnitures', path_furnitures);
-    
-    function readJSON(typeJSON, path) {
+    function readJSON(typeJSON, path, tree, index) {
         $.getJSON(path, function(data) { 
             if (data.type == "FeatureCollection") 
             {
                 console.log('FeatureCollection detected for '+typeJSON+'.');
                 if (typeJSON === "architecture") 
                 {
-                    map.id = data.id;
-                    map.coordinates = data.coordinates;
+                    tree.id = data.id;
+                    tree.coordinates = data.coordinates;
                 }
                 
-                //foreach data.features
+                //THREE.FogExp2( hex, density );reach data.features
                 $.each( data.features, function( key, feature ) 
                 {
                     var obj = {};
@@ -65,10 +52,108 @@ function JSONtoJS(indexMapPaths) {
             else 
             {
                 console.log('ERROR: No FeatureCollection detected');
-        	}
+            }
         });
-    }
+    };
+
+}; // Chiude il this.parseJSON
+
+C3D.init3D = function() {
+        var stats = initStats();
+        // create a scene, that will hold all our elements such as objects, cameras and lights.
+        var scene = this.scene;
+        // create a camera, which defines where we're looking at.
+        var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        // create a render and set the size
+        var renderer = new THREE.WebGLRenderer();
+        
+        var trackballControls = new THREE.TrackballControls(camera);
+        
+        renderer.setClearColor(new THREE.Color(0x092D52, 1.0)); 
+        //renderer.setClearColor(new THREE.Color(0x2C3848, 1.0));
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMapEnabled = true;
+        
+        // position and point the camera to the center of the scene
+        camera.position.set(-40,-40,40);
+        camera.up = new THREE.Vector3(0,0,1);
+        camera.lookAt(scene.position);
+        
+        // add subtle ambient lighting
+        var ambiColor = "#1c1c1c";
+        var ambientLight = new THREE.AmbientLight(ambiColor);
+        scene.add(ambientLight);
+        
+        // add axis helper
+        var axisHelper = new THREE.AxisHelper(3);
+        scene.add(axisHelper);
+
+        var controls = new function () {
+            this.showAxisHelper = true;
+            this.enableTrackball = false;
+        };
+        
+        var enableTrackball = false;
+        var gui = new dat.GUI();
+        
+        gui.add(controls, 'showAxisHelper').onChange(function (value) {
+            axisHelper.visible = value;
+        });
+        
+        gui.add(controls, 'enableTrackball').onChange(function (value) {
+            enableTrackball = value;
+        });
+
+        $('body').append(renderer.domElement);
+        
+        render();
+        
+        function render() {
+            stats.update();
+            if (enableTrackball) trackballControls.update();
+            
+            requestAnimationFrame(render);
+            renderer.render(scene, camera);
+        }
+        
+        function initStats() {
+            var stats = new Stats();
+            stats.setMode(0); // 0: fps, 1: ms
+            $('body').append(stats.domElement);
+            return stats;
+        }
+
 }
+/*
+    La visita avviene per ampiezza, in modo da disegnare prima i livelli   
+*/
+C3D.generate3DModel = function() {
+    var queue = [];
+    var feature;
+    console.log(this.tree + '-' + this.tree.children);
+    $.each(this.tree.children, function(key, child) {
+        queue.push(child);
+    });
+    
+    while(queue.length>0) {
+        feature = queue.pop();
+        
+        if(feature.geometry.type in archGen) {
+            var el3D = archGen[feature.geometry.type](feature);
+            this.scene.add(el3D);
+        }
+        else {
+            console.log('ERROR: Class: ' + feature.geometry.type + 'not recognized.');
+        }
+
+        for(childrenElement in element.children) {
+            queue.push(childrenElement);
+        }
+    }
+
+} // Chiude generate3DModel
+
+
 
 function architectureParsing(scene, pathname) {
     
@@ -142,7 +227,7 @@ function furnitureParsing(scene, pathname) {
           l'architettura del modello 3D da rappresentare;
         - pathname_furniture: pathname del file JSON contenenti le feature che descrivono 
           gli elementi d'arredo che caratterizzano il modello 3D da rappresentare;
- */
+*/
 function parsing(parsing_object) {
     architectureParsing(parsing_object.scene, parsing_object.architecturePathname);
     furnitureParsing(parsing_object.scene, parsing_object.furniturePathname);
