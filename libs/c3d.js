@@ -13,7 +13,7 @@ var C3D = {
     Funzione che genera albero ed indice a partire dai file json
  */ 
 
-C3D.parseJSON = function() {
+C3D.parseJSON = function(done) {
     var self = C3D;
     self.index['building'] = self.tree;
     function readJSON(typeJSON, path) {
@@ -45,6 +45,7 @@ C3D.parseJSON = function() {
             {
                 console.log('ERROR: No FeatureCollection detected');
             }
+            done();
         });
     };
 
