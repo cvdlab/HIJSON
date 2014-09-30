@@ -152,7 +152,7 @@ C3D.generate3DModel = function() {
             console.log('ERROR: Class: ' + feature.geometry.type + 'not recognized.');
         }
 
-        for(child in element.children) {
+        for(child in feature.children) {
             queue.push(child);
         }
     }
