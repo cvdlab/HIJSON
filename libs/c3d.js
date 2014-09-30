@@ -1,59 +1,52 @@
-var C3D = {
-    tree: {
+function C3D() {
+    this.tree = {
         id: '',
         children: []
-    },
-    index: {},
-    path_architecture:  'json_input/architecture_new.json',
-    path_furnitures: 'json_input/furnitures_new.json',
-    scene: new THREE.Scene()
-}
-
-C3D.parseJSON = function() {
-    var self = C3D;
-    self.index['building'] = self.tree;
+    };
+    this.index = {};
+    this.path_architecture =  'json_input/architecture_new.json';
+    this.path_furnitures = 'json_input/furnitures_new.json';
+    this.scene = new THREE.Scene();
     
-    function readJSON(typeJSON, path) {
-        console.log('readJson called with'+path);
-        $.getJSON(path, function(data) { 
-            if (data.type == "FeatureCollection") 
-            {
-                console.log('FeatureCollection detected for '+typeJSON+'.');
-                if (typeJSON === "architecture") 
+    this.parseJSON = function() {
+        this.index['building'] = this.tree;
+    
+        function readJSON(typeJSON, path) {
+            $.getJSON(path, function(data) { 
+                if (data.type == "FeatureCollection") 
                 {
-                    self.tree.id = data.id;
-                    self.tree.coordinates = data.coordinates;
+                    console.log('FeatureCollection detected for '+typeJSON+'.');
+                    if (typeJSON === "architecture") 
+                    {
+                        this.tree.id = data.id;
+                        this.tree.coordinates = data.coordinates;
+                    }
+                    
+                    //THREE.FogExp2( hex, density );reach data.features
+                    $.each( data.features, function( key, feature ) 
+                    {
+                        var obj = {};
+                        obj.id = feature.id;
+                        obj.parent = this.index[feature.properties.parent];
+                        obj.parent.children.push(obj);
+                        obj.children = [];
+                        obj.geometry = feature.geometry;
+                        obj.properties = feature.properties;
+                        this.index[feature.id] = obj;
+                    });
+                    
+                } 
+                else 
+                {
+                    console.log('ERROR: No FeatureCollection detected');
                 }
-                
-                //THREE.FogExp2( hex, density );reach data.features
-                $.each( data.features, function( key, feature ) 
-                {
-                    var obj = {};
-                    obj.id = feature.id;
-                    obj.parent = self.index[feature.properties.parent];
-                    obj.parent.children.push(obj);
-                    obj.children = [];
-                    obj.geometry = feature.geometry;
-                    obj.properties = feature.properties;
-                    self.index[feature.id] = obj;
-                });
-                
-            } 
-            else 
-            {
-                console.log('ERROR: No FeatureCollection detected');
-            }
-        });
+            });
+        };
+        readJSON('architecture', this.path_architecture);
+        readJSON('furnitures', this.path_furnitures);      
     };
 
-
-    readJSON('architecture', self.path_architecture);
-    readJSON('furnitures', self.path_furnitures);      
-
-
-};
-
-C3D.init3D = function() {
+    this.init3D = function() {
         var stats = initStats();
         // create a scene, that will hold all our elements such as objects, cameras and lights.
         var scene = this.scene;
@@ -118,35 +111,33 @@ C3D.init3D = function() {
             return stats;
         }
 
-}
-
-
-C3D.generate3DModel = function() {
-    var queue = [];
-    var feature;
-    var self = C3D;
-    console.log(self.tree.children);
-    $.each(self.tree.children, function(key, child) {
-        queue.push(child);
-    });
-    
-    while(queue.length>0) {
-        feature = queue.pop();
-        
-        if(feature.geometry.type in archGen) {
-            var el3D = archGen[feature.geometry.type](feature);
-            self.scene.add(el3D);
-        }
-        else {
-            console.log('ERROR: Class: ' + feature.geometry.type + 'not recognized.');
-        }
-
-        for(childrenElement in element.children) {
-            queue.push(childrenElement);
-        }
     }
 
-} // Chiude generate3DModel
 
+    this.generate3DModel = function() {
+        var queue = [];
+        var feature;
+        $.each(this.tree.children, function(key, child) {
+            queue.push(child);
+        });
+        
+        while(queue.length>0) {
+            feature = queue.pop();
+            
+            if(feature.geometry.type in archGen) {
+                var el3D = archGen[feature.geometry.type](feature);
+                this.scene.add(el3D);
+            }
+            else {
+                console.log('ERROR: Class: ' + feature.geometry.type + 'not recognized.');
+            }
+
+            for(childrenElement in element.children) {
+                queue.push(childrenElement);
+            }
+        }
+
+    } // Chiude generate3DModel
+}
 
 
