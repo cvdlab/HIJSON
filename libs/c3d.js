@@ -1,4 +1,4 @@
-/* Parser e funzioni di supporto per C3D */
+    /* Parser e funzioni di supporto per C3D */
 
 /* set floor height */
 var levelHeight = 5;
@@ -141,7 +141,6 @@ C3D.init3D = function() {
 C3D.generate3DModel = function() {
     var queue = [];
     var feature;
-    console.log(this.tree, this.tree.children);
     $.each(this.tree.children, function(key, child) {
         queue.push(child);
     });
