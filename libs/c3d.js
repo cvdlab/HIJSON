@@ -1,13 +1,3 @@
-    /* Parser e funzioni di supporto per C3D */
-
-/* set floor height */
-var levelHeight = 5;
-
-/* convert Floor level to actual height */
-function zLevel(level) {
-    return level*levelHeight;
-}
-
 var C3D = {
     tree: {
         id: '',
@@ -19,11 +9,11 @@ var C3D = {
     scene: new THREE.Scene()
 }
 
-C3D.parseJSON = function(callback) {
-    var self = this;
-    self.index['building'] = this.tree;
+C3D.parseJSON = function() {
+    var self = C3D;
+    self.index['building'] = self.tree;
     
-    function readJSON(typeJSON, path, read_callback) {
+    function readJSON(typeJSON, path) {
         console.log('readJson called with'+path);
         $.getJSON(path, function(data) { 
             if (data.type == "FeatureCollection") 
@@ -48,8 +38,6 @@ C3D.parseJSON = function(callback) {
                     self.index[feature.id] = obj;
                 });
                 
-                read_callback();
-
             } 
             else 
             {
@@ -59,15 +47,11 @@ C3D.parseJSON = function(callback) {
     };
 
 
-    readJSON('architecture', self.path_architecture, function(){
-        readJSON('furnitures', self.path_furnitures, function(){
-            callback();
-        });
-    });
-    
+    readJSON('architecture', self.path_architecture);
+    readJSON('furnitures', self.path_furnitures);      
 
 
-}; // Chiude il this.parseJSON
+};
 
 C3D.init3D = function() {
         var stats = initStats();
@@ -135,13 +119,14 @@ C3D.init3D = function() {
         }
 
 }
-/*
-    La visita avviene per ampiezza, in modo da disegnare prima i livelli   
-*/
+
+
 C3D.generate3DModel = function() {
     var queue = [];
     var feature;
-    $.each(this.tree.children, function(key, child) {
+    var self = C3D;
+    console.log(self.tree.children);
+    $.each(self.tree.children, function(key, child) {
         queue.push(child);
     });
     
@@ -150,7 +135,7 @@ C3D.generate3DModel = function() {
         
         if(feature.geometry.type in archGen) {
             var el3D = archGen[feature.geometry.type](feature);
-            this.scene.add(el3D);
+            self.scene.add(el3D);
         }
         else {
             console.log('ERROR: Class: ' + feature.geometry.type + 'not recognized.');
@@ -165,80 +150,3 @@ C3D.generate3DModel = function() {
 
 
 
-function architectureParsing(scene, pathname) {
-    
-    var planimetry = new THREE.Object3D();
-
-    $.getJSON(pathname, function(data) { 
-        if (data.type == "FeatureCollection") 
-        {
-            console.log('FeatureCollection detected for Architecture.');
-            
-            //foreach data.features invocare in base al geometry.type uno dei metodi descritti in seguito, una o più volte (multi-*)
-            $.each( data.features, function( key, feature ) 
-            {
-                if(feature.geometry.type in archGen) 
-                {
-					archGen[feature.geometry.type](planimetry, feature.geometry.coordinates, feature.properties);
-				}
-                else 
-                {
-					console.log('ERROR: geometry Type: ' + feature.geometry.type + 'not recognized.');
-				}
-            });
-        } 
-        else 
-        {
-            console.log('ERROR: No FeatureCollection detected');
-    	}
-    });
-    
-    scene.add(planimetry);
-
-}
-
-
-function furnitureParsing(scene, pathname) {
-    
-    var furnitures = new THREE.Object3D();
-
-    $.getJSON(pathname, function(data) { 
-        if (data.type == "FeatureCollection") 
-        {
-            console.log('FeatureCollection detected for Furnitures.');
-            
-            //foreach data.features invocare in base al geometry.type uno dei metodi descritti in seguito, una o più volte (multi-*)
-            $.each( data.features, function( key, feature ) 
-            {
-                if(feature.properties.geomType in furnitureGen) 
-                {
-					furnitureGen[feature.properties.geomType](furnitures, feature);
-				}
-                else 
-                {
-					simpleFurnitureAdd(furnitures, feature);
-				}
-            });
-        } 
-        else 
-        {
-            console.log('ERROR: No FeatureCollection detected');
-    	}
-    });
-    
-    scene.add(furnitures);
-
-}
-
-/*
-    La funzione parsing richiede in input un oggetto javascript con i seguenti parametri
-        - scene: la scena in cui bisogna generare il modello 3D.
-        - pathname_architecture: pathname del file JSON contenenti le feature che descrivono 
-          l'architettura del modello 3D da rappresentare;
-        - pathname_furniture: pathname del file JSON contenenti le feature che descrivono 
-          gli elementi d'arredo che caratterizzano il modello 3D da rappresentare;
-*/
-function parsing(parsing_object) {
-    architectureParsing(parsing_object.scene, parsing_object.architecturePathname);
-    furnitureParsing(parsing_object.scene, parsing_object.furniturePathname);
-}
