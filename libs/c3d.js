@@ -13,7 +13,7 @@ var C3D = {
     Funzione che genera albero ed indice a partire dai file json
  */ 
 
-C3D.parseJSON = function(done) {
+C3D.parseJSON = function() {
     var self = C3D;
     self.index['building'] = self.tree;
     function readJSON(typeJSON, path) {
@@ -42,16 +42,16 @@ C3D.parseJSON = function(done) {
                 
             } 
             else 
-            {
-                console.log('ERROR: No FeatureCollection detected');
+            {   
+                var err = 'ERROR: No FeatureCollection detected' 
+                return err;
             }
-            done();
         });
     };
 
 
     readJSON('architecture', self.path_architecture);
-    readJSON('furnitures', self.path_furnitures);      
+    //readJSON('furnitures', self.path_furnitures);      
 
 
 };
@@ -135,27 +135,25 @@ C3D.generate3DModel = function() {
     var self = C3D;
     var queue = [];
     var feature;
-    
-    console.log(self.tree.children, this.tree.children); //console.log di debug
-    
-    $.each(self.tree.children, function(key, child) {
-        queue.push(child);
-    });
-    
+    for(var i=0;i< self.tree.children.length;i++) {
+        queue.push(self.tree.children[i]);
+    }
     while(queue.length>0) {
         feature = queue.pop();
-        
         if(feature.geometry.type in archGen) {
+            console.log('Oggetto in fase di generazione: ' + feature.id);
             var el3D = archGen[feature.geometry.type](feature);
             self.scene.add(el3D);
         }
         else {
-            console.log('ERROR: Class: ' + feature.geometry.type + 'not recognized.');
+            var err = 'ERROR: Class: ' + feature.geometry.type + 'not recognized.';
+            return err;
         }
 
-        for(child in feature.children) {
-            queue.push(child);
+        for(var i=0;i< feature.children.length;i++) {
+            queue.push(feature.children[i]);
         }
+        console.log('Coda dopo aver inserito i figli di: ' + feature.id +': ' + queue);
     }
 
 } // Chiude generate3DModel

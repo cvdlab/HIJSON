@@ -81,7 +81,7 @@ function parsePolygon(feature) {
     
     var polygon = new THREE.Mesh(shape.makeGeometry(), new THREE.MeshBasicMaterial({color: 0x367289, transparent: true, opacity: 0.3, side: THREE.DoubleSide}));
     
-    //polygon.position.z = 0;  // imposta il piano di altezza
+    polygon.position.z = 0;  // imposta il piano di altezza
     
     return polygon;
     //map.add(polygon);
@@ -94,20 +94,44 @@ archGen['LineString'] = parseLineString;
 
 archGen['Polygon'] = parsePolygon;
 
-archGen['MultiPoint'] = function parseMultiPoint(planimetry,coordinates,properties) {
-	$.each(coordinates, function (key, pointCoordinates) {
-		parsePoint(planimetry, pointCoordinates, properties);
-	});
+// archGen['MultiPoint'] = function parseMultiPoint(feature) {
+// 	$.each(feature.geometry.coordinates, function (key, pointCoordinates) {
+// 		parsePoint(feature);
+// 	});
+// }
+
+// archGen['MultiLineString'] = function parseMultiLineString(feature) {
+// 	$.each(feature.geometry.coordinates, function (key, lineStringCoordinates) {
+// 		parseLineString(feature);
+// 	});
+// }
+
+// archGen['MultiPolygon'] = function parseMultiPolygon(feature) {
+// 	$.each(feature.geometry.coordinates, function (key, polygonCoordinates) {
+// 		parsePolygon(feature);
+// 	});
+// }
+
+archGen['MultiPoint'] = function parseMultiPoint(feature) {
+    var singlePoint;
+    for(var i=0; i<feature.geometry.coordinates;i++) {
+        singlePoint = feature;
+        singlePoint.geometry.type = "Point";
+        singlePoint.geometry.coordinates = feature.geometry.coordinates[i];
+        parsePoint(singlePoint);
+    }
 }
 
-archGen['MultiLineString'] = function parseMultiLineString(planimetry,coordinates,properties) {
-	$.each(coordinates, function (key, lineStringCoordinates) {
-		parseLineString(planimetry, lineStringCoordinates, properties);
-	});
-}
-
-archGen['MultiPolygon'] = function parseMultiPolygon(planimetry,coordinates,properties) {
-	$.each(coordinates, function (key, polygonCoordinates) {
-		parsePolygon(planimetry, polygonCoordinates, properties);
-	});
+archGen['MultiLineString'] = function parseMultiLineString(feature) {
+    var singleLineString;
+    var newCoordinates;
+    for(var i=0; i<feature.geometry.coordinates.length;i++) {
+        newCoordinates = feature.geometry.coordinates[i];
+        singleLineString = feature;
+        singleLineString.geometry.type = "LineString";
+        console.log(newCoordinates);
+        singleLineString.geometry.coordinates = newCoordinates;
+        //console.log(singleLineString);
+        parseLineString(singleLineString);
+    }
 }

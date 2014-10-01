@@ -37,6 +37,7 @@
     <script src="assets/js/Stats.min.js"></script>
     <script src="assets/js/dat.gui.min.js"></script>
     <script src="assets/js/TrackballControls.js"></script>
+    <script src="assets/js/async.js"></script>
     
     <!-- custom geoJSON libraries -->
     <script src="libs/archGenerator.js"></script> 
@@ -47,11 +48,33 @@
     <script src="assets/js/bootstrap.min.js"></script>
     
     <script>
+    var err;
+    async.waterfall
+    (
+        [
+            function(callback) {
+                console.log('Inizio C3D.parseJSON()');
+                err = C3D.parseJSON();
+                callback(err);
+            },
+            function(callback) {
+                console.log('Fine C3D.parseJSON()');
+                console.log('Inizio C3D.init3D()');
+                err = C3D.init3D();
+                callback(err);
 
-        C3D.parseJSON(function () {
-            C3D.init3D();
-            C3D.generate3DModel();
-        });
+            },
+            function(callback) {
+                console.log('Fine C3D.init3D()');
+                console.log('Inizio C3D.generate3DModel()');
+                err = C3D.generate3DModel();
+                callback(err);
+            }
+        ],
+        function(err, data) {
+            if(err) console.log(err);
+        }
+    );
     </script>
 
 
