@@ -144,7 +144,11 @@ C3D.generate3DModel = function() {
         if(feature.geometry.type in archGen) {
             console.log('Oggetto in fase di generazione: ' + feature.id);
             var el3D = archGen[feature.geometry.type](feature.geometry.coordinates, feature.properties);
-            self.scene.add(el3D);
+            feature.obj3D = el3D;
+            if (feature.parent.id === "building")
+                self.scene.add(el3D);
+            else
+                self.index[feature.parent.id].obj3D.add(el3D);
         }
         else {
             var err = 'ERROR: Class: ' + feature.geometry.type + 'not recognized.';
