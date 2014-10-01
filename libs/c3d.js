@@ -156,6 +156,7 @@ C3D.generate3DModel = function() {
         }
 
         for(var i=0;i< feature.children.length;i++) {
+            console.log(feature.children[i]);
             queue.push(feature.children[i]);
         }
         console.log('Coda dopo aver inserito i figli di: ' + feature.id +': ' + queue);

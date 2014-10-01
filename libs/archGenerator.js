@@ -1,13 +1,5 @@
 var archGen = {}
 
-/* set floor height */
-var levelHeight = 5;
-
-/* convert Floor level to actual height */
-function zLevel(level) {
-    return level*levelHeight;
-}
-
 function parsePoint(coordinates, properties) {
     // creo l'oggetto THREE punto a partire dai dati della feature (feature.geometry.coordinates) e lo aggiungo alla map
     var pointPosition = new THREE.Vector3(
@@ -74,7 +66,7 @@ function parsePolygon(coordinates, properties) {
         shape.holes.push(hole);
     }
     
-    var polygon = new THREE.Mesh(shape.makeGeometry(), new THREE.MeshBasicMaterial({color: 0x367289, transparent: true, opacity: 0.3, side: THREE.DoubleSide}));
+    var polygon = new THREE.Mesh(shape.makeGeometry(), new THREE.MeshBasicMaterial({color: 0x0DD45C, transparent: true, opacity: 0.3, side: THREE.DoubleSide}));
     
     polygon.position.z = 0;  // imposta il piano di altezza
     
