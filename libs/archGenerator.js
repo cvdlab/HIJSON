@@ -130,6 +130,7 @@ archGen['MultiLineString'] = function parseMultiLineString(feature) {
         singleLineString = feature;
         singleLineString.geometry.type = "LineString";
         console.log(newCoordinates);
+        console.log(singleLineString);
         singleLineString.geometry.coordinates = newCoordinates;
         //console.log(singleLineString);
         parseLineString(singleLineString);
