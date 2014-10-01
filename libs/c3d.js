@@ -142,7 +142,7 @@ C3D.generate3DModel = function() {
         feature = queue.pop();
         if(feature.geometry.type in archGen) {
             console.log('Oggetto in fase di generazione: ' + feature.id);
-            var el3D = archGen[feature.geometry.type](feature);
+            var el3D = archGen[feature.geometry.type](feature.geometry.coordinates, feature.properties);
             self.scene.add(el3D);
         }
         else {
@@ -157,6 +157,5 @@ C3D.generate3DModel = function() {
     }
 
 } // Chiude generate3DModel
-
 
 

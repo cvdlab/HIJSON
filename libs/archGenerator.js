@@ -8,11 +8,11 @@ function zLevel(level) {
     return level*levelHeight;
 }
 
-function parsePoint(feature) {
+function parsePoint(coordinates, properties) {
     // creo l'oggetto THREE punto a partire dai dati della feature (feature.geometry.coordinates) e lo aggiungo alla map
     var pointPosition = new THREE.Vector3(
-                        feature.geometry.coordinates[0], 
-                        feature.geometry.coordinates[1]
+                        coordinates[0], 
+                        coordinates[1]
                         );
     
     var point = new THREE.Object3D();
@@ -23,12 +23,12 @@ function parsePoint(feature) {
     point.add(new THREE.Mesh( new THREE.CircleGeometry( 0.25, 20 ), new THREE.MeshBasicMaterial( {color: 0xff0000, side: THREE.DoubleSide} ) ));
     
     return point;
-    //map.add(point);
 }
 
-function parseLineString(feature) {
-    
-    switch (feature.properties.class) {
+function parseLineString(coordinates, properties) {
+    console.log(coordinates);
+    console.log(properties);
+    switch (properties.class) {
         case "internal_wall":
             var material = new THREE.LineBasicMaterial({ color: 0x5898A4, linewidth: 5 });
             break;
@@ -43,9 +43,9 @@ function parseLineString(feature) {
     }
     
     var geometry = new THREE.Geometry();
-    $.each(feature.geometry.coordinates, function (key, pointCoordinates){
-        geometry.vertices.push( new THREE.Vector3( pointCoordinates[0], pointCoordinates[1] ) );
-    });
+    for(var i=0; i<coordinates.length; i++){
+        geometry.vertices.push( new THREE.Vector3( coordinates[i][0], coordinates[i][1],0 ) );
+    };
     
     var line = new THREE.Line( geometry, material );
     
@@ -53,11 +53,10 @@ function parseLineString(feature) {
     //map.add( line );
 }
 
-function parsePolygon(feature) {
+function parsePolygon(coordinates, properties) {
     // probabilmente l'utilizzo di una shape risulta l'opzione migliore, specialmente per la creazione degli holes (vedi docs geoJson)
     
     var shape = new THREE.Shape();
-    var coordinates = feature.geometry.coordinates;
     for (var j = 0; j < coordinates[0].length; j++) //scorro le singole coordinate del perimetro esterno
     { 
         if (j == 0) { // primo punto
@@ -94,45 +93,21 @@ archGen['LineString'] = parseLineString;
 
 archGen['Polygon'] = parsePolygon;
 
-// archGen['MultiPoint'] = function parseMultiPoint(feature) {
-// 	$.each(feature.geometry.coordinates, function (key, pointCoordinates) {
-// 		parsePoint(feature);
-// 	});
-// }
+archGen['MultiPoint'] = function parseMultiPoint(coordinates, properties) {
+	for(var i=0;i<coordinates.length; i++) {
+		parsePoint(coordinates[i],properties);
+	}
+};
 
-// archGen['MultiLineString'] = function parseMultiLineString(feature) {
-// 	$.each(feature.geometry.coordinates, function (key, lineStringCoordinates) {
-// 		parseLineString(feature);
-// 	});
-// }
-
-// archGen['MultiPolygon'] = function parseMultiPolygon(feature) {
-// 	$.each(feature.geometry.coordinates, function (key, polygonCoordinates) {
-// 		parsePolygon(feature);
-// 	});
-// }
-
-archGen['MultiPoint'] = function parseMultiPoint(feature) {
-    var singlePoint;
-    for(var i=0; i<feature.geometry.coordinates;i++) {
-        singlePoint = feature;
-        singlePoint.geometry.type = "Point";
-        singlePoint.geometry.coordinates = feature.geometry.coordinates[i];
-        parsePoint(singlePoint);
+archGen['MultiLineString'] = function parseMultiLineString(coordinates, properties) {
+    for(var i=0;i<coordinates.length; i++) {
+        console.log('passa');
+        parseLineString(coordinates[i],properties);
     }
-}
+};
 
-archGen['MultiLineString'] = function parseMultiLineString(feature) {
-    var singleLineString;
-    var newCoordinates;
-    for(var i=0; i<feature.geometry.coordinates.length;i++) {
-        newCoordinates = feature.geometry.coordinates[i];
-        singleLineString = feature;
-        singleLineString.geometry.type = "LineString";
-        console.log(newCoordinates);
-        console.log(singleLineString);
-        singleLineString.geometry.coordinates = newCoordinates;
-        //console.log(singleLineString);
-        parseLineString(singleLineString);
+archGen['MultiPolygon'] = function parseMultiPolygon(coordinates, properties) {
+    for(var i=0;i<coordinates.length; i++) {
+        parsePolygon(coordinates[i],properties);
     }
-}
+};
