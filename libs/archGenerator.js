@@ -26,8 +26,6 @@ function parsePoint(coordinates, properties) {
 }
 
 function parseLineString(coordinates, properties) {
-    console.log(coordinates);
-    console.log(properties);
     switch (properties.class) {
         case "internal_wall":
             var material = new THREE.LineBasicMaterial({ color: 0x5898A4, linewidth: 5 });
@@ -46,9 +44,7 @@ function parseLineString(coordinates, properties) {
     for(var i=0; i<coordinates.length; i++){
         geometry.vertices.push( new THREE.Vector3( coordinates[i][0], coordinates[i][1],0 ) );
     };
-    
     var line = new THREE.Line( geometry, material );
-    
     return line;
     //map.add( line );
 }
@@ -94,20 +90,27 @@ archGen['LineString'] = parseLineString;
 archGen['Polygon'] = parsePolygon;
 
 archGen['MultiPoint'] = function parseMultiPoint(coordinates, properties) {
-	for(var i=0;i<coordinates.length; i++) {
+	var multiPoint = new THREE.Object3D();
+    for(var i=0;i<coordinates.length; i++) {
 		parsePoint(coordinates[i],properties);
 	}
+
+    return multiPoint;
 };
 
 archGen['MultiLineString'] = function parseMultiLineString(coordinates, properties) {
+    var multiLine = new THREE.Object3D();
     for(var i=0;i<coordinates.length; i++) {
-        console.log('passa');
-        parseLineString(coordinates[i],properties);
+        multiLine.add(parseLineString(coordinates[i],properties));
     }
+    return multiLine;
 };
 
 archGen['MultiPolygon'] = function parseMultiPolygon(coordinates, properties) {
+    var multiPolygon = new THREE.Object3D();
     for(var i=0;i<coordinates.length; i++) {
         parsePolygon(coordinates[i],properties);
     }
+
+    return multiPolygon;
 };
