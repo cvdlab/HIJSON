@@ -34,7 +34,11 @@ function parseLineString(coordinates, properties) {
     
     var geometry = new THREE.Geometry();
     for(var i=0; i<coordinates.length; i++){
-        geometry.vertices.push( new THREE.Vector3( coordinates[i][0], coordinates[i][1],0 ) );
+        if(properties.z!==undefined)
+            geometry.vertices.push( new THREE.Vector3( coordinates[i][0], coordinates[i][1], properties.z) );
+        else
+            geometry.vertices.push( new THREE.Vector3( coordinates[i][0], coordinates[i][1], 0) );
+
     };
     var line = new THREE.Line( geometry, material );
     return line;
