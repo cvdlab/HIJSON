@@ -34,10 +34,7 @@ function parseLineString(coordinates, properties) {
     
     var geometry = new THREE.Geometry();
     for(var i=0; i<coordinates.length; i++){
-        if(properties.z!==undefined)
-            geometry.vertices.push( new THREE.Vector3( coordinates[i][0], coordinates[i][1], properties.z) );
-        else
-            geometry.vertices.push( new THREE.Vector3( coordinates[i][0], coordinates[i][1], 0) );
+        geometry.vertices.push( new THREE.Vector3( coordinates[i][0], coordinates[i][1], 0) );
 
     };
     var line = new THREE.Line( geometry, material );
@@ -47,6 +44,16 @@ function parseLineString(coordinates, properties) {
 
 function parsePolygon(coordinates, properties) {
     // probabilmente l'utilizzo di una shape risulta l'opzione migliore, specialmente per la creazione degli holes (vedi docs geoJson)
+    switch (properties.class) {
+    case "internal_wall":
+        var material = new THREE.MeshBasicMaterial({color: 0xff0000, transparent: true, opacity: 0.3, side: THREE.DoubleSide});
+        break;
+    case "room":
+        var material = new THREE.MeshBasicMaterial({color: 0xff0000, transparent: true, opacity: 0.3, side: THREE.DoubleSide});
+        break;
+    default:
+        var material = new THREE.MeshBasicMaterial({color: 0x0DD45C, transparent: true, opacity: 0.3, side: THREE.DoubleSide});
+    }
     
     var shape = new THREE.Shape();
     for (var j = 0; j < coordinates[0].length; j++) //scorro le singole coordinate del perimetro esterno
@@ -70,7 +77,7 @@ function parsePolygon(coordinates, properties) {
         shape.holes.push(hole);
     }
     
-    var polygon = new THREE.Mesh(shape.makeGeometry(), new THREE.MeshBasicMaterial({color: 0x0DD45C, transparent: true, opacity: 0.3, side: THREE.DoubleSide}));
+    var polygon = new THREE.Mesh(shape.makeGeometry(), material);
     
     polygon.position.z = 0;  // imposta il piano di altezza
     

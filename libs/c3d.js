@@ -49,7 +49,6 @@ C3D.parseJSON = function() {
         });
     };
 
-
     readJSON('architecture', self.path_architecture);
     //readJSON('furnitures', self.path_furnitures);      
 
@@ -135,19 +134,23 @@ C3D.generate3DModel = function() {
     var self = C3D;
     var queue = [];
     var feature;
+    
+    self.index["building"].obj3D = new THREE.Object3D();
+
     for(var i=0;i< self.tree.children.length;i++) {
         queue.push(self.tree.children[i]);
     }
     while(queue.length>0) {
-        feature = queue.pop();
+        feature = queue.shift();
         if(feature.geometry.type in archGen) {
             console.log('Oggetto in fase di generazione: ' + feature.id);
             var el3D = archGen[feature.geometry.type](feature.geometry.coordinates, feature.properties);
             feature.obj3D = el3D;
-            if (feature.parent.id === "building")
-                self.scene.add(el3D);
-            else
-                self.index[feature.parent.id].obj3D.add(el3D);
+
+            if(feature.properties.z!==undefined)
+                el3D.position.z = feature.properties.tVector[3];
+
+            self.index[feature.parent.id].obj3D.add(el3D);
         }
         else {
             var err = 'ERROR: Class: ' + feature.geometry.type + 'not recognized.';
@@ -158,7 +161,31 @@ C3D.generate3DModel = function() {
             queue.push(feature.children[i]);
         }
     }
-
+    self.scene.add(self.index["building"].obj3D);
 } // Chiude generate3DModel
+
+C3D.difference = function() {
+    var a = [ [0, 0], [1, 0], [1, 50], [0, 50], [0, 0]];
+    var b = [ [0, 10], [1, 10], [1, 20], [0, 20], [0, 10] ];
+
+
+    var v1_1 = a.shift();
+    var v2_1 = a.shift();
+    var v3_1 = b.shift();
+    var v4_1 = b.shift();
+
+    var w1 = [];
+    w1.push(v1_1,v2_1,v4_1,v3_1,v1_1);
+    //console.log(w1);
+
+    var v1_2 = a.shift(); console.log('v1: ' + v1_2);
+    var v2_2 = a.shift(); console.log('v2: ' + v2_2);
+    var v3_2 = b.shift(); console.log('v3: ' + v3_2);
+    var v4_2 = b.shift(); console.log('v4: ' + v4_2);
+
+    var w2 = [];
+    w2.push(v4_2,v3_2,v1_2,v2_2,v4_2);
+    console.log(w2);
+}
 
 
