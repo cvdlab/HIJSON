@@ -24,7 +24,6 @@ C3D.parseJSON = function() {
                 if (typeJSON === "architecture") 
                 {
                     self.tree.id = data.id;
-                    //self.tree.coordinates = data.coordinates;
                     self.tree.properties = data.properties;
                 }
                 
@@ -69,10 +68,9 @@ C3D.init3D = function() {
     // create a render and set the size
     var renderer = new THREE.WebGLRenderer();
     
-    // var trackballControls = new THREE.TrackballControls(camera);
+    var trackballControls = new THREE.TrackballControls(camera);
     
     renderer.setClearColor(new THREE.Color(0x092D52, 1.0)); 
-    //renderer.setClearColor(new THREE.Color(0x2C3848, 1.0));
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.shadowMapEnabled = true;
     
@@ -94,7 +92,7 @@ C3D.init3D = function() {
 
       var controls = new function () {
         this.showAxisHelper = true;
-        // this.enableTrackball = false;
+        this.enableTrackball = false;
         this.visibleRoom = "building";
         
         this.redraw = function() {
@@ -117,16 +115,16 @@ C3D.init3D = function() {
         }
     };
     
-    // var enableTrackball = false;
+    var enableTrackball = false;
     var gui = new dat.GUI();   
     
     gui.add(controls, 'showAxisHelper').onChange(function (value) {
         axisHelper.visible = value;
     });
     
-    // gui.add(controls, 'enableTrackball').onChange(function (value) {
-    //     enableTrackball = value;
-    // });
+    gui.add(controls, 'enableTrackball').onChange(function (value) {
+        enableTrackball = value;
+    });
     var rooms = ["building"];
     for(var key in C3D.index) {
         var element = C3D.index[key];
@@ -140,7 +138,7 @@ C3D.init3D = function() {
     
     function render() {
         stats.update();
-        // if (enableTrackball) trackballControls.update();
+        if (enableTrackball) trackballControls.update();
         
         requestAnimationFrame(render);
         renderer.render(scene, camera);

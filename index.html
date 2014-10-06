@@ -36,7 +36,7 @@
     <script src="assets/js/jquery-2.1.1.js"></script>
     <script src="assets/js/Stats.min.js"></script>
     <script src="assets/js/dat.gui.min.js"></script>
-<!--      <script src="assets/js/TrackballControls.js"></script> -->
+     <script src="assets/js/TrackballControls.js"></script>
     <script src="assets/js/async.js"></script>
     
     <!-- custom geoJSON libraries -->
@@ -72,7 +72,12 @@
                 var geometry = new THREE.BoxGeometry( 1, 1, 1 );
                 var material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
                 var cube = new THREE.Mesh( geometry, material );
+                var cube2 = new THREE.Mesh( geometry, material );
+                cube2.position.x = 2;
+                cube2.position.y = 2;
                 C3D.index["room_0.2"].obj3D.add( cube );
+                C3D.index["room_0.2"].obj3D.add( cube2 );
+
                 
                 callback(err);
             }
