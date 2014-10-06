@@ -234,7 +234,7 @@ C3D.initControls = function() {
     var rooms = ["building"];
     for(var key in C3D.index) {
         var element = C3D.index[key];
-        if(element.properties.class==="room") {
+        if(element.properties.class==="room" ||element.properties.class==="level") {
             rooms.push(element.id);
         }
     }
