@@ -19,6 +19,9 @@ function parsePoint(coordinates, properties) {
 
 function parseLineString(coordinates, properties) {
     switch (properties.class) {
+        case "external_wall":
+            var material = new THREE.LineBasicMaterial({ color: 0x8AA20B, linewidth: 5 });
+            break;
         case "internal_wall":
             var material = new THREE.LineBasicMaterial({ color: 0x5898A4, linewidth: 5 });
             break;
@@ -49,10 +52,13 @@ function parsePolygon(coordinates, properties) {
         var material = new THREE.MeshBasicMaterial({color: 0xff0000, transparent: true, opacity: 0.3, side: THREE.DoubleSide});
         break;
     case "room":
-        var material = new THREE.MeshBasicMaterial({color: 0xff0000, transparent: true, opacity: 0.3, side: THREE.DoubleSide});
+        var material = new THREE.MeshBasicMaterial({color: 0x0000ff, transparent: true, opacity: 0.3, side: THREE.DoubleSide});
+        break;
+    case "level":
+        var material = new THREE.MeshBasicMaterial({color: 0x0DDB5F, transparent: true, opacity: 0.01, side: THREE.DoubleSide});
         break;
     default:
-        var material = new THREE.MeshBasicMaterial({color: 0x0DD45C, transparent: true, opacity: 0.3, side: THREE.DoubleSide});
+        var material = new THREE.MeshBasicMaterial({color: 0x00ff00, transparent: true, opacity: 0.3, side: THREE.DoubleSide});
     }
     
     var shape = new THREE.Shape();

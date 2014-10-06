@@ -36,7 +36,7 @@
     <script src="assets/js/jquery-2.1.1.js"></script>
     <script src="assets/js/Stats.min.js"></script>
     <script src="assets/js/dat.gui.min.js"></script>
-    <script src="assets/js/TrackballControls.js"></script>
+<!--      <script src="assets/js/TrackballControls.js"></script> -->
     <script src="assets/js/async.js"></script>
     
     <!-- custom geoJSON libraries -->
@@ -68,6 +68,12 @@
                 console.log('Fine C3D.init3D()');
                 console.log('Inizio C3D.generate3DModel()');
                 err = C3D.generate3DModel();
+                callback(err);
+            },
+            function(callback) {
+                console.log('Fine C3D.generate3DModel()');
+                console.log('Inizio C3D.initControls()');
+                err = C3D.initControls();
                 callback(err);
             }
         ],

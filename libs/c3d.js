@@ -4,7 +4,7 @@ var C3D = {
         children: []
     },
     index: {},
-    path_architecture:  'json_input/architecture_new.json',
+    path_architecture:  'json_input/architecture_polygon.json',
     path_furnitures: 'json_input/furnitures_new.json',
     scene: new THREE.Scene()
 }
@@ -24,7 +24,8 @@ C3D.parseJSON = function() {
                 if (typeJSON === "architecture") 
                 {
                     self.tree.id = data.id;
-                    self.tree.coordinates = data.coordinates;
+                    //self.tree.coordinates = data.coordinates;
+                    self.properties = data.properties;
                 }
                 
                 //THREE.FogExp2( hex, density );reach data.features
@@ -68,7 +69,7 @@ C3D.init3D = function() {
     // create a render and set the size
     var renderer = new THREE.WebGLRenderer();
     
-    var trackballControls = new THREE.TrackballControls(camera);
+    // var trackballControls = new THREE.TrackballControls(camera);
     
     renderer.setClearColor(new THREE.Color(0x092D52, 1.0)); 
     //renderer.setClearColor(new THREE.Color(0x2C3848, 1.0));
@@ -85,33 +86,19 @@ C3D.init3D = function() {
     var ambientLight = new THREE.AmbientLight(ambiColor);
     scene.add(ambientLight);
     
+    $('body').append(renderer.domElement);
     // add axis helper
     var axisHelper = new THREE.AxisHelper(3);
     scene.add(axisHelper);
 
-    var controls = new function () {
-        this.showAxisHelper = true;
-        this.enableTrackball = false;
-    };
-    
-    var enableTrackball = false;
-    var gui = new dat.GUI();
-    
-    gui.add(controls, 'showAxisHelper').onChange(function (value) {
-        axisHelper.visible = value;
-    });
-    
-    gui.add(controls, 'enableTrackball').onChange(function (value) {
-        enableTrackball = value;
-    });
 
-    $('body').append(renderer.domElement);
+
     
     render();
     
     function render() {
         stats.update();
-        if (enableTrackball) trackballControls.update();
+        // if (enableTrackball) trackballControls.update();
         
         requestAnimationFrame(render);
         renderer.render(scene, camera);
@@ -147,9 +134,26 @@ C3D.generate3DModel = function() {
             var el3D = archGen[feature.geometry.type](feature.geometry.coordinates, feature.properties);
             feature.obj3D = el3D;
 
-            if(feature.properties.z!==undefined)
-                el3D.position.z = feature.properties.tVector[3];
 
+            if(feature.properties.rVector!==undefined) {
+                var conv = Math.PI/180;
+                var rotation = [
+                            feature.properties.rVector[0]*conv, 
+                            feature.properties.rVector[1]*conv,
+                            feature.properties.rVector[2]*conv];
+                el3D.rotation.set(rotation[0], rotation[1], rotation[2]);
+            }
+
+            if(feature.properties.tVector!==undefined) {
+                var position = new THREE.Vector3(
+                            feature.properties.tVector[0], 
+                            feature.properties.tVector[1],
+                            feature.properties.tVector[2]);
+                el3D.position = position;
+            }
+            // if(feature.properties.z!==undefined)
+            //     el3D.position.z = feature.properties.tVector[3];
+            
             self.index[feature.parent.id].obj3D.add(el3D);
         }
         else {
@@ -176,7 +180,7 @@ C3D.difference = function() {
 
     var w1 = [];
     w1.push(v1_1,v2_1,v4_1,v3_1,v1_1);
-    //console.log(w1);
+    console.log(w1);
 
     var v1_2 = a.shift(); console.log('v1: ' + v1_2);
     var v2_2 = a.shift(); console.log('v2: ' + v2_2);
@@ -186,6 +190,56 @@ C3D.difference = function() {
     var w2 = [];
     w2.push(v4_2,v3_2,v1_2,v2_2,v4_2);
     console.log(w2);
+
+
+
+}
+
+C3D.initControls = function() {
+      var controls = new function () {
+        this.showAxisHelper = true;
+        // this.enableTrackball = false;
+        this.visibleRoom = "building";
+        
+        this.redraw = function() {
+            C3D.index["building"].obj3D.traverse(function(object) {
+                object.visible = false;
+            });
+            C3D.index[controls.visibleRoom].obj3D.traverse(function(object) {
+                object.visible = true;
+            });
+            for(var i in C3D.index) {
+                console.log(C3D.index[i].obj3D);
+                if(C3D.index[i].properties.class==="internal_wall") {
+                    if($.inArray(controls.visibleRoom, C3D.index[i].properties.connections)) {
+                        C3D.index[i].obj3D.traverse(function(object) {
+                        object.visible = true;
+                        });
+                    }
+                }
+            }            
+        }
+    };
+    
+    // var enableTrackball = false;
+    var gui = new dat.GUI();   
+    
+    gui.add(controls, 'showAxisHelper').onChange(function (value) {
+        axisHelper.visible = value;
+    });
+    
+    // gui.add(controls, 'enableTrackball').onChange(function (value) {
+    //     enableTrackball = value;
+    // });
+    var rooms = ["building"];
+    for(var key in C3D.index) {
+        var element = C3D.index[key];
+        console.log(element);
+        if(element.properties.class==="room") {
+            rooms.push(element.id);
+        }
+    }
+    gui.add(controls, "visibleRoom", rooms).onChange(controls.redraw);  
 }
 
 
