@@ -211,7 +211,7 @@ C3D.initControls = function() {
             for(var i in C3D.index) {
                 if((C3D.index[i].properties.class==="internal_wall") || 
                     (C3D.index[i].properties.class==="external_wall")) {
-                    if(!($.inArray(controls.visibleRoom, C3D.index[i].properties.connections))) {
+                    if($.inArray(controls.visibleRoom, C3D.index[i].properties.connections) !== -1) {
                         C3D.index[i].obj3D.traverse(function(object) {
                         object.visible = true;
                         });
