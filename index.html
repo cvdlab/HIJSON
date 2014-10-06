@@ -69,12 +69,6 @@
                 console.log('Inizio C3D.generate3DModel()');
                 err = C3D.generate3DModel();
                 callback(err);
-            },
-            function(callback) {
-                console.log('Fine C3D.generate3DModel()');
-                console.log('Inizio C3D.initControls()');
-                err = C3D.initControls();
-                callback(err);
             }
         ],
         function(err, data) {

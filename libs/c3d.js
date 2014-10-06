@@ -92,7 +92,49 @@ C3D.init3D = function() {
     scene.add(axisHelper);
 
 
-
+      var controls = new function () {
+        this.showAxisHelper = true;
+        // this.enableTrackball = false;
+        this.visibleRoom = "building";
+        
+        this.redraw = function() {
+            C3D.index["building"].obj3D.traverse(function(object) {
+                object.visible = false;
+            });
+            C3D.index[controls.visibleRoom].obj3D.traverse(function(object) {
+                object.visible = true;
+            });
+            for(var i in C3D.index) {
+                if((C3D.index[i].properties.class==="internal_wall") || 
+                    (C3D.index[i].properties.class==="external_wall")) {
+                    if($.inArray(controls.visibleRoom, C3D.index[i].properties.connections) !== -1) {
+                        C3D.index[i].obj3D.traverse(function(object) {
+                        object.visible = true;
+                        });
+                    }
+                }
+            }            
+        }
+    };
+    
+    // var enableTrackball = false;
+    var gui = new dat.GUI();   
+    
+    gui.add(controls, 'showAxisHelper').onChange(function (value) {
+        axisHelper.visible = value;
+    });
+    
+    // gui.add(controls, 'enableTrackball').onChange(function (value) {
+    //     enableTrackball = value;
+    // });
+    var rooms = ["building"];
+    for(var key in C3D.index) {
+        var element = C3D.index[key];
+        if(element.properties.class==="room" ||element.properties.class==="level") {
+            rooms.push(element.id);
+        }
+    }
+    gui.add(controls, "visibleRoom", rooms).onChange(controls.redraw)
     
     render();
     
@@ -194,51 +236,4 @@ C3D.difference = function() {
 
 
 }
-
-C3D.initControls = function() {
-      var controls = new function () {
-        this.showAxisHelper = true;
-        // this.enableTrackball = false;
-        this.visibleRoom = "building";
-        
-        this.redraw = function() {
-            C3D.index["building"].obj3D.traverse(function(object) {
-                object.visible = false;
-            });
-            C3D.index[controls.visibleRoom].obj3D.traverse(function(object) {
-                object.visible = true;
-            });
-            for(var i in C3D.index) {
-                if((C3D.index[i].properties.class==="internal_wall") || 
-                    (C3D.index[i].properties.class==="external_wall")) {
-                    if($.inArray(controls.visibleRoom, C3D.index[i].properties.connections) !== -1) {
-                        C3D.index[i].obj3D.traverse(function(object) {
-                        object.visible = true;
-                        });
-                    }
-                }
-            }            
-        }
-    };
-    
-    // var enableTrackball = false;
-    var gui = new dat.GUI();   
-    
-    gui.add(controls, 'showAxisHelper').onChange(function (value) {
-        axisHelper.visible = value;
-    });
-    
-    // gui.add(controls, 'enableTrackball').onChange(function (value) {
-    //     enableTrackball = value;
-    // });
-    var rooms = ["building"];
-    for(var key in C3D.index) {
-        var element = C3D.index[key];
-        if(element.properties.class==="room" ||element.properties.class==="level") {
-            rooms.push(element.id);
-        }
-    }
-    gui.add(controls, "visibleRoom", rooms).onChange(controls.redraw);  
-}
-
 
