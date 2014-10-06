@@ -68,17 +68,6 @@
                 console.log('Fine C3D.init3D()');
                 console.log('Inizio C3D.generate3DModel()');
                 err = C3D.generate3DModel();
-                
-                var geometry = new THREE.BoxGeometry( 1, 1, 1 );
-                var material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
-                var cube = new THREE.Mesh( geometry, material );
-                var cube2 = new THREE.Mesh( geometry, material );
-                cube2.position.x = 2;
-                cube2.position.y = 2;
-                C3D.index["room_0.2"].obj3D.add( cube );
-                C3D.index["room_0.2"].obj3D.add( cube2 );
-
-                
                 callback(err);
             }
         ],

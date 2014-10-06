@@ -68,7 +68,7 @@ C3D.init3D = function() {
     // create a render and set the size
     var renderer = new THREE.WebGLRenderer();
     
-    var trackballControls = new THREE.TrackballControls(camera);
+    //var trackballControls = new THREE.TrackballControls(camera);
     
     renderer.setClearColor(new THREE.Color(0x092D52, 1.0)); 
     renderer.setSize(window.innerWidth, window.innerHeight);
