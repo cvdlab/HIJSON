@@ -4,7 +4,7 @@ var C3D = {
         children: []
     },
     index: {},
-    path_architecture:  'json_input/architecture_polygon.json',
+    path_architecture:  'json_input/architecture.json',
     path_furnitures: 'json_input/furnitures_new.json',
     scene: new THREE.Scene()
 }
