@@ -25,7 +25,7 @@ C3D.parseJSON = function() {
                 {
                     self.tree.id = data.id;
                     //self.tree.coordinates = data.coordinates;
-                    self.properties = data.properties;
+                    self.tree.properties = data.properties;
                 }
                 
                 //THREE.FogExp2( hex, density );reach data.features
@@ -209,9 +209,9 @@ C3D.initControls = function() {
                 object.visible = true;
             });
             for(var i in C3D.index) {
-                console.log(C3D.index[i].obj3D);
-                if(C3D.index[i].properties.class==="internal_wall") {
-                    if($.inArray(controls.visibleRoom, C3D.index[i].properties.connections)) {
+                if((C3D.index[i].properties.class==="internal_wall") || 
+                    (C3D.index[i].properties.class==="external_wall")) {
+                    if(!($.inArray(controls.visibleRoom, C3D.index[i].properties.connections))) {
                         C3D.index[i].obj3D.traverse(function(object) {
                         object.visible = true;
                         });
@@ -234,7 +234,6 @@ C3D.initControls = function() {
     var rooms = ["building"];
     for(var key in C3D.index) {
         var element = C3D.index[key];
-        console.log(element);
         if(element.properties.class==="room") {
             rooms.push(element.id);
         }
