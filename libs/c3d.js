@@ -50,7 +50,7 @@ C3D.parseJSON = function() {
     };
 
     readJSON('architecture', self.path_architecture);
-    //readJSON('furnitures', self.path_furnitures);      
+    readJSON('furnitures', self.path_furnitures);      
 
 
 };
@@ -169,7 +169,7 @@ C3D.generate3DModel = function() {
     }
     while(queue.length>0) {
         feature = queue.shift();
-        if(feature.geometry.type in archGen) {
+        if((feature.geometry.type in archGen) && (!(feature.properties.class in furnitureGen))) {
             console.log('Oggetto in fase di generazione: ' + feature.id);
             var el3D = archGen[feature.geometry.type](feature.geometry.coordinates, feature.properties);
             feature.obj3D = el3D;
@@ -191,13 +191,39 @@ C3D.generate3DModel = function() {
                             feature.properties.tVector[2]);
                 el3D.position = position;
             }
-            // if(feature.properties.z!==undefined)
-            //     el3D.position.z = feature.properties.tVector[3];
+            
+            self.index[feature.parent.id].obj3D.add(el3D);
+            console.log(feature.properties.class in furnitureGen);
+        }
+
+        else if(feature.properties.class in furnitureGen) {
+            console.log('Oggetto in fase di generazione: ' + feature.id + " in furnitures");
+            
+            var el3D = furnitureGen[feature.properties.class](feature.geometry.coordinates, feature.properties);
+            feature.obj3D = el3D;
+
+
+            if(feature.properties.rVector!==undefined) {
+                var conv = Math.PI/180;
+                var rotation = [
+                            feature.properties.rVector[0]*conv, 
+                            feature.properties.rVector[1]*conv,
+                            feature.properties.rVector[2]*conv];
+                el3D.rotation.set(rotation[0], rotation[1], rotation[2]);
+            }
+
+            if(feature.properties.tVector!==undefined) {
+                var position = new THREE.Vector3(
+                            feature.properties.tVector[0], 
+                            feature.properties.tVector[1],
+                            feature.properties.tVector[2]);
+                el3D.position = position;
+            }
             
             self.index[feature.parent.id].obj3D.add(el3D);
         }
         else {
-            var err = 'ERROR: Class: ' + feature.geometry.type + 'not recognized.';
+             var err = 'ERROR: Class: ' + feature.geometry.type + 'not recognized.';
             return err;
         }
 
