@@ -20,16 +20,16 @@ function parsePoint(coordinates, properties) {
 function parseLineString(coordinates, properties) {
     switch (properties.class) {
         case "external_wall":
-            var material = new THREE.LineBasicMaterial({ color: 0x8AA20B, linewidth: 5 });
+            var material = new THREE.LineBasicMaterial({ color: 0x8AA20B, linewidth: properties.thickness });
             break;
         case "internal_wall":
-            var material = new THREE.LineBasicMaterial({ color: 0x5898A4, linewidth: 5 });
+            var material = new THREE.LineBasicMaterial({ color: 0x5898A4, linewidth: properties.thickness });
             break;
         case "door":
-            var material = new THREE.LineBasicMaterial({ color: 0x052744, linewidth: 5 });
+            var material = new THREE.LineBasicMaterial({ color: 0x052744, linewidth: properties.thickness });
             break;
         case "level":
-            var material = new THREE.LineBasicMaterial({ color:0x00ffff, linewidth: 5 });
+            var material = new THREE.LineBasicMaterial({ color:0x00ffff, linewidth: properties.thickness });
             break;
         default:
             var material = new THREE.LineBasicMaterial({ color: 0x000000 });
