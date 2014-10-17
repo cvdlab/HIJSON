@@ -18,15 +18,9 @@
     <![endif]-->
     
     <style>
-        body{
-            margin: 0;
-            overflow: hidden;
-        }
-        
         #stats {  /* Align stats top-left */
             position: absolute;
-            left: 0px;
-            top: 0px;
+            
         }
     </style> 
 </head>
@@ -36,7 +30,7 @@
     <script src="assets/js/jquery-2.1.1.js"></script>
     <script src="assets/js/Stats.min.js"></script>
     <script src="assets/js/dat.gui.min.js"></script>
-     <script src="assets/js/TrackballControls.js"></script>
+    <script src="assets/js/TrackballControls.js"></script>
     <script src="assets/js/async.js"></script>
     
     <!-- custom geoJSON libraries -->
@@ -78,11 +72,22 @@
 
 
     </script>
-    <div class="container">
+    <div class="container-fluid">
+        <div class="page-header">
+            <h1>C3D</h1>
+        </div>
         <div class="row">
-            <div class="col-md-6" id="2DModel">
+            <div class="col-md-6">
+                <h3>2D</h3>
+                <div id="2DModel">
+                	
+                </div>
             </div>
-            <div class="col-md-6" id="3DModel">
+            <div class="col-md-6">
+                <h3>3D</h3>
+                <div id="3DModel">
+                	
+                </div>
             </div>
         </div>
         <div class="row">

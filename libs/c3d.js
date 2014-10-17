@@ -60,18 +60,25 @@ C3D.parseJSON = function() {
  */ 
 
 C3D.init3D = function() {
+    
+    var container = $('#3DModel');
+    var containerWidth = container.width();
+    var containerHeight = container.width()/4*3;
+    container.css('height', containerHeight);
+    
+    
     var stats = initStats();
     // create a scene, that will hold all our elements such as objects, cameras and lights.
     var scene = this.scene;
     // create a camera, which defines where we're looking at.
-    var camera = new THREE.PerspectiveCamera(45, $("#3DModel").width() / $("#3DModel").height, 0.1, 1000);
+    var camera = new THREE.PerspectiveCamera(45, containerWidth / containerHeight, 0.1, 1000);
     // create a render and set the size
     var renderer = new THREE.WebGLRenderer();
     
-    //var trackballControls = new THREE.TrackballControls(camera);
+    var trackballControls = new THREE.TrackballControls(camera, container[0]);
     
     renderer.setClearColor(new THREE.Color(0x092D52, 1.0)); 
-    renderer.setSize($("#3DModel").width(), $("#3DModel").height());
+    renderer.setSize(containerWidth, containerHeight);
     renderer.shadowMapEnabled = true;
     
     // position and point the camera to the center of the scene
@@ -84,7 +91,7 @@ C3D.init3D = function() {
     var ambientLight = new THREE.AmbientLight(ambiColor);
     scene.add(ambientLight);
     
-    $('#3DModel').append(renderer.domElement);
+    container.append(renderer.domElement);
     // add axis helper
     var axisHelper = new THREE.AxisHelper(3);
     scene.add(axisHelper);
@@ -103,12 +110,10 @@ C3D.init3D = function() {
                 object.visible = true;
             });
             for(var i in C3D.index) {
-                if((C3D.index[i].properties.class==="internal_wall") || 
-                    (C3D.index[i].properties.class==="external_wall")) {
+                var elementClass = C3D.index[i].properties.class;
+                if((elementClass === "internal_wall") || (elementClass === "external_wall")) {
                     if($.inArray(controls.visibleRoom, C3D.index[i].properties.connections) !== -1) {
-                        C3D.index[i].obj3D.traverse(function(object) {
-                        object.visible = true;
-                        });
+                        C3D.index[i].obj3D.traverse(function(object) { object.visible = true; });
                     }
                 }
             }            
@@ -132,13 +137,29 @@ C3D.init3D = function() {
             rooms.push(element.id);
         }
     }
-    gui.add(controls, "visibleRoom", rooms).onChange(controls.redraw)
+    gui.add(controls, "visibleRoom", rooms).onChange(controls.redraw);
+    
+    window.addEventListener( 'resize', onWindowResize, false );
+
+    function onWindowResize(){
+        
+        containerWidth = container.width();
+        containerHeight = container.width()/4*3;
+        container.css('height', containerHeight);
+    
+        camera.aspect = containerWidth / containerHeight;
+        camera.updateProjectionMatrix();
+    
+        renderer.setSize( containerWidth, containerHeight );
+    
+    }
     
     render();
     
     function render() {
         stats.update();
         if (enableTrackball) trackballControls.update();
+        
         
         requestAnimationFrame(render);
         renderer.render(scene, camera);
@@ -147,7 +168,7 @@ C3D.init3D = function() {
     function initStats() {
         var stats = new Stats();
         stats.setMode(0); // 0: fps, 1: ms
-        $('#3DModel').append(stats.domElement);
+        container.append(stats.domElement);
         return stats;
     }
 
