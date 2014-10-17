@@ -64,14 +64,14 @@ C3D.init3D = function() {
     // create a scene, that will hold all our elements such as objects, cameras and lights.
     var scene = this.scene;
     // create a camera, which defines where we're looking at.
-    var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+    var camera = new THREE.PerspectiveCamera(45, $("#3DModel").width() / $("#3DModel").height, 0.1, 1000);
     // create a render and set the size
     var renderer = new THREE.WebGLRenderer();
     
     //var trackballControls = new THREE.TrackballControls(camera);
     
     renderer.setClearColor(new THREE.Color(0x092D52, 1.0)); 
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize($("#3DModel").width(), $("#3DModel").height());
     renderer.shadowMapEnabled = true;
     
     // position and point the camera to the center of the scene
@@ -84,7 +84,7 @@ C3D.init3D = function() {
     var ambientLight = new THREE.AmbientLight(ambiColor);
     scene.add(ambientLight);
     
-    $('body').append(renderer.domElement);
+    $('#3DModel').append(renderer.domElement);
     // add axis helper
     var axisHelper = new THREE.AxisHelper(3);
     scene.add(axisHelper);
@@ -147,7 +147,7 @@ C3D.init3D = function() {
     function initStats() {
         var stats = new Stats();
         stats.setMode(0); // 0: fps, 1: ms
-        $('body').append(stats.domElement);
+        $('#3DModel').append(stats.domElement);
         return stats;
     }
 
