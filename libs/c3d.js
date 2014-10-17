@@ -255,6 +255,11 @@ C3D.generate3DModel = function() {
     self.scene.add(self.index["building"].obj3D);
 } // Chiude generate3DModel
 
+
+C3D.generate2DModel = function() {
+    var queue = [];
+    
+}
 C3D.difference = function() {
     var a = [ [0, 0], [1, 0], [1, 50], [0, 50], [0, 0]];
     var b = [ [0, 10], [1, 10], [1, 20], [0, 20], [0, 10] ];
