@@ -419,3 +419,38 @@ C3D.fromC3DJSONToGeoJSON = function() {
 
 
 }
+
+function trans(obj) = {
+	var tVect = [obj.properties.tVector[0], obj.properties.tVector[1]];
+	var oldCoords;
+	var newCoords;
+	var ancestor = C3D.index[obj.properties.parent];
+	while(ancestor.properties.class !== 'building') {
+		tVect[0] += ancestor.properties.tVector[0];
+		tVect[1] += ancestor.properties.tVector[1];
+		ancestor = C3D.index[ancestor.parent];
+	}
+	
+	switch (obj.geometry.type) {
+        case "Point":
+            return tVect;
+        case "LineString":
+        	oldCoords = obj.geometry.coordinates;
+        	for (var i = 0; i < oldCoords.lenght; i++)
+        	{
+	        	newCoords.push([oldCoords[i][0]+tVect[0],oldCoords[i][1]+tVect[1]]);
+        	}
+            return newCoords;
+        case "Polygon":
+        	oldCoords = obj.geometry.coordinates;
+        	for (var i = 0; i < oldCoords.lenght; i++)
+	        	for (var j = 0; j < oldCoords[i].lenght; j++)
+	        	{
+		        	newCoords.push([oldCoords[i][j][0]+tVect[0],oldCoords[i][j][1]+tVect[1]]);
+	        	}
+	        }
+            return newCoords;
+        default:
+        	return undefined;
+    }
+}
