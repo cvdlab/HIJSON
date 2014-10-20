@@ -46,7 +46,6 @@
               "properties": 
               {
                     "class": "external_wall",
-                    "thickness": 5,
                     "parent": "level_0",
                     "description": "1_S",
                     "tVector": [0, 0, 0],
@@ -445,6 +444,7 @@
               {
                     "class": "door",
                     "parent": "wall_0.1-H",
+                    "thickness": 5,
                     "description": "Door room1 H",
                     "tVector": [3, 0, 0]
               }
@@ -465,6 +465,7 @@
               {
                     "class": "door",
                     "parent": "wall_0.H-S",
+                    "thickness": 5,
                     "description": "Door room1",
                     "tVector": [2, 0, 0]
               }
@@ -485,6 +486,7 @@
               {
                     "class": "door",
                     "parent": "wall_0.2-H",
+                    "thickness": 5,
                     "description": "Door room1",
                     "tVector": [4, 0, 0]
               }
@@ -505,6 +507,7 @@
               {
                     "class": "door",
                     "parent": "wall_0.3-H",
+                    "thickness": 5,
                     "description": "Door room1",
                     "tVector": [4, 0, 0]
               }
@@ -526,6 +529,7 @@
               {
                     "class": "door",
                     "parent": "wall_0.4-H-N",
+                    "thickness": 5,
                     "description": "Door room1",
                     "tVector": [7, 0, 0]
               }
@@ -1087,6 +1091,7 @@
               {
                     "class": "door",
                     "parent": "wall_1.1-H",
+                    "thickness": 5,
                     "description": "Door room1 H",
                     "tVector": [3, 0, 0]
               }
@@ -1107,6 +1112,7 @@
               {
                     "class": "door",
                     "parent": "wall_1.H-S",
+                    "thickness": 5,
                     "description": "Door room1",
                     "tVector": [2, 0, 0]
               }
@@ -1127,6 +1133,7 @@
               {
                     "class": "door",
                     "parent": "wall_1.2-H",
+                    "thickness": 5,
                     "description": "Door room1",
                     "tVector": [4, 0, 0]
               }
@@ -1147,6 +1154,7 @@
               {
                     "class": "door",
                     "parent": "wall_1.3-H",
+                    "thickness": 5,
                     "description": "Door room1",
                     "tVector": [4, 0, 0]
               }
@@ -1168,6 +1176,7 @@
               {
                     "class": "door",
                     "parent": "wall_1.4-H-N",
+                    "thickness": 5,
                     "description": "Door room1",
                     "tVector": [7, 0, 0]
               }

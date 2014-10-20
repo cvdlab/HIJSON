@@ -23,7 +23,6 @@ furnitureGen['server'] = function parseServer(coordinates, properties) {
                         coordinates[0], 
                         coordinates[1]
                         );
-    console.log('passa');
     if(properties.dimensions === undefined) {
         var dimensions = [1,1,2];
 

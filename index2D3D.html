@@ -9,7 +9,7 @@
     
     <!-- Bootstrap -->
     <link href="assets/css/bootstrap.min.css" rel="stylesheet">
-    
+
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -22,7 +22,15 @@
             position: absolute;
             
         }
+        #model2D { 
+            height: 450px; 
+        }
+
     </style> 
+    <link href="assets/leaflet/leaflet.css" rel="stylesheet">
+    <script src="assets/leaflet/leaflet.js"></script>
+
+
 </head>
 <body> 
     <!-- JavaScript libraries -->
@@ -63,6 +71,12 @@
                 console.log('Inizio C3D.generate3DModel()');
                 err = C3D.generate3DModel();
                 callback(err);
+            },
+            function(callback) {
+                console.log('Fine C3D.generate3DModel()');
+                console.log('Inizio C3D.init2D()');
+                err = C3D.init2D();
+                callback(err);
             }
         ],
         function(err, data) {
@@ -79,15 +93,12 @@
         <div class="row">
             <div class="col-md-6">
                 <h3>2D</h3>
-                <div id="2DModel">
-                	
-                </div>
+                <div id="model2D"></div>
             </div>
+            
             <div class="col-md-6">
                 <h3>3D</h3>
-                <div id="3DModel">
-                	
-                </div>
+                <div id="model3D"></div>
             </div>
         </div>
         <div class="row">
