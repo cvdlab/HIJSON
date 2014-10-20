@@ -420,7 +420,8 @@ C3D.fromC3DJSONToGeoJSON = function() {
 
 }
 
-function trans(obj) = {
+/*
+function trans(obj) {
 	var tVect = [obj.properties.tVector[0], obj.properties.tVector[1]];
 	var oldCoords;
 	var newCoords;
@@ -454,3 +455,4 @@ function trans(obj) = {
         	return undefined;
     }
 }
+*/
