@@ -47,6 +47,7 @@
               {
                     "class": "external_wall",
                     "parent": "level_0",
+                    "thickness": 5,
                     "description": "1_S",
                     "tVector": [0, 0, 0],
                     "rVector": [0, 0, 0],

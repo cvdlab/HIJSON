@@ -4,6 +4,7 @@ var C3D = {
         children: []
     },
     index: {},
+    geoJSONmap: {},
     path_architecture:  'json_input/architecture.json',
     path_furnitures: 'json_input/furnitures.json',
     scene: new THREE.Scene()
@@ -60,8 +61,22 @@ C3D.init2D = function() {
         var container2DHeight = container2D.width()/4*3;
         container2D.css('height', container2DHeight);
 
-        var map = L.map('model2D').setView([0, 0], 6);
 
+
+	    window.addEventListener( 'resize', onWindowResize2D, false );
+	
+	    function onWindowResize2D(){
+	        
+	        container2DWidth = container2D.width();
+	        container2DHeight = container2D.width()/4*3;
+	        container2D.css('height', container2DHeight);
+	    }
+	    
+        var map = L.map('model2D').setView([0, 0], 3);
+        
+        L.geoJson(C3D.geoJSONmap.level_0).addTo(map);
+        
+		//Quando si posizionera' sulla mappa 
         // L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
         //     maxZoom: 18,
         //     attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
@@ -69,44 +84,6 @@ C3D.init2D = function() {
         //         'Imagery © <a href="http://mapbox.com">Mapbox</a>',
         //     id: 'examples.map-i875mjb7'
         // }).addTo(map);
-
-
-        L.marker([0, 0]).addTo(map)
-            .bindPopup("Centro della mappa").openPopup();
-
-        L.circle([0, 0], 500, {
-            color: 'red',
-            fillColor: '#f03',
-            fillOpacity: 0.5
-        }).addTo(map).bindPopup("I am a circle.");
-
-        L.polygon([
-            [0, 0],
-            [4, 0],
-            [4, 4],
-            [0, 4]
-        ]).addTo(map).bindPopup("I am a polygon.");
-
-
-        var popup = L.popup();
-
-        function onMapClick(e) {
-            popup
-                .setLatLng(e.latlng)
-                .setContent("You clicked the map at " + e.latlng.toString())
-                .openOn(map);
-        }
-
-        map.on('click', onMapClick);
-
-    window.addEventListener( 'resize', onWindowResize2D, false );
-
-    function onWindowResize2D(){
-        
-        container2DWidth = container2D.width();
-        container2DHeight = container2D.width()/4*3;
-        container2D.css('height', container2DHeight);
-    }
 
 }
 /*
@@ -152,8 +129,8 @@ C3D.init3D = function() {
 
 
       var controls = new function () {
-        this.showAxisHelper = true;
-        this.enableTrackball = false;
+        //this.showAxisHelper = true;
+        //this.enableTrackball = false;
         this.visibleRoom = "building";
         
         this.redraw = function() {
@@ -174,16 +151,21 @@ C3D.init3D = function() {
         }
     };
     
-    var enableTrackball = false;
+    //var enableTrackball = false;
     var gui = new dat.GUI();   
     
-    gui.add(controls, 'showAxisHelper').onChange(function (value) {
+    /*
+gui.add(controls, 'showAxisHelper').onChange(function (value) {
         axisHelper.visible = value;
     });
+*/
     
-    gui.add(controls, 'enableTrackball').onChange(function (value) {
+    /*
+	gui.add(controls, 'enableTrackball').onChange(function (value) {
         enableTrackball = value;
     });
+	*/
+	
     var rooms = ["building"];
     for(var key in C3D.index) {
         var element = C3D.index[key];
@@ -212,8 +194,8 @@ C3D.init3D = function() {
     
     function render() {
         stats.update();
-        if (enableTrackball) trackballControls.update();
-        
+        //if (enableTrackball) trackballControls.update();
+        trackballControls.update();
         
         requestAnimationFrame(render);
         renderer.render(scene, camera);
@@ -270,7 +252,7 @@ C3D.generate3DModel = function() {
         }
 
         else if(feature.properties.class in furnitureGen) {
-            console.log('Oggetto in fase di generazione: ' + feature.id + " in furnitures");
+            console.log('(3D) Oggetto in fase di generazione: ' + feature.id + " in furnitures");
             
             var el3D = furnitureGen[feature.properties.class](feature.geometry.coordinates, feature.properties);
             feature.obj3D = el3D;
@@ -310,8 +292,6 @@ C3D.generate3DModel = function() {
 
 C3D.generate2DModel = function() {
     
-    var width = $('#2DModel').width();
-    var height = $('#2DModel').th();
 
 }
 C3D.difference = function() {
@@ -341,118 +321,114 @@ C3D.difference = function() {
 
 C3D.fromC3DJSONToGeoJSON = function() {
 
-    var includedArchitectureClasses = ['level','external_wall','internal_wall','room','door'];
+    var includedArchitectureClasses = ['level','room','door'];
     var includedFurtituresClasses = ['server','surveillanceCamera'];
-
+	
+	var includedClasses = includedArchitectureClasses.concat(includedFurtituresClasses);
     var queue = [];
-    var feature;
-    
-    C3D.index["building"].obj3D = new THREE.Object3D();
+    var obj;
 
+	var newObj = {};
+	
     for(var i=0;i< C3D.tree.children.length;i++) {
         queue.push(C3D.tree.children[i]);
     }
+    
     while(queue.length>0) {
-        feature = queue.shift();
-        if((feature.geometry.type in archGen) && (!(feature.properties.class in furnitureGen))) {
-            console.log('Oggetto in fase di generazione: ' + feature.id);
-            var el3D = archGen[feature.geometry.type](feature.geometry.coordinates, feature.properties);
-            feature.obj3D = el3D;
+        obj = queue.shift();
+        if($.inArray(obj.properties.class, includedClasses)> -1)
+        {
+            console.log('(2D) Oggetto in fase di generazione: ' + obj.id);
+			var level = getLevel(obj);			
+			
+			if(!(level in C3D.geoJSONmap)) {
 
+				C3D.geoJSONmap[level] = {
+					"type": "FeatureCollection",
+					"features": []
+				}
 
-            if(feature.properties.rVector!==undefined) {
-                var conv = Math.PI/180;
-                var rotation = [
-                            feature.properties.rVector[0]*conv, 
-                            feature.properties.rVector[1]*conv,
-                            feature.properties.rVector[2]*conv];
-                el3D.rotation.set(rotation[0], rotation[1], rotation[2]);
-            }
-
-            if(feature.properties.tVector!==undefined) {
-                var position = new THREE.Vector3(
-                            feature.properties.tVector[0], 
-                            feature.properties.tVector[1],
-                            feature.properties.tVector[2]);
-                el3D.position = position;
-            }
-            
-            C3D.index[feature.parent.id].obj3D.add(el3D);
+			}
+			
+			var newObj = {};
+			
+			newObj.type = "Feature";
+			newObj.id = obj.id;
+			newObj.geometry = {
+				"type": obj.geometry.type,
+				"coordinates": absoluteCoords(obj)
+			};
+			newObj.properties = {};
+			
+			C3D.geoJSONmap[level].features.push(newObj);
+		}
+		
+		for(var i=0;i< obj.children.length;i++) {
+			queue.push(obj.children[i]);
         }
-
-        else if(feature.properties.class in furnitureGen) {
-            console.log('Oggetto in fase di generazione: ' + feature.id + " in furnitures");
-            
-            var el3D = furnitureGen[feature.properties.class](feature.geometry.coordinates, feature.properties);
-            feature.obj3D = el3D;
-
-
-            if(feature.properties.rVector!==undefined) {
-                var conv = Math.PI/180;
-                var rotation = [
-                            feature.properties.rVector[0]*conv, 
-                            feature.properties.rVector[1]*conv,
-                            feature.properties.rVector[2]*conv];
-                el3D.rotation.set(rotation[0], rotation[1], rotation[2]);
-            }
-
-            if(feature.properties.tVector!==undefined) {
-                var position = new THREE.Vector3(
-                            feature.properties.tVector[0], 
-                            feature.properties.tVector[1],
-                            feature.properties.tVector[2]);
-                el3D.position = position;
-            }
-            
-            C3D.index[feature.parent.id].obj3D.add(el3D);
-        }
-        else {
-             var err = 'ERROR: Class: ' + feature.geometry.type + 'not recognized.';
-            return err;
-        }
-
-        for(var i=0;i< feature.children.length;i++) {
-            queue.push(feature.children[i]);
-        }
-    }
-    C3D.scene.add(C3D.index["building"].obj3D);
+		
+	}		
 
 
 }
 
-/*
-function trans(obj) {
+
+function absoluteCoords(obj) {
 	var tVect = [obj.properties.tVector[0], obj.properties.tVector[1]];
 	var oldCoords;
-	var newCoords;
-	var ancestor = C3D.index[obj.properties.parent];
+	var newCoords = [];
+	var ancestor = C3D.index[obj.parent.id];
+
 	while(ancestor.properties.class !== 'building') {
 		tVect[0] += ancestor.properties.tVector[0];
 		tVect[1] += ancestor.properties.tVector[1];
-		ancestor = C3D.index[ancestor.parent];
+		ancestor = C3D.index[ancestor.parent.id];
 	}
-	
+	//console.log(obj.geometry.type);
 	switch (obj.geometry.type) {
         case "Point":
             return tVect;
-        case "LineString":
+            break;
+        case "LineString": 
         	oldCoords = obj.geometry.coordinates;
-        	for (var i = 0; i < oldCoords.lenght; i++)
+        	for (var i = 0; i < oldCoords.length; i++)
         	{
 	        	newCoords.push([oldCoords[i][0]+tVect[0],oldCoords[i][1]+tVect[1]]);
         	}
             return newCoords;
+            break;
         case "Polygon":
         	oldCoords = obj.geometry.coordinates;
-        	for (var i = 0; i < oldCoords.lenght; i++)
-	        	for (var j = 0; j < oldCoords[i].lenght; j++)
+        	for (var i = 0; i < oldCoords.length; i++)
+        	{
+	        	var newPerimeter = [];
+	        	for (var j = 0; j < oldCoords[i].length; j++)
 	        	{
-		        	newCoords.push([oldCoords[i][j][0]+tVect[0],oldCoords[i][j][1]+tVect[1]]);
+	        		newPerimeter.push([oldCoords[i][j][0]+tVect[0],oldCoords[i][j][1]+tVect[1]]);
 	        	}
+	        	newCoords.push(newPerimeter);
 	        }
             return newCoords;
+            break;
         default:
         	return undefined;
+        	break;
     }
 }
-*/
+
+function getLevel(obj) {
+	var ancestor = obj;
+	while (ancestor.properties.class !== 'level')
+	{
+		ancestor = ancestor.parent;
+	}
+	if (ancestor.properties.class === 'building')
+	{
+		return undefined;
+	}
+	else
+	{
+		return ancestor.id;
+	}
+}
+

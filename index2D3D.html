@@ -59,8 +59,21 @@
                 err = C3D.parseJSON();
                 callback(err);
             },
+
             function(callback) {
                 console.log('Fine C3D.parseJSON()');
+                console.log('Inizio C3D.fromC3DJSONToGeoJSON()');
+                err = C3D.fromC3DJSONToGeoJSON();
+                callback(err);
+            },
+            function(callback) {
+                console.log('Fine C3D.fromC3DJSONToGeoJSON()');
+                console.log('Inizio C3D.init2D()');
+                err = C3D.init2D();
+                callback(err);
+            },
+            function(callback) {
+                console.log('Fine C3D.init2D()');
                 console.log('Inizio C3D.init3D()');
                 err = C3D.init3D();
                 callback(err);
@@ -70,12 +83,6 @@
                 console.log('Fine C3D.init3D()');
                 console.log('Inizio C3D.generate3DModel()');
                 err = C3D.generate3DModel();
-                callback(err);
-            },
-            function(callback) {
-                console.log('Fine C3D.generate3DModel()');
-                console.log('Inizio C3D.init2D()');
-                err = C3D.init2D();
                 callback(err);
             }
         ],
@@ -102,9 +109,8 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-6" id="blank">
-            </div>
-            <div class="col-md-6" id="3DModelControls">
+            <div class="col-md-12" id="Model3DControls">
+            	<h3>Controls</h3>
             </div>
         </div>
 
