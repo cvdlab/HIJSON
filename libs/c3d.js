@@ -227,7 +227,7 @@ C3D.generate3DModel = function() {
         feature = queue.shift();
         if((feature.geometry.type in archGen) && (!(feature.properties.class in furnitureGen))) {
             //console.log('(3D) Oggetto in fase di generazione: ' + feature.id);
-            var el3D = archGen[feature.geometry.type](feature.geometry.coordinates, feature.properties);
+            var el3D = archGen[feature.geometry.type](feature);
             feature.obj3D = el3D;
 
 

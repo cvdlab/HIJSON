@@ -1,10 +1,10 @@
 var archGen = {}
 
-function parsePoint(coordinates, properties) {
+function parsePoint(feature) {
     // creo l'oggetto THREE punto a partire dai dati della feature (feature.geometry.coordinates) e lo aggiungo alla map
     var pointPosition = new THREE.Vector3(
-                        coordinates[0], 
-                        coordinates[1]
+                        feature.coordinates[0], 
+                        feature.coordinates[1]
                         );
     
     var point = new THREE.Object3D();
@@ -17,67 +17,101 @@ function parsePoint(coordinates, properties) {
     return point;
 }
 
-function parseLineString(coordinates, properties) {
-    switch (properties.class) {
+function parseLineString(feature) {
+    switch (feature.properties.class) {
         case "external_wall":
-            var material = new THREE.LineBasicMaterial({ color: 0xDE935F, linewidth: properties.thickness });
+            var material = new THREE.LineBasicMaterial({ 
+                color: 0xDE935F, 
+                linewidth: feature.properties.thickness 
+            });
             break;
         case "internal_wall":
-            var material = new THREE.LineBasicMaterial({ color: 0xF0C674, linewidth: properties.thickness });
+            var material = new THREE.LineBasicMaterial({ 
+                color: 0xF0C674, 
+                linewidth:  feature.properties.thickness 
+            });
             break;
         case "door":
-            var material = new THREE.LineBasicMaterial({ color: 0xB5BD68, linewidth: properties.thickness });
+            var material = new THREE.LineBasicMaterial({ 
+                color: 0xB5BD68, 
+                linewidth: feature.properties.thickness 
+            });
             break;
         case "level":
-            var material = new THREE.LineBasicMaterial({ color:0x8ABEB7, linewidth: properties.thickness });
+            var material = new THREE.LineBasicMaterial({ 
+                color:0x8ABEB7, 
+                linewidth: feature.properties.thickness 
+            });
             break;
         default:
-            var material = new THREE.LineBasicMaterial({ color: 0x000000 });
+            var material = new THREE.LineBasicMaterial({ 
+                color: 0x000000 
+            });
     }
-    
+    var feaGeo = feature.geometry;
+
     var geometry = new THREE.Geometry();
-    for(var i=0; i<coordinates.length; i++){
-        geometry.vertices.push( new THREE.Vector3( coordinates[i][0], coordinates[i][1], 0) );
+    for(var i=0; i<feaGeo.coordinates.length; i++){
+        geometry.vertices.push( new THREE.Vector3( feaGeo.coordinates[i][0], feaGeo.coordinates[i][1], 0) );
 
     };
     var line = new THREE.Line( geometry, material );
     return line;
-    //map.add( line );
 }
 
-function parsePolygon(coordinates, properties) {
-    // probabilmente l'utilizzo di una shape risulta l'opzione migliore, specialmente per la creazione degli holes (vedi docs geoJson)
-    switch (properties.class) {
+function parsePolygon(feature) {
+    switch (feature.properties.class) {
     case "internal_wall":
-        var material = new THREE.MeshBasicMaterial({color: 0xff0000, transparent: true, opacity: 0.3, side: THREE.DoubleSide});
+        var material = new THREE.MeshBasicMaterial({
+            color: 0xff0000, 
+            transparent: true, 
+            opacity: 0.3, 
+            side: THREE.DoubleSide
+        });
         break;
     case "room":
-        var material = new THREE.MeshBasicMaterial({color: 0x8ABEB7, transparent: true, opacity: 0.3, side: THREE.DoubleSide});
+        var material = new THREE.MeshBasicMaterial({
+            color: 0x8ABEB7,
+            transparent: true, 
+            opacity: 0.3, 
+            side: THREE.DoubleSide
+        });
         break;
     case "level":
-        var material = new THREE.MeshBasicMaterial({color: 0x0DDB5F, transparent: true, opacity: 0.01, side: THREE.DoubleSide});
+        var material = new THREE.MeshBasicMaterial({
+            color: 0x0DDB5F, 
+            transparent: true, 
+            opacity: 0.01, 
+            side: THREE.DoubleSide
+        });
         break;
     default:
-        var material = new THREE.MeshBasicMaterial({color: 0x00ff00, transparent: true, opacity: 0.3, side: THREE.DoubleSide});
+        var material = new THREE.MeshBasicMaterial({
+            color: 0x00ff00, 
+            transparent: true, 
+            opacity: 0.3, 
+            side: THREE.DoubleSide
+        });
     }
     
     var shape = new THREE.Shape();
-    for (var j = 0; j < coordinates[0].length; j++) //scorro le singole coordinate del perimetro esterno
+    var feaGeo = feature.geometry;
+    for (var j = 0; j < feaGeo.coordinates[0].length; j++) //scorro le singole coordinate del perimetro esterno
     { 
         if (j == 0) { // primo punto
-            shape.moveTo(coordinates[0][j][0], coordinates[0][j][1]);
+            shape.moveTo(feaGeo.coordinates[0][j][0], feaGeo.coordinates[0][j][1]);
         } else { // altri punti
-            shape.lineTo(coordinates[0][j][0], coordinates[0][j][1]);
+            shape.lineTo(feaGeo.coordinates[0][j][0], feaGeo.coordinates[0][j][1]);
         }
     }
     
-    for (var i = 1; i < coordinates.length; i++) { //scorro eventuali holes
+    for (var i = 1; i < feaGeo.coordinates.length; i++) { //scorro eventuali holes
         var hole = new THREE.Path();
-        for (var j = 0; j < coordinates[i].length; j++) { //scorro le singole coordinate dei vari perimetri
+        for (var j = 0; j < feaGeo.coordinates[i].length; j++) { //scorro le singole coordinate dei vari perimetri
             if (j == 0) { // primo punto
-                hole.moveTo(coordinates[i][j][0], coordinates[i][j][1]);
+                hole.moveTo(feaGeo.coordinates[i][j][0], feaGeo.coordinates[i][j][1]);
             } else { // altri punti
-                hole.lineTo(coordinates[i][j][0], coordinates[i][j][1]);
+                hole.lineTo(feaGeo.coordinates[i][j][0], feaGeo.coordinates[i][j][1]);
             }  
         }
         shape.holes.push(hole);
@@ -88,7 +122,6 @@ function parsePolygon(coordinates, properties) {
     polygon.position.z = 0;  // imposta il piano di altezza
     
     return polygon;
-    //map.add(polygon);
 }
 
 
@@ -98,28 +131,3 @@ archGen['LineString'] = parseLineString;
 
 archGen['Polygon'] = parsePolygon;
 
-archGen['MultiPoint'] = function parseMultiPoint(coordinates, properties) {
-	var multiPoint = new THREE.Object3D();
-    for(var i=0;i<coordinates.length; i++) {
-		parsePoint(coordinates[i],properties);
-	}
-
-    return multiPoint;
-};
-
-archGen['MultiLineString'] = function parseMultiLineString(coordinates, properties) {
-    var multiLine = new THREE.Object3D();
-    for(var i=0;i<coordinates.length; i++) {
-        multiLine.add(parseLineString(coordinates[i],properties));
-    }
-    return multiLine;
-};
-
-archGen['MultiPolygon'] = function parseMultiPolygon(coordinates, properties) {
-    var multiPolygon = new THREE.Object3D();
-    for(var i=0;i<coordinates.length; i++) {
-        parsePolygon(coordinates[i],properties);
-    }
-
-    return multiPolygon;
-};
