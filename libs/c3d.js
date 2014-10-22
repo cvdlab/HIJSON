@@ -4,10 +4,10 @@ var C3D = {
         children: []
     },
     index: {},
-    geoJSONmap: {},
     path_architecture:  'json_input/architecture.json',
     path_furnitures: 'json_input/furnitures.json',
-    scene: new THREE.Scene()
+    scene: new THREE.Scene(),
+	map: {}
 }
 
 /*
@@ -54,6 +54,7 @@ C3D.parseJSON = function() {
 
 
 };
+
 C3D.init2D = function() {
         
         var container2D = $("#model2D");
@@ -72,9 +73,9 @@ C3D.init2D = function() {
 	        container2D.css('height', container2DHeight);
 	    }
 	    
-        var map = L.map('model2D').setView([0, 0], 3);
         
-        L.geoJson(C3D.geoJSONmap.level_0).addTo(map);
+        C3D.map = L.map('model2D').setView([0, 0], 3);
+        
         
 		//Quando si posizionera' sulla mappa 
         // L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
@@ -86,6 +87,7 @@ C3D.init2D = function() {
         // }).addTo(map);
 
 }
+
 /*
     Funzione di inizializzazione three js
  */ 
@@ -108,7 +110,7 @@ C3D.init3D = function() {
     
     var trackballControls = new THREE.TrackballControls(camera, container3D[0]);
     
-    renderer.setClearColor(new THREE.Color(0x092D52, 1.0)); 
+    renderer.setClearColor(new THREE.Color(0x1D1F21, 1.0)); 
     renderer.setSize(container3DWidth, container3DHeight);
     renderer.shadowMapEnabled = true;
     
@@ -155,12 +157,10 @@ C3D.init3D = function() {
     var gui = new dat.GUI();   
     
     /*
-gui.add(controls, 'showAxisHelper').onChange(function (value) {
+	gui.add(controls, 'showAxisHelper').onChange(function (value) {
         axisHelper.visible = value;
     });
-*/
-    
-    /*
+
 	gui.add(controls, 'enableTrackball').onChange(function (value) {
         enableTrackball = value;
     });
@@ -220,18 +220,18 @@ C3D.generate3DModel = function() {
     
     C3D.index["building"].obj3D = new THREE.Object3D();
 
-    for(var i=0;i< C3D.tree.children.length;i++) {
+    for (var i=0; i < C3D.tree.children.length; i++) {
         queue.push(C3D.tree.children[i]);
     }
-    while(queue.length>0) {
+    while (queue.length>0) {
         feature = queue.shift();
         if((feature.geometry.type in archGen) && (!(feature.properties.class in furnitureGen))) {
-            console.log('Oggetto in fase di generazione: ' + feature.id);
+            //console.log('(3D) Oggetto in fase di generazione: ' + feature.id);
             var el3D = archGen[feature.geometry.type](feature.geometry.coordinates, feature.properties);
             feature.obj3D = el3D;
 
 
-            if(feature.properties.rVector!==undefined) {
+            if (feature.properties.rVector !== undefined) {
                 var conv = Math.PI/180;
                 var rotation = [
                             feature.properties.rVector[0]*conv, 
@@ -240,25 +240,24 @@ C3D.generate3DModel = function() {
                 el3D.rotation.set(rotation[0], rotation[1], rotation[2]);
             }
 
-            if(feature.properties.tVector!==undefined) {
-                var position = new THREE.Vector3(
-                            feature.properties.tVector[0], 
-                            feature.properties.tVector[1],
-                            feature.properties.tVector[2]);
-                el3D.position = position;
+            if (feature.properties.tVector !== undefined) {
+                el3D.position.x += feature.properties.tVector[0];
+                el3D.position.y += feature.properties.tVector[1];
+                el3D.position.z += feature.properties.tVector[2];
             }
+            
             
             C3D.index[feature.parent.id].obj3D.add(el3D);
         }
 
-        else if(feature.properties.class in furnitureGen) {
-            console.log('(3D) Oggetto in fase di generazione: ' + feature.id + " in furnitures");
+        else if (feature.properties.class in furnitureGen) {
+            //console.log('(3D) Oggetto in fase di generazione: ' + feature.id + " in furnitures");
             
             var el3D = furnitureGen[feature.properties.class](feature.geometry.coordinates, feature.properties);
             feature.obj3D = el3D;
 
 
-            if(feature.properties.rVector!==undefined) {
+            if (feature.properties.rVector !== undefined) {
                 var conv = Math.PI/180;
                 var rotation = [
                             feature.properties.rVector[0]*conv, 
@@ -267,18 +266,16 @@ C3D.generate3DModel = function() {
                 el3D.rotation.set(rotation[0], rotation[1], rotation[2]);
             }
 
-            if(feature.properties.tVector!==undefined) {
-                var position = new THREE.Vector3(
-                            feature.properties.tVector[0], 
-                            feature.properties.tVector[1],
-                            feature.properties.tVector[2]);
-                el3D.position = position;
+            if (feature.properties.tVector !== undefined) {
+                el3D.position.x += feature.properties.tVector[0];
+                el3D.position.y += feature.properties.tVector[1];
+                el3D.position.z += feature.properties.tVector[2];
             }
             
             C3D.index[feature.parent.id].obj3D.add(el3D);
         }
         else {
-             var err = 'ERROR: Class: ' + feature.geometry.type + 'not recognized.';
+            var err = 'ERROR: Class: ' + feature.geometry.type + 'not recognized.';
             return err;
         }
 
@@ -289,11 +286,145 @@ C3D.generate3DModel = function() {
     C3D.scene.add(C3D.index["building"].obj3D);
 } // Chiude generate3DModel
 
-
+/*
+    Funzione che genera il modello 2D per Leaflet
+*/ 
+ 
 C3D.generate2DModel = function() {
-    
 
-}
+	var geoJSONmap = {};
+    var includedArchitectureClasses = ['level','room','door', 'internal_wall', 'external_wall'];
+    var includedFurtituresClasses = ['server','surveillanceCamera'];
+	
+	var includedClasses = includedArchitectureClasses.concat(includedFurtituresClasses);
+    var queue = [];
+    var obj;
+
+	var newObj = {};
+	
+    for(var i=0;i< C3D.tree.children.length;i++) {
+        queue.push(C3D.tree.children[i]);
+    }
+    
+    while(queue.length>0) {
+        obj = queue.shift();
+        if($.inArray(obj.properties.class, includedClasses)> -1)
+        {
+            //console.log('(2D) Oggetto in fase di generazione: ' + obj.id);
+			var level = getLevel(obj);			
+			
+			if(!(level in geoJSONmap)) {
+
+				geoJSONmap[level] = {
+					"type": "FeatureCollection",
+					"features": []
+				}
+
+			}
+			
+			var newObj = {};
+			
+			newObj.type = "Feature";
+			newObj.id = obj.id;
+			newObj.geometry = {
+				"type": obj.geometry.type,
+				"coordinates": absoluteCoords(obj)
+			};
+			newObj.properties = {};
+			
+			geoJSONmap[level].features.push(newObj);
+		}
+		
+		for(var i=0;i< obj.children.length;i++) {
+			queue.push(obj.children[i]);
+        }
+		
+	}
+	
+	for(geoJSONlevel in geoJSONmap) {
+		C3D.index[geoJSONlevel].layer2D = L.geoJson(geoJSONmap[geoJSONlevel]);
+	}
+	
+	C3D.index['level_0'].layer2D.addTo(C3D.map);
+	C3D.map.fitBounds(C3D.index['level_0'].layer2D.getBounds());
+
+	function fromGradesToRadians(rVect) {
+		for(var i = 0; i < rVect.length; i++) {
+			rVect[i] = rVect[i] * Math.PI / 180;
+		}
+	}
+	
+	function absoluteCoords(obj) {
+		var tVect = [obj.properties.tVector[0], obj.properties.tVector[1]];
+	
+		var oldCoords;
+		var newCoords = [];
+		var ancestor = C3D.index[obj.parent.id];
+		
+		if(obj.properties.rVector !== undefined) {
+			var rVect = [obj.properties.rVector[0], obj.properties.rVector[1], obj.properties.rVector[2]];
+			fromGradesToRadians(rVect);
+		}
+		
+		while(ancestor.properties.class !== 'building') {
+			tVect[0] += ancestor.properties.tVector[0];
+			tVect[1] += ancestor.properties.tVector[1];
+			ancestor = C3D.index[ancestor.parent.id];
+		}
+		//console.log(obj.geometry.type);
+		switch (obj.geometry.type) {
+	        case "Point":
+	            return tVect;
+	            break;
+	        case "LineString": 
+	        	oldCoords = obj.geometry.coordinates;
+	        	for (var i = 0; i < oldCoords.length; i++)
+	        	{
+	        		var newX = ((oldCoords[i][0] * Math.cos(rVect[2])) - (oldCoords[i][1] * Math.sin(rVect[2]))) + tVect[0];
+	        		var newY = ((oldCoords[i][0] * Math.sin(rVect[2])) + (oldCoords[i][1] * Math.cos(rVect[2]))) + tVect[1];
+		        	newCoords.push([newX, newY]);
+	        	}
+	        	
+	            return newCoords;
+	            break;
+	        case "Polygon":
+	        	oldCoords = obj.geometry.coordinates;
+	        	for (var i = 0; i < oldCoords.length; i++)
+	        	{
+		        	var newPerimeter = [];
+		        	for (var j = 0; j < oldCoords[i].length; j++)
+		        	{
+	
+		        		newPerimeter.push([oldCoords[i][j][0]+tVect[0],oldCoords[i][j][1]+tVect[1]]);
+		        	}
+		        	newCoords.push(newPerimeter);
+		        }
+	            return newCoords;
+	            break;
+	        default:
+	        	return undefined;
+	        	break;
+	    }
+	}
+	
+	function getLevel(obj) {
+		var ancestor = obj;
+		while (ancestor.properties.class !== 'level')
+		{
+			ancestor = ancestor.parent;
+		}
+		if (ancestor.properties.class === 'building')
+		{
+			return undefined;
+		}
+		else
+		{
+			return ancestor.id;
+		}
+	}
+}// Chiude generate2DModel
+
+/*
 C3D.difference = function() {
     var a = [ [0, 0], [1, 0], [1, 50], [0, 50], [0, 0]];
     var b = [ [0, 10], [1, 10], [1, 20], [0, 20], [0, 10] ];
@@ -317,118 +448,7 @@ C3D.difference = function() {
     w2.push(v4_2,v3_2,v1_2,v2_2,v4_2);
     console.log(w2);
 }
+*/
 
 
-C3D.fromC3DJSONToGeoJSON = function() {
-
-    var includedArchitectureClasses = ['level','room','door'];
-    var includedFurtituresClasses = ['server','surveillanceCamera'];
-	
-	var includedClasses = includedArchitectureClasses.concat(includedFurtituresClasses);
-    var queue = [];
-    var obj;
-
-	var newObj = {};
-	
-    for(var i=0;i< C3D.tree.children.length;i++) {
-        queue.push(C3D.tree.children[i]);
-    }
-    
-    while(queue.length>0) {
-        obj = queue.shift();
-        if($.inArray(obj.properties.class, includedClasses)> -1)
-        {
-            console.log('(2D) Oggetto in fase di generazione: ' + obj.id);
-			var level = getLevel(obj);			
-			
-			if(!(level in C3D.geoJSONmap)) {
-
-				C3D.geoJSONmap[level] = {
-					"type": "FeatureCollection",
-					"features": []
-				}
-
-			}
-			
-			var newObj = {};
-			
-			newObj.type = "Feature";
-			newObj.id = obj.id;
-			newObj.geometry = {
-				"type": obj.geometry.type,
-				"coordinates": absoluteCoords(obj)
-			};
-			newObj.properties = {};
-			
-			C3D.geoJSONmap[level].features.push(newObj);
-		}
-		
-		for(var i=0;i< obj.children.length;i++) {
-			queue.push(obj.children[i]);
-        }
-		
-	}		
-
-
-}
-
-
-function absoluteCoords(obj) {
-	var tVect = [obj.properties.tVector[0], obj.properties.tVector[1]];
-	var oldCoords;
-	var newCoords = [];
-	var ancestor = C3D.index[obj.parent.id];
-
-	while(ancestor.properties.class !== 'building') {
-		tVect[0] += ancestor.properties.tVector[0];
-		tVect[1] += ancestor.properties.tVector[1];
-		ancestor = C3D.index[ancestor.parent.id];
-	}
-	//console.log(obj.geometry.type);
-	switch (obj.geometry.type) {
-        case "Point":
-            return tVect;
-            break;
-        case "LineString": 
-        	oldCoords = obj.geometry.coordinates;
-        	for (var i = 0; i < oldCoords.length; i++)
-        	{
-	        	newCoords.push([oldCoords[i][0]+tVect[0],oldCoords[i][1]+tVect[1]]);
-        	}
-            return newCoords;
-            break;
-        case "Polygon":
-        	oldCoords = obj.geometry.coordinates;
-        	for (var i = 0; i < oldCoords.length; i++)
-        	{
-	        	var newPerimeter = [];
-	        	for (var j = 0; j < oldCoords[i].length; j++)
-	        	{
-	        		newPerimeter.push([oldCoords[i][j][0]+tVect[0],oldCoords[i][j][1]+tVect[1]]);
-	        	}
-	        	newCoords.push(newPerimeter);
-	        }
-            return newCoords;
-            break;
-        default:
-        	return undefined;
-        	break;
-    }
-}
-
-function getLevel(obj) {
-	var ancestor = obj;
-	while (ancestor.properties.class !== 'level')
-	{
-		ancestor = ancestor.parent;
-	}
-	if (ancestor.properties.class === 'building')
-	{
-		return undefined;
-	}
-	else
-	{
-		return ancestor.id;
-	}
-}
 

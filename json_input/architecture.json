@@ -28,7 +28,8 @@
                 "class": "level",
                 "parent": "building",
                 "description": "Mura perimetrali box_0",
-                "tVector": [0, 0, 0]
+                "tVector": [0, 0, 0],
+                "rVector": [0, 0, 0]
             }
         },
         {
@@ -447,7 +448,8 @@
                     "parent": "wall_0.1-H",
                     "thickness": 5,
                     "description": "Door room1 H",
-                    "tVector": [3, 0, 0]
+                    "tVector": [3, 0, 0],
+                    "rVector": [0, 0, 0]
               }
         },
         {
@@ -468,7 +470,8 @@
                     "parent": "wall_0.H-S",
                     "thickness": 5,
                     "description": "Door room1",
-                    "tVector": [2, 0, 0]
+                    "tVector": [2, 0, 0],
+                    "rVector": [0, 0, 0]
               }
         },
         {
@@ -489,7 +492,8 @@
                     "parent": "wall_0.2-H",
                     "thickness": 5,
                     "description": "Door room1",
-                    "tVector": [4, 0, 0]
+                    "tVector": [4, 0, 0],
+                    "rVector": [0, 0, 0]
               }
         },
         {
@@ -510,7 +514,8 @@
                     "parent": "wall_0.3-H",
                     "thickness": 5,
                     "description": "Door room1",
-                    "tVector": [4, 0, 0]
+                    "tVector": [4, 0, 0],
+                    "rVector": [0, 0, 0]
               }
         }, 
 
@@ -532,7 +537,8 @@
                     "parent": "wall_0.4-H-N",
                     "thickness": 5,
                     "description": "Door room1",
-                    "tVector": [7, 0, 0]
+                    "tVector": [7, 0, 0],
+                    "rVector": [0, 0, 0]
               }
         },
 
@@ -553,7 +559,8 @@
                     "class": "room",
                     "parent": "level_0",
                     "description": "room_0.1",
-                    "tVector": [0, 0, 0]
+                    "tVector": [0, 0, 0],
+                    "rVector": [0, 0, 0]
               }
         },
         {
@@ -573,7 +580,8 @@
                     "class": "room",
                     "parent": "level_0",
                     "description": "room_0.2",
-                    "tVector": [11, 11, 0]
+                    "tVector": [11, 11, 0],
+                    "rVector": [0, 0, 0]
               }
         },
         {
@@ -593,7 +601,8 @@
                     "class": "room",
                     "parent": "level_0",
                     "description": "room_0.3",
-                    "tVector": [21, 11, 0]
+                    "tVector": [21, 11, 0],
+                    "rVector": [0, 0, 0]
               }
         },
         {
@@ -613,7 +622,8 @@
                     "class": "room",
                     "parent": "level_0",
                     "description": "room_0.4",
-                    "tVector": [16, 0, 0]
+                    "tVector": [16, 0, 0],
+                    "rVector": [0, 0, 0]
               }
         },
         {
@@ -633,7 +643,8 @@
                     "class": "room",
                     "parent": "level_0",
                     "description": "hall_0.1",
-                    "tVector": [11, 0, 0]
+                    "tVector": [11, 0, 0],
+                    "rVector": [0, 0, 0]
               }
         },
 
@@ -674,7 +685,8 @@
                 "class": "level",
                 "parent": "building",
                 "description": "Mura perimetrali box_1",
-                "tVector": [0, 0, 10]
+                "tVector": [0, 0, 10],
+                "rVector": [0, 0, 0]
             }
         },
         {
@@ -1094,7 +1106,8 @@
                     "parent": "wall_1.1-H",
                     "thickness": 5,
                     "description": "Door room1 H",
-                    "tVector": [3, 0, 0]
+                    "tVector": [3, 0, 0],
+                    "rVector": [0, 0, 0]
               }
         },
         {
@@ -1115,7 +1128,8 @@
                     "parent": "wall_1.H-S",
                     "thickness": 5,
                     "description": "Door room1",
-                    "tVector": [2, 0, 0]
+                    "tVector": [2, 0, 0],
+                    "rVector": [0, 0, 0]
               }
         },
         {
@@ -1136,7 +1150,8 @@
                     "parent": "wall_1.2-H",
                     "thickness": 5,
                     "description": "Door room1",
-                    "tVector": [4, 0, 0]
+                    "tVector": [4, 0, 0],
+                    "rVector": [0, 0, 0]
               }
         },
         {
@@ -1157,7 +1172,8 @@
                     "parent": "wall_1.3-H",
                     "thickness": 5,
                     "description": "Door room1",
-                    "tVector": [4, 0, 0]
+                    "tVector": [4, 0, 0],
+                    "rVector": [0, 0, 0]
               }
         }, 
 
@@ -1179,7 +1195,8 @@
                     "parent": "wall_1.4-H-N",
                     "thickness": 5,
                     "description": "Door room1",
-                    "tVector": [7, 0, 0]
+                    "tVector": [7, 0, 0],
+                    "rVector": [0, 0, 0]
               }
         },
         {
@@ -1199,7 +1216,8 @@
                     "class": "room",
                     "parent": "level_1",
                     "description": "room_1.1",
-                    "tVector": [0, 0, 0]
+                    "tVector": [0, 0, 0],
+                    "rVector": [0, 0, 0]
               }
         },
         {
@@ -1219,7 +1237,8 @@
                     "class": "room",
                     "parent": "level_1",
                     "description": "room_1.2",
-                    "tVector": [11, 11, 0]
+                    "tVector": [11, 11, 0],
+                    "rVector": [0, 0, 0]
               }
         },
         {
@@ -1239,7 +1258,8 @@
                     "class": "room",
                     "parent": "level_1",
                     "description": "room_1.3",
-                    "tVector": [21, 11, 0]
+                    "tVector": [21, 11, 0],
+                    "rVector": [0, 0, 0]
               }
         },
         {
@@ -1259,7 +1279,8 @@
                     "class": "room",
                     "parent": "level_1",
                     "description": "room_1.4",
-                    "tVector": [16, 0, 0]
+                    "tVector": [16, 0, 0],
+                    "rVector": [0, 0, 0]
               }
         },
         {
@@ -1279,7 +1300,8 @@
                     "class": "room",
                     "parent": "level_1",
                     "description": "hall_1.1",
-                    "tVector": [11, 0, 0]
+                    "tVector": [11, 0, 0],
+                    "rVector": [0, 0, 0]
               }
         }
 

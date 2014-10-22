@@ -62,18 +62,18 @@
 
             function(callback) {
                 console.log('Fine C3D.parseJSON()');
-                console.log('Inizio C3D.fromC3DJSONToGeoJSON()');
-                err = C3D.fromC3DJSONToGeoJSON();
-                callback(err);
-            },
-            function(callback) {
-                console.log('Fine C3D.fromC3DJSONToGeoJSON()');
                 console.log('Inizio C3D.init2D()');
-                err = C3D.init2D();
+                err = C3D.init2D()
                 callback(err);
             },
             function(callback) {
                 console.log('Fine C3D.init2D()');
+                console.log('Inizio C3D.generate2DModel()');
+                err = C3D.generate2DModel();
+                callback(err);
+            },
+            function(callback) {
+                console.log('Fine C3D.generate2DModel()');
                 console.log('Inizio C3D.init3D()');
                 err = C3D.init3D();
                 callback(err);
@@ -87,7 +87,12 @@
             }
         ],
         function(err, data) {
-            if(err) console.log(err);
+            if(err) {
+            	console.log(err);
+            }
+            else {
+            	console.log('Fine C3D.generate3DModel()'); 
+            }
         }
     );
 
