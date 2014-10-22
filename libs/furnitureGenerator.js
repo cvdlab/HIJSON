@@ -1,17 +1,14 @@
 var furnitureGen = {}
 
-var simpleFurnitures = {}
+furnitureGen['server'] = function parseServer(feature) {
 
-
-furnitureGen['server'] = function parseServer(coordinates, properties) {
-
-    if(properties.dimensions === undefined)
+    if(feature.properties.dimensions === undefined)
     {
         var dimensions = [1,1,2];
     }
     else
     {
-        var dimensions = properties.dimensions;
+        var dimensions = feature.properties.dimensions;
     }
     
     var geometry = new THREE.BoxGeometry(dimensions[0], dimensions[1], dimensions[2]);
@@ -25,7 +22,7 @@ furnitureGen['server'] = function parseServer(coordinates, properties) {
 };
 
 
-simpleFurnitures['surveillanceCamera'] = function surveillanceCamera() {
+furnitureGen['surveillanceCamera'] = function parseSurveillanceCamera(feature) {
     var radius = 0.2;
     var widthSegments = 32;
     var heightSegments = 32;
@@ -46,7 +43,7 @@ simpleFurnitures['surveillanceCamera'] = function surveillanceCamera() {
     return surveillanceCamera;
 }
 
-simpleFurnitures['hotspot'] = function hotspot() {
+furnitureGen['hotspot'] = function parseHotspot(feature) {
     var width = 0.1;
     var depth = 0.2;
     var height = 0.3;
@@ -61,7 +58,7 @@ simpleFurnitures['hotspot'] = function hotspot() {
     return hotspot;
 };
 
-simpleFurnitures['light'] = function light() {
+furnitureGen['light'] = function parseLight(feature) {
     var radius = 0.05;
     var width = 0.1;
     var depth = 0.2;
@@ -80,7 +77,7 @@ simpleFurnitures['light'] = function light() {
     return light;
 };
 
-simpleFurnitures['antenna'] = function antenna() {
+furnitureGen['antenna'] = function parseAntenna(feature) {
     var radius_down = 0.02;
     var radius_up = 0.01;
     var length = 0.3;
