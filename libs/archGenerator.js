@@ -3,8 +3,8 @@ var archGen = {}
 function parsePoint(feature) {
     // creo l'oggetto THREE punto a partire dai dati della feature (feature.geometry.coordinates) e lo aggiungo alla map
     var pointPosition = new THREE.Vector3(
-                        feature.coordinates[0], 
-                        feature.coordinates[1]
+                        feature.geometry.coordinates[0], 
+                        feature.geometry.coordinates[1]
                         );
     
     var point = new THREE.Object3D();
