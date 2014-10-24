@@ -1,5 +1,55 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+	script.
+		var err;
+		async.waterfall(
+			[
+				function(callback) {
+					console.log('Inizio C3D.parseJSON()');
+					err = C3D.parseJSON();
+					callback(err);
+				},
+				function(callback) {
+					console.log('Fine C3D.parseJSON()');
+					console.log('Inizio C3D.init2D()');
+					err = C3D.init2D()
+					callback(err);
+				},
+				function(callback) {
+					console.log('Fine C3D.init2D()');
+					console.log('Inizio C3D.generate2DModel()');
+					err = C3D.generate2DModel();
+					callback(err);
+				},
+				function(callback) {
+					console.log('Fine C3D.generate2DModel()');
+					console.log('Inizio C3D.init3D()');
+					err = C3D.init3D();
+					callback(err);
+				},
+				function(callback) {
+					console.log('Fine C3D.init3D()');
+					console.log('Inizio C3D.generate3DModel()');
+					err = C3D.generate3DModel();
+					callback(err);
+				}
+			],
+			function(err, data) {
+				if(err) {
+					console.log(err);
+				} else {
+					console.log('Fine C3D.generate3DModel()'); 
+				}
+			}
+		);
+	.container-fluid
+		.page-header
+			h1 C3D
+		.row
+			.col-md-6
+				h3 2D
+				#model2D
+			.col-md-6
+				h3 3D
+				#model3D

@@ -5,7 +5,7 @@ html
 		meta(http-equiv='X-UA-Compatible', content='IE=edge')
 		meta(name='viewport', content='width=device-width, initial-scale=1')
 		
-		title= 'C3D'
+		title= title
 		
 		// Style
 		link(rel='stylesheet', href='/assets/css/bootstrap.min.css')
@@ -13,8 +13,15 @@ html
 		style.
 			#stats { position: absolute; }
 	body
-		script(src='assets/js/jquery-2.1.1.js')
-		script(src='assets/js/async.js')
-		script(src='assets/js/bootstrap.min.js')
+		// Default JavaScript libraries
+		script(src='/assets/js/jquery-2.1.1.js')
+		script(src='/assets/js/async.js')
+		script(src='/assets/js/bootstrap.min.js')
+		
+		include ./includes/scripts_2d.jade
+		include ./includes/scripts_3d.jade
+		
+		// C3D Library
+		script(src='/libs/c3d.js')
 		
 		block content
