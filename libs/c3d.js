@@ -1,13 +1,17 @@
 var C3D = {
     tree: {
-        id: '',
+        id: 'building',
+        properties: {
+	        "class": "building"
+        },
         children: []
     },
     index: {},
-    path_architecture:  'json_input/architecture.json',
+    path_config: 'json_input/config.json',
+    path_architecture: 'json_input/architecture.json',
     path_furnitures: 'json_input/furnitures.json',
-    scene: new THREE.Scene(),
-	map: {},
+    scene3D: new THREE.Scene(),
+	map2D: {},
     generator3D: {}
 }
 
@@ -22,13 +26,7 @@ C3D.parseJSON = function() {
             if (data.type == "FeatureCollection") 
             {
                 console.log('FeatureCollection detected for '+typeJSON+'.');
-                if (typeJSON === "architecture") 
-                {
-                    C3D.tree.id = data.id;
-                    C3D.tree.properties = data.properties;
-                }
                 
-                //THREE.FogExp2( hex, density );reach data.features
                 $.each( data.features, function( key, feature ) 
                 {
                     var obj = {};
@@ -61,19 +59,15 @@ C3D.init2D = function() {
         var container2DHeight = container2D.width()/4*3;
         container2D.css('height', container2DHeight);
 
-
-
 	    window.addEventListener( 'resize', onWindowResize2D, false );
 	
-	    function onWindowResize2D(){
-	        
+	    function onWindowResize2D() {
 	        container2DWidth = container2D.width();
 	        container2DHeight = container2D.width()/4*3;
 	        container2D.css('height', container2DHeight);
 	    }
 	    
-        
-        C3D.map = L.map('model2D').setView([0, 0], 3);
+        C3D.map2D2D = L.map('model2D').setView([0, 0], 3);
         
         
 		//Quando si posizionera' sulla mappa 
@@ -98,10 +92,9 @@ C3D.init3D = function() {
     var container3DHeight = container3D.width()/4*3;
     container3D.css('height', container3DHeight);
     
-    
     var stats = initStats();
     // create a scene, that will hold all our elements such as objects, cameras and lights.
-    var scene = this.scene;
+    var scene = C3D.scene3D;
     // create a camera, which defines where we're looking at.
     var camera = new THREE.PerspectiveCamera(45, container3DWidth / container3DHeight, 0.1, 1000);
     // create a render and set the size
@@ -130,8 +123,7 @@ C3D.init3D = function() {
 
 
       var controls = new function () {
-        //this.showAxisHelper = true;
-        //this.enableTrackball = false;
+
         this.visibleRoom = "building";
         
         this.redraw = function() {
@@ -152,19 +144,8 @@ C3D.init3D = function() {
         }
     };
     
-    //var enableTrackball = false;
     var gui = new dat.GUI();   
     
-    /*
-	gui.add(controls, 'showAxisHelper').onChange(function (value) {
-        axisHelper.visible = value;
-    });
-
-	gui.add(controls, 'enableTrackball').onChange(function (value) {
-        enableTrackball = value;
-    });
-	*/
-	
     var rooms = ["building"];
     for(var key in C3D.index) {
         var element = C3D.index[key];
@@ -222,36 +203,11 @@ C3D.generate3DModel = function() {
     for (var i=0; i < C3D.tree.children.length; i++) {
         queue.push(C3D.tree.children[i]);
     }
+    
     while (queue.length>0) {
         feature = queue.shift();
-        if((feature.geometry.type in archGen) && (!(feature.properties.class in furnitureGen))) {
+        if(feature.properties.class in C3D.generator3D) {
             //console.log('(3D) Oggetto in fase di generazione: ' + feature.id);
-            var el3D = archGen[feature.geometry.type](feature);
-            feature.obj3D = el3D;
-
-
-            if (feature.properties.rVector !== undefined) {
-                var conv = Math.PI/180;
-                var rotation = [
-                            feature.properties.rVector[0]*conv, 
-                            feature.properties.rVector[1]*conv,
-                            feature.properties.rVector[2]*conv];
-                el3D.rotation.set(rotation[0], rotation[1], rotation[2]);
-            }
-
-            if (feature.properties.tVector !== undefined) {
-                el3D.position.x += feature.properties.tVector[0];
-                el3D.position.y += feature.properties.tVector[1];
-                el3D.position.z += feature.properties.tVector[2];
-            }
-            
-            
-            C3D.index[feature.parent.id].obj3D.add(el3D);
-        }
-
-        else if (feature.properties.class in C3D.generator3D) {
-            //console.log('(3D) Oggetto in fase di generazione: ' + feature.id + " in furnitures");
-            
             var el3D = C3D.generator3D[feature.properties.class](feature);
             feature.obj3D = el3D;
 
@@ -271,9 +227,9 @@ C3D.generate3DModel = function() {
                 el3D.position.z += feature.properties.tVector[2];
             }
             
+            
             C3D.index[feature.parent.id].obj3D.add(el3D);
-        }
-        else {
+        } else {
             var err = 'ERROR: Class: ' + feature.geometry.type + 'not recognized.';
             return err;
         }
@@ -282,7 +238,7 @@ C3D.generate3DModel = function() {
             queue.push(feature.children[i]);
         }
     }
-    C3D.scene.add(C3D.index["building"].obj3D);
+    C3D.scene3D.add(C3D.index["building"].obj3D);
 } // Chiude generate3DModel
 
 /*
@@ -335,8 +291,7 @@ C3D.generate2DModel = function() {
 		}
 		
 		for(var i=0;i< obj.children.length;i++) {
-            console.log(obj.children[i].id);
-			queue.push(obj.children[i]);
+            queue.push(obj.children[i]);
         }
 		
 	}
@@ -345,8 +300,8 @@ C3D.generate2DModel = function() {
 		C3D.index[geoJSONlevel].layer2D = L.geoJson(geoJSONmap[geoJSONlevel]);
 	}
 	
-	C3D.index['level_0'].layer2D.addTo(C3D.map);
-	C3D.map.fitBounds(C3D.index['level_0'].layer2D.getBounds());
+	C3D.index['level_0'].layer2D.addTo(C3D.map2D2D);
+	C3D.map2D2D.fitBounds(C3D.index['level_0'].layer2D.getBounds());
 
 	function fromGradesToRadians(rVect) {
 		for(var i = 0; i < rVect.length; i++) {
@@ -450,7 +405,7 @@ C3D.difference = function() {
 }
 */
 
-C3D.generator3D['server'] = function parseServer(feature) {
+C3D.generator3D['server'] = function (feature) {
 
     if(feature.properties.dimensions === undefined)
     {
@@ -472,7 +427,7 @@ C3D.generator3D['server'] = function parseServer(feature) {
 };
 
 
-C3D.generator3D['surveillanceCamera'] = function parseSurveillanceCamera(feature) {
+C3D.generator3D['surveillanceCamera'] = function(feature) {
     var radius = 0.2;
     var widthSegments = 32;
     var heightSegments = 32;
@@ -493,7 +448,7 @@ C3D.generator3D['surveillanceCamera'] = function parseSurveillanceCamera(feature
     return surveillanceCamera;
 }
 
-C3D.generator3D['hotspot'] = function parseHotspot(feature) {
+C3D.generator3D['hotspot'] = function(feature) {
     var width = 0.1;
     var depth = 0.2;
     var height = 0.3;
@@ -508,7 +463,7 @@ C3D.generator3D['hotspot'] = function parseHotspot(feature) {
     return hotspot;
 };
 
-C3D.generator3D['light'] = function parseLight(feature) {
+C3D.generator3D['light'] = function(feature) {
     var radius = 0.05;
     var width = 0.1;
     var depth = 0.2;
@@ -527,7 +482,7 @@ C3D.generator3D['light'] = function parseLight(feature) {
     return light;
 };
 
-C3D.generator3D['antenna'] = function parseAntenna(feature) {
+C3D.generator3D['antenna'] = function(feature) {
     var radius_down = 0.02;
     var radius_up = 0.01;
     var length = 0.3;
@@ -549,5 +504,83 @@ C3D.generator3D['antenna'] = function parseAntenna(feature) {
     return antenna;
 };
 
+function generateLineString(geometry) {
+	var lineString = new THREE.Geometry();
+    for(var i = 0; i < geometry.coordinates.length; i++){
+        lineString.vertices.push( new THREE.Vector3( geometry.coordinates[i][0], geometry.coordinates[i][1], 0) );
 
+    }
+    return lineString;
+}
 
+function generatePolygon(geometry) {
+	
+	var shape = new THREE.Shape();
+    for (var j = 0; j < geometry.coordinates[0].length; j++) //scorro le singole coordinate del perimetro esterno
+    { 
+        if (j == 0) { // primo punto
+            shape.moveTo(geometry.coordinates[0][j][0], geometry.coordinates[0][j][1]);
+        } else { // altri punti
+            shape.lineTo(geometry .coordinates[0][j][0], geometry.coordinates[0][j][1]);
+        }
+    }
+    
+    for (var i = 1; i < geometry.coordinates.length; i++) { //scorro eventuali holes
+        var hole = new THREE.Path();
+        for (var j = 0; j < geometry.coordinates[i].length; j++) { //scorro le singole coordinate dei vari perimetri
+            if (j == 0) { // primo punto
+                hole.moveTo(geometry.coordinates[i][j][0], geometry.coordinates[i][j][1]);
+            } else { // altri punti
+                hole.lineTo(geometry.coordinates[i][j][0], geometry.coordinates[i][j][1]);
+            }  
+        }
+        shape.holes.push(hole);
+    }
+    
+    var polygon = shape.makeGeometry();
+    
+    return polygon;
+}
+
+C3D.generator3D['external_wall'] = function(feature) {
+    var material = new THREE.LineBasicMaterial({ 
+    	color: 0xDE935F, 
+		linewidth: feature.properties.thickness 
+	});
+	return new THREE.Line(generateLineString(feature.geometry), material);	
+}
+
+C3D.generator3D['internal_wall'] = function(feature) {
+    var material = new THREE.LineBasicMaterial({ 
+        color: 0xF0C674, 
+        linewidth:  feature.properties.thickness 
+    });
+	return new THREE.Line(generateLineString(feature.geometry), material);
+}
+
+C3D.generator3D['door'] = function(feature) {
+    var material = new THREE.LineBasicMaterial({ 
+        color: 0xB5BD68, 
+        linewidth: feature.properties.thickness 
+    });
+	return new THREE.Line(generateLineString(feature.geometry), material);
+}
+
+C3D.generator3D['level'] = function(feature) {
+    var material = new THREE.LineBasicMaterial({ 
+        color:0x8ABEB7, 
+        linewidth: feature.properties.thickness 
+    });
+	return new THREE.Line(generateLineString(feature.geometry), material);
+}
+
+C3D.generator3D['room'] = function(feature) {
+    var material = new THREE.MeshBasicMaterial({
+        color: 0x8ABEB7,
+        transparent: true, 
+        opacity: 0.3, 
+        side: THREE.DoubleSide
+    });
+    
+    return new THREE.Mesh(generatePolygon(feature.geometry), material);
+}
