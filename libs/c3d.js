@@ -7,7 +7,8 @@ var C3D = {
     path_architecture:  'json_input/architecture.json',
     path_furnitures: 'json_input/furnitures.json',
     scene: new THREE.Scene(),
-	map: {}
+	map: {},
+    generator3D: {}
 }
 
 /*
@@ -48,11 +49,25 @@ C3D.parseJSON = function() {
             }
         });
     };
-
-    readJSON('architecture', C3D.path_architecture);
-    readJSON('furnitures', C3D.path_furnitures);      
-
-
+    var err;
+    async.waterfall
+    (
+        [
+            function(callback) {
+                err =  readJSON('architecture', C3D.path_architecture);
+                callback(err);
+            },
+            function(callback) {
+                err =  readJSON('furnitures', C3D.path_furnitures);
+                callback(err);
+            }
+        ],
+        function(err, data) {
+            if(err) {
+              console.log(err);
+            }
+        }
+    );  
 };
 
 C3D.init2D = function() {
@@ -225,7 +240,7 @@ C3D.generate3DModel = function() {
     }
     while (queue.length>0) {
         feature = queue.shift();
-        if((feature.geometry.type in archGen) && (!(feature.properties.class in furnitureGen))) {
+        if((feature.geometry.type in archGen) && (!(feature.properties.class in C3D.generator3D))) {
             //console.log('(3D) Oggetto in fase di generazione: ' + feature.id);
             var el3D = archGen[feature.geometry.type](feature);
             feature.obj3D = el3D;
@@ -250,10 +265,10 @@ C3D.generate3DModel = function() {
             C3D.index[feature.parent.id].obj3D.add(el3D);
         }
 
-        else if (feature.properties.class in furnitureGen) {
+        else if (feature.properties.class in C3D.generator3D) {
             //console.log('(3D) Oggetto in fase di generazione: ' + feature.id + " in furnitures");
             
-            var el3D = furnitureGen[feature.properties.class](feature);
+            var el3D = C3D.generator3D[feature.properties.class](feature);
             feature.obj3D = el3D;
 
 
@@ -336,6 +351,7 @@ C3D.generate2DModel = function() {
 		}
 		
 		for(var i=0;i< obj.children.length;i++) {
+            console.log(obj.children[i].id);
 			queue.push(obj.children[i]);
         }
 		
@@ -449,6 +465,105 @@ C3D.difference = function() {
     console.log(w2);
 }
 */
+
+C3D.generator3D['server'] = function parseServer(feature) {
+
+    if(feature.properties.dimensions === undefined)
+    {
+        var dimensions = [1,1,2];
+    }
+    else
+    {
+        var dimensions = feature.properties.dimensions;
+    }
+    
+    var geometry = new THREE.BoxGeometry(dimensions[0], dimensions[1], dimensions[2]);
+    var material = new THREE.MeshBasicMaterial( {color: 0x008080} );
+    
+    var server = new THREE.Mesh(geometry, material);
+
+    server.position.z += dimensions[2]/2;
+    
+    return server;
+};
+
+
+C3D.generator3D['surveillanceCamera'] = function parseSurveillanceCamera(feature) {
+    var radius = 0.2;
+    var widthSegments = 32;
+    var heightSegments = 32;
+    var phiStart = 0;
+    var phiLength = -Math.PI;
+    var thetaStart = 0;
+    var thetaLength = Math.PI;
+
+    var geometry = new THREE.SphereGeometry( radius, widthSegments, heightSegments, phiStart, phiLength, thetaStart, thetaLength);
+    var material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
+    
+    var model = new THREE.Mesh( geometry, material );
+
+    model.position.z = model.position.z + levelHeight - radius/2;
+    
+    var surveillanceCamera = new THREE.Object3D();
+    surveillanceCamera.add(model);
+    return surveillanceCamera;
+}
+
+C3D.generator3D['hotspot'] = function parseHotspot(feature) {
+    var width = 0.1;
+    var depth = 0.2;
+    var height = 0.3;
+    var geometry = new THREE.BoxGeometry(width, depth, height);
+    var material = new THREE.MeshBasicMaterial( {color: 0x0000ff});
+    
+    var model = new THREE.Mesh( geometry, material );
+    model.position.z = model.position.z + levelHeight - height/2;
+    
+    var hotspot = new THREE.Object3D();
+    hotspot.add(model);
+    return hotspot;
+};
+
+C3D.generator3D['light'] = function parseLight(feature) {
+    var radius = 0.05;
+    var width = 0.1;
+    var depth = 0.2;
+    var height = 0.3;
+    var length  = 2;
+
+    var geometry = new THREE.CylinderGeometry( radius, radius, length, 32);
+    var material = new THREE.MeshBasicMaterial( {color: 0xffffff} );
+    var model = new THREE.Mesh( geometry, material);
+    
+    model.position.z = model.position.z + levelHeight - radius;
+
+    var light = new THREE.Object3D();
+
+    light.add(model);
+    return light;
+};
+
+C3D.generator3D['antenna'] = function parseAntenna(feature) {
+    var radius_down = 0.02;
+    var radius_up = 0.01;
+    var length = 0.3;
+    var width = 0.1;
+    var depth = 0.2;
+    var height = 0.3;
+    
+    var geometry = new THREE.CylinderGeometry( radius_down, radius_up, length, 32);
+    var material = new THREE.MeshBasicMaterial( {color: 0xff0000} );
+    var model = new THREE.Mesh( geometry, material);
+
+    model.rotation.x = Math.PI/2;
+    
+    model.position.z = model.position.z + levelHeight - length;
+
+    var antenna = new THREE.Object3D();
+
+    antenna.add(model);
+    return antenna;
+};
 
 
 
