@@ -9,7 +9,7 @@
     
     <!-- Bootstrap -->
     <link href="assets/css/bootstrap.min.css" rel="stylesheet">
-    
+
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -18,17 +18,19 @@
     <![endif]-->
     
     <style>
-        body{
-            margin: 0;
-            overflow: hidden;
-        }
-        
         #stats {  /* Align stats top-left */
             position: absolute;
-            left: 0px;
-            top: 0px;
+            
         }
+        #model2D { 
+            height: 450px; 
+        }
+
     </style> 
+    <link href="assets/leaflet/leaflet.css" rel="stylesheet">
+    <script src="assets/leaflet/leaflet.js"></script>
+
+
 </head>
 <body> 
     <!-- JavaScript libraries -->
@@ -36,7 +38,7 @@
     <script src="assets/js/jquery-2.1.1.js"></script>
     <script src="assets/js/Stats.min.js"></script>
     <script src="assets/js/dat.gui.min.js"></script>
-     <script src="assets/js/TrackballControls.js"></script>
+    <script src="assets/js/TrackballControls.js"></script>
     <script src="assets/js/async.js"></script>
     
     <!-- custom geoJSON libraries -->
@@ -57,8 +59,21 @@
                 err = C3D.parseJSON();
                 callback(err);
             },
+
             function(callback) {
                 console.log('Fine C3D.parseJSON()');
+                console.log('Inizio C3D.init2D()');
+                err = C3D.init2D()
+                callback(err);
+            },
+            function(callback) {
+                console.log('Fine C3D.init2D()');
+                console.log('Inizio C3D.generate2DModel()');
+                err = C3D.generate2DModel();
+                callback(err);
+            },
+            function(callback) {
+                console.log('Fine C3D.generate2DModel()');
                 console.log('Inizio C3D.init3D()');
                 err = C3D.init3D();
                 callback(err);
@@ -72,12 +87,37 @@
             }
         ],
         function(err, data) {
-            if(err) console.log(err);
+            if(err) {
+              console.log(err);
+            }
+            else {
+              console.log('Fine C3D.generate3DModel()'); 
+            }
         }
     );
 
 
     </script>
+    <div class="container-fluid">
+        <div class="page-header">
+            <h1>C3D</h1>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <h3>2D</h3>
+                <div id="model2D"></div>
+            </div>
+            
+            <div class="col-md-6">
+                <h3>3D</h3>
+                <div id="model3D"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12" id="Model3DControls">
+              <h3>Controls</h3>
+            </div>
+        </div>
 
 
 
