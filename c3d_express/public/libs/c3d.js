@@ -67,7 +67,7 @@ C3D.init2D = function() {
 	        container2D.css('height', container2DHeight);
 	    }
 	    
-        C3D.map2D2D = L.map('model2D').setView([0, 0], 3);
+        C3D.map2D = L.map('model2D').setView([0, 0], 3);
         
         
 		//Quando si posizionera' sulla mappa 
@@ -117,10 +117,10 @@ C3D.init3D = function() {
     scene.add(ambientLight);
     
     container3D.append(renderer.domElement);
+    
     // add axis helper
     var axisHelper = new THREE.AxisHelper(3);
     scene.add(axisHelper);
-
 
       var controls = new function () {
 
@@ -149,10 +149,11 @@ C3D.init3D = function() {
     var rooms = ["building"];
     for(var key in C3D.index) {
         var element = C3D.index[key];
-        if(element.properties.class==="room" ||element.properties.class==="level") {
+        if(element.properties.class === "room" || element.properties.class === "level") {
             rooms.push(element.id);
         }
     }
+    
     gui.add(controls, "visibleRoom", rooms).onChange(controls.redraw);
     
     window.addEventListener( 'resize', onWindowResize3D, false );
@@ -174,7 +175,6 @@ C3D.init3D = function() {
     
     function render() {
         stats.update();
-        //if (enableTrackball) trackballControls.update();
         trackballControls.update();
         
         requestAnimationFrame(render);
@@ -300,8 +300,8 @@ C3D.generate2DModel = function() {
 		C3D.index[geoJSONlevel].layer2D = L.geoJson(geoJSONmap[geoJSONlevel]);
 	}
 	
-	C3D.index['level_0'].layer2D.addTo(C3D.map2D2D);
-	C3D.map2D2D.fitBounds(C3D.index['level_0'].layer2D.getBounds());
+	C3D.index['level_0'].layer2D.addTo(C3D.map2D);
+	C3D.map2D.fitBounds(C3D.index['level_0'].layer2D.getBounds());
 
 	function fromGradesToRadians(rVect) {
 		for(var i = 0; i < rVect.length; i++) {

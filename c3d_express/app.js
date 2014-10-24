@@ -16,7 +16,7 @@ app.set('view engine', 'jade');
 app.locals.pretty = true;
 
 // uncomment after placing your favicon in /public
-//app.use(favicon(__dirname + '/public/favicon.ico'));
+app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -55,6 +55,14 @@ app.use(function(err, req, res, next) {
         message: err.message,
         error: {}
     });
+});
+
+var debug = require('debug')('c3d');
+
+app.set('port', process.env.PORT || 3000);
+
+var server = app.listen(app.get('port'), function() {
+  debug('Express server listening on port ' + server.address().port);
 });
 
 module.exports = app;
