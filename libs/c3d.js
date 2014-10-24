@@ -49,25 +49,9 @@ C3D.parseJSON = function() {
             }
         });
     };
-    var err;
-    async.waterfall
-    (
-        [
-            function(callback) {
-                err =  readJSON('architecture', C3D.path_architecture);
-                callback(err);
-            },
-            function(callback) {
-                err =  readJSON('furnitures', C3D.path_furnitures);
-                callback(err);
-            }
-        ],
-        function(err, data) {
-            if(err) {
-              console.log(err);
-            }
-        }
-    );  
+    
+    readJSON('architecture', C3D.path_architecture);
+    readJSON('furnitures', C3D.path_furnitures);  
 };
 
 C3D.init2D = function() {
@@ -240,7 +224,7 @@ C3D.generate3DModel = function() {
     }
     while (queue.length>0) {
         feature = queue.shift();
-        if((feature.geometry.type in archGen) && (!(feature.properties.class in C3D.generator3D))) {
+        if((feature.geometry.type in archGen) && (!(feature.properties.class in furnitureGen))) {
             //console.log('(3D) Oggetto in fase di generazione: ' + feature.id);
             var el3D = archGen[feature.geometry.type](feature);
             feature.obj3D = el3D;
