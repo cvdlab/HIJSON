@@ -42,9 +42,8 @@
     <script src="assets/js/TrackballControls.js"></script>
     <script src="assets/js/async.js"></script>
     <script src="assets/leaflet/leaflet.js"></script>
+
     <!-- custom geoJSON libraries -->
-    <script src="libs/archGenerator.js"></script> 
-    <script src="libs/furnitureGenerator.js"></script>
     <script src="libs/c3d.js"></script>
     
     <!-- Bootstrap -->
@@ -67,13 +66,29 @@
                         var map = L.map('model2D').setView([0, 0], 3);
 
                         var socket = io('/users');
-                        
                         map.on('click', onMapClick);
                         function onMapClick(e) {
-                            console.log(e);
                             socket.emit('sentCoordinates',e.latlng);
                         }
-
+                        
+                        marker = {
+                            id: undefined,
+                            mkr: undefined
+                        }
+                        socket.on('sentCoordinates', function(newPosition) {
+                            if(marker.id===undefined) {
+                                marker.id = newPosition.id;
+                                marker.mkr = L.marker([newPosition.latlng.lat, newPosition.latlng.lng]).addTo(map)
+                                        .bindPopup("<b>User: </b>" + newPosition.id
+                                            +'<br><b>[' + newPosition.latlng.lat + ';' + newPosition.latlng.lng+']</b>').openPopup();
+                                        console.log(marker);
+                            }
+                            else {
+                                marker.mkr.setLatLng(newPosition.latlng).bindPopup("<b>User: </b>" + newPosition.id
+                                            +'<br><b>[' + newPosition.latlng.lat + ';' + newPosition.latlng.lng+']</b>').openPopup();
+                            }
+   
+                        });
 
                     </script>
                 </div>

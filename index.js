@@ -33,6 +33,7 @@ admins.on('connection', function(socket){
   });
 });
 
+
 var users = io.of('/users');
 users.on('connection', function(socket){
   console.log('user connected with id: ' + socket.id);
@@ -45,6 +46,12 @@ users.on('connection', function(socket){
 users.on('connection', function(socket){
   socket.on('sentCoordinates', function(latlng){
     console.log('latlng: ' + latlng.lat + ';' + latlng.lng);
+    
+    var newPosition = {}
+    newPosition.id = socket.id;
+    newPosition.latlng = latlng;
+    users.emit('sentCoordinates', newPosition);
+    admins.emit('sentCoordinates', newPosition);
   });
 });
 
