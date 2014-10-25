@@ -52,7 +52,7 @@
 
     <div class="container-fluid">
         <div class="page-header">
-            <h1>C3D</h1>
+            <h1>Admin</h1>
         </div>
         <div class="row">
             <div class="col-md-12">
@@ -62,24 +62,29 @@
                         var map = L.map('model2D').setView([0, 0], 3);
 
                         var socket = io('/admins');
-                        marker = {
-                            id: undefined,
-                            mkr: undefined
-                        }
-                        socket.on('sentCoordinates', function(newPosition) {
-                            console.log('passa');
-                            if(marker.id===undefined) {
-                                marker.id = newPosition.id;
-                                marker.mkr = L.marker([newPosition.latlng.lat, newPosition.latlng.lng]).addTo(map)
-                                        .bindPopup("<b>User: </b>" + newPosition.id
-                                            +'<br><b>[' + newPosition.latlng.lat + ';' + newPosition.latlng.lng+']</b>').openPopup();
-                                        console.log(marker);
+                        
+                        var usersInMap = {};
+                        socket.on('updateUsers', function(usersConnected) {
+                            for(userToUpdate in usersConnected) {
+                                if(userToUpdate in usersInMap) {
+                                    console.log('Modifica');
+                                    var user = usersInMap[userToUpdate];
+                                    console.log(user);
+                                    user.point.setLatLng(usersConnected[userToUpdate].latlng).bindPopup("<b>User: </b>" + user.id +'<br><b>[' + usersConnected[userToUpdate].latlng.lat + ';' + usersConnected[userToUpdate].latlng.lng+']</b>').openPopup();
+                                }
+                                else  {
+                                    console.log('Nuovo inserimento');
+                                    console.log(usersConnected[userToUpdate].latlng);
+                                    var user = {
+                                        id: usersConnected[userToUpdate].id,
+                                        latlng: usersConnected[userToUpdate].latlng,
+                                        point: L.marker(usersConnected[userToUpdate].latlng).addTo(map)
+                                            .bindPopup("<b>User: </b>"+ usersConnected[userToUpdate].id+'<br><b>[' + usersConnected[userToUpdate].latlng.lat + ';' + usersConnected[userToUpdate].latlng.lng+']</b>').openPopup()
+                                    }
+                                    usersInMap[user.id] = user;
+                                }
                             }
-                            else {
-                                marker.mkr.setLatLng(newPosition.latlng).bindPopup("<b>User: </b>" + newPosition.id
-                                            +'<br><b>[' + newPosition.latlng.lat + ';' + newPosition.latlng.lng+']</b>').openPopup();
-                            }
-   
+                        
                         });
                     </script>
                 </div>
