@@ -67,7 +67,10 @@
                         
                         var socket = io('/users');
                     
-                        var marker = {};
+                        var marker = L.marker([0, 0]).addTo(map);
+                        marker.bindPopup('<b>[' + marker.getLatLng().lat + '; ' + marker.getLatLng().lng + ']</b>');
+                        
+                        socket.emit('updatePosition', marker.getLatLng());
                         
                         map.on('click', onMapClick);
 
