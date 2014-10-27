@@ -35,24 +35,22 @@ var users = io.of('/users');
 
 users.on('connection', function(socket){
     console.log('User connected with id: ' + socket.id);
-    var socketInfo = {
+    var user = {
         id: socket.id,
-        latlng: [0, 0]
+        latlng: undefined
     };
-    usersConnected[socketInfo.id] = socketInfo;
-    socket.emit('initSocket', socketInfo);
-    admins.emit('updateUsers',usersConnected);
+    usersConnected[user.id] = user;
 
     socket.on('disconnect', function(){
         console.log('User disconnected with id: ' + socket.id);
         delete usersConnected[socket.id];
-        admins.emit('userDisconnected',socket.id);
+        admins.emit('updateUsers', usersConnected);
     });
 
-    socket.on('sentCoordinates', function(latlng){
-        socketInfo.latlng = latlng;
-        socket.emit('refreshCoordinates',socketInfo);
-        admins.emit('updateUsers',usersConnected);
+    socket.on('updatePosition', function(latlng){
+        user.latlng = latlng;
+        socket.emit('updatePosition', user);
+        admins.emit('updateUsers', usersConnected);
     });
 });
 
