@@ -23,7 +23,7 @@ var admins = io.of('/admins');
 
 admins.on('connection', function(socket){
     console.log('Admin connected with id: ' + socket.id);
-    socket.emit('initMap',usersConnected);
+    socket.emit('updateMapUsersConnected',usersConnected);
   
   socket.on('disconnect', function(){
     console.log('Admin disconnected with id: ' + socket.id);
@@ -44,13 +44,13 @@ users.on('connection', function(socket){
     socket.on('disconnect', function(){
         console.log('User disconnected with id: ' + socket.id);
         delete usersConnected[socket.id];
-        admins.emit('updateUsers', usersConnected);
+        admins.emit('updateMapUsersConnected', usersConnected);
     });
 
     socket.on('updatePosition', function(latlng){
         user.latlng = latlng;
         socket.emit('updatePosition', user);
-        admins.emit('updateUsers', usersConnected);
+        admins.emit('updateMapUsersConnected', usersConnected);
     });
 });
 

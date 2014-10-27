@@ -65,24 +65,8 @@
                         var markers = L.featureGroup();
                         map.addLayer(markers);
 
-                        socket.on('initMap', function(usersConnected){
-                            for(userToUpdate in usersConnected) { 
-                                console.log('Init Map');
-                                var user = {
-                                    id: usersConnected[userToUpdate].id,
-                                    latlng: usersConnected[userToUpdate].latlng,
-                                    marker: L.marker(usersConnected[userToUpdate].latlng).addTo(map)
-                                        
-                                }
-                                user.marker.bindPopup("<b>User: </b>" + user.id +'<br><b>[' + user.latlng.lat + '; ' + user.latlng.lng + ']</b>');
 
-                                markers.addLayer(user.marker);
-
-                            }
-                         
-                        });
-
-                        socket.on('updateUsers', function(usersConnected) {
+                        socket.on('updateMapUsersConnected', function(usersConnected) {
                             
                             map.removeLayer(markers);
                             
@@ -91,8 +75,6 @@
                             map.addLayer(markers);
                             
                             for(userToUpdate in usersConnected) { 
-                                console.log('Update Map');
-                                
                                 var user = {
                                     id: usersConnected[userToUpdate].id,
                                     latlng: usersConnected[userToUpdate].latlng,
@@ -100,7 +82,6 @@
                                         
                                 }
                                 user.point.bindPopup("<b>User: </b>" + user.id +'<br><b>[' + user.latlng.lat + '; ' + user.latlng.lng + ']</b>');
-
                                 markers.addLayer(user.point);
                             }
                         });

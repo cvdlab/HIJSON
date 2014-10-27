@@ -67,21 +67,22 @@
                         
                         var socket = io('/users');
                     
-                        var point = {}; 
+                        var marker = {};
                         
                         map.on('click', onMapClick);
-                        
-                        function onMapClick(e) {
-                            newPosition = e;
-                            socket.emit('updatePosition',e.latlng);
 
+                        function onMapClick(e) {
+                            socket.emit('updatePosition', e.latlng);
                         }
 
                         socket.on('updatePosition', function(user) {
-                            map.removeLayer(point);
-                            point = L.marker(user.latlng).addTo(map);
-                            point.bindPopup("<b>User: </b>" + user.id +'<br><b>[' + user.latlng.lat + '; ' + user.latlng.lng + ']</b>');
-                            map.addLayer(point);
+                            map.removeLayer(marker);
+                            
+                            marker = L.marker(user.latlng).addTo(map);
+                            
+                            marker.bindPopup("<b>User: </b>" + user.id +'<br><b>[' + user.latlng.lat + '; ' + user.latlng.lng + ']</b>');
+                            
+                            map.addLayer(marker);
                         });
 
 
@@ -90,8 +91,5 @@
             </div>
             
         </div>
-
-
-
 </body>
 </html>
