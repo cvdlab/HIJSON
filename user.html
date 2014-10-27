@@ -73,18 +73,15 @@
 
                         function onMapClick(e) {
                             socket.emit('updatePosition', e.latlng);
-                        }
-
-                        socket.on('updatePosition', function(user) {
+                            
                             map.removeLayer(marker);
                             
-                            marker = L.marker(user.latlng).addTo(map);
+                            marker = L.marker(e.latlng).addTo(map);
                             
-                            marker.bindPopup("<b>User: </b>" + user.id +'<br><b>[' + user.latlng.lat + '; ' + user.latlng.lng + ']</b>');
+                            marker.bindPopup("<b>User: </b>" + socket.id +'<br><b>[' + e.latlng.lat + '; ' + e.latlng.lng + ']</b>');
                             
                             map.addLayer(marker);
-                        });
-
+                        }
 
                     </script>
                 </div>

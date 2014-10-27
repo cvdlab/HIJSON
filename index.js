@@ -49,7 +49,6 @@ users.on('connection', function(socket){
 
     socket.on('updatePosition', function(latlng){
         user.latlng = latlng;
-        socket.emit('updatePosition', user);
         admins.emit('updateMapUsersConnected', usersConnected);
     });
 });
