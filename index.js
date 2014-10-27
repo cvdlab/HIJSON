@@ -22,11 +22,11 @@ app.get('/', function(req, res){
 var admins = io.of('/admins');
 
 admins.on('connection', function(socket){
-    console.log('admin connected with id: ' + socket.id);
-    admins.emit('updateUsers',usersConnected);
+    console.log('Admin connected with id: ' + socket.id);
+    socket.emit('initMap',usersConnected);
   
   socket.on('disconnect', function(){
-    console.log('admin disconnected with id: ' + socket.id);
+    console.log('Admin disconnected with id: ' + socket.id);
   });
 
 });
@@ -46,12 +46,11 @@ users.on('connection', function(socket){
     socket.on('disconnect', function(){
         console.log('User disconnected with id: ' + socket.id);
         delete usersConnected[socket.id];
-        admins.emit('updateUsers',usersConnected);
+        admins.emit('userDisconnected',socket.id);
     });
 
     socket.on('sentCoordinates', function(latlng){
         socketInfo.latlng = latlng;
-        console.log(socket.id +'[' + latlng.lat + ';' + latlng.lng + '].');
         socket.emit('refreshCoordinates',socketInfo);
         admins.emit('updateUsers',usersConnected);
     });

@@ -77,15 +77,17 @@
 
                         }
                         socket.on('initSocket', function(socketInfo) {
-                            point = L.marker([socketInfo.latlng[0], socketInfo.latlng[1] ]).addTo(map)
-                                    .bindPopup("<b>User: </b>" + socketInfo.id +'<br><b>[' + socketInfo.latlng[0] + ';' + socketInfo.latlng[1]+']</b>')
-                                    .openPopup();
+                            var latlng = L.latLng(socketInfo.latlng[0], socketInfo.latlng[1]);
+                            point = L.marker(latlng).addTo(map)
+                                    .bindPopup("<b>User: </b>" + socketInfo.id +'<br><b>[' + latlng.lat + '; ' + latlng.lng +']</b>');
+                            map.addLayer(point);
 
                         });
                         
                         socket.on('refreshCoordinates', function(socketInfo) {
-                            console.log(socketInfo);
-                            point.setLatLng(socketInfo.latlng).bindPopup("<b>User: </b>" + socketInfo.id +'<br><b>[' + socketInfo.latlng.lat + ';' + socketInfo.latlng.lng+']</b>').openPopup();
+                            map.removeLayer(point);
+                            point.setLatLng(socketInfo.latlng).bindPopup("<b>User: </b>" + socketInfo.id +'<br><b>[' + socketInfo.latlng.lat + '; ' + socketInfo.latlng.lng+']</b>').openPopup();
+                            map.addLayer(point);
                         });
 
 

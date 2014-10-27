@@ -64,27 +64,56 @@
                         var socket = io('/admins');
                         
                         var usersInMap = {};
+                        socket.on('initMap', function(usersConnected){
+                            for(userToUpdate in usersConnected) { 
+                                console.log('InitMap');
+                                var user = {
+                                    id: usersConnected[userToUpdate].id,
+                                    latlng: usersConnected[userToUpdate].latlng,
+                                    point: L.marker(usersConnected[userToUpdate].latlng).addTo(map)
+                                        
+                                }
+                                user.point.bindPopup("<b>User: </b>" + user.id +'<br><b>[' + user.latlng.lat + '; ' + user.latlng.lng + ']</b>');
+
+                                usersInMap[user.id] = user;
+                                map.addLayer(user.point);
+                            }
+                         
+                        });
                         socket.on('updateUsers', function(usersConnected) {
                             for(userToUpdate in usersConnected) {
+                                console.log(usersConnected);
                                 if(userToUpdate in usersInMap) {
                                     console.log('Modifica');
                                     var user = usersInMap[userToUpdate];
                                     console.log(user);
-                                    user.point.setLatLng(usersConnected[userToUpdate].latlng).bindPopup("<b>User: </b>" + user.id +'<br><b>[' + usersConnected[userToUpdate].latlng.lat + ';' + usersConnected[userToUpdate].latlng.lng+']</b>').openPopup();
+                                    map.removeLayer(user.point);
+                                    usersInMap[userToUpdate].latlng = usersConnected[userToUpdate].latlng;
+                                    user.point.setLatLng(usersConnected[userToUpdate].latlng)
+
                                 }
                                 else  {
                                     console.log('Nuovo inserimento');
-                                    console.log(usersConnected[userToUpdate].latlng);
+                                    var arrayTolatlng = L.latLng(usersConnected[userToUpdate].latlng[0], usersConnected[userToUpdate].latlng[1]);
                                     var user = {
                                         id: usersConnected[userToUpdate].id,
-                                        latlng: usersConnected[userToUpdate].latlng,
+                                        latlng: arrayTolatlng,
                                         point: L.marker(usersConnected[userToUpdate].latlng).addTo(map)
-                                            .bindPopup("<b>User: </b>"+ usersConnected[userToUpdate].id+'<br><b>[' + usersConnected[userToUpdate].latlng.lat + ';' + usersConnected[userToUpdate].latlng.lng+']</b>').openPopup()
+                                            
                                     }
                                     usersInMap[user.id] = user;
                                 }
+                                console.log(user);
+                                user.point.bindPopup("<b>User: </b>" + user.id +'<br><b>[' + user.latlng.lat + '; ' + user.latlng.lng + ']</b>')
+
+                                map.addLayer(user.point);
                             }
-                        
+                        });
+
+                        socket.on('userDisconnected', function(idUserDisconnetect) {
+                            console.log('Rimuovi users');
+                            map.removeLayer(usersInMap[idUserDisconnetect].point);
+                            delete usersInMap[idUserDisconnetect];
                         });
                     </script>
                 </div>
