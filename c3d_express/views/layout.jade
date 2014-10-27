@@ -17,11 +17,24 @@ html
 		script(src='/assets/js/jquery-2.1.1.js')
 		script(src='/assets/js/async.js')
 		script(src='/assets/js/bootstrap.min.js')
-		
+		script(src='/socket.io/socket.io.js')
 		include ./includes/scripts_2d.jade
 		include ./includes/scripts_3d.jade
 		
 		// C3D Library
-		script(src='/libs/c3d.js')
+		script(src='/libs/c3d_client.js')
+		
+		script.
+			var socket = io();
+			socket.on('initialization', function (data) {
+			    console.log('initialization');
+			    C3D_server = JSON.parse(data.C3D_server);
+			    for (prop in C3D_server) {
+				    C3D[prop] = C3D_server[prop];
+			    }
+			    C3D.setIndexAndParents();
+			    C3D.activate2D();
+			    C3D.activate3D();
+			});
 		
 		block content

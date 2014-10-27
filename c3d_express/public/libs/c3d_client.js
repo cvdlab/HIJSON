@@ -1,60 +1,79 @@
-var C3D = {
-    tree: {
-        id: 'building',
-        properties: {
-	        "class": "building"
-        },
-        children: []
-    },
-    index: {},
-    path_config: 'json_input/config.json',
-    path_architecture: 'json_input/architecture.json',
-    path_furnitures: 'json_input/furnitures.json',
-    scene3D: new THREE.Scene(),
-	map2D: {},
-    generator3D: {}
+var C3D = {};
+
+C3D.setIndexAndParents = function() {
+    var queue = [];
+    var feature;
+    C3D.index = {};
+    C3D.index['building'] = C3D.tree;
+    for (var i = 0; i < C3D.tree.children.length; i++) {
+        queue.push(C3D.tree.children[i]);
+    }
+    
+    while (queue.length > 0) {
+        feature = queue.shift();
+		C3D.index[feature.id] = feature;
+
+        for(var i = 0; i < feature.children.length; i++) {
+            queue.push(feature.children[i]);
+        }
+    }
+    
+    for (id in C3D.index) {
+    	var feature = C3D.index[id];
+		feature.parent = C3D.index[feature.properties.parent];
+	}
 }
 
-/*
-    Funzione che genera albero ed indice a partire dai file json
- */ 
+C3D.activate2D = function() {
+	var err;
+	async.waterfall(
+		[
+			function(callback) {
+				err = C3D.init2D();
+				callback(err);
+			},
+			function(callback) {
+				err = C3D.generate2DModel();
+				callback(err);
+			}
+		],
+		function(err, data) {
+			if(err) {
+				console.log(err);
+			} else {
+				console.log('Modello 2D inizializzato.'); 
+			}
+		}
+	);
+}
 
-C3D.parseJSON = function() {
-    C3D.index['building'] = C3D.tree;
-    function readJSON(typeJSON, path) {
-        $.getJSON(path, function(data) { 
-            if (data.type == "FeatureCollection") 
-            {
-                console.log('FeatureCollection detected for '+typeJSON+'.');
-                
-                $.each( data.features, function( key, feature ) 
-                {
-                    var obj = {};
-                    obj.id = feature.id;
-                    obj.parent = C3D.index[feature.properties.parent];
-                    obj.parent.children.push(obj);
-                    obj.children = [];
-                    obj.geometry = feature.geometry;
-                    obj.properties = feature.properties;
-                    C3D.index[feature.id] = obj;
-                });
-                
-            } 
-            else 
-            {   
-                var err = 'ERROR: No FeatureCollection detected' 
-                return err;
-            }
-        });
-    };
-    
-    readJSON('architecture', C3D.path_architecture);
-    readJSON('furnitures', C3D.path_furnitures);  
-};
+C3D.activate3D = function() {
+	var err;
+	async.waterfall(
+		[
+			function(callback) {
+				err = C3D.init3D();
+				callback(err);
+			},
+			function(callback) {
+				err = C3D.generate3DModel();
+				callback(err);
+			}
+		],
+		function(err, data) {
+			if(err) {
+				console.log(err);
+			} else {
+				console.log('Modello 3D inizializzato.'); 
+			}
+		}
+	);
+}
+
 
 C3D.init2D = function() {
         
-        var container2D = $("#model2D");
+        var container2D = $("#container2D");
         var container2DWidth = container2D.width();
         var container2DHeight = container2D.width()/4*3;
         container2D.css('height', container2DHeight);
@@ -67,7 +86,7 @@ C3D.init2D = function() {
 	        container2D.css('height', container2DHeight);
 	    }
 	    
-        C3D.map2D = L.map('model2D').setView([0, 0], 3);
+        C3D.map2D = L.map('container2D').setView([0, 0], 3);
         
         
 		//Quando si posizionera' sulla mappa 
@@ -83,18 +102,19 @@ C3D.init2D = function() {
 
 /*
     Funzione di inizializzazione three js
- */ 
+*/ 
 
 C3D.init3D = function() {
-    
-    var container3D = $('#model3D');
+	
+	var container3D = $('#container3D');
     var container3DWidth = container3D.width();
     var container3DHeight = container3D.width()/4*3;
     container3D.css('height', container3DHeight);
     
     var stats = initStats();
     // create a scene, that will hold all our elements such as objects, cameras and lights.
-    var scene = C3D.scene3D;
+    
+    var scene = new THREE.Scene();
     // create a camera, which defines where we're looking at.
     var camera = new THREE.PerspectiveCamera(45, container3DWidth / container3DHeight, 0.1, 1000);
     // create a render and set the size
@@ -102,7 +122,7 @@ C3D.init3D = function() {
     
     var trackballControls = new THREE.TrackballControls(camera, container3D[0]);
     
-    renderer.setClearColor(new THREE.Color(0x1D1F21, 1.0)); 
+    renderer.setClearColor(new THREE.Color(C3D.config.style.background.color, 1.0)); 
     renderer.setSize(container3DWidth, container3DHeight);
     renderer.shadowMapEnabled = true;
     
@@ -143,6 +163,7 @@ C3D.init3D = function() {
             }            
         }
     };
+    C3D.scene3D = scene;
     
     var gui = new dat.GUI();   
     
@@ -244,13 +265,49 @@ C3D.generate3DModel = function() {
 /*
     Funzione che genera il modello 2D per Leaflet
 */ 
- 
+
+C3D.setStyle2DModel = function (feature) {
+/*
+    switch(feature.properties.class) {
+	    case "internal_wall":
+	     	return {
+			 	color: C3D.config.style[feature.properties.class]
+			 	};
+	     	break;
+	    case "external_wall": 
+	     	return {
+			 	color: C3D.config.style[feature.properties.class]
+			 	};
+	    	break;
+	    case "level":
+	    	return {
+			 	color: C3D.config.style[feature.properties.class]
+			 	};
+	    	break;
+	    case "door": 
+	     	return {
+			 	color: C3D.config.style[feature.properties.class]
+			 	};
+	    	break;
+	    case "room":
+	     	return {
+			 	fillcolor: C3D.config.style[feature.properties.class]
+			 	};
+	    	break;
+    }
+*/
+	console.log(feature);
+	return C3D.config.style[feature.properties.class];
+
+    
+}
+
+
 C3D.generate2DModel = function() {
 
 	var geoJSONmap = {};
-    var includedArchitectureClasses = ['level','room','door', 'internal_wall', 'external_wall'];
-    var includedFurtituresClasses = ['server','surveillanceCamera'];
-	
+    var includedArchitectureClasses = ['level', 'room', 'door', 'internal_wall', 'external_wall'];
+    var includedFurtituresClasses = ['server', 'surveillanceCamera'];
 	var includedClasses = includedArchitectureClasses.concat(includedFurtituresClasses);
     var queue = [];
     var obj;
@@ -271,8 +328,8 @@ C3D.generate2DModel = function() {
 			if(!(level in geoJSONmap)) {
 
 				geoJSONmap[level] = {
-					"type": "FeatureCollection",
-					"features": []
+					type: "FeatureCollection",
+					features: []
 				}
 
 			}
@@ -282,10 +339,12 @@ C3D.generate2DModel = function() {
 			newObj.type = "Feature";
 			newObj.id = obj.id;
 			newObj.geometry = {
-				"type": obj.geometry.type,
-				"coordinates": absoluteCoords(obj)
+				type: obj.geometry.type,
+				coordinates: absoluteCoords(obj)
 			};
-			newObj.properties = {};
+			newObj.properties = {
+				class: obj.properties.class
+			};
 			
 			geoJSONmap[level].features.push(newObj);
 		}
@@ -297,7 +356,7 @@ C3D.generate2DModel = function() {
 	}
 	
 	for(geoJSONlevel in geoJSONmap) {
-		C3D.index[geoJSONlevel].layer2D = L.geoJson(geoJSONmap[geoJSONlevel]);
+		C3D.index[geoJSONlevel].layer2D = L.geoJson(geoJSONmap[geoJSONlevel], {style: C3D.setStyle2DModel});
 	}
 	
 	C3D.index['level_0'].layer2D.addTo(C3D.map2D);
@@ -377,7 +436,7 @@ C3D.generate2DModel = function() {
 	}
 }// Chiude generate2DModel
 
-
+C3D.generator3D = {};
 
 C3D.generator3D['server'] = function (feature) {
 
@@ -399,7 +458,6 @@ C3D.generator3D['server'] = function (feature) {
     
     return server;
 };
-
 
 C3D.generator3D['surveillanceCamera'] = function(feature) {
     var radius = 0.2;
@@ -518,7 +576,7 @@ function generatePolygon(geometry) {
 
 C3D.generator3D['external_wall'] = function(feature) {
     var material = new THREE.LineBasicMaterial({ 
-    	color: 0xDE935F, 
+    	color: C3D.config.style.external_wall.color, 
 		linewidth: feature.properties.thickness 
 	});
 	return new THREE.Line(generateLineString(feature.geometry), material);	
@@ -526,7 +584,7 @@ C3D.generator3D['external_wall'] = function(feature) {
 
 C3D.generator3D['internal_wall'] = function(feature) {
     var material = new THREE.LineBasicMaterial({ 
-        color: 0xF0C674, 
+        color: C3D.config.style.internal_wall.color, 
         linewidth:  feature.properties.thickness 
     });
 	return new THREE.Line(generateLineString(feature.geometry), material);
@@ -534,7 +592,7 @@ C3D.generator3D['internal_wall'] = function(feature) {
 
 C3D.generator3D['door'] = function(feature) {
     var material = new THREE.LineBasicMaterial({ 
-        color: 0xB5BD68, 
+        color: C3D.config.style.door.color, 
         linewidth: feature.properties.thickness 
     });
 	return new THREE.Line(generateLineString(feature.geometry), material);
@@ -542,7 +600,7 @@ C3D.generator3D['door'] = function(feature) {
 
 C3D.generator3D['level'] = function(feature) {
     var material = new THREE.LineBasicMaterial({ 
-        color:0x8ABEB7, 
+        color:C3D.config.style.level.color, 
         linewidth: feature.properties.thickness 
     });
 	return new THREE.Line(generateLineString(feature.geometry), material);
@@ -550,7 +608,7 @@ C3D.generator3D['level'] = function(feature) {
 
 C3D.generator3D['room'] = function(feature) {
     var material = new THREE.MeshBasicMaterial({
-        color: 0x8ABEB7,
+        color: C3D.config.style.room.fillColor,
         transparent: true, 
         opacity: 0.3, 
         side: THREE.DoubleSide
