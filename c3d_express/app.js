@@ -10,8 +10,6 @@ var routes = require('./routes/index');
 
 var app = express();
 
-
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -75,11 +73,14 @@ var server = app.listen(app.get('port'), function() {
 var server = app.listen(app.get('port'));
 console.log('Server running on port: '+app.get('port'));
 
+
 var io = require('socket.io')(server);
 
+/*
 io.on('connection', function (socket) {
-	console.log('initialization for '+socket.id);
+	console.log('initialization for ' + socket.id);
 	socket.emit('initialization', { C3D_server: JSON.stringify(C3D) });
 });
+*/
 
 module.exports = app;
