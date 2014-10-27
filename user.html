@@ -78,7 +78,7 @@
                             
                             marker = L.marker(e.latlng).addTo(map);
                             
-                            marker.bindPopup("<b>User: </b>" + socket.id +'<br><b>[' + e.latlng.lat + '; ' + e.latlng.lng + ']</b>');
+                            marker.bindPopup('<b>[' + e.latlng.lat + '; ' + e.latlng.lng + ']</b>');
                             
                             map.addLayer(marker);
                         }
