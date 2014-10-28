@@ -12,20 +12,6 @@ block internal_content
 		marker.bindPopup('<b>[' + marker.getLatLng().lat + '; ' + marker.getLatLng().lng + ']</b>');
 		socket.emit('updatePosition', marker.getLatLng());
 		
-		marker.on('click', onMapClick);
-
-		function onMapClick(e) {
-			console.log(e);
-			socket.emit('updatePosition', e.latlng);
-			map.removeLayer(marker);
-			marker = L.marker(latlng, {
-		    	draggable: true
-			});
-			marker.addTo(map);	
-			marker.bindPopup('<b>[' + e.latlng.lat + '; ' + e.latlng.lng + ']</b>');
-			map.addLayer(marker);
-		};
-
 		marker.on('dragend', dragMarker);
 
 		function dragMarker(e) {
