@@ -5,7 +5,14 @@ block internal_content
 		var map = C3D.map2D;
 		var socket = io('/users');
 		
+		var userIcon =  L.icon({
+			iconUrl: 'assets/img/user.png',
+			iconSize: [64, 64],
+			iconAnchor:[32, 64]
+		});
+		
 		var marker = L.marker(new L.LatLng(0, 0), {
+		    icon: userIcon,
 		    draggable: true
 		});
 		marker.addTo(map);		
