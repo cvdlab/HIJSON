@@ -30,7 +30,25 @@ app.get('/', function(req, res) {
 	res.render('main', {
 		title: 'C3D - Index',
 		enable_2D: true,
+		enable_3D: true,
+		C3D_server: JSON.stringify(C3D)
+	});
+});
+
+app.get('/model2D', function(req, res) {
+	res.render('main', {
+		title: 'C3D - Index',
+		enable_2D: true,
 		enable_3D: false,
+		C3D_server: JSON.stringify(C3D)
+	});
+});
+
+app.get('/model3D', function(req, res) {
+	res.render('main', {
+		title: 'C3D - Index',
+		enable_2D: false,
+		enable_3D: true,
 		C3D_server: JSON.stringify(C3D)
 	});
 });
