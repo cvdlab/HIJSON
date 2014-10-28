@@ -60,63 +60,147 @@ C3D.parseJSON = function() {
         	}
         }
     }
+    
+    C3D.generateGeoJSON();
+    
     C3D.index = {};
     console.log('C3D initialization complete.');
 }
 
-function absoluteCoords(obj) {
+C3D.generateGeoJSON = function() {
+
+	var geoJSONmap = {};
+    var includedArchitectureClasses = ['level', 'room', 'door', 'internal_wall', 'external_wall'];
+    var includedFurtituresClasses = ['server', 'surveillanceCamera'];
+	var includedClasses = includedArchitectureClasses.concat(includedFurtituresClasses);
+    var queue = [];
+    var obj;
+
+	var newObj = {};
 	
-	function translationMatrix(x,y) {
-		return [
-			[ x, 0 ],
-			[ 0, y ]
-		]
-	}
-	
-	function rotationMatrix(grades) {
-		var radiants = grades * Math.PI/180;
-		return [
-			[Math.cos(radiants), -Math.sin(radiants)],
-			[Math.sin(radiants), Math.cos(radiants)]
-		]
-	}
-	
-	function matrixProduct(a,b) {
-		return [
-			[ a[0][0]*b[0][0]+a[0][1]*b[1][0], a[0][0]*b[0][1]+a[0][1]*b[1][1] ],
-			[ a[1][0]*b[0][0]+a[1][1]*b[1][0], a[1][0]*b[0][1]+a[1][1]*b[1][1] ]
-		]
-	}
-	
-	function applyTransformation(v,m) {
-		return [
-			[ v[0]*m[0][0]+v[1]*m[0][1], v[0]*m[1][0]+v[1]*m[1][1] ]
-		]
-	}
-	
-	function objMatrix(object) {
-		var tX = object.properties.tVector[0];
-		var tY = object.properties.tVector[1];
-		var rZ = object.properties.rVector[2];
+    for(var i = 0; i < C3D.tree.children.length; i++) {
+        queue.push(C3D.tree.children[i]);
+    }
+    
+    while(queue.length > 0) {
+        obj = queue.shift();
+        
+
+        if(includedClasses.indexOf(obj.properties.class) > -1)
+        {
+	        var localMatrix = objMatrix(obj);
+			var globalMatrix = getCMT(C3D.index[obj.properties.parent]);
+			C3D.index[obj.id].CMT = matrixProduct(globalMatrix, localMatrix);
+			
+            //console.log('(2D) Oggetto in fase di generazione: ' + obj.id);
+			var level = getLevel(obj);			
+			
+			if(!(level in geoJSONmap)) {
+				geoJSONmap[level] = {
+					type: "FeatureCollection",
+					features: []
+				}
+			}
+			
+			var newObj = {};
+			
+			newObj.type = "Feature";
+			newObj.id = obj.id;
+			newObj.geometry = {
+				type: obj.geometry.type,
+				coordinates: absoluteCoords(obj)
+			};
+			
+			newObj.properties = {
+				class: obj.properties.class
+			};
+			
+			geoJSONmap[level].features.push(newObj);
+		}
 		
-		var transMat = translationMatrix(tX, tY);
-		var rotMat = rotationMatrix(rZ);
-		return matrixProduct(transMat, rotMat);
+		for(var i = 0; i < obj.children.length; i++) {
+            queue.push(obj.children[i]);
+        }
+		
 	}
+	C3D.geoJSONmap = geoJSONmap;
+}
+
+function getCMT(obj) {
+	if (obj.CMT !== undefined) {
+		return obj.CMT;
+	} else {
+		return [
+			[1,0,0],
+			[0,1,0],
+			[0,0,1]			
+		];
+	}
+}
+
+function translationMatrix(x,y) {
+	return [
+		[ 1, 0, x ],
+		[ 0, 1, y ],
+		[ 0, 0, 1 ]
+	]
+}
+
+function rotationMatrix(grades) {
+	var radiants = grades * Math.PI/180;
+	return [
+		[Math.cos(radiants), -Math.sin(radiants), 0],
+		[Math.sin(radiants), Math.cos(radiants), 0],
+		[0, 0, 1]
+	]
+}
+
+function matrixProduct(a,b) {
+	return [
+		[ a[0][0]*b[0][0] + a[0][1]*b[1][0] + a[0][2]*b[2][0], a[0][0]*b[0][1] + a[0][1]*b[1][1] + a[0][2]*b[2][1], a[0][0]*b[0][2] + a[0][1]*b[1][2] + a[0][2]*b[2][2] ],
+		[ a[1][0]*b[0][0] + a[1][1]*b[1][0] + a[1][2]*b[2][0], a[1][0]*b[0][1] + a[1][1]*b[1][1] + a[1][2]*b[2][1], a[1][0]*b[0][2] + a[1][1]*b[1][2] + a[1][2]*b[2][2] ],
+		[ a[2][0]*b[0][0] + a[2][1]*b[1][0] + a[2][2]*b[2][0], a[2][0]*b[0][1] + a[2][1]*b[1][1] + a[2][2]*b[2][1], a[2][0]*b[0][2] + a[2][1]*b[1][2] + a[2][2]*b[2][2] ]
+	]
+}
+
+function applyTransformation(v, m) {
+	return [
+		[ v[0]*m[0][0] + v[1]*m[0][1] + m[0][2], v[0]*m[1][0] + v[1]*m[1][1] + m[1][2] ]
+	]
+}
+
+function objMatrix(object) {
+	var tX = object.properties.tVector[0];
+	var tY = object.properties.tVector[1];
+	var rZ = object.properties.rVector[2];
 	
-	var ancestor = C3D.index[obj.properties.parent];
-	var matrix = objMatrix(obj);
-	
-	while(ancestor.properties.class !== 'building') {
-		matrix = matrixProduct(matrix, objMatrix(ancestor));
+	var transMat = translationMatrix(tX, tY);
+	var rotMat = rotationMatrix(rZ);
+	return matrixProduct(transMat, rotMat);
+}
+
+function getLevel(obj) {
+	var ancestor = obj;
+	while (ancestor.properties.class !== 'level') {
 		ancestor = C3D.index[ancestor.properties.parent];
 	}
+	if (ancestor.properties.class === 'building') {
+		return undefined;
+	} else {
+		return ancestor.id;
+	}
+}
+
+function absoluteCoords(obj) {
+	
+	var matrix = getCMT(obj);
 	
 	switch (obj.geometry.type) {
         case "Point":
             return applyTransformation(obj.geometry.coordinates, matrix);
             break;
         case "LineString": 
+        	var newCoords = [];
         	oldCoords = obj.geometry.coordinates;
         	for (var i = 0; i < oldCoords.length; i++)
         	{
@@ -126,6 +210,7 @@ function absoluteCoords(obj) {
             return newCoords;
             break;
         case "Polygon":
+        	var newCoords = [];
         	oldCoords = obj.geometry.coordinates;
         	for (var i = 0; i < oldCoords.length; i++)
         	{

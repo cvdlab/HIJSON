@@ -270,58 +270,9 @@ C3D.generate3DModel = function() {
 */ 
 
 C3D.generate2DModel = function() {
-
-	var geoJSONmap = {};
-    var includedArchitectureClasses = ['level', 'room', 'door', 'internal_wall', 'external_wall'];
-    var includedFurtituresClasses = ['server', 'surveillanceCamera'];
-	var includedClasses = includedArchitectureClasses.concat(includedFurtituresClasses);
-    var queue = [];
-    var obj;
-
-	var newObj = {};
 	
-    for(var i = 0; i < C3D.tree.children.length; i++) {
-        queue.push(C3D.tree.children[i]);
-    }
-    
-    while(queue.length > 0) {
-        obj = queue.shift();
-        if(includedClasses.indexOf(obj.properties.class) > -1)
-        {
-            //console.log('(2D) Oggetto in fase di generazione: ' + obj.id);
-			var level = getLevel(obj);			
-			
-			if(!(level in geoJSONmap)) {
-				geoJSONmap[level] = {
-					type: "FeatureCollection",
-					features: []
-				}
-			}
-			
-			var newObj = {};
-			
-			newObj.type = "Feature";
-			newObj.id = obj.id;
-			newObj.geometry = {
-				type: obj.geometry.type,
-				coordinates: absoluteCoords(obj)
-			};
-			
-			newObj.properties = {
-				class: obj.properties.class
-			};
-			
-			geoJSONmap[level].features.push(newObj);
-		}
-		
-		for(var i = 0; i < obj.children.length; i++) {
-            queue.push(obj.children[i]);
-        }
-		
-	}
-	
-	for(geoJSONlevel in geoJSONmap) {
-		C3D.index[geoJSONlevel].layer2D = L.geoJson(geoJSONmap[geoJSONlevel], {style: styleFunction});
+	for(geoJSONlevel in C3D.geoJSONmap) {
+		C3D.index[geoJSONlevel].layer2D = L.geoJson(C3D.geoJSONmap[geoJSONlevel], {style: styleFunction});
 	}
 	
 	C3D.index['level_0'].layer2D.addTo(C3D.map2D);
@@ -330,86 +281,8 @@ C3D.generate2DModel = function() {
 	function styleFunction(feature) {
 		return C3D.config.style[feature.properties.class];
 	}
-
-	function fromGradesToRadians(grades) {
-		return grades * Math.PI / 180;
-	}
 	
-	function absoluteCoords(obj) {
-		var tVect = [obj.properties.tVector[0], obj.properties.tVector[1]];
-		var rotationGrades = obj.properties.rVector[2];
-	
-		var oldCoords;
-		var newCoords = [];
-		var ancestor = C3D.index[obj.parent.id];
-		
-/*
-		if(obj.properties.rVector !== undefined) {
-			var rVect = [obj.properties.rVector[0], obj.properties.rVector[1], obj.properties.rVector[2]];
-			fromGradesToRadians(rVect);
-		}
-*/
-		
-		while(ancestor.properties.class !== 'building') {
-			tVect[0] += ancestor.properties.tVector[0];
-			tVect[1] += ancestor.properties.tVector[1];
-			rotationGrades += ancestor.properties.rVector[2];
-			ancestor = C3D.index[ancestor.parent.id];
-		}
-		
-		rotation = rotationGrades * Math.PI / 180;
-		
-		switch (obj.geometry.type) {
-	        case "Point":
-	            return tVect;
-	            break;
-	        case "LineString": 
-	        	oldCoords = obj.geometry.coordinates;
-	        	for (var i = 0; i < oldCoords.length; i++)
-	        	{
-		        	oldX = oldCoords[i][0];
-		        	oldY = oldCoords[i][1];
-	        		var newX = ((oldX * Math.cos(rotation)) - (oldY * Math.sin(rotation)) + tVect[0]);
-	        		var newY = ((oldX * Math.sin(rotation)) + (oldY * Math.cos(rotation)) + tVect[1]);
-		        	newCoords.push([newX, newY]);
-	        	}
-	            return newCoords;
-	            break;
-	        case "Polygon":
-	        	oldCoords = obj.geometry.coordinates;
-	        	for (var i = 0; i < oldCoords.length; i++)
-	        	{
-		        	var newPerimeter = [];
-		        	for (var j = 0; j < oldCoords[i].length; j++)
-		        	{
-		        		newPerimeter.push([oldCoords[i][j][0]+tVect[0],oldCoords[i][j][1]+tVect[1]]);
-		        	}
-		        	newCoords.push(newPerimeter);
-		        }
-	            return newCoords;
-	            break;
-	        default:
-	        	return undefined;
-	        	break;
-	    }
-	}
-	
-	function getLevel(obj) {
-		var ancestor = obj;
-		while (ancestor.properties.class !== 'level')
-		{
-			ancestor = ancestor.parent;
-		}
-		if (ancestor.properties.class === 'building')
-		{
-			return undefined;
-		}
-		else
-		{
-			return ancestor.id;
-		}
-	}
-}// Chiude generate2DModel
+}	// Chiude generate2DModel
 
 C3D.generator3D = {};
 
