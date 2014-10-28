@@ -164,9 +164,7 @@ function matrixProduct(a,b) {
 }
 
 function applyTransformation(v, m) {
-	return [
-		[ v[0]*m[0][0] + v[1]*m[0][1] + m[0][2], v[0]*m[1][0] + v[1]*m[1][1] + m[1][2] ]
-	]
+	return [ v[0]*m[0][0] + v[1]*m[0][1] + m[0][2], v[0]*m[1][0] + v[1]*m[1][1] + m[1][2] ];
 }
 
 function objMatrix(object) {
