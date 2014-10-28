@@ -9,10 +9,12 @@ block internal_content
 		marker.bindPopup('<b>[' + marker.getLatLng().lat + '; ' + marker.getLatLng().lng + ']</b>');
 		socket.emit('updatePosition', marker.getLatLng());
 		
-		map.on('click', function(e) {
+		map.on('click', onMapClick);
+		
+		function onMapClick(e) {
 			socket.emit('updatePosition', e.latlng);
 			map.removeLayer(marker);
 			marker = L.marker(e.latlng).addTo(map);
 			marker.bindPopup('<b>[' + e.latlng.lat + '; ' + e.latlng.lng + ']</b>');
 			map.addLayer(marker);
-		});
+		};

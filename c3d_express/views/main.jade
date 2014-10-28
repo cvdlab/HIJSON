@@ -28,12 +28,6 @@ block content
 			C3D[prop] = C3D_server[prop];
 		}
 		C3D.setIndexAndParents();
-		
-	if enable_2D
-		script C3D.activate2D();
-			
-	if enable_3D 
-		script C3D.activate3D();
 	
 	.container-fluid
 		.page-header
@@ -63,4 +57,16 @@ block content
 					.col-md-12
 						h3 3D
 						#container3D
+		
+	if enable_2D
+		script.
+			C3D.init2D();
+			C3D.generate2DModel();
+			
+	if enable_3D 
+		script.
+			C3D.init3D();
+			C3D.generate3DModel();
+	
+
 	block internal_content

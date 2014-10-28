@@ -24,53 +24,6 @@ C3D.setIndexAndParents = function() {
 	}
 }
 
-C3D.activate2D = function() {
-	var err;
-	async.waterfall(
-		[
-			function(callback) {
-				err = C3D.init2D();
-				callback(err);
-			},
-			function(callback) {
-				err = C3D.generate2DModel();
-				callback(err);
-			}
-		],
-		function(err, data) {
-			if(err) {
-				console.log(err);
-			} else {
-				console.log('Modello 2D inizializzato.'); 
-			}
-		}
-	);
-}
-
-C3D.activate3D = function() {
-	var err;
-	async.waterfall(
-		[
-			function(callback) {
-				err = C3D.init3D();
-				callback(err);
-			},
-			function(callback) {
-				err = C3D.generate3DModel();
-				callback(err);
-			}
-		],
-		function(err, data) {
-			if(err) {
-				console.log(err);
-			} else {
-				console.log('Modello 3D inizializzato.'); 
-			}
-		}
-	);
-}
-
-
 C3D.init2D = function() {
         
         var container2D = $("#container2D");
