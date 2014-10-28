@@ -145,6 +145,40 @@
                 "tVector": [2, 3, 0],
                 "rVector": [0, 0, 0]
             }
+        },
+
+        {
+            "id": "camera_room1",
+            "type": "Feature",
+            "geometry": 
+            {
+                "type": "Point",
+                "coordinates": [0, 0]
+            },
+            "properties": 
+            {
+                "parent": "room_0.1",
+                "class": "surveillanceCamera",
+                "tVector": [0, 0, 2],
+                "rVector": [0, 0, 0]
+            }
+        },
+
+        {
+            "id": "camera_room2",
+            "type": "Feature",
+            "geometry": 
+            {
+                "type": "Point",
+                "coordinates": [0, 0]
+            },
+            "properties": 
+            {
+                "parent": "room_0.2",
+                "class": "surveillanceCamera",
+                "tVector": [2, 0, 0],
+                "rVector": [0, 0, 0]
+            }
         }
     ]
 }
