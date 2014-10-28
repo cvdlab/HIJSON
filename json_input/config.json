@@ -1,7 +1,36 @@
 {
     "coordinates": 
-        {
-            "latitude":41.799404, 
-            "longitude": 12.485177 
-        }
+    {
+        "latitude": 41.799404, 
+        "longitude": 12.485177 
+    },
+    "style":
+    {
+	    "background": 
+	    {
+	    	"color": "#002451"
+		},
+	    "internal_wall": 
+	    {
+	    	"color": "#bbdaff"
+	    },
+	    "external_wall": 
+	    {
+	    	"color": "#7285b7"
+	    },
+	    "level": 
+	    {
+		    "color": "#ffffff",
+		    "opacity": 0
+	    },
+	    "door": 
+	    {
+	    	"color": "#99ffff"
+	    },
+	    "room": 
+	    {
+		    "fillColor": "#ffc58f",
+		    "opacity": 0.6
+	    }
+    }
 }
