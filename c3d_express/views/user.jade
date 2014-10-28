@@ -5,7 +5,10 @@ block internal_content
 		var map = C3D.map2D;
 		var socket = io('/users');
 		
-		var marker = L.marker([0, 0]).addTo(map);
+		var marker = L.marker(new L.LatLng(0, 0), {
+		    draggable: true
+		});
+		marker.addTo(map);		
 		marker.bindPopup('<b>[' + marker.getLatLng().lat + '; ' + marker.getLatLng().lng + ']</b>');
 		socket.emit('updatePosition', marker.getLatLng());
 		
