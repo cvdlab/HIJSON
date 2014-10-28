@@ -31,6 +31,18 @@
 	    {
 		    "fillColor": "#ffc58f",
 		    "opacity": 0.6
+	    },
+	    "server": 
+	    {
+		    "prefix": "fa",
+		    "icon": "database",
+		    "markerColor": "orange"
+	    },
+	    "surveillanceCamera": 
+	    {
+		    "prefix": "fa",
+		    "icon": "video-camera",
+		    "markerColor": "red"
 	    }
     }
 }

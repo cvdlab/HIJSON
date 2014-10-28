@@ -225,7 +225,11 @@ C3D.generate3DModel = function() {
 C3D.generate2DModel = function() {
 	
 	for(geoJSONlevel in C3D.geoJSONmap) {
-		C3D.index[geoJSONlevel].layer2D = L.geoJson(C3D.geoJSONmap[geoJSONlevel], {style: styleFunction});
+		var layer = L.geoJson(C3D.geoJSONmap[geoJSONlevel], {
+																style: styleFunction, 
+																pointToLayer: furnitureMarker
+															});
+		C3D.index[geoJSONlevel].layer2D = layer;
 	}
 	
 	C3D.index['level_0'].layer2D.addTo(C3D.map2D);
@@ -233,6 +237,17 @@ C3D.generate2DModel = function() {
 	
 	function styleFunction(feature) {
 		return C3D.config.style[feature.properties.class];
+	}
+	
+	function furnitureMarker(feature, latlng) {
+		
+		if (C3D.config.style[feature.properties.class] !== undefined) {
+			var markerIcon = L.AwesomeMarkers.icon(C3D.config.style[feature.properties.class]);
+		} else {
+			var markerIcon = L.AwesomeMarkers.icon({ icon: "asterisk" });
+		}
+		
+		return L.marker(latlng, {icon: markerIcon});
 	}
 	
 }	// Chiude generate2DModel
