@@ -61,7 +61,9 @@ C3D.parseJSON = function() {
         }
     }
     
+    process.stdout.write('Generating geoJson layers... ');
     C3D.generateGeoJSON();
+    console.log('Done.');
     
     C3D.index = {};
     console.log('C3D initialization complete.');
