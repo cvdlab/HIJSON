@@ -4,6 +4,13 @@ block internal_content
 	script.
 		var map = C3D.map2D;
 		var markers = L.featureGroup();
+		var userIcon =  L.icon({
+			iconUrl: 'assets/img/user.png',
+			iconSize: [64, 64],
+			iconAnchor:[32, 64],
+			popupAnchor:  [0, -64]
+		});
+		
 		map.addLayer(markers);
 		
 		var socket = io('/admins');
@@ -14,10 +21,13 @@ block internal_content
 			map.addLayer(markers);
 			
 			for(userToUpdate in usersConnected) { 
+
 				var user = {
 					id: usersConnected[userToUpdate].id,
 					latlng: usersConnected[userToUpdate].latlng,
-					point: L.marker(usersConnected[userToUpdate].latlng).addTo(map)
+					point:  L.marker((usersConnected[userToUpdate].latlng), {
+		    					icon: userIcon
+		    				})
 				}
 			user.point.bindPopup("<b>User: </b>" + user.id +'<br><b>[' + user.latlng.lat + '; ' + user.latlng.lng + ']</b>');
 			markers.addLayer(user.point);
