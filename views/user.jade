@@ -8,7 +8,8 @@ block internal_content
 		var userIcon =  L.icon({
 			iconUrl: 'assets/img/user.png',
 			iconSize: [64, 64],
-			iconAnchor:[32, 64]
+			iconAnchor:[32, 64],
+			popupAnchor:  [0, -64]
 		});
 		
 		var marker = L.marker(new L.LatLng(0, 0), {
