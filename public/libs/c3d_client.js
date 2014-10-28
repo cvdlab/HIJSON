@@ -32,7 +32,7 @@ C3D.init2D = function() {
         container2D.css('height', container2DHeight);
 
 		C3D.map2D = L.map('container2D').setView([0, 0], 3);
-		
+		$(".leaflet-container").css({"background": C3D.config.style.background.color});
 	    window.addEventListener('resize', onWindowResize2D, false);
 	
 	    function onWindowResize2D() {
@@ -274,7 +274,6 @@ C3D.generator3D['surveillanceCamera'] = function(feature) {
     
     var model = new THREE.Mesh( geometry, material );
 
-    model.position.z = model.position.z + levelHeight - radius/2;
     
     var surveillanceCamera = new THREE.Object3D();
     surveillanceCamera.add(model);
