@@ -4,11 +4,9 @@ block internal_content
 	script.
 		var map = C3D.map2D;
 		var markers = L.featureGroup();
-		var userIcon =  L.icon({
-			iconUrl: 'assets/img/user.png',
-			iconSize: [64, 64],
-			iconAnchor:[32, 64],
-			popupAnchor:  [0, -64]
+		var userIcon =  L.AwesomeMarkers.icon({
+			prefix: 'fa',
+			icon: 'male'
 		});
 		
 		map.addLayer(markers);
