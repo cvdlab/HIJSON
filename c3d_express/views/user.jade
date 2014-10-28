@@ -15,7 +15,6 @@ block internal_content
 		marker.on('dragend', dragMarker);
 
 		function dragMarker(e) {
-			console.log('drag');
 			var latlng = marker.getLatLng();
 			socket.emit('updatePosition', latlng);
 			map.removeLayer(marker);
