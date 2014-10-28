@@ -1,0 +1,25 @@
+extends main
+
+block internal_content
+	script.
+		var map = C3D.map2D;
+		var markers = L.featureGroup();
+		map.addLayer(markers);
+		
+		var socket = io('/admins');
+		socket.on('updateMapUsersConnected', function(usersConnected) {
+		
+			map.removeLayer(markers);
+			markers = L.featureGroup();
+			map.addLayer(markers);
+			
+			for(userToUpdate in usersConnected) { 
+				var user = {
+					id: usersConnected[userToUpdate].id,
+					latlng: usersConnected[userToUpdate].latlng,
+					point: L.marker(usersConnected[userToUpdate].latlng).addTo(map)
+				}
+			user.point.bindPopup("<b>User: </b>" + user.id +'<br><b>[' + user.latlng.lat + '; ' + user.latlng.lng + ']</b>');
+			markers.addLayer(user.point);
+			}
+		});

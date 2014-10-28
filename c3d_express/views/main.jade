@@ -30,12 +30,10 @@ block content
 		C3D.setIndexAndParents();
 		
 	if enable_2D
-		script.
-			C3D.activate2D();
+		script C3D.activate2D();
 			
 	if enable_3D 
-		script.
-			C3D.activate3D();
+		script C3D.activate3D();
 	
 	.container-fluid
 		.page-header
@@ -64,4 +62,5 @@ block content
 				else
 					.col-md-12
 						h3 3D
-						#container3D				
+						#container3D
+	block internal_content

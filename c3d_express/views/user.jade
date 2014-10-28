@@ -1,0 +1,18 @@
+extends main
+
+block internal_content
+	script.
+		var map = C3D.map2D;
+		var socket = io('/users');
+		
+		var marker = L.marker([0, 0]).addTo(map);
+		marker.bindPopup('<b>[' + marker.getLatLng().lat + '; ' + marker.getLatLng().lng + ']</b>');
+		socket.emit('updatePosition', marker.getLatLng());
+		
+		map.on('click', function(e) {
+			socket.emit('updatePosition', e.latlng);
+			map.removeLayer(marker);
+			marker = L.marker(e.latlng).addTo(map);
+			marker.bindPopup('<b>[' + e.latlng.lat + '; ' + e.latlng.lng + ']</b>');
+			map.addLayer(marker);
+		});

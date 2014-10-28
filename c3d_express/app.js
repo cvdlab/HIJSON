@@ -35,6 +35,24 @@ app.get('/', function(req, res) {
 	});
 });
 
+app.get('/admin', function(req, res) {
+	res.render('admin', {
+		title: 'C3D - Admin',
+		enable_2D: true,
+		enable_3D: false,
+		C3D_server: JSON.stringify(C3D)
+	});
+});
+
+app.get('/user', function(req, res) {
+	res.render('user', {
+		title: 'C3D - user',
+		enable_2D: true,
+		enable_3D: false,
+		C3D_server: JSON.stringify(C3D)
+	});
+});
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
     var err = new Error('Not Found');
@@ -83,13 +101,38 @@ var server = app.listen(app.get('port'));
 console.log('Server running on port: '+app.get('port'));
 
 
+//socket.io
 var io = require('socket.io')(server);
+var admins = io.of('/admins');
+var users = io.of('/users');
+var usersConnected = {};
 
-/*
-io.on('connection', function (socket) {
-	console.log('initialization for ' + socket.id);
-	socket.emit('initialization', { C3D_server: JSON.stringify(C3D) });
+admins.on('connection', function(socket){
+	console.log('Admin connected with id: ' + socket.id);
+	socket.emit('updateMapUsersConnected',usersConnected);
+	socket.on('disconnect', function() {
+		console.log('Admin disconnected with id: ' + socket.id);
+	});
 });
-*/
+
+users.on('connection', function(socket){
+    console.log('User connected with id: ' + socket.id);
+    var user = {
+        id: socket.id,
+        latlng: undefined
+    };
+    usersConnected[user.id] = user;
+
+    socket.on('disconnect', function(){
+        console.log('User disconnected with id: ' + socket.id);
+        delete usersConnected[socket.id];
+        admins.emit('updateMapUsersConnected', usersConnected);
+    });
+
+    socket.on('updatePosition', function(latlng){
+        user.latlng = latlng;
+        admins.emit('updateMapUsersConnected', usersConnected);
+    });
+});
 
 module.exports = app;

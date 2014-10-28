@@ -78,7 +78,9 @@ C3D.init2D = function() {
         var container2DHeight = container2D.width()/4*3;
         container2D.css('height', container2DHeight);
 
-	    window.addEventListener( 'resize', onWindowResize2D, false );
+		C3D.map2D = L.map('container2D').setView([0, 0], 3);
+		
+	    window.addEventListener('resize', onWindowResize2D, false);
 	
 	    function onWindowResize2D() {
 	        container2DWidth = container2D.width();
@@ -86,7 +88,7 @@ C3D.init2D = function() {
 	        container2D.css('height', container2DHeight);
 	    }
 	    
-        C3D.map2D = L.map('container2D').setView([0, 0], 3);
+        
         
         
 		//Quando si posizionera' sulla mappa 
@@ -105,6 +107,7 @@ C3D.init2D = function() {
 */ 
 
 C3D.init3D = function() {
+	C3D.scene3D = new THREE.Scene();
 	
 	var container3D = $('#container3D');
     var container3DWidth = container3D.width();
@@ -114,7 +117,7 @@ C3D.init3D = function() {
     var stats = initStats();
     // create a scene, that will hold all our elements such as objects, cameras and lights.
     
-    var scene = new THREE.Scene();
+    var scene = C3D.scene3D;
     // create a camera, which defines where we're looking at.
     var camera = new THREE.PerspectiveCamera(45, container3DWidth / container3DHeight, 0.1, 1000);
     // create a render and set the size
@@ -163,7 +166,7 @@ C3D.init3D = function() {
             }            
         }
     };
-    C3D.scene3D = scene;
+    
     
     var gui = new dat.GUI();   
     
@@ -266,43 +269,6 @@ C3D.generate3DModel = function() {
     Funzione che genera il modello 2D per Leaflet
 */ 
 
-C3D.setStyle2DModel = function (feature) {
-/*
-    switch(feature.properties.class) {
-	    case "internal_wall":
-	     	return {
-			 	color: C3D.config.style[feature.properties.class]
-			 	};
-	     	break;
-	    case "external_wall": 
-	     	return {
-			 	color: C3D.config.style[feature.properties.class]
-			 	};
-	    	break;
-	    case "level":
-	    	return {
-			 	color: C3D.config.style[feature.properties.class]
-			 	};
-	    	break;
-	    case "door": 
-	     	return {
-			 	color: C3D.config.style[feature.properties.class]
-			 	};
-	    	break;
-	    case "room":
-	     	return {
-			 	fillcolor: C3D.config.style[feature.properties.class]
-			 	};
-	    	break;
-    }
-*/
-	console.log(feature);
-	return C3D.config.style[feature.properties.class];
-
-    
-}
-
-
 C3D.generate2DModel = function() {
 
 	var geoJSONmap = {};
@@ -320,18 +286,16 @@ C3D.generate2DModel = function() {
     
     while(queue.length > 0) {
         obj = queue.shift();
-        if($.inArray(obj.properties.class, includedClasses) > -1)
+        if(includedClasses.indexOf(obj.properties.class) > -1)
         {
             //console.log('(2D) Oggetto in fase di generazione: ' + obj.id);
 			var level = getLevel(obj);			
 			
 			if(!(level in geoJSONmap)) {
-
 				geoJSONmap[level] = {
 					type: "FeatureCollection",
 					features: []
 				}
-
 			}
 			
 			var newObj = {};
@@ -342,6 +306,7 @@ C3D.generate2DModel = function() {
 				type: obj.geometry.type,
 				coordinates: absoluteCoords(obj)
 			};
+			
 			newObj.properties = {
 				class: obj.properties.class
 			};
@@ -356,35 +321,43 @@ C3D.generate2DModel = function() {
 	}
 	
 	for(geoJSONlevel in geoJSONmap) {
-		C3D.index[geoJSONlevel].layer2D = L.geoJson(geoJSONmap[geoJSONlevel], {style: C3D.setStyle2DModel});
+		C3D.index[geoJSONlevel].layer2D = L.geoJson(geoJSONmap[geoJSONlevel], {style: styleFunction});
 	}
 	
 	C3D.index['level_0'].layer2D.addTo(C3D.map2D);
 	C3D.map2D.fitBounds(C3D.index['level_0'].layer2D.getBounds());
+	
+	function styleFunction(feature) {
+		return C3D.config.style[feature.properties.class];
+	}
 
-	function fromGradesToRadians(rVect) {
-		for(var i = 0; i < rVect.length; i++) {
-			rVect[i] = rVect[i] * Math.PI / 180;
-		}
+	function fromGradesToRadians(grades) {
+		return grades * Math.PI / 180;
 	}
 	
 	function absoluteCoords(obj) {
 		var tVect = [obj.properties.tVector[0], obj.properties.tVector[1]];
+		var rotationGrades = obj.properties.rVector[2];
 	
 		var oldCoords;
 		var newCoords = [];
 		var ancestor = C3D.index[obj.parent.id];
 		
+/*
 		if(obj.properties.rVector !== undefined) {
 			var rVect = [obj.properties.rVector[0], obj.properties.rVector[1], obj.properties.rVector[2]];
 			fromGradesToRadians(rVect);
 		}
+*/
 		
 		while(ancestor.properties.class !== 'building') {
 			tVect[0] += ancestor.properties.tVector[0];
 			tVect[1] += ancestor.properties.tVector[1];
+			rotationGrades += ancestor.properties.rVector[2];
 			ancestor = C3D.index[ancestor.parent.id];
 		}
+		
+		rotation = rotationGrades * Math.PI / 180;
 		
 		switch (obj.geometry.type) {
 	        case "Point":
@@ -394,8 +367,10 @@ C3D.generate2DModel = function() {
 	        	oldCoords = obj.geometry.coordinates;
 	        	for (var i = 0; i < oldCoords.length; i++)
 	        	{
-	        		var newX = ((oldCoords[i][0] * Math.cos(rVect[2])) - (oldCoords[i][1] * Math.sin(rVect[2]))) + tVect[0];
-	        		var newY = ((oldCoords[i][0] * Math.sin(rVect[2])) + (oldCoords[i][1] * Math.cos(rVect[2]))) + tVect[1];
+		        	oldX = oldCoords[i][0];
+		        	oldY = oldCoords[i][1];
+	        		var newX = ((oldX * Math.cos(rotation)) - (oldY * Math.sin(rotation)) + tVect[0]);
+	        		var newY = ((oldX * Math.sin(rotation)) + (oldY * Math.cos(rotation)) + tVect[1]);
 		        	newCoords.push([newX, newY]);
 	        	}
 	            return newCoords;
