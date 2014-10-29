@@ -43,6 +43,11 @@
 		    "prefix": "fa",
 		    "icon": "video-camera",
 		    "markerColor": "red"
+	    },
+	    "user": 
+	    {
+		    "prefix": "fa",
+		    "icon": "male"
 	    }
     }
 }

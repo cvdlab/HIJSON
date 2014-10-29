@@ -5,10 +5,7 @@ block internal_content
 		var map = C3D.map2D;
 		var socket = io('/users');
 		
-		var userIcon =  L.AwesomeMarkers.icon({
-			prefix: 'fa',
-			icon: 'male'
-		});
+		var userIcon =  L.AwesomeMarkers.icon( C3D.config.style['user'] );
 		
 		var marker = L.marker(new L.LatLng(0, 0), {
 		    icon: userIcon,
