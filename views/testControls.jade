@@ -8,14 +8,16 @@ block internal_content
 				select#selectLevel
 
 				script.
+					var elements = ['room','level','building'];
 					for(id in C3D.index)
-						if(C3D.index[id].parent === undefined || C3D.index[id].parent.id === "building" )
+						if(elements.indexOf(C3D.index[id].properties.class) > -1)
+						//if(C3D.index[id].parent === undefined || C3D.index[id].parent.id === "building" )
 							$("#selectLevel").append('<option value=' + C3D.index[id].id + '>' + C3D.index[id].id +'</option>')
 
 
 					$( "#selectLevel" ).on('change', function() {
 						if(!{enable_2D})
-							if(this.value !== 'building') {
+							if(this.value === 'level_0' || this.value === 'level_1') {
 								C3D.map2D.eachLayer(function(layer) { C3D.map2D.removeLayer(layer); });
 								C3D.index[this.value].layer2D.addTo(C3D.map2D);
 							}
