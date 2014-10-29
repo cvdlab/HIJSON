@@ -1,41 +1,35 @@
 extends main
 block internal_content
+	.page-header
+			h1 Controls
 	.row
-		.col-md-12
-			.page-header
-				h1 Controls
+		.col-md-3
 			.lead Select level: 
 				select#selectLevel
+		.col-md-3
+			.lead Select Room:
+				select#selectRoom(disabled = true)
+	script.
+		var elements = ['room','level','building'];
+		for(id in C3D.index)
+			//if(elements.indexOf(C3D.index[id].properties.class) > -1)
+			if(C3D.index[id].parent === undefined || C3D.index[id].parent.id === "building" )
+				$("#selectLevel").append('<option value=' + id + '>' + id +'</option>')
 
-				script.
-					var elements = ['room','level','building'];
-					for(id in C3D.index)
-						if(elements.indexOf(C3D.index[id].properties.class) > -1)
-						//if(C3D.index[id].parent === undefined || C3D.index[id].parent.id === "building" )
-							$("#selectLevel").append('<option value=' + C3D.index[id].id + '>' + C3D.index[id].id +'</option>')
 
+		$( "#selectLevel" ).on('change', function() {
+			C3D.emit('selectFeature',this.value);
+			$("#selectRoom").prop('disabled', false);
+			console.log(this.value);
+			$('#selectRoom option').each(function (){
+				$(this).remove();
+			});
+			
+			for(id in C3D.index)
+				if(C3D.index[id].properties.parent === this.value&&C3D.index[id].properties.class==='room')
+					$("#selectRoom").append('<option value=' + id + '>' + id +'</option>')
+		});
 
-					$( "#selectLevel" ).on('change', function() {
-						if(!{enable_2D})
-							if(this.value === 'level_0' || this.value === 'level_1') {
-								C3D.map2D.eachLayer(function(layer) { C3D.map2D.removeLayer(layer); });
-								C3D.index[this.value].layer2D.addTo(C3D.map2D);
-							}
-						if (!{enable_3D})
-							C3D.index["building"].obj3D.traverse(function(object) {
-								object.visible = false;
-							});
-							C3D.index[this.value].obj3D.traverse(function(object) {
-								object.visible = true;
-							});
-							for(var i in C3D.index) {
-								var elementClass = C3D.index[i].properties.class;
-								if((elementClass === "internal_wall") || (elementClass === "external_wall")) {
-									if($.inArray(this.value, C3D.index[i].properties.connections) !== -1) {
-										C3D.index[i].obj3D.traverse(function(object) {
-											object.visible = true; 
-										});
-									}
-								}
-							} 
-					});
+		$( "#selectRoom" ).on('change', function() {
+			C3D.emit('selectFeature', this.value);
+		});

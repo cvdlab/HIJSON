@@ -1,5 +1,27 @@
 var C3D = {};
 
+C3D.handlers = {};
+
+C3D.on = function(event, handler) {
+    var handlers_list = this.handlers[event];
+
+    if(handlers_list === undefined) {
+        handlers_list = this.handlers[event] = [];
+    }
+
+    handlers_list.push(handler);
+}
+
+C3D.emit = function(event, id) {
+    var handlers_list = this.handlers[event];
+
+    if(handlers_list !== undefined) {
+        handlers_list.forEach(function (handler) {
+            handler(id);
+        });
+    }
+}
+
 C3D.setIndexAndParents = function() {
     var queue = [];
     var feature;
@@ -41,7 +63,7 @@ C3D.init2D = function() {
 	        container2D.css('height', container2DHeight);
 	    }
 	    
-        
+        C3D.on('selectFeature', C3D.showFeature2D);
         
         
 		//Quando si posizionera' sulla mappa 
@@ -129,7 +151,7 @@ C3D.init3D = function() {
         container3D.append(stats.domElement);
         return stats;
     }
-
+    C3D.on('selectFeature', C3D.showFeature3D);
 }
 
 /*
@@ -192,7 +214,8 @@ C3D.generate2DModel = function() {
 	for(geoJSONlevel in C3D.geoJSONmap) {
 		var layer = L.geoJson(C3D.geoJSONmap[geoJSONlevel], {
 																style: styleFunction, 
-																pointToLayer: furnitureMarker
+																pointToLayer: furnitureMarker,
+                                                                onEachFeature: onEachFeature
 															});
 		C3D.index[geoJSONlevel].layer2D = layer;
 	}
@@ -214,7 +237,35 @@ C3D.generate2DModel = function() {
 		
 		return L.marker(latlng, {icon: markerIcon});
 	}
-	
+	function onEachFeature(feature, layer) {
+        layer.on({
+            //mouseover: highlightFeature,
+            //mouseout: resetHighlight,
+            click: selectFeature
+        });
+        C3D.index[feature.id].layer2D = layer;
+    }
+
+    function selectFeature(e) {
+        C3D.emit('selectFeature', e.target.feature.id);
+    }
+
+    // function highlightFeature(feature, layer) {
+    //         var layer = e.target;
+    //         layer.setStyle({
+    //             weight: 5,
+    //             color: '#666',
+    //             dashArray: '',
+    //             fillOpacity: 1
+    //         });
+    //         if(!L.Browser.ie && L.Browser.opera) {
+    //             layer.bringToFront();
+    //         }
+    // }
+
+    // function resetHighlight(e) {
+    //     C3D.geojson.resetStyle(e.target);
+    // }
 }	// Chiude generate2DModel
 
 C3D.generator3D = {};
@@ -433,4 +484,43 @@ C3D.generator3D['room'] = function(feature) {
     });
     
     return new THREE.Mesh(generatePolygon(feature.geometry), material);
+}
+
+C3D.showFeature2D = function(idObject) {
+    if(C3D.index[idObject].properties.class === 'level') {
+        C3D.map2D.eachLayer(function(layer) { C3D.map2D.removeLayer(layer); });
+        C3D.index[idObject].layer2D.addTo(C3D.map2D);
+    }
+    if(C3D.index[idObject].properties.class !== 'building') 
+        C3D.map2D.fitBounds(C3D.getRoom(C3D.index[idObject]).layer2D.getBounds());
+}
+
+C3D.showFeature3D = function(idObject) {
+    C3D.index["building"].obj3D.traverse(function(object) {
+        object.visible = false;
+    });
+    
+    C3D.index[idObject].obj3D.traverse(function(object) {
+        object.visible = true;
+    });
+    
+    for(var i in C3D.index) {
+        var elementClass = C3D.index[i].properties.class;
+        if((elementClass === "internal_wall") || (elementClass === "external_wall")) {
+            if($.inArray(idObject, C3D.index[i].properties.connections) !== -1) {
+                C3D.index[i].obj3D.traverse(function(object) { object.visible = true; });
+            }   
+        }
+    } 
+}
+
+C3D.getRoom = function(obj) {
+    var ancestor = obj;
+    if(obj.properties.class !== 'building' && obj.properties.class !== 'level') {
+        console.log(ancestor);
+        while(ancestor.properties.class !== 'room') {
+            ancestor = ancestor.parent;
+        }
+    }
+    return ancestor;
 }

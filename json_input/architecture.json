@@ -1092,28 +1092,6 @@
         },
         {
               "type": "Feature",
-              "id": "door_1.H-S",
-              "geometry": 
-              {
-                    "type": "LineString",
-                    "coordinates": 
-                    [ 
-                       [0, 0], [1, 0] 
-                    ]  
-                  
-              },
-              "properties": 
-              {
-                    "class": "door",
-                    "parent": "wall_1.H-S",
-                    "thickness": 5,
-                    "description": "Door room1",
-                    "tVector": [2, 0, 0],
-                    "rVector": [0, 0, 0]
-              }
-        },
-        {
-              "type": "Feature",
               "id": "door_1.2-H",
               "geometry": 
               {
