@@ -28,6 +28,7 @@
                 "class": "level",
                 "parent": "building",
                 "description": "Mura perimetrali box_0",
+                "height": 3.5,
                 "tVector": [0, 0, 0],
                 "rVector": [0, 0, 0]
             }
@@ -647,28 +648,6 @@
                     "rVector": [0, 0, 0]
               }
         },
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         {
             "type": "Feature",
             "id": "level_1",
@@ -685,7 +664,8 @@
                 "class": "level",
                 "parent": "building",
                 "description": "Mura perimetrali box_1",
-                "tVector": [0, 0, 10],
+                "height": 3.5,
+                "tVector": [0, 0, 3.5],
                 "rVector": [0, 0, 0]
             }
         },

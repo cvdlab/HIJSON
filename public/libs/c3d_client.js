@@ -96,43 +96,8 @@ C3D.init3D = function() {
     
     // add axis helper
     var axisHelper = new THREE.AxisHelper(3);
-    scene.add(axisHelper);
-
-      var controls = new function () {
-
-        this.visibleRoom = "building";
+    scene.add(axisHelper); 
         
-        this.redraw = function() {
-            C3D.index["building"].obj3D.traverse(function(object) {
-                object.visible = false;
-            });
-            C3D.index[controls.visibleRoom].obj3D.traverse(function(object) {
-                object.visible = true;
-            });
-            for(var i in C3D.index) {
-                var elementClass = C3D.index[i].properties.class;
-                if((elementClass === "internal_wall") || (elementClass === "external_wall")) {
-                    if($.inArray(controls.visibleRoom, C3D.index[i].properties.connections) !== -1) {
-                        C3D.index[i].obj3D.traverse(function(object) { object.visible = true; });
-                    }
-                }
-            }            
-        }
-    };
-    
-    
-    var gui = new dat.GUI();   
-    
-    var rooms = ["building"];
-    for(var key in C3D.index) {
-        var element = C3D.index[key];
-        if(element.properties.class === "room" || element.properties.class === "level") {
-            rooms.push(element.id);
-        }
-    }
-    
-    gui.add(controls, "visibleRoom", rooms).onChange(controls.redraw);
-    
     window.addEventListener( 'resize', onWindowResize3D, false );
 
     function onWindowResize3D(){
@@ -389,20 +354,58 @@ function generatePolygon(geometry) {
     return polygon;
 }
 
+function generateWallGeometry(wallFeature) {
+	var wallLength = wallFeature.geometry.coordinates[1][0];
+	var wallHeight = wallFeature.parent.properties.height;
+	var coordinates = [
+		[ [0, 0], [wallLength, 0], [wallLength, wallHeight], [0, wallHeight] ]
+	];
+	for (var i = 0; i < wallFeature.children.length; i++) {
+		var child = wallFeature.children[i];
+		if (child.properties.class === 'door') {
+			var doorLength = child.geometry.coordinates[1][0];
+//			var doorHeight = child.properties.height;
+			var doorHeight = 2;
+			var doorShift = child.properties.tVector[0];
+			var hole = [
+				[doorShift,0], [doorShift+doorLength, 0], [doorShift+doorLength, doorHeight], [doorShift, doorHeight]	
+			];
+			coordinates.push(hole);
+		}
+	}
+	return {
+		coordinates: coordinates
+	}
+}
+
 C3D.generator3D['external_wall'] = function(feature) {
     var material = new THREE.LineBasicMaterial({ 
     	color: C3D.config.style.external_wall.color, 
-		linewidth: feature.properties.thickness 
+        side: THREE.DoubleSide
 	});
-	return new THREE.Line(generateLineString(feature.geometry), material);	
+	
+	var geometry = generatePolygon(generateWallGeometry(feature));
+	var wall = new THREE.Mesh(geometry, material);
+	
+	var container = new THREE.Object3D();
+	container.add(wall);
+	wall.rotation.x += Math.PI/2;
+	return container;	
 }
 
 C3D.generator3D['internal_wall'] = function(feature) {
     var material = new THREE.LineBasicMaterial({ 
         color: C3D.config.style.internal_wall.color, 
-        linewidth:  feature.properties.thickness 
+        side: THREE.DoubleSide
     });
-	return new THREE.Line(generateLineString(feature.geometry), material);
+    
+	var geometry = generatePolygon(generateWallGeometry(feature));
+	var wall = new THREE.Mesh(geometry, material);
+	
+	var container = new THREE.Object3D();
+	container.add(wall);
+	wall.rotation.x += Math.PI/2;
+	return container;
 }
 
 C3D.generator3D['door'] = function(feature) {
