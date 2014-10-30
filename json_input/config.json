@@ -8,15 +8,17 @@
     {
 	    "background": 
 	    {
-	    	"color": "#002451"
+	    	"color": "#fdf6e3"
 		},
 	    "internal_wall": 
 	    {
-	    	"color": "#bbdaff"
+	    	"color": "#073642",
+	    	"opacity": 1
 	    },
 	    "external_wall": 
 	    {
-	    	"color": "#7285b7"
+	    	"color": "#073642",
+	    	"opacity": 1
 	    },
 	    "level": 
 	    {
@@ -29,8 +31,9 @@
 	    },
 	    "room": 
 	    {
-		    "fillColor": "#ffc58f",
-		    "opacity": 0.6
+		    "weight": 0,
+		    "fillColor": "#93a1a1",
+		    "fillOpacity": 1
 	    },
 	    "server": 
 	    {

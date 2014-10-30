@@ -138,7 +138,7 @@ users.on('connection', function(socket){
         id: socket.id,
         position: {
         	latlng: undefined,
-        	layer: undefined
+        	level: undefined
         }
     };
     usersConnected[user.id] = user;

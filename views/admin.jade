@@ -3,33 +3,33 @@ extends main
 block internal_content
 	script.
 		var map = C3D.map2D;
-		var markers = L.featureGroup();
 		var userIcon =  L.AwesomeMarkers.icon( C3D.config.style['user'] );
 		
-		map.addLayer(markers);
-		
 		var socket = io('/admins');
-		socket.on('updateMapUsersConnected', function(usersConnected) {
 		
-			map.removeLayer(markers);
-			markers = L.featureGroup();
-			map.addLayer(markers);
+		socket.on('updateMapUsersConnected', function(usersConnected) {
+					
+			for(id in C3D.index) {
+				if(C3D.index[id].properties.class === 'level') {
+					C3D.index[id].layer2D.userMarkers.clearLayers();
+				}
+			}
 			
 			for(userToUpdate in usersConnected) { 
 				console.log(usersConnected[userToUpdate]);
-				if(usersConnected[userToUpdate].position.level === getActualLayer) {
-					var user = {
-						id: usersConnected[userToUpdate].id,
-						position: {
-							latlng: usersConnected[userToUpdate].position.latlng,
-							level: usersConnected[userToUpdate].position.level
-						},
-						marker:  L.marker((usersConnected[userToUpdate].latlng), {
-			    					icon: userIcon
-			    				})
-						}
-						user.marker.bindPopup("<b>User: </b>" + user.id +'<br><b>[' + user.position.latlng.lat + '; ' + user.position.latlng.lng + ']</b>');
-						markers.addLayer(user.marker);
+				
+				var user = {
+					id: usersConnected[userToUpdate].id,
+					position:
+					{
+						latlng: usersConnected[userToUpdate].position.latlng,
+						level: usersConnected[userToUpdate].position.level
+					},
+					marker: L.marker((usersConnected[userToUpdate].position.latlng), { icon: userIcon })
 				}
+				console.log(user.position);
+				user.marker.bindPopup("<b>User: </b>" + user.id +'<br><b>[' + user.position.latlng.lat + '; ' + user.position.latlng.lng + ']</b>');
+				user.marker.addTo(C3D.index[user.position.level].layer2D.userMarkers);
 			}
+		});
 		

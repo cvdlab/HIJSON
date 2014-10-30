@@ -7,30 +7,27 @@ block internal_content
 		var userIcon =  L.AwesomeMarkers.icon( C3D.config.style['user'] );
 		var position = {};
 		position.latlng = new L.LatLng(0, 0);
-		position.layer = getActualLayer();
+		position.level = getActualLevelId();
 
 		var marker = L.marker(position.latlng, {
 		    icon: userIcon,
 		    draggable: true
 		});
-		marker.addTo(map);		
+		
+		marker.addTo(C3D.index[position.level].layer2D.userMarkers);		
 		marker.bindPopup('<b>[' + position.latlng.lat + '; ' + position.latlng.lng + ']</b>');
 		socket.emit('updatePosition', position);
-		marker.on('dragend', dragMarker);
+		marker.on('drag', dragMarker);
 
 		function dragMarker(e) {
-
 			position.latlng = marker.getLatLng();
-			position.layer =  getActualLayer();
-
+			position.level =  getActualLevelId();
 			socket.emit('updatePosition', position);
-			
-			marker.setLatLng(position.latlng);	
+			marker.setLatLng(position.latlng);
 			marker.bindPopup('<b>[' + position.latlng.lat + '; ' + position.latlng.lng + ']</b>');
 		}
 
-
-		function getActualLayer() {
+		function getActualLevelId() {
 			var id;
 			for(idLayer in map._layers){
 				layer = map._layers[idLayer];
@@ -43,3 +40,14 @@ block internal_content
 			}	
 			return id;
 		}
+		
+		C3D.on('selectFeature', function(idObject) {
+			if(C3D.index[idObject].properties.class === 'level') {
+				C3D.index[position.level].layer2D.userMarkers.removeLayer(marker);
+				position.level = getActualLevelId();
+				socket.emit('updatePosition', position);
+				marker.addTo(C3D.index[position.level].layer2D.userMarkers);	
+			}
+		});
+		
+		

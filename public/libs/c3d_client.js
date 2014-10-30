@@ -196,10 +196,9 @@ C3D.generate3DModel = function() {
     while (queue.length>0) {
         feature = queue.shift();
         if(feature.properties.class in C3D.generator3D) {
-            //console.log('(3D) Oggetto in fase di generazione: ' + feature.id);
+	        
             var el3D = C3D.generator3D[feature.properties.class](feature);
             feature.obj3D = el3D;
-
 
             if (feature.properties.rVector !== undefined) {
                 var conv = Math.PI/180;
@@ -240,6 +239,9 @@ C3D.generate2DModel = function() {
                                                                 onEachFeature: onEachFeature
 															});
 		C3D.index[geoJSONlevel].layer2D = layer;
+		var markers = new L.featureGroup();
+		markers.addTo(C3D.index[geoJSONlevel].layer2D);
+		C3D.index[geoJSONlevel].layer2D.userMarkers = markers;
 	}
 	
 	C3D.index['level_0'].layer2D.addTo(C3D.map2D);
@@ -304,7 +306,7 @@ C3D.generator3D['server'] = function (feature) {
     }
     
     var geometry = new THREE.BoxGeometry(dimensions[0], dimensions[1], dimensions[2]);
-    var material = new THREE.MeshBasicMaterial( {color: 0x008080} );
+    var material = new THREE.MeshLambertMaterial( {color: 0x008080} );
     
     var server = new THREE.Mesh(geometry, material);
 
@@ -501,7 +503,7 @@ C3D.generator3D['room'] = function(feature) {
     var material = new THREE.MeshBasicMaterial({
         color: C3D.config.style.room.fillColor,
         transparent: true, 
-        opacity: 0.3, 
+        opacity: 0.9, 
         side: THREE.DoubleSide
     });
     
