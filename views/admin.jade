@@ -16,15 +16,20 @@ block internal_content
 			map.addLayer(markers);
 			
 			for(userToUpdate in usersConnected) { 
-
-				var user = {
-					id: usersConnected[userToUpdate].id,
-					latlng: usersConnected[userToUpdate].latlng,
-					point:  L.marker((usersConnected[userToUpdate].latlng), {
-		    					icon: userIcon
-		    				})
+				console.log(usersConnected[userToUpdate]);
+				if(usersConnected[userToUpdate].position.level === getActualLayer) {
+					var user = {
+						id: usersConnected[userToUpdate].id,
+						position: {
+							latlng: usersConnected[userToUpdate].position.latlng,
+							level: usersConnected[userToUpdate].position.level
+						},
+						marker:  L.marker((usersConnected[userToUpdate].latlng), {
+			    					icon: userIcon
+			    				})
+						}
+						user.marker.bindPopup("<b>User: </b>" + user.id +'<br><b>[' + user.position.latlng.lat + '; ' + user.position.latlng.lng + ']</b>');
+						markers.addLayer(user.marker);
 				}
-			user.point.bindPopup("<b>User: </b>" + user.id +'<br><b>[' + user.latlng.lat + '; ' + user.latlng.lng + ']</b>');
-			markers.addLayer(user.point);
 			}
-		});
+		

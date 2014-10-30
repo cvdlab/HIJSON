@@ -136,7 +136,10 @@ users.on('connection', function(socket){
     console.log('User connected with id: ' + socket.id);
     var user = {
         id: socket.id,
-        latlng: undefined
+        position: {
+        	latlng: undefined,
+        	layer: undefined
+        }
     };
     usersConnected[user.id] = user;
 
@@ -146,8 +149,8 @@ users.on('connection', function(socket){
         admins.emit('updateMapUsersConnected', usersConnected);
     });
 
-    socket.on('updatePosition', function(latlng){
-        user.latlng = latlng;
+    socket.on('updatePosition', function(position){
+        user.position = position;
         admins.emit('updateMapUsersConnected', usersConnected);
     });
 });

@@ -4,24 +4,42 @@ block internal_content
 	script.
 		var map = C3D.map2D;
 		var socket = io('/users');
-		
 		var userIcon =  L.AwesomeMarkers.icon( C3D.config.style['user'] );
-		
-		var marker = L.marker(new L.LatLng(0, 0), {
+		var position = {};
+		position.latlng = new L.LatLng(0, 0);
+		position.layer = getActualLayer();
+
+		var marker = L.marker(position.latlng, {
 		    icon: userIcon,
 		    draggable: true
 		});
 		marker.addTo(map);		
-		marker.bindPopup('<b>[' + marker.getLatLng().lat + '; ' + marker.getLatLng().lng + ']</b>');
-		socket.emit('updatePosition', marker.getLatLng());
-		
+		marker.bindPopup('<b>[' + position.latlng.lat + '; ' + position.latlng.lng + ']</b>');
+		socket.emit('updatePosition', position);
 		marker.on('dragend', dragMarker);
 
 		function dragMarker(e) {
-			var latlng = marker.getLatLng();
-			socket.emit('updatePosition', latlng);
-			map.removeLayer(marker);
-			marker.setLatLng(latlng);	
-			marker.bindPopup('<b>[' + latlng.lat + '; ' + latlng.lng + ']</b>');
-			map.addLayer(marker);
+
+			position.latlng = marker.getLatLng();
+			position.layer =  getActualLayer();
+
+			socket.emit('updatePosition', position);
+			
+			marker.setLatLng(position.latlng);	
+			marker.bindPopup('<b>[' + position.latlng.lat + '; ' + position.latlng.lng + ']</b>');
+		}
+
+
+		function getActualLayer() {
+			var id;
+			for(idLayer in map._layers){
+				layer = map._layers[idLayer];
+				if(layer.feature !== undefined) {
+					if(layer.feature.properties.class === 'level')
+					{
+						id = layer.feature.id;
+					}
+				}
+			}
+			return id;
 		}
