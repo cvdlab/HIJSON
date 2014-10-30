@@ -69,5 +69,35 @@ block content
 				C3D.init3D();
 				C3D.generate3DModel();
 		
-
+		.page-header
+			h1 Controls
+			
+		.row
+			.col-md-3
+				.lead Select Level: 
+					select#selectLevel
+			.col-md-3
+				.lead Select Room:
+					select#selectRoom(disabled = true)
+		script.
+			var elements = ['level','building'];
+			for(id in C3D.index)
+				//if(C3D.index[id].parent === undefined || C3D.index[id].parent.id === "building" )
+				if(elements.indexOf(C3D.index[id].properties.class) > -1)
+					$("#selectLevel").append('<option value=' + id + '>' + id +'</option>')
+	
+			$( "#selectLevel" ).on('change', function() {
+				C3D.emit('selectFeature',this.value);
+				
+				$("#selectRoom").prop('disabled', false);
+				$('#selectRoom option').each( function () { $(this).remove(); } );
+				
+				for(id in C3D.index)
+					if( (C3D.index[id].properties.parent === this.value) && (C3D.index[id].properties.class === 'room') )
+						$("#selectRoom").append('<option value=' + id + '>' + id +'</option>');
+			});
+	
+			$( "#selectRoom" ).on('change', function() {
+				C3D.emit('selectFeature', this.value);
+			});
 		block internal_content

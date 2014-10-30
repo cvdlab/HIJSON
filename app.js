@@ -71,16 +71,6 @@ app.get('/user', function(req, res) {
 	});
 });
 
-
-//Rotta per il test dei controlli
-app.get('/controls', function(req, res) {
-	res.render('testControls', {
-		title: 'C3D - test Controls',
-		enable_2D: true,
-		enable_3D: true,
-		C3D_server: JSON.stringify(C3D)
-	});
-});
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
     var err = new Error('Not Found');
@@ -127,7 +117,6 @@ var server = app.listen(app.get('port'), function() {
 
 var server = app.listen(app.get('port'));
 console.log('Server running on port: '+app.get('port'));
-
 
 //socket.io
 var io = require('socket.io')(server);

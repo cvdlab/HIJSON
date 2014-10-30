@@ -63,7 +63,14 @@ C3D.init2D = function() {
 	        container2D.css('height', container2DHeight);
 	    }
 	    
-        C3D.on('selectFeature', C3D.showFeature2D);
+        C3D.on('selectFeature', function(idObject) {
+		    if(C3D.index[idObject].properties.class === 'level') {
+		        C3D.map2D.eachLayer(function(layer) { C3D.map2D.removeLayer(layer); });
+		        C3D.index[idObject].layer2D.addTo(C3D.map2D);
+		    }
+		    if(C3D.index[idObject].properties.class !== 'building') 
+		        C3D.map2D.fitBounds(C3D.getRoom(C3D.index[idObject]).layer2D.getBounds());
+        });
         
         
 		//Quando si posizionera' sulla mappa 
@@ -151,7 +158,25 @@ C3D.init3D = function() {
         container3D.append(stats.domElement);
         return stats;
     }
-    C3D.on('selectFeature', C3D.showFeature3D);
+    
+    C3D.on('selectFeature', function(idObject) {
+	    C3D.index["building"].obj3D.traverse(function(object) {
+	        object.visible = false;
+	    });
+	    
+	    C3D.index[idObject].obj3D.traverse(function(object) {
+	        object.visible = true;
+	    });
+	    
+	    for(var i in C3D.index) {
+	        var elementClass = C3D.index[i].properties.class;
+	        if((elementClass === "internal_wall") || (elementClass === "external_wall")) {
+	            if($.inArray(idObject, C3D.index[i].properties.connections) !== -1) {
+	                C3D.index[i].obj3D.traverse(function(object) { object.visible = true; });
+	            }   
+	        }
+	    } 
+    });
 }
 
 /*
@@ -193,9 +218,6 @@ C3D.generate3DModel = function() {
             
             
             C3D.index[feature.parent.id].obj3D.add(el3D);
-        } else {
-            var err = 'ERROR: Class: ' + feature.geometry.type + 'not recognized.';
-            return err;
         }
 
         for(var i=0;i< feature.children.length;i++) {
@@ -484,34 +506,6 @@ C3D.generator3D['room'] = function(feature) {
     });
     
     return new THREE.Mesh(generatePolygon(feature.geometry), material);
-}
-
-C3D.showFeature2D = function(idObject) {
-    if(C3D.index[idObject].properties.class === 'level') {
-        C3D.map2D.eachLayer(function(layer) { C3D.map2D.removeLayer(layer); });
-        C3D.index[idObject].layer2D.addTo(C3D.map2D);
-    }
-    if(C3D.index[idObject].properties.class !== 'building') 
-        C3D.map2D.fitBounds(C3D.getRoom(C3D.index[idObject]).layer2D.getBounds());
-}
-
-C3D.showFeature3D = function(idObject) {
-    C3D.index["building"].obj3D.traverse(function(object) {
-        object.visible = false;
-    });
-    
-    C3D.index[idObject].obj3D.traverse(function(object) {
-        object.visible = true;
-    });
-    
-    for(var i in C3D.index) {
-        var elementClass = C3D.index[i].properties.class;
-        if((elementClass === "internal_wall") || (elementClass === "external_wall")) {
-            if($.inArray(idObject, C3D.index[i].properties.connections) !== -1) {
-                C3D.index[i].obj3D.traverse(function(object) { object.visible = true; });
-            }   
-        }
-    } 
 }
 
 C3D.getRoom = function(obj) {
