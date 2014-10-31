@@ -233,12 +233,34 @@ C3D.generate3DModel = function() {
 C3D.generate2DModel = function() {
 	
 	for(geoJSONlevel in C3D.geoJSONmap) {
-		var layer = L.geoJson(C3D.geoJSONmap[geoJSONlevel], {
+		var buckets = [];
+        var finalLayer = L.featureGroup();
+        var flatLayer = L.geoJson(C3D.geoJSONmap[geoJSONlevel], {
 																style: styleFunction, 
 																pointToLayer: furnitureMarker,
                                                                 onEachFeature: onEachFeature
 															});
-		C3D.index[geoJSONlevel].layer2D = layer;
+		
+        flatLayer.eachLayer(function(layer){
+            if(!(layer.feature.properties.class in buckets)) {
+                buckets[layer.feature.properties.class] = L.featureGroup();
+            }
+            layer.addTo(buckets[layer.feature.properties.class]);
+        });
+        var orderPosition = ['room','level','external_wall','internal_wall','door','server'];
+        while(orderPosition.length !== 0)
+        {
+            var classLevelToSet = orderPosition.shift();
+
+            if(classLevelToSet in buckets)
+            {
+                console.log(classLevelToSet);
+                buckets[classLevelToSet].addTo(finalLayer);
+            }
+        }
+
+        C3D.index[geoJSONlevel].layer2D = finalLayer;
+
 		var markers = new L.featureGroup();
 		markers.addTo(C3D.index[geoJSONlevel].layer2D);
 		C3D.index[geoJSONlevel].layer2D.userMarkers = markers;
@@ -247,7 +269,7 @@ C3D.generate2DModel = function() {
 	C3D.index['level_0'].layer2D.addTo(C3D.map2D);
 	C3D.map2D.fitBounds(C3D.index['level_0'].layer2D.getBounds());
 	
-	function styleFunction(feature) {
+    function styleFunction(feature) {
 		return C3D.config.style[feature.properties.class];
 	}
 	
@@ -290,6 +312,39 @@ C3D.generate2DModel = function() {
     // function resetHighlight(e) {
     //     C3D.geojson.resetStyle(e.target);
     // }
+    function setPositionLayer(layer) {
+        var orderPosition = ['level','room','external_wall', 'internal_wall','door'];
+        var classLevelToSet = orderPosition.shift();
+        
+        while(orderPosition.length !== 0)
+        {
+            for(idLayer in layer._layers) {
+                subLayer = layer._layers[idLayer];
+                if(subLayer.feature !== undefined) {
+                    if(subLayer.feature.properties.class === classLevelToSet)
+                    {
+                        subLayer.bringToFront();
+                    }
+                }
+            }
+            classLevelToSet = orderPosition.shift();
+        }
+    }
+
+    function getActualLevelId() {
+        var id;
+        for(idLayer in C3D.map2D._layers){
+            layer = C3D.map2D._layers[idLayer];
+            if(layer.feature !== undefined) {
+                if(layer.feature.properties.class === 'level')
+                {
+                    id = layer.feature.id;
+                }
+            }
+        }   
+        return id;
+    }
+
 }	// Chiude generate2DModel
 
 C3D.generator3D = {};
