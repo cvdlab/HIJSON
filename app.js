@@ -66,7 +66,7 @@ app.get('/user', function(req, res) {
 	res.render('user', {
 		title: 'C3D - user',
 		enable_2D: true,
-		enable_3D: false,
+		enable_3D: true,
 		C3D_server: JSON.stringify(C3D)
 	});
 });
