@@ -1,7 +1,7 @@
 var C3D = {};
 
 C3D.handlers = {};
-C3D.options3D = {};
+
 C3D.on = function(event, handler) {
     var handlers_list = this.handlers[event];
 
@@ -91,85 +91,60 @@ C3D.init2D = function() {
 */ 
 
 C3D.init3D = function() {
-	C3D.scene3D = new THREE.Scene();
 	
     var container3D = $('#container3D');
     var container3DWidth = container3D.width();
     var container3DHeight = container3D.width()/4*3;
     container3D.css('height', container3DHeight);
     
-    var stats = initStats();
-    // create a scene, that will hold all our elements such as objects, cameras and lights.
+    var stats = new Stats();
+    stats.setMode(0); // 0: fps, 1: ms
+    container3D.append(stats.domElement);
+   
+    var scene = new THREE.Scene();
+    C3D.scene3D = scene;
     
-    var scene = C3D.scene3D;
-    // create a camera, which defines where we're looking at.
     var camera = new THREE.PerspectiveCamera(45, container3DWidth / container3DHeight, 0.1, 1000);
     C3D.camera3D = camera;
-    // create a render and set the size
-    var renderer = new THREE.WebGLRenderer();
     
-    var trackballControls = new THREE.TrackballControls(camera, container3D[0]);
-    
-    renderer.setClearColor(new THREE.Color(C3D.config.style.background.color, 1.0)); 
-    renderer.setSize(container3DWidth, container3DHeight);
-    renderer.shadowMapEnabled = true;
-    
-    // position and point the camera to the center of the scene
     camera.position.set(-40,-40,40);
     camera.up = new THREE.Vector3(0,0,1);
     camera.lookAt(scene.position);
+	
+	
+    var trackballControls = new THREE.TrackballControls(camera, container3D[0]);
+    trackballControls.enabled = true;
+    var pointerLockControls = {};
+	pointerLockControls.enabled = false;
     
-    // add subtle ambient lighting
+    //var FPenabled = false;
+	var objects = [];
+    
+    var renderer = new THREE.WebGLRenderer();
+    renderer.setClearColor(new THREE.Color(C3D.config.style.background.color, 1.0)); 
+    renderer.setSize(container3DWidth, container3DHeight);
+    renderer.shadowMapEnabled = true;
+    container3D.append(renderer.domElement);
+
     var ambiColor = "#1c1c1c";
     var ambientLight = new THREE.AmbientLight(ambiColor);
     scene.add(ambientLight);
     
-    container3D.append(renderer.domElement);
-    
-    // add axis helper
     var axisHelper = new THREE.AxisHelper(3);
     scene.add(axisHelper); 
         
     window.addEventListener( 'resize', onWindowResize3D, false );
 
-    function onWindowResize3D(){
-        
+    function onWindowResize3D() {
         container3DWidth = container3D.width();
         container3DHeight = container3D.width()/4*3;
         container3D.css('height', container3DHeight);
     
         camera.aspect = container3DWidth / container3DHeight;
         camera.updateProjectionMatrix();
-    
         renderer.setSize( container3DWidth, container3DHeight );
-    
     }
 
-	function animate() {
-		requestAnimationFrame(animate);
-		render();
-		update();
-	}
-    
-    function render() {
-        renderer.render(scene, camera);
-    }
-    
-    function update() {
-	    stats.update();
-        if (FPenabled === true) {
-			computeFPControls();
-		}
-        trackballControls.update();
-    }
-    
-    function initStats() {
-        var stats = new Stats();
-        stats.setMode(0); // 0: fps, 1: ms
-        container3D.append(stats.domElement);
-        return stats;
-    }
-    
     C3D.on('selectFeature', function(idObject) {
 	    C3D.index["building"].obj3D.traverse(function(object) {
 	        object.visible = false;
@@ -188,99 +163,89 @@ C3D.init3D = function() {
 	        }
 	    } 
     });
-    
-/*
-    C3D.on('startFPS', function() {
-        controls = new THREE.PointerLockControls(camera);
-        scene.add(controls.getObject());
-        container3D.requestPointerLock = container3D.requestPointerLock || container3D.mozRequestPointerLock || container3D.webkitRequestPointerLock;
-		container3D.requestPointerLock();
-    });
-    
-    function computeFPControls() {
-        controls.isOnObject(false);
-        rayMove.ray.origin.copy(controls.getObject().position);
-        rayMove.ray.origin.y -= 4;
-        var intersections = rayMove.intersectObjects(objects);
-        if (intersections.length > 0) {
-          var distance = intersections[0].distance;
-          if (distance > 0 && distance < 4) {
-            controls.isOnObject(true);
-          }
-    }
-    controls.update();
-*/
 
 	var havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
 	
 	if (havePointerLock) {
 	
-	  var element = container3D[0];
+		var element = container3D[0];
+		
+		C3D.on('startFPS', function() {
+			pointerLockControls = new THREE.PointerLockControls(camera);
+			scene.add(pointerLockControls.getObject());
+			element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
+			if (/Firefox/i.test(navigator.userAgent)) {
+				var fullscreenchange = function(event) {
+					if (document.fullscreenElement === element || document.mozFullscreenElement === element || document.mozFullScreenElement === element) {
+						document.removeEventListener('fullscreenchange', fullscreenchange);
+						document.removeEventListener('mozfullscreenchange', fullscreenchange);
+						element.requestPointerLock();
+					}
+				}
+				document.addEventListener('fullscreenchange', fullscreenchange, false);
+				document.addEventListener('mozfullscreenchange', fullscreenchange, false);
+				element.requestFullscreen = element.requestFullscreen || element.mozRequestFullscreen || element.mozRequestFullScreen || element.webkitRequestFullscreen;
+				element.requestFullscreen();
+			} else {
+				element.requestPointerLock();
+			}
+		});
 	
-	  var pointerlockchange = function(event) {
-	    if (document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element) {
-	      FPenabled = true;
-	      trackballControls.reset();
-	      controls.enabled = true;
-	      camera.position.set(0, 0, 0);
-	      //camera.up = new THREE.Vector3(0, 0, 1);
-	      controls.getObject().position.set(0, 0, 0);
-	      $("#pointer").fadeIn(1000);
-	    } else {
-	      location.reload();
-	    }
-	  }
+		//questo evento viene richiamato ad ogni attivazione/disattivazione del pointerlock, in paricolare il blocco if all'avvio del pointerlock, il blocco else alla disattivazione del pointerlock
+		var pointerlockchange = function(event) {
+			if (document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element) {
+				trackballControls.enabled = false;
+				pointerLockControls.enabled = true;
+				$("#pointer").css('display', 'block');
+				camera.position.set(0, 0, 0);
+				//camera.up = new THREE.Vector3(0, 0, 1);
+				pointerLockControls.getObject().position.set(0, 0, 0);
+			} else {
+				pointerLockControls.enabled = false;
+				trackballControls.enabled = true;
+				$("#pointer").css('display', 'none');
+				camera.position.set(-40,-40,40);
+				camera.lookAt(scene.position);
+			}
+		}
 	
-	  var pointerlockerror = function(event) {
-	    $("#error").fadeIn(500);
-	  }
+		var pointerlockerror = function(event) {
+			alert('PointerLock error');
+		}
 	
-	  document.addEventListener('pointerlockchange', pointerlockchange, false);
-	  document.addEventListener('mozpointerlockchange', pointerlockchange, false);
-	  document.addEventListener('webkitpointerlockchange', pointerlockchange, false);
+		document.addEventListener('pointerlockchange', pointerlockchange, false);
+		document.addEventListener('mozpointerlockchange', pointerlockchange, false);
+		document.addEventListener('webkitpointerlockchange', pointerlockchange, false);
+		
+		document.addEventListener('pointerlockerror', pointerlockerror, false);
+		document.addEventListener('mozpointerlockerror', pointerlockerror, false);
+		document.addEventListener('webkitpointerlockerror', pointerlockerror, false);
 	
-	  document.addEventListener('pointerlockerror', pointerlockerror, false);
-	  document.addEventListener('mozpointerlockerror', pointerlockerror, false);
-	  document.addEventListener('webkitpointerlockerror', pointerlockerror, false);
+		function computePointerLockControls() {
+			/*
+			// questo serviva nell'esempio per verificare se si stava sopra un cubo
+			pointerLockControls.isOnObject(false);
+			rayMove.ray.origin.copy(pointerLockControls.getObject().position);
+			rayMove.ray.origin.y -= 4;
+			var intersections = rayMove.intersectObjects(objects);
+			if (intersections.length > 0) {
+				var distance = intersections[0].distance;
+				if (distance > 0 && distance < 4) {
+					pointerLockControls.isOnObject(true);
+				}
+			}
+			*/
+			pointerLockControls.update();
+		}
+	} else {
+        alert('Your browser doesn\'t seem to support Pointer Lock API');
+    }
+
 	
-	  var startFP = function() {
-	    controls = new THREE.PointerLockControls(camera);
-	    scene.add(controls.getObject());
-	    element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
-	    if (/Firefox/i.test(navigator.userAgent)) {
-	      var fullscreenchange = function(event) {
-	        if (document.fullscreenElement === element || document.mozFullscreenElement === element || document.mozFullScreenElement === element) {
-	          document.removeEventListener('fullscreenchange', fullscreenchange);
-	          document.removeEventListener('mozfullscreenchange', fullscreenchange);
-	          element.requestPointerLock();
-	        }
-	      }
-	      document.addEventListener('fullscreenchange', fullscreenchange, false);
-	      document.addEventListener('mozfullscreenchange', fullscreenchange, false);
-	      element.requestFullscreen = element.requestFullscreen || element.mozRequestFullscreen || element.mozRequestFullScreen || element.webkitRequestFullscreen;
-	      element.requestFullscreen();
-	    } else {
-	      element.requestPointerLock();
-	    }
-	  };
 	
-	  function computeFPControls() {
-	    controls.isOnObject(false);
-	    rayMove.ray.origin.copy(controls.getObject().position);
-	    rayMove.ray.origin.y -= 4;
-	    var intersections = rayMove.intersectObjects(objects);
-	    if (intersections.length > 0) {
-	      var distance = intersections[0].distance;
-	      if (distance > 0 && distance < 4) {
-	        controls.isOnObject(true);
-	      }
-	    }
-	    controls.update();
-	  }
-	
-	}
 	
 	// mouse interaction
+	/*
 	var projector = new THREE.Projector();
 	document.addEventListener('mousedown', onDocumentMouseDown, false);
 	function onDocumentMouseDown(event) {
@@ -288,13 +253,11 @@ C3D.init3D = function() {
 		if (document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element) {
 			var vector = new THREE.Vector3(0, 0, 0.5);
 			projector.unprojectVector(vector, camera);
-			var raycaster = new THREE.Raycaster( vector, controls.getDirection( new THREE.Vector3(0, 0, 0) ).clone() );
+			var raycaster = new THREE.Raycaster( vector, pointerLockControls.getDirection( new THREE.Vector3(0, 0, 0) ).clone() );
 		} else {
 			var vector = new THREE.Vector3((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1, 0.5);
 			projector.unprojectVector(vector, camera);
-			var raycaster = new THREE.Raycaster(camera.position,
-				vector.sub(camera.position).normalize());
-	
+			var raycaster = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
 		}
 		var intersects = raycaster.intersectObjects(toIntersect);
 		if (intersects.length > 0) {
@@ -302,18 +265,27 @@ C3D.init3D = function() {
 		}
 	}
 	var toIntersect = [];
-	
-	// first person controls
-	var FPenabled = false;
-	var controls;
-	var objects = [];
+	*/
+
+
+	/*
+	// questo serviva nell'esempio per verificare se si stava sopra un cubo
 	var rayMove = new THREE.Raycaster();
 	rayMove.ray.direction.set(0, 0, -1);
-	var rayPointer = new THREE.Raycaster();
-  
-	C3D.on('startFPS', startFP);
+	*/
 	
-	animate();
+	function render() {
+		requestAnimationFrame(render);
+		stats.update();
+        if (pointerLockControls.enabled) {
+			computePointerLockControls();
+		}
+		if (trackballControls.enabled) {
+			trackballControls.update();
+		}
+		renderer.render(scene, camera);
+	}
+	render();
 }
 
 /*
@@ -323,7 +295,6 @@ C3D.init3D = function() {
 C3D.generate3DModel = function() {
     var queue = [];
     var feature;
-    
     C3D.index["building"].obj3D = new THREE.Object3D();
 
     for (var i=0; i < C3D.tree.children.length; i++) {
@@ -333,7 +304,6 @@ C3D.generate3DModel = function() {
     while (queue.length>0) {
         feature = queue.shift();
         if(feature.properties.class in C3D.generator3D) {
-	        
             var el3D = C3D.generator3D[feature.properties.class](feature);
             feature.obj3D = el3D;
 
@@ -345,17 +315,13 @@ C3D.generate3DModel = function() {
                             feature.properties.rVector[2]*conv];
                 el3D.rotation.set(rotation[0], rotation[1], rotation[2]);
             }
-
             if (feature.properties.tVector !== undefined) {
                 el3D.position.x += feature.properties.tVector[0];
                 el3D.position.y += feature.properties.tVector[1];
                 el3D.position.z += feature.properties.tVector[2];
             }
-            
-            
             C3D.index[feature.parent.id].obj3D.add(el3D);
         }
-
         for(var i=0;i< feature.children.length;i++) {
             queue.push(feature.children[i]);
         }
@@ -366,9 +332,7 @@ C3D.generate3DModel = function() {
 /*
     Funzione che genera il modello 2D per Leaflet
 */ 
-
 C3D.generate2DModel = function() {
-	
 	for(geoJSONlevel in C3D.geoJSONmap) {
 		var layer = L.geoJson(C3D.geoJSONmap[geoJSONlevel], {
 																style: styleFunction, 
@@ -380,12 +344,12 @@ C3D.generate2DModel = function() {
 		markers.addTo(C3D.index[geoJSONlevel].layer2D);
 		C3D.index[geoJSONlevel].layer2D.userMarkers = markers;
 	}
-
 	
     C3D.index['level_0'].layer2D.addTo(C3D.map2D);
 
 	C3D.map2D.fitBounds(C3D.index['level_0'].layer2D.getBounds());
     orderLayer();	
+	
 	function styleFunction(feature) {
 		return C3D.config.style[feature.properties.class];
 	}
@@ -397,9 +361,9 @@ C3D.generate2DModel = function() {
 		} else {
 			var markerIcon = L.AwesomeMarkers.icon({ icon: "asterisk" });
 		}
-		
 		return L.marker(latlng, {icon: markerIcon});
 	}
+	
 	function onEachFeature(feature, layer) {
         layer.on({
             //mouseover: highlightFeature,
@@ -412,24 +376,6 @@ C3D.generate2DModel = function() {
     function selectFeature(e) {
         C3D.emit('selectFeature', e.target.feature.id);
     }
-
-
-    // function highlightFeature(feature, layer) {
-    //         var layer = e.target;
-    //         layer.setStyle({
-    //             weight: 5,
-    //             color: '#666',
-    //             dashArray: '',
-    //             fillOpacity: 1
-    //         });
-    //         if(!L.Browser.ie && L.Browser.opera) {
-    //             layer.bringToFront();
-    //         }
-    // }
-
-    // function resetHighlight(e) {
-    //     C3D.geojson.resetStyle(e.target);
-    // }
 }	// Chiude generate2DModel
 
 function getActualLevelId() {
@@ -437,53 +383,39 @@ function getActualLevelId() {
     for(idLayer in C3D.map2D._layers){
         layer = C3D.map2D._layers[idLayer];
         if(layer.feature !== undefined) {
-            if(layer.feature.properties.class === 'level')
-            {
-                id = layer.feature.id;
-            }
+            if(layer.feature.properties.class === 'level') { 
+	            id = layer.feature.id; 
+	        }
         }
     }   
     return id;
 }
 
 function orderLayer() {
-
     var orderClass = ['room','external_wall','internal_wall','door'];
     while(orderClass.length !== 0) {
         var classElement = orderClass.shift();
         for(idLayer in C3D.map2D._layers) {
-            console.log(idLayer);
             layer = C3D.map2D._layers[idLayer];
             if(layer.feature !== undefined) {
-                if(layer.feature.properties.class === classElement)
-                {
-                    console.log(classElement);
+                if(layer.feature.properties.class === classElement) {
                     layer.bringToFront();
                 }
             }     
         }
     }
 }
+
 C3D.generator3D = {};
 
 C3D.generator3D['server'] = function (feature) {
-
-    if(feature.properties.dimensions === undefined)
-    {
-        var dimensions = [1,1,2];
-    }
-    else
-    {
-        var dimensions = feature.properties.dimensions;
-    }
+    if(feature.properties.dimensions === undefined) { var dimensions = [1,1,2]; }
+    else { var dimensions = feature.properties.dimensions; }
     
     var geometry = new THREE.BoxGeometry(dimensions[0], dimensions[1], dimensions[2]);
     var material = new THREE.MeshLambertMaterial( {color: 0x008080} );
-    
     var server = new THREE.Mesh(geometry, material);
-
     server.position.z += dimensions[2]/2;
-    
     return server;
 };
 
@@ -500,8 +432,6 @@ C3D.generator3D['surveillanceCamera'] = function(feature) {
     var material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
     
     var model = new THREE.Mesh( geometry, material );
-
-    
     var surveillanceCamera = new THREE.Object3D();
     surveillanceCamera.add(model);
     return surveillanceCamera;
@@ -563,42 +493,37 @@ C3D.generator3D['antenna'] = function(feature) {
     return antenna;
 };
 
-function generateLineString(geometry) {
+function generateLineString(geoJSONgeometry) {
 	var lineString = new THREE.Geometry();
-    for(var i = 0; i < geometry.coordinates.length; i++){
-        lineString.vertices.push( new THREE.Vector3( geometry.coordinates[i][0], geometry.coordinates[i][1], 0) );
-
+    for(var i = 0; i < geoJSONgeometry.coordinates.length; i++){
+        lineString.vertices.push( new THREE.Vector3( geoJSONgeometry.coordinates[i][0], geoJSONgeometry.coordinates[i][1], 0) );
     }
     return lineString;
 }
 
-function generatePolygon(geometry) {
-	
+function generatePolygon(geoJSONgeometry) {
+	var coords = geoJSONgeometry.coordinates;
 	var shape = new THREE.Shape();
-    for (var j = 0; j < geometry.coordinates[0].length; j++) //scorro le singole coordinate del perimetro esterno
+    for (var j = 0; j < coords[0].length; j++) //scorro le singole coordinate del perimetro esterno
     { 
         if (j == 0) { // primo punto
-            shape.moveTo(geometry.coordinates[0][j][0], geometry.coordinates[0][j][1]);
+            shape.moveTo(coords[0][j][0], coords[0][j][1]);
         } else { // altri punti
-            shape.lineTo(geometry .coordinates[0][j][0], geometry.coordinates[0][j][1]);
+            shape.lineTo(coords[0][j][0], coords[0][j][1]);
         }
     }
-    
-    for (var i = 1; i < geometry.coordinates.length; i++) { //scorro eventuali holes
+    for (var i = 1; i < coords.length; i++) { //scorro eventuali holes
         var hole = new THREE.Path();
-        for (var j = 0; j < geometry.coordinates[i].length; j++) { //scorro le singole coordinate dei vari perimetri
+        for (var j = 0; j < coords[i].length; j++) { //scorro le singole coordinate dei vari perimetri
             if (j == 0) { // primo punto
-                hole.moveTo(geometry.coordinates[i][j][0], geometry.coordinates[i][j][1]);
+                hole.moveTo(coords[i][j][0], coords[i][j][1]);
             } else { // altri punti
-                hole.lineTo(geometry.coordinates[i][j][0], geometry.coordinates[i][j][1]);
+                hole.lineTo(coords[i][j][0], coords[i][j][1]);
             }  
         }
         shape.holes.push(hole);
     }
-    
-    var polygon = shape.makeGeometry();
-    
-    return polygon;
+    return shape.makeGeometry();  
 }
 
 function generateWallGeometry(wallFeature) {
@@ -620,9 +545,7 @@ function generateWallGeometry(wallFeature) {
 			coordinates.push(hole);
 		}
 	}
-	return {
-		coordinates: coordinates
-	}
+	return { coordinates: coordinates }
 }
 
 C3D.generator3D['external_wall'] = function(feature) {
