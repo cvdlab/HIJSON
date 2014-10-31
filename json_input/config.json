@@ -12,12 +12,12 @@
 		},
 	    "internal_wall": 
 	    {
-	    	"color": "#ff0000",
+	    	"color": "#073642",
 	    	"opacity": 1
 	    },
 	    "external_wall": 
 	    {
-	    	"color": "#ff0000",
+	    	"color": "#073642",
 	    	"opacity": 1
 	    },
 	    "level": 
@@ -32,8 +32,8 @@
 	    "room": 
 	    {
 		    "weight": 0,
-		    "fillColor": "#000000",
-		    "fillOpacity": 0.8
+		    "fillColor": "#93a1a1",
+		    "fillOpacity": 1
 	    },
 	    "server": 
 	    {
