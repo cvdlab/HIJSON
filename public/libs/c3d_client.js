@@ -1,7 +1,7 @@
 var C3D = {};
 
 C3D.handlers = {};
-
+C3D.options3D = {};
 C3D.on = function(event, handler) {
     var handlers_list = this.handlers[event];
 
@@ -93,7 +93,7 @@ C3D.init2D = function() {
 C3D.init3D = function() {
 	C3D.scene3D = new THREE.Scene();
 	
-	var container3D = $('#container3D');
+    var container3D = $('#container3D');
     var container3DWidth = container3D.width();
     var container3DHeight = container3D.width()/4*3;
     container3D.css('height', container3DHeight);
@@ -144,11 +144,12 @@ C3D.init3D = function() {
         renderer.setSize( container3DWidth, container3DHeight );
     
     }
-    
+
     render();
     
     function render() {
         stats.update();
+        
         trackballControls.update();
         
         requestAnimationFrame(render);

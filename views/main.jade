@@ -36,7 +36,7 @@ block content
 		.row
 			if (enable_2D && enable_3D)	
 				.col-md-6
-					h3 2Da
+					h3 2D
 					#container2D 
 				.col-md-6
 					h3 3D
@@ -63,7 +63,13 @@ block content
 		
 		.page-header
 			h1 Controls
-			
+		if enable_3D
+			h3 3D Controls			
+			.row
+				.col-md-12
+					button.btn.btn-default.btn-lg(id="startFPS")  Start FPS
+
+		h3 Building Controls
 		.row
 			.col-md-3
 				.lead Select Level: 
@@ -91,5 +97,9 @@ block content
 	
 			$( "#selectRoom" ).on('change', function() {
 				C3D.emit('selectFeature', this.value);
+			});
+
+			$( "#startFPS" ).on('click', function() {
+				alert('click');
 			});
 		block internal_content
