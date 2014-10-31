@@ -1,2 +1,33 @@
 style.
-	#stats { position: absolute; }
+	#stats {
+		position: absolute; 
+	}
+	#pointer {
+		position: relative;
+		top: 50%;
+		left: 50%;
+		margin-top: -20px;
+		margin-left: -20px;
+		width: 40px;
+		height: 40px;
+		display: none;
+		background-image: url("assets/textures/pointer.png");
+		background-repeat: no-repeat;
+		background-size: contain;
+	}
+	
+	#plerror {
+		text-shadow:0px 0px 20px rgba(250,100,100,1);
+		font-weight:bold;
+		font-size:30px;
+		font-family:arial, helvetica, sans-serif;
+		text-align:center;
+		position: fixed;
+		top: 50%;
+		left: 50%;
+		margin-top: -15px;
+		margin-left: -100px;
+		width: 200px;
+		height: 30px;
+		display: none;
+	}

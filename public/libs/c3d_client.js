@@ -145,14 +145,22 @@ C3D.init3D = function() {
     
     }
 
-    render();
+	function animate() {
+		requestAnimationFrame(animate);
+		render();
+		update();
+	}
     
     function render() {
-        stats.update();
-        computeFPControls();
-        trackballControls.update();
-        requestAnimationFrame(render);
         renderer.render(scene, camera);
+    }
+    
+    function update() {
+	    stats.update();
+        if (FPenabled === true) {
+			computeFPControls();
+		}
+        trackballControls.update();
     }
     
     function initStats() {
@@ -180,26 +188,15 @@ C3D.init3D = function() {
 	        }
 	    } 
     });
+    
+/*
     C3D.on('startFPS', function() {
         controls = new THREE.PointerLockControls(camera);
         scene.add(controls.getObject());
         container3D.requestPointerLock = container3D.requestPointerLock || container3D.mozRequestPointerLock || container3D.webkitRequestPointerLock;
-        if (/Firefox/i.test(navigator.userAgent)) {
-          var fullscreenchange = function(event) {
-            if (container3D.fullscreenElement === element || container3D.mozFullscreenElement === element || container3D.mozFullScreenElement === container3D) {
-              container3D.removeEventListener('fullscreenchange', fullscreenchange);
-              container3D.removeEventListener('mozfullscreenchange', fullscreenchange);
-              element.requestPointerLock();
-            }
-          }
-          container3D.addEventListener('fullscreenchange', fullscreenchange, false);
-          container3D.addEventListener('mozfullscreenchange', fullscreenchange, false);
-          container3D.requestFullscreen = container3D.requestFullscreen || container3D.mozRequestFullscreen || container3D.mozRequestFullScreen || container3D.webkitRequestFullscreen;
-          container3D.requestFullscreen();
-        } else {
-          container3D.requestPointerLock();
-        }
+		container3D.requestPointerLock();
     });
+    
     function computeFPControls() {
         controls.isOnObject(false);
         rayMove.ray.origin.copy(controls.getObject().position);
@@ -212,7 +209,111 @@ C3D.init3D = function() {
           }
     }
     controls.update();
-  }
+*/
+
+	var havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
+	
+	if (havePointerLock) {
+	
+	  var element = container3D[0];
+	
+	  var pointerlockchange = function(event) {
+	    if (document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element) {
+	      FPenabled = true;
+	      trackballControls.reset();
+	      controls.enabled = true;
+	      camera.position.set(0, 0, 0);
+	      camera.up = new THREE.Vector3(0, 0, 1);
+	      controls.getObject().position.set(0, 0, 0);
+	      $("#pointer").fadeIn(1000);
+	    } else {
+	      location.reload();
+	    }
+	  }
+	
+	  var pointerlockerror = function(event) {
+	    $("#error").fadeIn(500);
+	  }
+	
+	  document.addEventListener('pointerlockchange', pointerlockchange, false);
+	  document.addEventListener('mozpointerlockchange', pointerlockchange, false);
+	  document.addEventListener('webkitpointerlockchange', pointerlockchange, false);
+	
+	  document.addEventListener('pointerlockerror', pointerlockerror, false);
+	  document.addEventListener('mozpointerlockerror', pointerlockerror, false);
+	  document.addEventListener('webkitpointerlockerror', pointerlockerror, false);
+	
+	  var startFP = function() {
+	    controls = new THREE.PointerLockControls(camera);
+	    scene.add(controls.getObject());
+	    element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
+	    if (/Firefox/i.test(navigator.userAgent)) {
+	      var fullscreenchange = function(event) {
+	        if (document.fullscreenElement === element || document.mozFullscreenElement === element || document.mozFullScreenElement === element) {
+	          document.removeEventListener('fullscreenchange', fullscreenchange);
+	          document.removeEventListener('mozfullscreenchange', fullscreenchange);
+	          element.requestPointerLock();
+	        }
+	      }
+	      document.addEventListener('fullscreenchange', fullscreenchange, false);
+	      document.addEventListener('mozfullscreenchange', fullscreenchange, false);
+	      element.requestFullscreen = element.requestFullscreen || element.mozRequestFullscreen || element.mozRequestFullScreen || element.webkitRequestFullscreen;
+	      element.requestFullscreen();
+	    } else {
+	      element.requestPointerLock();
+	    }
+	  };
+	
+	  function computeFPControls() {
+	    controls.isOnObject(false);
+	    rayMove.ray.origin.copy(controls.getObject().position);
+	    rayMove.ray.origin.y -= 4;
+	    var intersections = rayMove.intersectObjects(objects);
+	    if (intersections.length > 0) {
+	      var distance = intersections[0].distance;
+	      if (distance > 0 && distance < 4) {
+	        controls.isOnObject(true);
+	      }
+	    }
+	    controls.update();
+	  }
+	
+	}
+	
+	// mouse interaction
+	var projector = new THREE.Projector();
+	document.addEventListener('mousedown', onDocumentMouseDown, false);
+	function onDocumentMouseDown(event) {
+		event.preventDefault();
+		if (document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element) {
+			var vector = new THREE.Vector3(0, 0, 0.5);
+			projector.unprojectVector(vector, camera);
+			var raycaster = new THREE.Raycaster( vector, controls.getDirection( new THREE.Vector3(0, 0, 0) ).clone() );
+		} else {
+			var vector = new THREE.Vector3((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1, 0.5);
+			projector.unprojectVector(vector, camera);
+			var raycaster = new THREE.Raycaster(camera.position,
+				vector.sub(camera.position).normalize());
+	
+		}
+		var intersects = raycaster.intersectObjects(toIntersect);
+		if (intersects.length > 0) {
+			intersects[0].object.interact && intersects[0].object.interact();
+		}
+	}
+	var toIntersect = [];
+	
+	// first person controls
+	var FPenabled = false;
+	var controls;
+	var objects = [];
+	var rayMove = new THREE.Raycaster();
+	rayMove.ray.direction.set(0, 0, -1);
+	var rayPointer = new THREE.Raycaster();
+  
+	C3D.on('startFPS', startFP);
+	
+	animate();
 }
 
 /*

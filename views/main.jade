@@ -48,7 +48,9 @@ block content
 			else if (!enable_2D && enable_3D)
 				.col-md-8.col-md-offset-2
 					h3 3D
-					#container3D 
+					#container3D
+						#pointer
+						#plerror
 
 			
 		if enable_2D
@@ -63,12 +65,7 @@ block content
 		
 		.page-header
 			h1 Controls
-		if enable_3D
-			h3 3D Controls			
-			.row
-				.col-md-12
-					button.btn.btn-default.btn-lg(id="startFPS")  Start FPS
-
+		
 		h3 Building Controls
 		.row
 			.col-md-3
@@ -77,6 +74,13 @@ block content
 			.col-md-3
 				.lead Select Room:
 					select#selectRoom(disabled = true)
+					
+		if enable_3D
+			h3 3D Controls			
+			.row
+				.col-md-12
+					button.btn.btn-default.btn-lg(id="startFPS") Start FPS
+					
 		script.
 			var elements = ['level','building'];
 			for(id in C3D.index)
