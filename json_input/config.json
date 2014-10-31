@@ -12,11 +12,13 @@
 		},
 	    "internal_wall": 
 	    {
+		    "weight": 0.5,
 	    	"color": "#ff0000",
 	    	"opacity": 1
 	    },
 	    "external_wall": 
 	    {
+	    	"weight": 0.5,
 	    	"color": "#ff0000",
 	    	"opacity": 1
 	    },
