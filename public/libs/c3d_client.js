@@ -146,12 +146,13 @@ C3D.init3D = function() {
     }
 
     render();
-    
+    var fpsActive = false;
     function render() {
         stats.update();
-
-        trackballControls.update();
+        if(fpsActive)
+            computeFPControls();
         
+        trackballControls.update();
         requestAnimationFrame(render);
         renderer.render(scene, camera);
     }
@@ -181,9 +182,42 @@ C3D.init3D = function() {
 	        }
 	    } 
     });
+    var controls;
     C3D.on('startFPS', function() {
-        //TODO
+        fpsActive = true;
+        controls = new THREE.PointerLockControls(camera);
+        scene.add(controls.getObject());
+        container3D.requestPointerLock = container3D.requestPointerLock || container3D.mozRequestPointerLock || container3D.webkitRequestPointerLock;
+        if (/Firefox/i.test(navigator.userAgent)) {
+          var fullscreenchange = function(event) {
+            if (container3D.fullscreenElement === element || container3D.mozFullscreenElement === element || container3D.mozFullScreenElement === container3D) {
+              container3D.removeEventListener('fullscreenchange', fullscreenchange);
+              container3D.removeEventListener('mozfullscreenchange', fullscreenchange);
+              element.requestPointerLock();
+            }
+          }
+          container3D.addEventListener('fullscreenchange', fullscreenchange, false);
+          container3D.addEventListener('mozfullscreenchange', fullscreenchange, false);
+          container3D.requestFullscreen = container3D.requestFullscreen || container3D.mozRequestFullscreen || container3D.mozRequestFullScreen || container3D.webkitRequestFullscreen;
+          container3D.requestFullscreen();
+        } else {
+          container3D.requestPointerLock();
+        }
     });
+
+    function computeFPControls() {
+        controls.isOnObject(false);
+        rayMove.ray.origin.copy(controls.getObject().position);
+        rayMove.ray.origin.y -= 4;
+        var intersections = rayMove.intersectObjects(objects);
+        if (intersections.length > 0) {
+          var distance = intersections[0].distance;
+          if (distance > 0 && distance < 4) {
+            controls.isOnObject(true);
+          }
+    }
+    controls.update();
+  }
 }
 
 /*
