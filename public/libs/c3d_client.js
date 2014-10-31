@@ -223,7 +223,7 @@ C3D.init3D = function() {
 	      trackballControls.reset();
 	      controls.enabled = true;
 	      camera.position.set(0, 0, 0);
-	      camera.up = new THREE.Vector3(0, 0, 1);
+	      //camera.up = new THREE.Vector3(0, 0, 1);
 	      controls.getObject().position.set(0, 0, 0);
 	      $("#pointer").fadeIn(1000);
 	    } else {
