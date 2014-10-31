@@ -26,20 +26,6 @@ block internal_content
 			marker.setLatLng(position.latlng);
 			marker.bindPopup('<b>[' + position.latlng.lat + '; ' + position.latlng.lng + ']</b>');
 		}
-
-		function getActualLevelId() {
-			var id;
-			for(idLayer in map._layers){
-				layer = map._layers[idLayer];
-				if(layer.feature !== undefined) {
-					if(layer.feature.properties.class === 'level')
-					{
-						id = layer.feature.id;
-					}
-				}
-			}	
-			return id;
-		}
 		
 		C3D.on('selectFeature', function(idObject) {
 			if(C3D.index[idObject].properties.class === 'level') {

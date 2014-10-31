@@ -70,6 +70,8 @@ C3D.init2D = function() {
 		    }
 		    if(C3D.index[idObject].properties.class !== 'building') 
 		        C3D.map2D.fitBounds(C3D.getRoom(C3D.index[idObject]).layer2D.getBounds());
+
+            orderLayer();
         });
         
         
@@ -243,10 +245,12 @@ C3D.generate2DModel = function() {
 		markers.addTo(C3D.index[geoJSONlevel].layer2D);
 		C3D.index[geoJSONlevel].layer2D.userMarkers = markers;
 	}
+
 	
-	C3D.index['level_0'].layer2D.addTo(C3D.map2D);
+    C3D.index['level_0'].layer2D.addTo(C3D.map2D);
+
 	C3D.map2D.fitBounds(C3D.index['level_0'].layer2D.getBounds());
-	
+    orderLayer();	
 	function styleFunction(feature) {
 		return C3D.config.style[feature.properties.class];
 	}
@@ -274,6 +278,7 @@ C3D.generate2DModel = function() {
         C3D.emit('selectFeature', e.target.feature.id);
     }
 
+
     // function highlightFeature(feature, layer) {
     //         var layer = e.target;
     //         layer.setStyle({
@@ -292,6 +297,38 @@ C3D.generate2DModel = function() {
     // }
 }	// Chiude generate2DModel
 
+function getActualLevelId() {
+    var id;
+    for(idLayer in C3D.map2D._layers){
+        layer = C3D.map2D._layers[idLayer];
+        if(layer.feature !== undefined) {
+            if(layer.feature.properties.class === 'level')
+            {
+                id = layer.feature.id;
+            }
+        }
+    }   
+    return id;
+}
+
+function orderLayer() {
+
+    var orderClass = ['room','external_wall','internal_wall','door'];
+    while(orderClass.length !== 0) {
+        var classElement = orderClass.shift();
+        for(idLayer in C3D.map2D._layers) {
+            console.log(idLayer);
+            layer = C3D.map2D._layers[idLayer];
+            if(layer.feature !== undefined) {
+                if(layer.feature.properties.class === classElement)
+                {
+                    console.log(classElement);
+                    layer.bringToFront();
+                }
+            }     
+        }
+    }
+}
 C3D.generator3D = {};
 
 C3D.generator3D['server'] = function (feature) {
