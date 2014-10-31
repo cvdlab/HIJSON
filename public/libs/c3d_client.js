@@ -146,12 +146,10 @@ C3D.init3D = function() {
     }
 
     render();
-    var fpsActive = false;
+    
     function render() {
         stats.update();
-        if(fpsActive)
-            computeFPControls();
-        
+        computeFPControls();
         trackballControls.update();
         requestAnimationFrame(render);
         renderer.render(scene, camera);
@@ -182,9 +180,7 @@ C3D.init3D = function() {
 	        }
 	    } 
     });
-    var controls;
     C3D.on('startFPS', function() {
-        fpsActive = true;
         controls = new THREE.PointerLockControls(camera);
         scene.add(controls.getObject());
         container3D.requestPointerLock = container3D.requestPointerLock || container3D.mozRequestPointerLock || container3D.webkitRequestPointerLock;
@@ -204,7 +200,6 @@ C3D.init3D = function() {
           container3D.requestPointerLock();
         }
     });
-
     function computeFPControls() {
         controls.isOnObject(false);
         rayMove.ray.origin.copy(controls.getObject().position);
