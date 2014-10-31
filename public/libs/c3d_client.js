@@ -149,7 +149,7 @@ C3D.init3D = function() {
     
     function render() {
         stats.update();
-        
+
         trackballControls.update();
         
         requestAnimationFrame(render);
@@ -180,6 +180,9 @@ C3D.init3D = function() {
 	            }   
 	        }
 	    } 
+    });
+    C3D.on('startFPS', function() {
+        //TODO
     });
 }
 
