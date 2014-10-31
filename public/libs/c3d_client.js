@@ -102,7 +102,6 @@ C3D.init3D = function() {
     var scene = C3D.scene3D;
     // create a camera, which defines where we're looking at.
     var camera = new THREE.PerspectiveCamera(45, container3DWidth / container3DHeight, 0.1, 1000);
-    C3D.camera3D = camera;
     // create a render and set the size
     var renderer = new THREE.WebGLRenderer();
     
