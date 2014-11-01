@@ -111,11 +111,9 @@ C3D.init3D = function() {
     camera.up = new THREE.Vector3(0,0,1);
     camera.lookAt(scene.position);
 	
-	
     var trackballControls = new THREE.TrackballControls(camera, container3D[0]);
     trackballControls.enabled = true;
-    var pointerLockControls = {};
-	pointerLockControls.enabled = false;
+    var pointerLockControls = { enabled: false };
     
     //var FPenabled = false;
 	var objects = [];
@@ -170,7 +168,7 @@ C3D.init3D = function() {
 	
 		var element = container3D[0];
 		
-		C3D.on('startFPS', function() {
+		C3D.on('startFPV', function() {
 			pointerLockControls = new THREE.PointerLockControls(camera);
 			scene.add(pointerLockControls.getObject());
 			element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
@@ -204,6 +202,7 @@ C3D.init3D = function() {
 				pointerLockControls.enabled = false;
 				trackballControls.enabled = true;
 				$("#pointer").css('display', 'none');
+				trackballControls.reset();
 				camera.position.set(-40,-40,40);
 				camera.lookAt(scene.position);
 			}

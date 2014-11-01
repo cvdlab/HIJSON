@@ -81,7 +81,7 @@ block content
 			h3 3D Controls			
 			.row
 				.col-md-12
-					button.btn.btn-default.btn-lg(id="startFPS") Start FPS
+					button.btn.btn-default.btn-lg(id="startFPV") Start FPV
 					
 		script.
 			var elements = ['level','building'];
@@ -105,7 +105,7 @@ block content
 				C3D.emit('selectFeature', this.value);
 			});
 
-			$( "#startFPS" ).on('click', function() {
-				C3D.emit('startFPS');
+			$( "#startFPV" ).on('click', function() {
+				C3D.emit('startFPV');
 			});
 		block internal_content
