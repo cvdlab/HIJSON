@@ -195,9 +195,9 @@ C3D.init3D = function() {
 				trackballControls.enabled = false;
 				pointerLockControls.enabled = true;
 				$("#pointer").css('display', 'block');
-				camera.position.set(0, 0, 0);
-				//camera.up = new THREE.Vector3(0, 0, 1);
-				pointerLockControls.getObject().position.set(0, 0, 0);
+				//camera.up = new THREE.Vector3(0, 1, 0);
+                camera.position.set(10, 10, 20);
+				pointerLockControls.getObject().position.set(1, 0, 0);
 			} else {
 				pointerLockControls.enabled = false;
 				trackballControls.enabled = true;
