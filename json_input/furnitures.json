@@ -159,11 +159,27 @@
             {
                 "parent": "room_0.1",
                 "class": "surveillanceCamera",
-                "tVector": [0, 3, 3.5],
+                "tVector": [0, 8, 3.5],
                 "rVector": [0, 0, 0]
             }
         },
 
+        {
+            "id": "camera_room_2",
+            "type": "Feature",
+            "geometry": 
+            {
+                "type": "Point",
+                "coordinates": [0, 0]
+            },
+            "properties": 
+            {
+                "parent": "room_0.1",
+                "class": "surveillanceCamera",
+                "tVector": [5, 0, 2.8],
+                "rVector": [0, 0, 90]
+            }
+        },
         {
             "id": "light_1_room_1",
             "type": "Feature",
