@@ -169,8 +169,8 @@ C3D.init3D = function() {
 		var element = container3D[0];
 		
 		C3D.on('startFPV', function() {
-
-			element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
+			
+            element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
 			if (/Firefox/i.test(navigator.userAgent)) {
 				var fullscreenchange = function(event) {
 					if (document.fullscreenElement === element || document.mozFullscreenElement === element || document.mozFullScreenElement === element) {
@@ -197,8 +197,8 @@ C3D.init3D = function() {
 				trackballControls.enabled = false;
 				pointerLockControls.enabled = true;
 				$("#pointer").css('display', 'block');
-				//camera.up = new THREE.Vector3(0, 1, 0);
-                //camera.position.set(10, 10, 20);
+                //camera.up = new THREE.Vector3(0, 1, 0);
+                camera.position.set(10, 10, 20)
 				pointerLockControls.getObject().position.set(0, 0, 40);
 			} else {
 				scene.add(camera); //ripristina la camera originaria
