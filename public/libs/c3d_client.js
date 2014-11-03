@@ -456,23 +456,69 @@ C3D.generator3D['hotspot'] = function(feature) {
 };
 
 C3D.generator3D['light'] = function(feature) {
-    var radius = 0.05;
-    var width = 0.1;
-    var depth = 0.2;
-    var height = 0.3;
-    var length  = 2;
+      function createLight() {
+        var spotLight = new THREE.SpotLight(0x404040);
 
-    var geometry = new THREE.CylinderGeometry( radius, radius, length, 32);
-    var material = new THREE.MeshBasicMaterial( {color: 0xffffff} );
-    var model = new THREE.Mesh( geometry, material);
+        spotLight.castShadow = true; 
+        spotLight.shadowMapWidth = 1024; 
+        spotLight.shadowMapHeight = 1024; 
+        spotLight.shadowCameraNear = 500; 
+        spotLight.shadowCameraFar = 4000; 
+        spotLight.shadowCameraFov = 30; 
+        //eventuali parametri di configurazione
+        return spotLight;
+      }
+      function createNeon() {
+        var radiusNeon = 0.01;
+        var heightNeon = 0.4;
+        var geometry = new THREE.CylinderGeometry( radiusNeon, radiusNeon, heightNeon, 32 );
+        var material = new THREE.MeshBasicMaterial( {color: 0xffffff} );
+        var neon = new THREE.Mesh( geometry, material );
+        neon.add(createLight());
+        return neon;
+      }
+
+    function createNeonGroup() {
+        var groupNeon = new THREE.Object3D();
+        var singleNeon;
+        var light;
+        for(var i = 0; i < 4; i++) {
+            singleNeon = createNeon();
+            singleNeon.position.x += 0.1*i;
+            groupNeon.add(singleNeon);
+        }
+        groupNeon.position.x -= 0.15;
+       return groupNeon;        
+      }
+
+    function createStructure() {
+        var height = 0.05;
+        var width = 0.4;
+        var externalCubeGeometry = new THREE.BoxGeometry(0.4,0.4,0.05);
+        var externalCubeMaterial = new THREE.MeshLambertMaterial({
+                                                            color:0xE7E6DD,
+                                                            transparent: true, 
+                                                            opacity: 0.1, 
+                                                            side: THREE.DoubleSide
+                                                        });
+        var externalCube = new THREE.Mesh(externalCubeGeometry, externalCubeMaterial);
+        
+        externalCube.position.x += width/2;
+        externalCube.position.y += width/2;
+        externalCube.position.z += height/2;
+        return externalCube;
+      }
+
+    function createModel() {
+        var lightBox = createStructure();
+        lightBox.add(createNeonGroup());        
+    }
+
+    var model = createModel();
     
-    model.position.z = model.position.z + levelHeight - radius;
+    return model;
+}
 
-    var light = new THREE.Object3D();
-
-    light.add(model);
-    return light;
-};
 
 C3D.generator3D['antenna'] = function(feature) {
     var radius_down = 0.02;

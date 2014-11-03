@@ -162,6 +162,22 @@
                 "tVector": [0, 3, 3.5],
                 "rVector": [0, 0, 0]
             }
+        },
+        {
+            "id": "light_room_1",
+            "type": "Feature",
+            "geometry": 
+            {
+                "type": "Point",
+                "coordinates": [0, 0]
+            },
+            "properties": 
+            {
+                "parent": "room_0.1",
+                "class": "light",
+                "tVector": [3, 3, 5],
+                "rVector": [0, 0, 0]
+            }
         }
     ]
 }
