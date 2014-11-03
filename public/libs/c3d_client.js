@@ -423,21 +423,58 @@ C3D.generator3D['server'] = function (feature) {
 };
 
 C3D.generator3D['surveillanceCamera'] = function(feature) {
-    var radius = 0.2;
-    var widthSegments = 32;
-    var heightSegments = 32;
-    var phiStart = 0;
-    var phiLength = -Math.PI;
-    var thetaStart = 0;
-    var thetaLength = Math.PI;
+    // var radius = 0.2;
+    // var widthSegments = 32;
+    // var heightSegments = 32;
+    // var phiStart = 0;
+    // var phiLength = -Math.PI;
+    // var thetaStart = 0;
+    // var thetaLength = Math.PI;
 
-    var geometry = new THREE.SphereGeometry( radius, widthSegments, heightSegments, phiStart, phiLength, thetaStart, thetaLength);
-    var material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
+    // var geometry = new THREE.SphereGeometry( radius, widthSegments, heightSegments, phiStart, phiLength, thetaStart, thetaLength);
+    // var material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
     
-    var model = new THREE.Mesh( geometry, material );
-    var surveillanceCamera = new THREE.Object3D();
-    surveillanceCamera.add(model);
-    return surveillanceCamera;
+    // var model = new THREE.Mesh( geometry, material );
+    // var surveillanceCamera = new THREE.Object3D();
+    // surveillanceCamera.add(model);
+    // return surveillanceCamera;
+        function createCamera() {
+            var material = new THREE.MeshLambertMaterial( {color: 0xffffff} );
+            
+            var camera = new THREE.Object3D();
+            var geometryBody = new THREE.BoxGeometry( 0.1, 0.05, 0.05 );
+            var cameraBody = new THREE.Mesh( geometryBody, material );
+
+            var geometryCylinder = new THREE.CylinderGeometry( 0.01, 0.03, 0.05, 32 );
+            var cylinder = new THREE.Mesh( geometryCylinder, material );
+            cylinder.rotation.z = Math.PI/2;
+            cylinder.position.x += 0.05;
+
+            var geometryViewFinder = new THREE.BoxGeometry( 0.01, 0.01, 0.01 );
+            var viewFinder = new THREE.Mesh( geometryViewFinder, material );
+            viewFinder.position.z = 0.015;
+            viewFinder.position.x = -0.052;
+            viewFinder.position.y = 0.015;
+            
+            var geometryAxis = new THREE.CylinderGeometry( 0.005, 0.005, 0.05, 32 );
+            var cylinderAxis = new THREE.Mesh( geometryAxis, material );
+            cylinderAxis.rotation.z = Math.PI/2;
+            cylinderAxis.position.x -= 0.075;
+
+            
+            camera.add(cameraBody);
+            camera.add(cylinder);
+            camera.add(viewFinder);
+            camera.add(cylinderAxis);
+            camera.position.x = 0.1;
+            camera.position.z += 0.025;
+            camera.position.y += 0.025;
+            return camera;
+
+        }
+    var model = createCamera();
+
+    return model;
 }
 
 C3D.generator3D['hotspot'] = function(feature) {
