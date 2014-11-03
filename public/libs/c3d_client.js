@@ -511,7 +511,8 @@ C3D.generator3D['light'] = function(feature) {
 
     function createModel() {
         var lightBox = createStructure();
-        lightBox.add(createNeonGroup());        
+        lightBox.add(createNeonGroup()); 
+        return lightBox;       
     }
 
     var model = createModel();
