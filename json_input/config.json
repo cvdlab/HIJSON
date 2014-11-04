@@ -44,13 +44,18 @@
 	    "surveillanceCamera": 
 	    {
 		    "prefix": "fa",
-		    "icon": "video-camera",
-		    "markerColor": "red"
+		    "icon": "video-camera"
 	    },
 	    "user": 
 	    {
 		    "prefix": "fa",
 		    "icon": "male"
+	    },
+	    "fireExtinguisher": 
+	    {
+		    "prefix": "fa",
+		    "icon": "fire-extinguisher",
+		    "markerColor": "red"
 	    }
     }
 }

@@ -591,19 +591,20 @@ C3D.generator3D['fireExtinguisher'] = function(feature) {
     model.add(sphereUp);
     
     var headGeometry = new THREE.BoxGeometry(0.02, 0.02, 0.2);
-    var materialHead = new THREE.MeshBasicMaterial( {color: 0x000000} );
-    var head = new THREE.Mesh( headGeometry, materialHead );
+    var materialBlack = new THREE.MeshLambertMaterial( {color: 0x000000} );
+    var head = new THREE.Mesh( headGeometry, materialBlack );
     head.position.z += 0.4;
     model.add(head);
 
-    var materialCylinder = new THREE.MeshBasicMaterial( {color: 0x000000} );
     var cylinderGeometry = new THREE.CylinderGeometry( 0.015, 0.08, 0.25, 32 );
-    var cylinder = new THREE.Mesh(cylinderGeometry, materialCylinder);
+    var cylinder = new THREE.Mesh(cylinderGeometry, materialBlack);
     cylinder.position.z += 0.48;
     cylinder.rotation.z = Math.PI/2;
     cylinder.position.x += 0.12;
     model.add(cylinder);
-    
+    // model.position.x += 0.1;
+    // model.position.y += 0.1;
+    model.position.z += 0.61/2;
     return model;
 }
 
