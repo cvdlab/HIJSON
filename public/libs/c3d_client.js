@@ -577,6 +577,36 @@ C3D.generator3D['antenna'] = function(feature) {
     return antenna;
 };
 
+C3D.generator3D['fireExtinguisher'] = function(feature) {
+    var model = new THREE.Object3D();
+    var material = new THREE.MeshBasicMaterial( {color: 0xff0000} );
+    var bodyGeometry = new THREE.CylinderGeometry( 0.1, 0.1, 0.61, 32 );
+    var body = new THREE.Mesh( bodyGeometry, material );
+    body.rotation.x = Math.PI/2;
+    model.add(body);
+
+    var geometrySphereUp = new THREE.SphereGeometry( 0.1, 32, 32 );
+    var sphereUp = new THREE.Mesh( geometrySphereUp, material );
+    sphereUp.position.z += 0.3;
+    model.add(sphereUp);
+    
+    var headGeometry = new THREE.BoxGeometry(0.02, 0.02, 0.2);
+    var materialHead = new THREE.MeshBasicMaterial( {color: 0x000000} );
+    var head = new THREE.Mesh( headGeometry, materialHead );
+    head.position.z += 0.4;
+    model.add(head);
+
+    var materialCylinder = new THREE.MeshBasicMaterial( {color: 0x000000} );
+    var cylinderGeometry = new THREE.CylinderGeometry( 0.015, 0.08, 0.25, 32 );
+    var cylinder = new THREE.Mesh(cylinderGeometry, materialCylinder);
+    cylinder.position.z += 0.48;
+    cylinder.rotation.z = Math.PI/2;
+    cylinder.position.x += 0.12;
+    model.add(cylinder);
+    
+    return model;
+}
+
 function generateLineString(geoJSONgeometry) {
 	var lineString = new THREE.Geometry();
     for(var i = 0; i < geoJSONgeometry.coordinates.length; i++){
