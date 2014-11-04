@@ -419,6 +419,7 @@ C3D.generator3D['server'] = function (feature) {
     var material = new THREE.MeshLambertMaterial( {color: 0x008080} );
     var server = new THREE.Mesh(geometry, material);
     server.position.z += dimensions[2]/2;
+    server.castShadow = true;
     return server;
 };
 
@@ -484,6 +485,8 @@ C3D.generator3D['surveillanceCamera'] = function(feature) {
         }
     var model = createCamera();
 
+    model.castShadow = true;
+
     return model;
 }
 
@@ -503,77 +506,53 @@ C3D.generator3D['hotspot'] = function(feature) {
 };
 
 C3D.generator3D['light'] = function(feature) {
-    var target = new THREE.Object3D();
-    target.position.set(feature.properties.tVector[0], feature.properties.tVector[1],0);
-    // var geometry = new THREE.BoxGeometry( 1, 1, 1 );
-    // var material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
-    // var cube = new THREE.Mesh( geometry, material );
-    // target.add( cube );
-    function createLight() {
-        var spotLight = new THREE.SpotLight(0x404040);
 
-        spotLight.castShadow = true; 
-        spotLight.shadowMapWidth = 1024; 
-        spotLight.shadowMapHeight = 1024; 
-        spotLight.shadowCameraNear = 500; 
-        spotLight.shadowCameraFar = 4000; 
-        spotLight.shadowCameraFov = 30; 
-        spotLight.target = target;
-        //eventuali parametri di configurazione
-        return spotLight;
-    }
+    var model = new THREE.Object3D();
+    var height = 0.05;
+    var width = 0.6;
+    var externalCubeGeometry = new THREE.BoxGeometry(width,width,height);
+    var externalCubeMaterial = new THREE.MeshLambertMaterial({
+                                                                color:0xE7E6DD,
+                                                                transparent: true, 
+                                                                opacity: 0.1, 
+                                                                side: THREE.DoubleSide
+                                                            });
+    var model3D = new THREE.Mesh(externalCubeGeometry, externalCubeMaterial);
     
-    function createNeon() {
-        var radiusNeon = 0.01;
-        var heightNeon = 0.4;
-        var geometry = new THREE.CylinderGeometry( radiusNeon, radiusNeon, heightNeon, 32 );
-        var material = new THREE.MeshBasicMaterial( {color: 0xffffff} );
-        var neon = new THREE.Mesh( geometry, material );
-        neon.add(createLight());
-        return neon;
+    model.add(model3D);
+    var groupNeon = new THREE.Object3D();
+    var neonMaterial = new THREE.MeshBasicMaterial( {color: 0xffffff} );
+    var neonGeometry = new THREE.CylinderGeometry( 0.015, 0.015, 0.6, 32 );
+    var translations = [(-0.075*3), (-0.075), (0.075), (0.075*3)];
+    for(i in translations)
+    {
+        var neon = new THREE.Mesh( neonGeometry, neonMaterial );
+        neon.position.x += translations[i];
+        groupNeon.add(neon);
     }
+    model.add(groupNeon);
 
-    function createNeonGroup() {
-        var groupNeon = new THREE.Object3D();
-        var singleNeon;
-        var light;
-        for(var i = 0; i < 4; i++) {
-            singleNeon = createNeon();
-            singleNeon.position.x += 0.1*i;
-            groupNeon.add(singleNeon);
-        }
-        groupNeon.position.x -= 0.15;
-        return groupNeon;        
-    }
+    var target = new THREE.Object3D();
+    target.position.z -= 1;
+    target.position.x = 0;
+    target.position.y = 0;
+    var geometry = new THREE.BoxGeometry( 1, 1, 1 );
+    var material = new THREE.MeshLambertMaterial( {color: 0x00ff00} );
+    var cube = new THREE.Mesh( geometry, material );
+    target.add( cube );
+    
+    model.add(target);
 
-    function createStructure() {
-        var height = 0.05;
-        var width = 0.4;
-        var externalCubeGeometry = new THREE.BoxGeometry(0.4,0.4,0.05);
-        var externalCubeMaterial = new THREE.MeshLambertMaterial({
-                                                                    color:0xE7E6DD,
-                                                                    transparent: true, 
-                                                                    opacity: 0.1, 
-                                                                    side: THREE.DoubleSide
-                                                                });
-        var externalCube = new THREE.Mesh(externalCubeGeometry, externalCubeMaterial);
-
-        externalCube.position.x += width/2;
-        externalCube.position.y += width/2;
-        externalCube.position.z += height/2;
-        return externalCube;
-    }
-
-    function createModel() {
-        var lightBox = createStructure();
-        lightBox.add(createNeonGroup()); 
-        return lightBox;       
-    }
-
-    var model = createModel();
-
+    var spotLight = new THREE.SpotLight(0xFFFFFF);
+    spotLight.position = model.position;
+    spotLight.target = target;
+    spotLight.distance = 25;
+    spotLight.angle = 0.75;
+    spotLight.exponent = 30;
+    spotLight.castShadow = true;
+    model.add(spotLight);
     return model;
-}
+} 
 
 
 C3D.generator3D['antenna'] = function(feature) {
@@ -654,7 +633,7 @@ function generateWallGeometry(wallFeature) {
 }
 
 C3D.generator3D['external_wall'] = function(feature) {
-    var material = new THREE.LineBasicMaterial({ 
+    var material = new THREE.MeshLambertMaterial({ 
     	color: C3D.config.style.external_wall.color, 
         side: THREE.DoubleSide
 	});
@@ -665,11 +644,13 @@ C3D.generator3D['external_wall'] = function(feature) {
 	var container = new THREE.Object3D();
 	container.add(wall);
 	wall.rotation.x += Math.PI/2;
+
+    wall.receiveShadow = true;
 	return container;	
 }
 
 C3D.generator3D['internal_wall'] = function(feature) {
-    var material = new THREE.LineBasicMaterial({ 
+    var material = new THREE.MeshLambertMaterial({ 
         color: C3D.config.style.internal_wall.color, 
         side: THREE.DoubleSide
     });
@@ -680,6 +661,8 @@ C3D.generator3D['internal_wall'] = function(feature) {
 	var container = new THREE.Object3D();
 	container.add(wall);
 	wall.rotation.x += Math.PI/2;
+
+    wall.receiveShadow = true;
 	return container;
 }
 
@@ -700,14 +683,17 @@ C3D.generator3D['level'] = function(feature) {
 }
 
 C3D.generator3D['room'] = function(feature) {
-    var material = new THREE.MeshBasicMaterial({
+    var material = new THREE.MeshLambertMaterial({
         color: C3D.config.style.room.fillColor,
         transparent: true, 
         opacity: 0.9, 
         side: THREE.DoubleSide
     });
-    
-    return new THREE.Mesh(generatePolygon(feature.geometry), material);
+
+    var model = new THREE.Mesh(generatePolygon(feature.geometry), material);
+    model.receiveShadow = true;
+
+    return model;
 }
 
 C3D.getRoom = function(obj) {

@@ -192,7 +192,7 @@
             {
                 "parent": "room_0.1",
                 "class": "light",
-                "tVector": [3, 3, 5],
+                "tVector": [3.5, 3, 3.5],
                 "rVector": [0, 0, 0]
             }
         },
@@ -209,7 +209,7 @@
             {
                 "parent": "room_0.1",
                 "class": "light",
-                "tVector": [3, 5, 5],
+                "tVector": [7, 3, 3.5],
                 "rVector": [0, 0, 0]
             }
         },
@@ -226,7 +226,7 @@
             {
                 "parent": "room_0.1",
                 "class": "light",
-                "tVector": [3, 7, 5],
+                "tVector": [3.5, 6, 3.5],
                 "rVector": [0, 0, 0]
             }
         },
@@ -243,7 +243,7 @@
             {
                 "parent": "room_0.1",
                 "class": "light",
-                "tVector": [3, 9, 5],
+                "tVector": [7, 6, 3.5],
                 "rVector": [0, 0, 0]
             }
         },
@@ -260,7 +260,7 @@
             {
                 "parent": "room_0.1",
                 "class": "light",
-                "tVector": [5, 3, 5],
+                "tVector": [3.5, 9, 3.5],
                 "rVector": [0, 0, 0]
             }
         },
@@ -277,7 +277,7 @@
             {
                 "parent": "room_0.1",
                 "class": "light",
-                "tVector": [5, 5, 5],
+                "tVector": [7, 9, 3.5],
                 "rVector": [0, 0, 0]
             }
         },
@@ -294,7 +294,7 @@
             {
                 "parent": "room_0.1",
                 "class": "light",
-                "tVector": [5, 7, 5],
+                "tVector": [3.5, 12, 3.5],
                 "rVector": [0, 0, 0]
             }
         },
@@ -311,15 +311,10 @@
             {
                 "parent": "room_0.1",
                 "class": "light",
-                "tVector": [5, 9, 5],
+                "tVector": [7, 12, 3.5],
                 "rVector": [0, 0, 0]
             }
         },
-
-
-
-
-
 
         {
             "id": "light_9_room_1",
@@ -333,7 +328,7 @@
             {
                 "parent": "room_0.1",
                 "class": "light",
-                "tVector": [7, 3, 5],
+                "tVector": [3.5, 15, 3.5],
                 "rVector": [0, 0, 0]
             }
         },
@@ -350,109 +345,7 @@
             {
                 "parent": "room_0.1",
                 "class": "light",
-                "tVector": [7, 5, 5],
-                "rVector": [0, 0, 0]
-            }
-        },
-        
-        {
-            "id": "light_11_room_1",
-            "type": "Feature",
-            "geometry": 
-            {
-                "type": "Point",
-                "coordinates": [0, 0]
-            },
-            "properties": 
-            {
-                "parent": "room_0.1",
-                "class": "light",
-                "tVector": [7, 7, 5],
-                "rVector": [0, 0, 0]
-            }
-        },
-        
-        {
-            "id": "light_12_room_1",
-            "type": "Feature",
-            "geometry": 
-            {
-                "type": "Point",
-                "coordinates": [0, 0]
-            },
-            "properties": 
-            {
-                "parent": "room_0.1",
-                "class": "light",
-                "tVector": [7, 9, 5],
-                "rVector": [0, 0, 0]
-            }
-        },
-
-        {
-            "id": "light_13_room_1",
-            "type": "Feature",
-            "geometry": 
-            {
-                "type": "Point",
-                "coordinates": [0, 0]
-            },
-            "properties": 
-            {
-                "parent": "room_0.1",
-                "class": "light",
-                "tVector": [9, 3, 5],
-                "rVector": [0, 0, 0]
-            }
-        },
-        
-        {
-            "id": "light_14_room_1",
-            "type": "Feature",
-            "geometry": 
-            {
-                "type": "Point",
-                "coordinates": [0, 0]
-            },
-            "properties": 
-            {
-                "parent": "room_0.1",
-                "class": "light",
-                "tVector": [9, 5, 5],
-                "rVector": [0, 0, 0]
-            }
-        },
-        
-        {
-            "id": "light_15_room_1",
-            "type": "Feature",
-            "geometry": 
-            {
-                "type": "Point",
-                "coordinates": [0, 0]
-            },
-            "properties": 
-            {
-                "parent": "room_0.1",
-                "class": "light",
-                "tVector": [9, 7, 5],
-                "rVector": [0, 0, 0]
-            }
-        },
-        
-        {
-            "id": "light_16_room_1",
-            "type": "Feature",
-            "geometry": 
-            {
-                "type": "Point",
-                "coordinates": [0, 0]
-            },
-            "properties": 
-            {
-                "parent": "room_0.1",
-                "class": "light",
-                "tVector": [9, 9, 5],
+                "tVector": [7, 15, 3.5],
                 "rVector": [0, 0, 0]
             }
         }
