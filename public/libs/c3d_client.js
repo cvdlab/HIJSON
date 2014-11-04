@@ -439,36 +439,46 @@ C3D.generator3D['surveillanceCamera'] = function(feature) {
     // surveillanceCamera.add(model);
     // return surveillanceCamera;
         function createCamera() {
+            
             var material = new THREE.MeshLambertMaterial( {color: 0xffffff} );
-            
             var camera = new THREE.Object3D();
-            var geometryBody = new THREE.BoxGeometry( 0.1, 0.05, 0.05 );
-            var cameraBody = new THREE.Mesh( geometryBody, material );
-
-            var geometryCylinder = new THREE.CylinderGeometry( 0.01, 0.03, 0.05, 32 );
-            var cylinder = new THREE.Mesh( geometryCylinder, material );
-            cylinder.rotation.z = Math.PI/2;
-            cylinder.position.x += 0.05;
-
-            var geometryViewFinder = new THREE.BoxGeometry( 0.01, 0.01, 0.01 );
-            var viewFinder = new THREE.Mesh( geometryViewFinder, material );
-            viewFinder.position.z = 0.015;
-            viewFinder.position.x = -0.052;
-            viewFinder.position.y = 0.015;
             
-            var geometryAxis = new THREE.CylinderGeometry( 0.005, 0.005, 0.05, 32 );
-            var cylinderAxis = new THREE.Mesh( geometryAxis, material );
-            cylinderAxis.rotation.z = Math.PI/2;
-            cylinderAxis.position.x -= 0.075;
+
+            //Creazione corpo macchina
+            var widthBody = 0.2;
+            var depthBody = 0.1;
+            var heightBody = 0.1;
+ 
+            var bodyCameraGeometry = new THREE.BoxGeometry(widthBody, depthBody, heightBody);
+            var bodyCamera = new THREE.Mesh( bodyCameraGeometry, material );
+
+
+
+            //Creazione obiettivo
+            var radiusTopCameraLens = 0.04;
+            var radiusBottomCameraLens = 0.06;
+            var heightCylinderCamenraLens =  0.08;
+            var cameraLensGeometry = new THREE.CylinderGeometry(radiusTopCameraLens, radiusBottomCameraLens, heightCylinderCamenraLens, 32 );
+            var cameraLens = new THREE.Mesh( cameraLensGeometry, material );
+            cameraLens.rotation.z = Math.PI/2;
+            cameraLens.position.x += 2*widthBody/3;
+           
+
+            //Creazione asse sostegno
+            var radiusTopRod = 0.005;
+            var radiusBottomRod = 0.005;
+            var heightRod = 0.15;
+
+            var rodGeometry = new THREE.CylinderGeometry(radiusTopRod, radiusBottomRod, heightRod, 32 );
+            var rod = new THREE.Mesh( rodGeometry, material );
+            rod.rotation.z = Math.PI/2;
+            rod.position.x -= widthBody/2;
 
             
-            camera.add(cameraBody);
-            camera.add(cylinder);
-            camera.add(viewFinder);
-            camera.add(cylinderAxis);
-            camera.position.x = 0.1;
-            camera.position.z += 0.025;
-            camera.position.y += 0.025;
+            camera.add(bodyCamera);
+            camera.add(cameraLens);
+            camera.add(rod);
+            camera.position.x += widthBody/2 + heightRod/2;
             return camera;
 
         }
