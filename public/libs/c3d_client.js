@@ -579,7 +579,7 @@ C3D.generator3D['antenna'] = function(feature) {
 
 C3D.generator3D['fireExtinguisher'] = function(feature) {
     var model = new THREE.Object3D();
-    var material = new THREE.MeshBasicMaterial( {color: 0xff0000} );
+    var material = new THREE.MeshLambertMaterial( {color: 0xff0000} );
     var bodyGeometry = new THREE.CylinderGeometry( 0.1, 0.1, 0.61, 32 );
     var body = new THREE.Mesh( bodyGeometry, material );
     body.rotation.x = Math.PI/2;
