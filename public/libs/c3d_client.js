@@ -192,7 +192,7 @@ C3D.init3D = function() {
 		var pointerlockchange = function(event) {
 			if (document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element) {
 				
-                
+                C3D.index['building'].obj3D.rotation.x = -Math.PI/2;
 				pointerLockControls = new THREE.PointerLockControls(camera);
 				scene.add(pointerLockControls.getObject());
 				trackballControls.enabled = false;
@@ -200,9 +200,9 @@ C3D.init3D = function() {
 				$("#pointer").css('display', 'block');
                 //camera.up = new THREE.Vector3(0, 1, 0);
                 camera.position.set(0, 0, 0);
-				//ointerLockControls.getObject().position.set(0, 0, 0);
+				pointerLockControls.getObject().position.set(12, 0, 15);
 			} else {
-                
+                C3D.index['building'].obj3D.rotation.x = 0;
 				scene.add(camera); //ripristina la camera originaria
 				camera.position.set(-40,-40,40);
 				camera.lookAt(scene.position);
