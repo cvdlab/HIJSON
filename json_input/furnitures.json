@@ -382,6 +382,23 @@
                 "tVector": [0.2, 2, 1],
                 "rVector": [0, 0, 0]
             }
+        },
+
+        {
+            "id": "hotspot_1.1",
+            "type": "Feature",
+            "geometry": 
+            {
+                "type": "Point",
+                "coordinates": [0, 0]
+            },
+            "properties": 
+            {
+                "parent": "room_0.1",
+                "class": "hotspot",
+                "tVector": [0.05, 2, 2.3],
+                "rVector": [0, 0, 90]
+            }
         }
     ]
 }

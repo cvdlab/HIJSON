@@ -56,6 +56,11 @@
 		    "prefix": "fa",
 		    "icon": "fire-extinguisher",
 		    "markerColor": "red"
+	    },
+	    "hotspot": 
+	    {
+		    "prefix": "fa",
+		    "icon": "wifi"
 	    }
     }
 }
