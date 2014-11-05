@@ -200,7 +200,7 @@ C3D.init3D = function() {
 				$("#pointer").css('display', 'block');
                 //camera.up = new THREE.Vector3(0, 1, 0);
                 camera.position.set(0, 0, 0);
-				pointerLockControls.getObject().position.set(12, 0, 15);
+				pointerLockControls.getObject().position.set(marker.getLatLng().lng, C3D.index[getActualLevelId()].properties.tVector[2] + 1.8, -marker.getLatLng().lat);
 			} else {
                 C3D.index['building'].obj3D.rotation.x = 0;
 				scene.add(camera); //ripristina la camera originaria
