@@ -2,7 +2,6 @@ extends main
 
 block internal_content
 	script.
-		var map = C3D.map2D;
 		var socket = io('/users');
 		var userIcon =  L.AwesomeMarkers.icon( C3D.config.style['user'] );
 		var position = {};
