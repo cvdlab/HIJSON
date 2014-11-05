@@ -8,16 +8,16 @@
     {
 	    "background": 
 	    {
-	    	"color": "#fdf6e3"
+	    	"color": "#f8f8f8"
 		},
 	    "internal_wall": 
 	    {
-	    	"color": "#073642",
+	    	"color": "#e8e8e8",
 	    	"opacity": 1
 	    },
 	    "external_wall": 
 	    {
-	    	"color": "#073642",
+	    	"color": "#d8d8d8",
 	    	"opacity": 1
 	    },
 	    "level": 
@@ -32,7 +32,7 @@
 	    "room": 
 	    {
 		    "weight": 0,
-		    "fillColor": "#93a1a1",
+		    "fillColor": "#b8b8b8",
 		    "fillOpacity": 1
 	    },
 	    "server": 
