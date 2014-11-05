@@ -107,8 +107,8 @@ C3D.init3D = function() {
     var camera = new THREE.PerspectiveCamera(45, container3DWidth / container3DHeight, 0.1, 1000);
     C3D.camera3D = camera;
     
-    camera.position.set(-40,-40,40);
-    camera.up = new THREE.Vector3(0,0,1);
+    camera.position.set(-40,40,40);
+    camera.up = new THREE.Vector3(0,1,0);
     camera.lookAt(scene.position);
 	
     var trackballControls = new THREE.TrackballControls(camera, container3D[0]);
@@ -192,7 +192,7 @@ C3D.init3D = function() {
 		var pointerlockchange = function(event) {
 			if (document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element) {
 				
-                C3D.index['building'].obj3D.rotation.x = -Math.PI/2;
+                //C3D.index['building'].obj3D.rotation.x = -Math.PI/2;
 				pointerLockControls = new THREE.PointerLockControls(camera);
 				scene.add(pointerLockControls.getObject());
 				trackballControls.enabled = false;
@@ -202,7 +202,7 @@ C3D.init3D = function() {
                 camera.position.set(0, 0, 0);
 				pointerLockControls.getObject().position.set(marker.getLatLng().lng, C3D.index[getActualLevelId()].properties.tVector[2] + 1.8, -marker.getLatLng().lat);
 			} else {
-                C3D.index['building'].obj3D.rotation.x = 0;
+                //C3D.index['building'].obj3D.rotation.x = 0;
 				scene.add(camera); //ripristina la camera originaria
 				camera.position.set(-40,-40,40);
 				camera.lookAt(scene.position);
@@ -331,6 +331,7 @@ C3D.generate3DModel = function() {
             queue.push(feature.children[i]);
         }
     }
+    C3D.index['building'].obj3D.rotation.x = -Math.PI/2;
     C3D.scene3D.add(C3D.index["building"].obj3D);
 } // Chiude generate3DModel
 

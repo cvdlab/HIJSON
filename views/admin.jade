@@ -2,9 +2,7 @@ extends main
 
 block internal_content
 	script.
-		var map = C3D.map2D;
 		var userIcon =  L.AwesomeMarkers.icon( C3D.config.style['user'] );
-		
 		var socket = io('/admins');
 		
 		socket.on('updateMapUsersConnected', function(usersConnected) {
@@ -16,8 +14,6 @@ block internal_content
 			}
 			
 			for(userToUpdate in usersConnected) { 
-				console.log(usersConnected[userToUpdate]);
-				
 				var user = {
 					id: usersConnected[userToUpdate].id,
 					position:
@@ -27,7 +23,6 @@ block internal_content
 					},
 					marker: L.marker((usersConnected[userToUpdate].position.latlng), { icon: userIcon })
 				}
-				console.log(user.position);
 				user.marker.bindPopup("<b>User: </b>" + user.id +'<br><b>[' + user.position.latlng.lat + '; ' + user.position.latlng.lng + ']</b>');
 				user.marker.addTo(C3D.index[user.position.level].layer2D.userMarkers);
 			}

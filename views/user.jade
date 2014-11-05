@@ -36,6 +36,7 @@ block internal_content
 				C3D.camera3D.parent.parent.position.z = C3D.index[idObject].properties.tVector[2] + 1.8;
 			}
 		});
+		
 		function onKeyDown() {
 			position.latlng = new L.LatLng((-C3D.camera3D.parent.parent.position.z),C3D.camera3D.parent.parent.position.x);
 			position.level =  getActualLevelId();
