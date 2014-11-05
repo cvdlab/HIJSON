@@ -611,7 +611,7 @@ function generateLineString(geoJSONgeometry) {
     return lineString;
 }
 
-function generatePolygon(geoJSONgeometry) {
+function generatePolygonShape(geoJSONgeometry){
 	var coords = geoJSONgeometry.coordinates;
 	var shape = new THREE.Shape();
     for (var j = 0; j < coords[0].length; j++) //scorro le singole coordinate del perimetro esterno
@@ -633,7 +633,11 @@ function generatePolygon(geoJSONgeometry) {
         }
         shape.holes.push(hole);
     }
-    return shape.makeGeometry();  
+    return shape;
+}
+
+function generatePolygon(geoJSONgeometry) {
+    return generatePolygonShape(geoJSONgeometry).makeGeometry();  
 }
 
 function generateWallGeometry(wallFeature) {
@@ -664,12 +668,20 @@ C3D.generator3D['external_wall'] = function(feature) {
         side: THREE.DoubleSide
 	});
 	
-	var geometry = generatePolygon(generateWallGeometry(feature));
-	var wall = new THREE.Mesh(geometry, material);
+	var shape = generatePolygonShape(generateWallGeometry(feature));
 	
+	var extrudedGeometry = shape.extrude({
+                curveSegments: 1,
+                steps: 1,
+                amount: feature.properties.thickness,
+                bevelEnabled: false
+            });
+            
+	var wall = new THREE.Mesh(extrudedGeometry, material);
 	var container = new THREE.Object3D();
 	container.add(wall);
 	wall.rotation.x += Math.PI/2;
+	wall.position.y += feature.properties.thickness/2;
 
     wall.receiveShadow = true;
 	return container;	
@@ -681,12 +693,20 @@ C3D.generator3D['internal_wall'] = function(feature) {
         side: THREE.DoubleSide
     });
     
-	var geometry = generatePolygon(generateWallGeometry(feature));
-	var wall = new THREE.Mesh(geometry, material);
+	var shape = generatePolygonShape(generateWallGeometry(feature));
 	
+	var extrudedGeometry = shape.extrude({
+                curveSegments: 1,
+                steps: 1,
+                amount: feature.properties.thickness,
+                bevelEnabled: false
+            });
+            
+	var wall = new THREE.Mesh(extrudedGeometry, material);
 	var container = new THREE.Object3D();
 	container.add(wall);
 	wall.rotation.x += Math.PI/2;
+	wall.position.y += feature.properties.thickness/2;
 
     wall.receiveShadow = true;
 	return container;
