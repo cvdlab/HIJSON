@@ -49,7 +49,7 @@
               {
                     "class": "external_wall",
                     "parent": "level_0",
-                    "thickness": 5,
+                    "thickness": 0.3,
                     "description": "1_S",
                     "tVector": [0, 0, 0],
                     "rVector": [0, 0, 0],
@@ -71,7 +71,7 @@
               "properties": 
               {
                     "class": "external_wall",
-                    "thickness": 5,
+                    "thickness": 0.3,
                     "parent": "level_0",
                     "description": "Mura esterno",
                     "tVector": [0, 0, 0],
@@ -95,7 +95,7 @@
               {
                     "class": "external_wall",
                     "parent": "level_0",
-                    "thickness": 5,                    
+                    "thickness": 0.3,                    
                     "description": "Mura esterno",
                     "tVector": [0, 19, 0],
                     "rVector": [0, 0, 0],
@@ -117,7 +117,7 @@
               "properties": 
               {
                     "class": "external_wall",
-                    "thickness": 5,
+                    "thickness": 0.3,
                     "parent": "level_0",
                     "description": "Mura interno",
                     "tVector": [11, 19, 0],
@@ -140,7 +140,7 @@
               "properties": 
               {
                     "class": "external_wall",
-                    "thickness": 5,
+                    "thickness": 0.3,
                     "parent": "level_0",
                     "description": "Mura interno",
                     "tVector": [21, 19, 0],
@@ -163,7 +163,7 @@
               "properties": 
               {
                     "class": "external_wall",
-                    "thickness": 5,
+                    "thickness": 0.3,
                     "parent": "level_0",
                     "description": "Mura interno",
                     "tVector": [31, 11, 0],
@@ -187,7 +187,7 @@
               "properties": 
               {
                     "class": "external_wall",
-                    "thickness": 5,
+                    "thickness": 0.3,
                     "parent": "level_0",
                     "description": "Mura interno",
                     "tVector": [31, 8, 0],
@@ -210,7 +210,7 @@
               "properties": 
               {
                     "class": "external_wall",
-                    "thickness": 5,
+                    "thickness": 0.3,
                     "parent": "level_0",
                     "description": "Mura interno",
                     "tVector": [31, 0, 0],
@@ -233,7 +233,7 @@
               "properties": 
               {
                     "class": "external_wall",
-                    "thickness": 5,
+                    "thickness": 0.3,
                     "parent": "level_0",
                     "description": "Mura interno",
                     "tVector": [16, 0, 0],
@@ -257,7 +257,7 @@
               "properties": 
               {
                     "class": "external_wall",
-                    "thickness": 5,
+                    "thickness": 0.3,
                     "parent": "level_0",
                     "description": "Mura interno",
                     "tVector": [11, 0, 0],
@@ -281,7 +281,7 @@
               "properties": 
               {
                     "class": "internal_wall",
-                    "thickness": 2,
+                    "thickness": 0.1,
                     "parent": "level_0",
                     "description": "Mura interno",
                     "tVector": [11, 11, 0],
@@ -305,7 +305,7 @@
               "properties": 
               {
                     "class": "internal_wall",
-                    "thickness": 2,
+                    "thickness": 0.1,
                     "parent": "level_0",
                     "description": "Mura interno",
                     "tVector": [21, 11, 0],
@@ -329,7 +329,7 @@
               "properties": 
               {
                     "class": "internal_wall",
-                    "thickness": 2,
+                    "thickness": 0.1,
                     "parent": "level_0",
                     "description": "Mura interno",
                     "tVector": [21, 11, 0],
@@ -353,7 +353,7 @@
               "properties": 
               {
                     "class": "internal_wall",
-                    "thickness": 2,
+                    "thickness": 0.1,
                     "parent": "level_0",
                     "description": "Mura interno",
                     "tVector": [16, 0, 0],
@@ -377,7 +377,7 @@
               "properties": 
               {
                     "class": "internal_wall",
-                    "thickness": 2,
+                    "thickness": 0.1,
                     "parent": "level_0",
                     "description": "Mura interno",
                     "tVector": [16, 8, 0],
@@ -400,7 +400,7 @@
               "properties": 
               {
                     "class": "internal_wall",
-                    "thickness": 2,
+                    "thickness": 0.1,
                     "parent": "level_0",
                     "description": "Mura interno",
                     "tVector": [11, 11, 0],
@@ -423,7 +423,7 @@
               "properties": 
               {
                     "class": "internal_wall",
-                    "thickness": 2,
+                    "thickness": 0.1,
                     "parent": "level_0",
                     "description": "Mura interno",
                     "tVector": [11, 0, 0],
@@ -684,7 +684,7 @@
               "properties": 
               {
                     "class": "external_wall",
-                    "thickness": 5,
+                    "thickness": 0.3,
                     "parent": "level_1",
                     "description": "1_S",
                     "tVector": [0, 0, 0],
@@ -707,7 +707,7 @@
               "properties": 
               {
                     "class": "external_wall",
-                    "thickness": 5,
+                    "thickness": 0.3,
                     "parent": "level_1",
                     "description": "Mura esterno",
                     "tVector": [0, 0, 0],
@@ -730,7 +730,7 @@
               "properties": 
               {
                     "class": "external_wall",
-                    "thickness": 5,
+                    "thickness": 0.3,
                     "parent": "level_1",
                     "description": "Mura esterno",
                     "tVector": [0, 19, 0],
@@ -753,7 +753,7 @@
               "properties": 
               {
                     "class": "external_wall",
-                    "thickness": 5,
+                    "thickness": 0.3,
                     "parent": "level_1",
                     "description": "Mura interno",
                     "tVector": [11, 19, 0],
@@ -776,7 +776,7 @@
               "properties": 
               {
                     "class": "external_wall",
-                    "thickness": 5,
+                    "thickness": 0.3,
                     "parent": "level_1",
                     "description": "Mura interno",
                     "tVector": [21, 19, 0],
@@ -799,7 +799,7 @@
               "properties": 
               {
                     "class": "external_wall",
-                    "thickness": 5,
+                    "thickness": 0.3,
                     "parent": "level_1",
                     "description": "Mura interno",
                     "tVector": [31, 11, 0],
@@ -823,7 +823,7 @@
               "properties": 
               {
                     "class": "external_wall",
-                    "thickness": 5,
+                    "thickness": 0.3,
                     "parent": "level_1",
                     "description": "Mura interno",
                     "tVector": [31, 8, 0],
@@ -846,7 +846,7 @@
               "properties": 
               {
                     "class": "external_wall",
-                    "thickness": 5,
+                    "thickness": 0.3,
                     "parent": "level_1",
                     "description": "Mura interno",
                     "tVector": [31, 0, 0],
@@ -869,7 +869,7 @@
               "properties": 
               {
                     "class": "external_wall",
-                    "thickness": 5,
+                    "thickness": 0.3,
                     "parent": "level_1",
                     "description": "Mura interno",
                     "tVector": [16, 0, 0],
@@ -893,7 +893,7 @@
               "properties": 
               {
                     "class": "external_wall",
-                    "thickness": 5,
+                    "thickness": 0.3,
                     "parent": "level_1",
                     "description": "Mura interno",
                     "tVector": [11, 0, 0],
@@ -917,7 +917,7 @@
               "properties": 
               {
                     "class": "internal_wall",
-                    "thickness": 2,
+                    "thickness": 0.1,
                     "parent": "level_1",
                     "description": "Mura interno",
                     "tVector": [11, 11, 0],
@@ -941,7 +941,7 @@
               "properties": 
               {
                     "class": "internal_wall",
-                    "thickness": 2,
+                    "thickness": 0.1,
                     "parent": "level_1",
                     "description": "Mura interno",
                     "tVector": [21, 11, 0],
@@ -965,7 +965,7 @@
               "properties": 
               {
                     "class": "internal_wall",
-                    "thickness": 2,
+                    "thickness": 0.1,
                     "parent": "level_1",
                     "description": "Mura interno",
                     "tVector": [21, 11, 0],
@@ -989,7 +989,7 @@
               "properties": 
               {
                     "class": "internal_wall",
-                    "thickness": 2,
+                    "thickness": 0.1,
                     "parent": "level_1",
                     "description": "Mura interno",
                     "tVector": [16, 0, 0],
@@ -1013,7 +1013,7 @@
               "properties": 
               {
                     "class": "internal_wall",
-                    "thickness": 2,
+                    "thickness": 0.1,
                     "parent": "level_1",
                     "description": "Mura interno",
                     "tVector": [16, 8, 0],
@@ -1036,7 +1036,7 @@
               "properties": 
               {
                     "class": "internal_wall",
-                    "thickness": 2,
+                    "thickness": 0.1,
                     "parent": "level_1",
                     "description": "Mura interno",
                     "tVector": [11, 11, 0],
@@ -1059,7 +1059,7 @@
               "properties": 
               {
                     "class": "internal_wall",
-                    "thickness": 2,
+                    "thickness": 0.1,
                     "parent": "level_1",
                     "description": "Mura interno",
                     "tVector": [11, 0, 0],
