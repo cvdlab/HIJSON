@@ -128,6 +128,12 @@ C3D.init3D = function() {
     var ambientLight = new THREE.AmbientLight(ambiColor);
     scene.add(ambientLight);
     
+    var directionalLight = new THREE.SpotLight( ambiColor, 15 );
+    directionalLight.position.set( 20, 100, 0 );
+    directionalLight.lookAt(0,0,0);
+   
+    scene.add(directionalLight);
+    
     var axisHelper = new THREE.AxisHelper(3);
     scene.add(axisHelper); 
         
@@ -419,8 +425,8 @@ C3D.generator3D['server'] = function (feature) {
     else { var dimensions = feature.properties.dimensions; }
     
     var geometry = new THREE.BoxGeometry(dimensions[0], dimensions[1], dimensions[2]);
-    var material = new THREE.MeshBasicMaterial( {color: 0x6a6a6a} );
-    var wireMaterial = new THREE.MeshBasicMaterial( {color: 0x000000, wireframe: true, wireframeLinewidth: 2} );
+    var material = new THREE.MeshLambertMaterial( {color: 0x6a6a6a} );
+    var wireMaterial = new THREE.MeshLambertMaterial( {color: 0x000000, wireframe: true, wireframeLinewidth: 2} );
     var server = new THREE.SceneUtils.createMultiMaterialObject(geometry, [material, wireMaterial]);
     server.position.z += dimensions[2]/2;
     server.castShadow = true;
@@ -428,24 +434,9 @@ C3D.generator3D['server'] = function (feature) {
 };
 
 C3D.generator3D['surveillanceCamera'] = function(feature) {
-    // var radius = 0.2;
-    // var widthSegments = 32;
-    // var heightSegments = 32;
-    // var phiStart = 0;
-    // var phiLength = -Math.PI;
-    // var thetaStart = 0;
-    // var thetaLength = Math.PI;
-
-    // var geometry = new THREE.SphereGeometry( radius, widthSegments, heightSegments, phiStart, phiLength, thetaStart, thetaLength);
-    // var material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
-    
-    // var model = new THREE.Mesh( geometry, material );
-    // var surveillanceCamera = new THREE.Object3D();
-    // surveillanceCamera.add(model);
-    // return surveillanceCamera;
         function createCamera() {
             
-            var material = new THREE.MeshBasicMaterial( {color: 0xffffff} );
+            var material = new THREE.MeshLambertMaterial( {color: 0xffffff} );
             var camera = new THREE.Object3D();
             
 
@@ -524,7 +515,7 @@ C3D.generator3D['light'] = function(feature) {
     var height = 0.05;
     var width = 0.6;
     var externalCubeGeometry = new THREE.BoxGeometry(width,width,height);
-    var externalCubeMaterial = new THREE.MeshBasicMaterial({
+    var externalCubeMaterial = new THREE.MeshLambertMaterial({
                                                                 color:0xE7E6DD,
                                                                 transparent: true, 
                                                                 opacity: 0.3, 
@@ -534,7 +525,7 @@ C3D.generator3D['light'] = function(feature) {
     
     model.add(model3D);
     var groupNeon = new THREE.Object3D();
-    var neonMaterial = new THREE.MeshBasicMaterial( {color: 0xffffff} );
+    var neonMaterial = new THREE.MeshLambertMaterial( {color: 0xffffff} );
     var neonGeometry = new THREE.CylinderGeometry( 0.015, 0.015, 0.58, 32 );
     var translations = [(-0.075*3), (-0.075), (0.075), (0.075*3)];
     for(i in translations)
@@ -560,7 +551,7 @@ C3D.generator3D['antenna'] = function(feature) {
     var height = 0.3;
     
     var geometry = new THREE.CylinderGeometry( radius_down, radius_up, length, 32);
-    var material = new THREE.MeshBasicMaterial( {color: 0xff0000} );
+    var material = new THREE.MeshLambertMaterial( {color: 0xff0000} );
     var model = new THREE.Mesh( geometry, material);
 
     model.rotation.x = Math.PI/2;
@@ -575,7 +566,7 @@ C3D.generator3D['antenna'] = function(feature) {
 
 C3D.generator3D['fireExtinguisher'] = function(feature) {
     var model = new THREE.Object3D();
-    var material = new THREE.MeshBasicMaterial( {color: 0xff0000} );
+    var material = new THREE.MeshLambertMaterial( {color: 0xff0000} );
     var bodyGeometry = new THREE.CylinderGeometry( 0.1, 0.1, 0.61, 32 );
     var body = new THREE.Mesh( bodyGeometry, material );
     body.rotation.x = Math.PI/2;
@@ -587,7 +578,7 @@ C3D.generator3D['fireExtinguisher'] = function(feature) {
     model.add(sphereUp);
     
     var headGeometry = new THREE.BoxGeometry(0.02, 0.02, 0.2);
-    var materialBlack = new THREE.MeshBasicMaterial( {color: 0x000000} );
+    var materialBlack = new THREE.MeshLambertMaterial( {color: 0x000000} );
     var head = new THREE.Mesh( headGeometry, materialBlack );
     head.position.z += 0.4;
     model.add(head);
@@ -664,7 +655,7 @@ function generateWallGeometry(wallFeature) {
 }
 
 C3D.generator3D['external_wall'] = function(feature) {
-    var material = new THREE.MeshBasicMaterial({ 
+    var material = new THREE.MeshLambertMaterial({ 
     	color: C3D.config.style.external_wall.color, 
         side: THREE.DoubleSide
 	});
@@ -689,7 +680,7 @@ C3D.generator3D['external_wall'] = function(feature) {
 }
 
 C3D.generator3D['internal_wall'] = function(feature) {
-    var material = new THREE.MeshBasicMaterial({ 
+    var material = new THREE.MeshLambertMaterial({ 
         color: C3D.config.style.internal_wall.color, 
         side: THREE.DoubleSide
     });
@@ -708,7 +699,7 @@ C3D.generator3D['internal_wall'] = function(feature) {
 	container.add(wall);
 	wall.rotation.x += Math.PI/2;
 	wall.position.y += feature.properties.thickness/2;
-
+    wall.castShadow = true;
     wall.receiveShadow = true;
 	return container;
 }
@@ -730,7 +721,7 @@ C3D.generator3D['level'] = function(feature) {
 }
 
 C3D.generator3D['room'] = function(feature) {
-    var material = new THREE.MeshBasicMaterial({
+    var material = new THREE.MeshLambertMaterial({
         color: C3D.config.style.room.fillColor,
         transparent: false, 
         opacity: 0.9, 
