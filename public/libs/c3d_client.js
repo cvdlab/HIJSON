@@ -191,18 +191,18 @@ C3D.init3D = function() {
 		//questo evento viene richiamato ad ogni attivazione/disattivazione del pointerlock, in paricolare il blocco if all'avvio del pointerlock, il blocco else alla disattivazione del pointerlock
 		var pointerlockchange = function(event) {
 			if (document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element) {
-				C3D.scene3D.rotation.x = Math.PI/2;
-                camera.position.set(0,0,0);
+				
+                
 				pointerLockControls = new THREE.PointerLockControls(camera);
 				scene.add(pointerLockControls.getObject());
 				trackballControls.enabled = false;
 				pointerLockControls.enabled = true;
 				$("#pointer").css('display', 'block');
                 //camera.up = new THREE.Vector3(0, 1, 0);
-                camera.position.set(10, 10, 20)
-				pointerLockControls.getObject().position.set(0, 0, 40);
+                camera.position.set(0, 0, 0);
+				//ointerLockControls.getObject().position.set(0, 0, 0);
 			} else {
-                C3D.scene3D.rotation.x = 0;
+                
 				scene.add(camera); //ripristina la camera originaria
 				camera.position.set(-40,-40,40);
 				camera.lookAt(scene.position);
