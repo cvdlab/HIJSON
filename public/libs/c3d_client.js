@@ -419,7 +419,8 @@ C3D.generator3D['server'] = function (feature) {
     
     var geometry = new THREE.BoxGeometry(dimensions[0], dimensions[1], dimensions[2]);
     var material = new THREE.MeshBasicMaterial( {color: 0x6a6a6a} );
-    var server = new THREE.Mesh(geometry, material);
+    var wireMaterial = new THREE.MeshBasicMaterial( {color: 0x000000, wireframe: true, wireframeLinewidth: 2} );
+    var server = new THREE.SceneUtils.createMultiMaterialObject(geometry, [material, wireMaterial]);
     server.position.z += dimensions[2]/2;
     server.castShadow = true;
     return server;
@@ -525,7 +526,7 @@ C3D.generator3D['light'] = function(feature) {
     var externalCubeMaterial = new THREE.MeshBasicMaterial({
                                                                 color:0xE7E6DD,
                                                                 transparent: true, 
-                                                                opacity: 0.1, 
+                                                                opacity: 0.3, 
                                                                 side: THREE.DoubleSide
                                                             });
     var model3D = new THREE.Mesh(externalCubeGeometry, externalCubeMaterial);
@@ -533,7 +534,7 @@ C3D.generator3D['light'] = function(feature) {
     model.add(model3D);
     var groupNeon = new THREE.Object3D();
     var neonMaterial = new THREE.MeshBasicMaterial( {color: 0xffffff} );
-    var neonGeometry = new THREE.CylinderGeometry( 0.015, 0.015, 0.6, 32 );
+    var neonGeometry = new THREE.CylinderGeometry( 0.015, 0.015, 0.58, 32 );
     var translations = [(-0.075*3), (-0.075), (0.075), (0.075*3)];
     for(i in translations)
     {
@@ -542,7 +543,7 @@ C3D.generator3D['light'] = function(feature) {
         groupNeon.add(neon);
     }
     model.add(groupNeon);
-
+    model.position.z -= (height/2) + 0.001;
     var room = feature.properties.parent;
 
     return model;
@@ -710,7 +711,7 @@ C3D.generator3D['level'] = function(feature) {
 C3D.generator3D['room'] = function(feature) {
     var material = new THREE.MeshBasicMaterial({
         color: C3D.config.style.room.fillColor,
-        transparent: true, 
+        transparent: false, 
         opacity: 0.9, 
         side: THREE.DoubleSide
     });
