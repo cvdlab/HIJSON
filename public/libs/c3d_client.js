@@ -1,7 +1,11 @@
 var C3D = {};
 
 C3D.handlers = {};
+C3D.generator3D = {};
 
+/*
+    Funzioni per gestire gli eventi secondo il pattern GoF Observer
+*/
 C3D.on = function(event, handler) {
     var handlers_list = this.handlers[event];
 
@@ -22,6 +26,9 @@ C3D.emit = function(event, id) {
     }
 }
 
+/*
+    Generazione dell'indice e settaggio dei parent agli elementi.
+*/
 C3D.setIndexAndParents = function() {
     var queue = [];
     var feature;
@@ -46,6 +53,9 @@ C3D.setIndexAndParents = function() {
 	}
 }
 
+/*
+    Inizializzazione 2D    
+*/
 C3D.init2D = function() {
         
         var container2D = $("#container2D");
@@ -71,7 +81,7 @@ C3D.init2D = function() {
 		    if(C3D.index[idObject].properties.class !== 'building') 
 		        C3D.map2D.fitBounds(C3D.getRoom(C3D.index[idObject]).layer2D.getBounds());
 
-            orderLayer();
+            C3D.orderLayer();
         });
         
         
@@ -206,7 +216,7 @@ C3D.init3D = function() {
 				$("#pointer").css('display', 'block');
                 //camera.up = new THREE.Vector3(0, 1, 0);
                 camera.position.set(0, 0, 0);
-				pointerLockControls.getObject().position.set(marker.getLatLng().lng, C3D.index[getActualLevelId()].properties.tVector[2] + 1.8, -marker.getLatLng().lat);
+				pointerLockControls.getObject().position.set(marker.getLatLng().lng, C3D.index[C3D.getActualLevelId()].properties.tVector[2] + 1.8, -marker.getLatLng().lat);
 			} else {
                 //C3D.index['building'].obj3D.rotation.x = 0;
 				scene.add(camera); //ripristina la camera originaria
@@ -248,7 +258,8 @@ C3D.init3D = function() {
 			*/
 			pointerLockControls.update();
 		}
-	} else {
+	} 
+    else {
         alert('Your browser doesn\'t seem to support Pointer Lock API');
     }
 
@@ -341,6 +352,7 @@ C3D.generate3DModel = function() {
     C3D.scene3D.add(C3D.index["building"].obj3D);
 } // Chiude generate3DModel
 
+
 /*
     Funzione che genera il modello 2D per Leaflet
 */ 
@@ -360,7 +372,7 @@ C3D.generate2DModel = function() {
     C3D.index['level_0'].layer2D.addTo(C3D.map2D);
 
 	C3D.map2D.fitBounds(C3D.index['level_0'].layer2D.getBounds());
-    orderLayer();	
+    C3D.orderLayer();	
 	
 	function styleFunction(feature) {
 		return C3D.config.style[feature.properties.class];
@@ -390,35 +402,22 @@ C3D.generate2DModel = function() {
     }
 }	// Chiude generate2DModel
 
-function getActualLevelId() {
-    var id;
-    for(idLayer in C3D.map2D._layers){
-        layer = C3D.map2D._layers[idLayer];
-        if(layer.feature !== undefined) {
-            if(layer.feature.properties.class === 'level') { 
-	            id = layer.feature.id; 
-	        }
-        }
-    }   
-    return id;
-}
 
-function orderLayer() {
-    var orderClass = ['room','external_wall','internal_wall','door'];
-    while(orderClass.length !== 0) {
-        var classElement = orderClass.shift();
-        for(idLayer in C3D.map2D._layers) {
-            layer = C3D.map2D._layers[idLayer];
-            if(layer.feature !== undefined) {
-                if(layer.feature.properties.class === classElement) {
-                    layer.bringToFront();
-                }
-            }     
-        }
-    }
-}
 
-C3D.generator3D = {};
+
+
+
+
+/*
+Qui sono presenti tutte le funzioni necessarie per generare(3D) gli elementi di arredamento:
+    - server (Modello creato)
+    - surveillanceCamera (Modello creato)
+    - hotspot (Modello creato)
+    - light (Modello creato)
+    - antenna
+    - fire Extinguisher
+*/
+
 
 C3D.generator3D['server'] = function (feature) {
     if(feature.properties.dimensions === undefined) { var dimensions = [1,1,2]; }
@@ -430,72 +429,66 @@ C3D.generator3D['server'] = function (feature) {
     var server = new THREE.SceneUtils.createMultiMaterialObject(geometry, [material, wireMaterial]);
     server.position.z += dimensions[2]/2;
     server.castShadow = true;
+
     return server;
 };
 
+
 C3D.generator3D['surveillanceCamera'] = function(feature) {
-        function createCamera() {
-            
-            var material = new THREE.MeshLambertMaterial( {color: 0xffffff} );
-            var camera = new THREE.Object3D();
-            
 
-            //Creazione corpo macchina
-            var widthBody = 0.2;
-            var depthBody = 0.1;
-            var heightBody = 0.1;
- 
-            var bodyCameraGeometry = new THREE.BoxGeometry(widthBody, depthBody, heightBody);
-            var bodyCamera = new THREE.Mesh( bodyCameraGeometry, material );
+    var material = new THREE.MeshLambertMaterial( {color: 0xffffff} );
+    var camera = new THREE.Object3D();
+    
 
+    //Creazione corpo macchina
+    var widthBody = 0.2;
+    var depthBody = 0.1;
+    var heightBody = 0.1;
 
+    var bodyCameraGeometry = new THREE.BoxGeometry(widthBody, depthBody, heightBody);
+    var bodyCamera = new THREE.Mesh( bodyCameraGeometry, material );
 
-            //Creazione obiettivo
-            var radiusTopCameraLens = 0.04;
-            var radiusBottomCameraLens = 0.06;
-            var heightCylinderCamenraLens =  0.08;
-            var cameraLensGeometry = new THREE.CylinderGeometry(radiusTopCameraLens, radiusBottomCameraLens, heightCylinderCamenraLens, 32 );
-            var cameraLens = new THREE.Mesh( cameraLensGeometry, material );
-            cameraLens.rotation.z = Math.PI/2;
-            cameraLens.position.x += 2*widthBody/3;
-           
+    //Creazione obiettivo
+    var radiusTopCameraLens = 0.04;
+    var radiusBottomCameraLens = 0.06;
+    var heightCylinderCamenraLens =  0.08;
+    var cameraLensGeometry = new THREE.CylinderGeometry(radiusTopCameraLens, radiusBottomCameraLens, heightCylinderCamenraLens, 32 );
+    var cameraLens = new THREE.Mesh( cameraLensGeometry, material );
+    cameraLens.rotation.z = Math.PI/2;
+    cameraLens.position.x += 2*widthBody/3;
+   
+    //Creazione asse sostegno
+    var radiusTopRod = 0.005;
+    var radiusBottomRod = 0.005;
+    var heightRod = 0.15;
 
-            //Creazione asse sostegno
-            var radiusTopRod = 0.005;
-            var radiusBottomRod = 0.005;
-            var heightRod = 0.15;
+    var rodGeometry = new THREE.CylinderGeometry(radiusTopRod, radiusBottomRod, heightRod, 32 );
+    var rod = new THREE.Mesh( rodGeometry, material );
+    rod.rotation.z = Math.PI/2;
+    rod.position.x -= widthBody/2;
 
-            var rodGeometry = new THREE.CylinderGeometry(radiusTopRod, radiusBottomRod, heightRod, 32 );
-            var rod = new THREE.Mesh( rodGeometry, material );
-            rod.rotation.z = Math.PI/2;
-            rod.position.x -= widthBody/2;
+    camera.add(bodyCamera);
+    camera.add(cameraLens);
+    camera.add(rod);
 
-            
-            camera.add(bodyCamera);
-            camera.add(cameraLens);
-            camera.add(rod);
-            camera.position.x += widthBody/2 + heightRod/2;
-            return camera;
+    camera.position.x += widthBody/2 + heightRod/2;
 
-        }
-    var model = createCamera();
-
-    model.castShadow = true;
-
-    return model;
+    return camera;
 }
 
+
 C3D.generator3D['hotspot'] = function(feature) {
-    var model = new THREE.Object3D();
+    var hotspot = new THREE.Object3D();
+
     var material = new THREE.MeshLambertMaterial( {color: 0xc0c0c0} );
     var bodyGeometry = new THREE.BoxGeometry( 0.1, 0.02, 0.1);
     var body = new THREE.Mesh( bodyGeometry, material );
-    model.add(body);
 
 
     var antennaGeometry = new THREE.CylinderGeometry( 0.001, 0.005, 0.1 , 32);
     var antennaDx= new THREE.Mesh(antennaGeometry, material);
     var antennaSx= new THREE.Mesh(antennaGeometry, material);
+
     antennaDx.rotation.x = Math.PI/2;
     antennaSx.rotation.x = Math.PI/2;
     antennaSx.position.x += 0.08/2;
@@ -503,15 +496,19 @@ C3D.generator3D['hotspot'] = function(feature) {
     
     antennaSx.position.z += 0.05;
     antennaDx.position.z += 0.05;
-    model.add(antennaDx);
-    model.add(antennaSx);
-    model.position.z += 0.1/2;
-    return model;
+
+    hotspot.add(body);
+    hotspot.add(antennaDx);
+    hotspot.add(antennaSx);
+    hotspot.position.z += 0.1/2;
+
+    return hotspot;
 };
+
 
 C3D.generator3D['light'] = function(feature) {
 
-    var model = new THREE.Object3D();
+    var light = new THREE.Object3D();
     var height = 0.05;
     var width = 0.6;
     var externalCubeGeometry = new THREE.BoxGeometry(width,width,height);
@@ -523,7 +520,7 @@ C3D.generator3D['light'] = function(feature) {
                                                             });
     var model3D = new THREE.Mesh(externalCubeGeometry, externalCubeMaterial);
     
-    model.add(model3D);
+    light.add(model3D);
     var groupNeon = new THREE.Object3D();
     var neonMaterial = new THREE.MeshLambertMaterial( {color: 0xffffff} );
     var neonGeometry = new THREE.CylinderGeometry( 0.015, 0.015, 0.58, 32 );
@@ -534,11 +531,10 @@ C3D.generator3D['light'] = function(feature) {
         neon.position.x += translations[i];
         groupNeon.add(neon);
     }
-    model.add(groupNeon);
-    model.position.z -= (height/2) + 0.001;
-    var room = feature.properties.parent;
+    light.add(groupNeon);
+    light.position.z -= (height/2) + 0.001;
 
-    return model;
+    return light;
 } 
 
 
@@ -564,38 +560,44 @@ C3D.generator3D['antenna'] = function(feature) {
     return antenna;
 };
 
+
 C3D.generator3D['fireExtinguisher'] = function(feature) {
-    var model = new THREE.Object3D();
+    var fireExtinguisher = new THREE.Object3D();
     var material = new THREE.MeshLambertMaterial( {color: 0xff0000} );
     var bodyGeometry = new THREE.CylinderGeometry( 0.1, 0.1, 0.61, 32 );
     var body = new THREE.Mesh( bodyGeometry, material );
     body.rotation.x = Math.PI/2;
-    model.add(body);
+    fireExtinguisher.add(body);
 
     var geometrySphereUp = new THREE.SphereGeometry( 0.1, 32, 32 );
     var sphereUp = new THREE.Mesh( geometrySphereUp, material );
     sphereUp.position.z += 0.3;
-    model.add(sphereUp);
+    fireExtinguisher.add(sphereUp);
     
     var headGeometry = new THREE.BoxGeometry(0.02, 0.02, 0.2);
     var materialBlack = new THREE.MeshLambertMaterial( {color: 0x000000} );
     var head = new THREE.Mesh( headGeometry, materialBlack );
     head.position.z += 0.4;
-    model.add(head);
+    fireExtinguisher.add(head);
 
     var cylinderGeometry = new THREE.CylinderGeometry( 0.015, 0.08, 0.25, 32 );
     var cylinder = new THREE.Mesh(cylinderGeometry, materialBlack);
     cylinder.position.z += 0.48;
     cylinder.rotation.z = Math.PI/2;
     cylinder.position.x += 0.12;
-    model.add(cylinder);
-    // model.position.x += 0.1;
-    // model.position.y += 0.1;
-    model.position.z += 0.61/2;
-    return model;
+    fireExtinguisher.add(cylinder);
+    fireExtinguisher.position.z += 0.61/2;
+
+    return fireExtinguisher;
 }
 
-function generateLineString(geoJSONgeometry) {
+
+
+
+/*
+    In seguito sono presenti le funzioni per disegnare l'architettura.
+*/
+C3D.generateLineString = function(geoJSONgeometry) {
 	var lineString = new THREE.Geometry();
     for(var i = 0; i < geoJSONgeometry.coordinates.length; i++){
         lineString.vertices.push( new THREE.Vector3( geoJSONgeometry.coordinates[i][0], geoJSONgeometry.coordinates[i][1], 0) );
@@ -603,7 +605,7 @@ function generateLineString(geoJSONgeometry) {
     return lineString;
 }
 
-function generatePolygonShape(geoJSONgeometry){
+C3D.generatePolygonShape = function(geoJSONgeometry){
 	var coords = geoJSONgeometry.coordinates;
 	var shape = new THREE.Shape();
     for (var j = 0; j < coords[0].length; j++) //scorro le singole coordinate del perimetro esterno
@@ -628,11 +630,11 @@ function generatePolygonShape(geoJSONgeometry){
     return shape;
 }
 
-function generatePolygon(geoJSONgeometry) {
-    return generatePolygonShape(geoJSONgeometry).makeGeometry();  
+C3D.generatePolygon = function(geoJSONgeometry) {
+    return C3D.generatePolygonShape(geoJSONgeometry).makeGeometry();  
 }
 
-function generateWallGeometry(wallFeature) {
+C3D.generateWallGeometry = function (wallFeature) {
 	var wallLength = wallFeature.geometry.coordinates[1][0];
 	var wallHeight = wallFeature.parent.properties.height;
 	var coordinates = [
@@ -660,7 +662,7 @@ C3D.generator3D['external_wall'] = function(feature) {
         side: THREE.DoubleSide
 	});
 	
-	var shape = generatePolygonShape(generateWallGeometry(feature));
+	var shape = C3D.generatePolygonShape(C3D.generateWallGeometry(feature));
 	
 	var extrudedGeometry = shape.extrude({
                 curveSegments: 1,
@@ -685,7 +687,7 @@ C3D.generator3D['internal_wall'] = function(feature) {
         side: THREE.DoubleSide
     });
     
-	var shape = generatePolygonShape(generateWallGeometry(feature));
+	var shape = C3D.generatePolygonShape(C3D.generateWallGeometry(feature));
 	
 	var extrudedGeometry = shape.extrude({
                 curveSegments: 1,
@@ -709,7 +711,7 @@ C3D.generator3D['door'] = function(feature) {
         color: C3D.config.style.door.color, 
         linewidth: feature.properties.thickness 
     });
-    return new THREE.Line(generateLineString(feature.geometry), material);
+    return new THREE.Line(C3D.generateLineString(feature.geometry), material);
 }
 
 C3D.generator3D['level'] = function(feature) {
@@ -717,7 +719,7 @@ C3D.generator3D['level'] = function(feature) {
         color:C3D.config.style.level.color, 
         linewidth: feature.properties.thickness 
     });
-	return new THREE.Line(generateLineString(feature.geometry), material);
+	return new THREE.Line(C3D.generateLineString(feature.geometry), material);
 }
 
 C3D.generator3D['room'] = function(feature) {
@@ -728,19 +730,59 @@ C3D.generator3D['room'] = function(feature) {
         side: THREE.DoubleSide
     });
 
-    var model = new THREE.Mesh(generatePolygon(feature.geometry), material);
+    var model = new THREE.Mesh(C3D.generatePolygon(feature.geometry), material);
     model.receiveShadow = true;
 
     return model;
 }
 
+
+/*
+    Funzioni di supporto
+*/
+
 C3D.getRoom = function(obj) {
     var ancestor = obj;
     if(obj.properties.class !== 'building' && obj.properties.class !== 'level') {
-        console.log(ancestor);
         while(ancestor.properties.class !== 'room') {
             ancestor = ancestor.parent;
         }
     }
     return ancestor;
+}
+
+/*
+    getActualLevelId ritorna il livello che al momento si sta visualizzando.
+*/
+C3D.getActualLevelId = function() {
+    var id;
+    for(idLayer in C3D.map2D._layers){
+        layer = C3D.map2D._layers[idLayer];
+        if(layer.feature !== undefined) {
+            if(layer.feature.properties.class === 'level') { 
+                id = layer.feature.id; 
+            }
+        }
+    }   
+    return id;
+}
+
+/*
+    orderLayer si occupa di ordinare i layer diversi per la mappa 2D leaflet. 
+    L'ordine viene stabilito dall'array orderClass.
+*/
+
+C3D.orderLayer = function() {
+    var orderClass = ['room','external_wall','internal_wall','door'];
+    while(orderClass.length !== 0) {
+        var classElement = orderClass.shift();
+        for(idLayer in C3D.map2D._layers) {
+            layer = C3D.map2D._layers[idLayer];
+            if(layer.feature !== undefined) {
+                if(layer.feature.properties.class === classElement) {
+                    layer.bringToFront();
+                }
+            }     
+        }
+    }
 }
