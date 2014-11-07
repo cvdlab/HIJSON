@@ -786,3 +786,27 @@ C3D.orderLayer = function() {
         }
     }
 }
+
+/*
+	funzioni di traduzioni coordinate, tra generali, 3D (rotazione) e 2D (latitudine e longitudine). Input ed output è sempre un array di 3 elementi.
+*/
+
+// il modello è stato ruotato di 90 gradi antiorario intorno all'asse x, quindi la x resta uguale, lungo y ci va a finire quello che prima si sviluppava lungo z, e lungo le z negative ci va a finire quello che prima si sviluppava in profondità lungo le y positive.
+C3D.fromGeneralTo3D = function(input) {
+	return [input[0], input[2], -input[1]];
+}
+
+// trasformazione inversa della precedente.
+C3D.from3DToGeneral = function(input) {
+	return [input[0], -input[2], input[1]];
+}
+
+// gli oggetti latlng di leaflet prendono prima la latitudine (y) e poi la longitudine (x). Questa funzione è un po' inutile ma rende coerente il tutto.
+C3D.fromGeneralTo2D = function(input) {
+	return [input[1], input[0], 0];
+}
+
+// input di questa funzione è [lat, lng, 0], ritorna le coordinate generali, compresa l'altezza impostata tramite l'altezza del piano attuale
+C3D.from2DToGeneral = function(input) {
+	return [input[1], input[0], C3D.index[C3D.getActualLevelId()].properties.tVector[2] ];
+}
