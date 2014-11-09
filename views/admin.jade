@@ -6,13 +6,15 @@ block internal_content
 		var socket = io('/admins');
 		
 		socket.on('updateMapUsersConnected', function(usersConnected) {
-					
+			
+			// prendi tutti i piani su leaflet e pulisci i marker degli utenti presenti
 			for(id in C3D.index) {
 				if(C3D.index[id].properties.class === 'level') {
 					C3D.index[id].layer2D.userMarkers.clearLayers();
 				}
 			}
 			
+			// per ogni utente nella mappa 
 			for(userToUpdate in usersConnected) { 
 				var user = {
 					id: usersConnected[userToUpdate].id,

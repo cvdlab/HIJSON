@@ -16,16 +16,15 @@ block internal_content
 		marker.addTo(C3D.index[position.level].layer2D.userMarkers);		
 		marker.bindPopup('<b>[' + position.latlng.lat + '; ' + position.latlng.lng + ']</b>');
 		socket.emit('updatePosition', position);
-		marker.on('drag', dragMarker);
-
-		function dragMarker(e) {
+		
+		marker.on('drag', function(e) {
 			position.latlng = marker.getLatLng();
 			position.level =  C3D.getActualLevelId();
 			socket.emit('updatePosition', position);
 			marker.setLatLng(position.latlng);
 			marker.bindPopup('<b>[' + position.latlng.lat + '; ' + position.latlng.lng + ']</b>');
-		}
-		
+		});
+
 		C3D.on('selectFeature', function(idObject) {
 			if(C3D.index[idObject].properties.class === 'level') {
 				C3D.index[position.level].layer2D.userMarkers.removeLayer(marker);
@@ -36,22 +35,12 @@ block internal_content
 			}
 		});
 		
-		function onKeyDown() {
+		document.addEventListener( 'keydown', function() {
 			position.latlng = new L.LatLng((-C3D.camera3D.parent.parent.position.z),C3D.camera3D.parent.parent.position.x);
 			position.level =  C3D.getActualLevelId();
 			marker.setLatLng(position.latlng);
 			marker.bindPopup('<b>[' + position.latlng.lat + '; ' + position.latlng.lng + ']</b>');
 			socket.emit('updatePosition', position);
-		}
-		function onKeyUp() {
-			position.latlng = new L.LatLng((-C3D.camera3D.parent.parent.position.z),C3D.camera3D.parent.parent.position.x);
-			position.level =  C3D.getActualLevelId();
-			marker.setLatLng(position.latlng);
-			marker.bindPopup('<b>[' + position.latlng.lat + '; ' + position.latlng.lng + ']</b>');
-			socket.emit('updatePosition', position);
-		}
-		
-		document.addEventListener( 'keydown', onKeyDown, false );
-		document.addEventListener( 'keyup', onKeyUp, false );
+		}, false );
 
 		
