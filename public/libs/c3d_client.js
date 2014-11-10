@@ -960,7 +960,7 @@ C3D.fromGeneralTo2D = function(genPosition) {
 
 // inversa
 C3D.from2DToGeneral = function(leafletPosition) {
-	var genPosition = {
+    var genPosition = {
 		coordinates: [leafletPosition.lng, leafletPosition.lat],
 		levelId: C3D.actualPosition.levelId
 	}

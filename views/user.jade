@@ -25,8 +25,7 @@ block internal_content
 			marker.on('drag', function(e) {
 				actualLatLng = marker.getLatLng();
 				marker.bindPopup('<b>[' + actualLatLng.lat + '; ' + actualLatLng.lng + ']</b>');
-				
-				C3D.actualPosition = C3D.from2DtoGeneral(actualLatLng);
+				C3D.actualPosition = C3D.from2DToGeneral(actualLatLng);
 				socket.emit('updatePosition', C3D.actualPosition);
 				
 				// if is active also 3D, move the CUBE when walking in FPV
@@ -42,7 +41,7 @@ block internal_content
 			
 			// 3D moving
 			document.addEventListener( 'keydown', function() {
-				C3D.actualPosition = C3D.from3DtoGeneral(C3D.camera3D.parent.parent.position);
+				C3D.actualPosition = C3D.from3DToGeneral(C3D.camera3D.parent.parent.position);
 				
 				//TODO move the cube, in FPV it is probably invisible, but when you leave FPV it must be in the right location
 				
