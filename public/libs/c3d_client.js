@@ -567,7 +567,7 @@ C3D.generator3D['light'] = function(feature) {
 } 
 
 C3D.generator3D['antenna'] = function(feature) {
-    var material = new THREE.MeshBasicMaterial( {color: 0xd9d7d7} );
+    var material = new THREE.MeshLambertMaterial( {color: 0xd9d7d7} );
     
     var antenna = new THREE.Object3D();
     var geometry = new THREE.BoxGeometry( 0.3, 0.1, 0.3 );
@@ -635,7 +635,7 @@ C3D.generator3D['table'] = function(feature) {
     var table = new THREE.Object3D();
 
     var geometry = new THREE.CylinderGeometry( 0.03, 0.03, 0.8, 32 );
-    var material = new THREE.MeshBasicMaterial( {color: 0xd9d7d7} );
+    var material = new THREE.MeshLambertMaterial( {color: 0xd9d7d7} );
     
     var p1 = new THREE.Mesh( geometry, material );
     p1.rotation.x += Math.PI/2;
@@ -659,7 +659,7 @@ C3D.generator3D['table'] = function(feature) {
     
 
     var geometry = new THREE.BoxGeometry( 2.1, 1.1, 0.04 );
-    var material = new THREE.MeshBasicMaterial( {color: 0x9b8c75} );
+    var material = new THREE.MeshLambertMaterial( {color: 0x9b8c75} );
     var plane = new THREE.Mesh( geometry, material );
     plane.position.x -= 0.05 - 2.1/2;
     plane.position.y -= 0.05 - 1.1/2;
@@ -678,7 +678,7 @@ C3D.generator3D['chair'] = function(feature) {
     var chair = new THREE.Object3D();
 
     var geometry = new THREE.CylinderGeometry( 0.01, 0.01, 0.4, 32 );
-    var material = new THREE.MeshBasicMaterial( {color: 0xd9d7d7} );
+    var material = new THREE.MeshLambertMaterial( {color: 0xd9d7d7} );
 
     var p1 = new THREE.Mesh( geometry, material );
     p1.rotation.x += Math.PI/2;
@@ -710,14 +710,13 @@ C3D.generator3D['chair'] = function(feature) {
     p6.position.x += 0.4;
 
     var geometry = new THREE.BoxGeometry( 0.45, 0.45, 0.02 );
-    var material = new THREE.MeshBasicMaterial( {color: 0x9b8c75} );
+    var material = new THREE.MeshLambertMaterial( {color: 0x9b8c75} );
     var plane = new THREE.Mesh( geometry, material );
     plane.position.x += 0.4/2;
     plane.position.y += 0.4/2;
     plane.position.z += 0.4;
     
     var geometry = new THREE.BoxGeometry( 0.38, 0.02, 0.15);
-    var material = new THREE.MeshBasicMaterial( {color: 0x9b8c75} );
     var back = new THREE.Mesh( geometry, material );
     back.position.x += 0.4/2;
     back.position.y += 0.001;
