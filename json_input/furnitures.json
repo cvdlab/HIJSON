@@ -362,7 +362,7 @@
             {
                 "parent": "room_0.1",
                 "class": "fireExtinguisher",
-                "tVector": [0.2, 13, 1],
+                "tVector": [0.35, 13, 1],
                 "rVector": [0, 0, 0]
             }
         },
@@ -379,7 +379,7 @@
             {
                 "parent": "room_0.2",
                 "class": "fireExtinguisher",
-                "tVector": [0.2, 2, 1],
+                "tVector": [0.35, 2, 1],
                 "rVector": [0, 0, 0]
             }
         },

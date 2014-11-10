@@ -439,6 +439,7 @@ C3D.generator3D['server'] = function (feature) {
     var server = new THREE.Mesh(geometry, material);
     server.position.z += dimensions[2]/2;
     
+    server.receiveShadow = true;
     server.castShadow = true;
 
     return server;
@@ -483,6 +484,8 @@ C3D.generator3D['surveillanceCamera'] = function(feature) {
     camera.add(rod);
 
     camera.position.x += widthBody/2 + heightRod/2;
+    
+    camera.receiveShadow = true;
     camera.castShadow = true;
 
     return camera;
@@ -514,6 +517,7 @@ C3D.generator3D['hotspot'] = function(feature) {
     hotspot.add(antennaSx);
     hotspot.position.z += 0.1/2;
 
+    hotspot.receiveShadow = true;
     hotspot.castShadow = true;
     return hotspot;
 };
@@ -573,6 +577,7 @@ C3D.generator3D['antenna'] = function(feature) {
 
     antenna.add(model);
 
+    antenna.receiveShadow = true;
     antenna.castShadow = true;
     return antenna;
 };
@@ -605,6 +610,7 @@ C3D.generator3D['fireExtinguisher'] = function(feature) {
     fireExtinguisher.add(cylinder);
     fireExtinguisher.position.z += 0.61/2;
 
+    fireExtinguisher.receiveShadow = true;
     fireExtinguisher.castShadow = true;
     return fireExtinguisher;
 }
@@ -695,8 +701,8 @@ C3D.generator3D['external_wall'] = function(feature) {
 	wall.rotation.x += Math.PI/2;
 	wall.position.y += feature.properties.thickness/2;
 
-    wall.receiveShadow = true;
-    wall.castShadow = true;
+    container.receiveShadow = true;
+    container.castShadow = true;
 	
     return container;	
 }
