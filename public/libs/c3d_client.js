@@ -138,7 +138,7 @@ C3D.init3D = function() {
     var ambientLight = new THREE.AmbientLight(ambiColor);
     scene.add(ambientLight);
     
-    var directionalLight = new THREE.DirectionalLight( 0xFFFFFF );
+    var directionalLight = new THREE.SpotLight( 0xFFFFFF );
     directionalLight.position.set( 30, 30, 30 );
     directionalLight.castShadow = true;
     directionalLight.shadowCameraNear = 10;
