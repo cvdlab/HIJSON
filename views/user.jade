@@ -9,7 +9,7 @@ block internal_content
 		var marker;
 		var user3d;
 		
-		if (!{enable_2D}) {
+		if (#{enable_2D}) {
 			//set the icon for the navigation
 			var userIcon =  L.AwesomeMarkers.icon( C3D.config.style['location'] );
 			var actualLatLng = C3D.fromGeneralTo2D(C3D.actualPosition);
@@ -22,7 +22,6 @@ block internal_content
 			marker.addTo(C3D.index[C3D.actualPosition.levelId].layer2D.userMarkers);		
 			marker.bindPopup('<b>[' + actualLatLng.lat + '; ' + actualLatLng.lng + ']</b>');
 			
-			
 			marker.on('drag', function(e) {
 				actualLatLng = marker.getLatLng();
 				marker.bindPopup('<b>[' + actualLatLng.lat + '; ' + actualLatLng.lng + ']</b>');
@@ -31,32 +30,41 @@ block internal_content
 				socket.emit('updatePosition', C3D.actualPosition);
 				
 			});
-			
-
+		}
 		
+		if(#{enable_3D}) {
+			document.addEventListener( 'keydown', function() {
+				C3D.actualPosition = C3D.from3DtoGeneral(C3D.camera3D.parent.parent.position);
+				if(#{enable_2D}) {
+					actualLatLng = C3D.fromGeneralTo2D(C3D.actualPosition)
+					marker.setLatLng(actualLatLng);
+					marker.bindPopup('<b>[' + actualLatLng.lat + '; ' + actualLatLng.lng + ']</b>');
+				}
+				socket.emit('updatePosition', C3D.actualPosition);
+			}, false );
 		}
 		
 
 		
 
 		C3D.on('selectFeature', function(idObject) {
-			if(C3D.index[idObject].properties.class === 'level') {
-				C3D.index[C3D.actualPosition.levelId].layer2D.userMarkers.removeLayer(marker);
-				marker.addTo(C3D.index[idObject].layer2D.userMarkers);
+			// level change
+			if(C3D.index[idObject].properties.class === 'level') { 
+				if (#{enable_2D}) { 
+					// move marker to new level
+					C3D.index[C3D.actualPosition.levelId].layer2D.userMarkers.removeLayer(marker);
+					marker.addTo(C3D.index[idObject].layer2D.userMarkers);
+				}
 				
+				// set the new level and emit
 				C3D.actualPosition.levelId = C3D.index[idObject];
 				socket.emit('updatePosition', C3D.actualPosition);
+				
 				
 				C3D.camera3D.parent.parent.position = C3D.index[idObject].properties.tVector[2] + 1.8;
 			}
 		});
 		
-		document.addEventListener( 'keydown', function() {
-			position.latlng = new L.LatLng((-C3D.camera3D.parent.parent.position.z),C3D.camera3D.parent.parent.position.x);
-			position.level =  C3D.getActualLevelId();
-			marker.setLatLng(position.latlng);
-			marker.bindPopup('<b>[' + position.latlng.lat + '; ' + position.latlng.lng + ']</b>');
-			socket.emit('updatePosition', position);
-		}, false );
+
 
 		

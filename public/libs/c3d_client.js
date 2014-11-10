@@ -30,7 +30,7 @@ C3D.setIndexAndParents = function() {
 C3D.setIndexAndParents();
 
 C3D.actualPosition = {
-	coordinates: [C3D.config.startPosition.coordinates[0], C3D.config.startPosition.coordinates[0]],
+	coordinates: [C3D.config.startPosition.coordinates[0], C3D.config.startPosition.coordinates[1]],
 	levelId: C3D.config.startPosition.levelId
 };
 C3D.handlers = {};
@@ -235,7 +235,7 @@ C3D.init3D = function() {
 				$("#pointer").css('display', 'block');
                 //camera.up = new THREE.Vector3(0, 1, 0);
                 camera.position.set(0, 0, 0);
-				pointerLockControls.getObject().position.set(C3D.fromGeneralTo3D(C3D.actualPosition));
+				pointerLockControls.getObject().position = C3D.fromGeneralTo3D(C3D.actualPosition);
 			} else {
                 //C3D.index['building'].obj3D.rotation.x = 0;
 				scene.add(camera); //ripristina la camera originaria

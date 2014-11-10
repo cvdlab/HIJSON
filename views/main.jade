@@ -87,6 +87,8 @@ block content
 			
 			$("#selectLevel").val(C3D.config.startPosition.levelId);
 	
+			C3D.emit('selectFeature', C3D.actualPosition.levelId);
+	
 			$( "#selectLevel" ).on('change', function() {
 				C3D.emit('selectFeature',this.value);
 				
