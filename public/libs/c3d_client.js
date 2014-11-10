@@ -1,31 +1,4 @@
-var C3D = {};
-
-C3D.actualLevelId = {};
-C3D.handlers = {};
-C3D.generator3D = {};
-
-/*
-    Funzioni per gestire gli eventi secondo il pattern GoF Observer
-*/
-C3D.on = function(event, handler) {
-    var handlers_list = this.handlers[event];
-
-    if(handlers_list === undefined) {
-        handlers_list = this.handlers[event] = [];
-    }
-
-    handlers_list.push(handler);
-}
-
-C3D.emit = function(event, id) {
-    var handlers_list = this.handlers[event];
-
-    if(handlers_list !== undefined) {
-        handlers_list.forEach(function (handler) {
-            handler(id);
-        });
-    }
-}
+var C3D = C3D || {};
 
 /*
     Generazione dell'indice e settaggio dei parent agli elementi.
@@ -53,6 +26,40 @@ C3D.setIndexAndParents = function() {
 		feature.parent = C3D.index[feature.properties.parent];
 	}
 }
+
+C3D.setIndexAndParents();
+
+C3D.actualPosition = {
+	coordinates: [C3D.config.startPosition.coordinates[0], C3D.config.startPosition.coordinates[0]],
+	levelId: C3D.config.startPosition.levelId
+};
+C3D.handlers = {};
+C3D.generator3D = {};
+
+/*
+    Funzioni per gestire gli eventi secondo il pattern GoF Observer
+*/
+C3D.on = function(event, handler) {
+    var handlers_list = this.handlers[event];
+
+    if(handlers_list === undefined) {
+        handlers_list = this.handlers[event] = [];
+    }
+
+    handlers_list.push(handler);
+}
+
+C3D.emit = function(event, id) {
+    var handlers_list = this.handlers[event];
+
+    if(handlers_list !== undefined) {
+        handlers_list.forEach(function (handler) {
+            handler(id);
+        });
+    }
+}
+
+
 
 /*
     Inizializzazione 2D    
@@ -228,7 +235,7 @@ C3D.init3D = function() {
 				$("#pointer").css('display', 'block');
                 //camera.up = new THREE.Vector3(0, 1, 0);
                 camera.position.set(0, 0, 0);
-				pointerLockControls.getObject().position.set(marker.getLatLng().lng, C3D.index[C3D.getActualLevelId()].properties.tVector[2] + 1.8, -marker.getLatLng().lat);
+				pointerLockControls.getObject().position.set(C3D.fromGeneralTo3D(C3D.actualPosition));
 			} else {
                 //C3D.index['building'].obj3D.rotation.x = 0;
 				scene.add(camera); //ripristina la camera originaria
@@ -872,43 +879,43 @@ C3D.orderLayer = function() {
 */
 
 // input: un oggetto posizione generale, output: un THREE.Vector3 da usare come posizione
-// C3D.fromGeneralTo3D = function(genPosition) {
-// 	var threePosition = new THREE.Vector3(genPosition.coordinates[0], C3D.index[genPosition.levelId].properties.tVector[2], -genPosition.coordinates[1]);
-// 	return threePosition;
-// }
+C3D.fromGeneralTo3D = function(genPosition) {
+	var threePosition = new THREE.Vector3(genPosition.coordinates[0], 0, -genPosition.coordinates[1]);
+	return threePosition;
+}
 
-// // trasformazione inversa della precedente.
-// C3D.from3DToGeneral = function(threePosition) {
-// 	var genPosition = {
-// 		coordinates: [threePosition.x, -threePosition.z],
-// 		levelId: C3D.actualLevelId;
-// 	}
-// 	return genPosition;
-// }
+// trasformazione inversa della precedente.
+C3D.from3DToGeneral = function(threePosition) {
+	var genPosition = {
+		coordinates: [threePosition.x, -threePosition.z],
+		levelId: C3D.actualPosition.levelId
+	}
+	return genPosition;
+}
 
-// // input: un oggetto posizione generale, output: un oggetto L.latLng
-// C3D.fromGeneralTo2D = function(genPosition) {
-// 	var leafletPosition = L.latLng(genPosition.coordinates[1], genPosition.coordinates[0]);
-// 	return leafletPosition;
-// }
+// input: un oggetto posizione generale, output: un oggetto L.latLng
+C3D.fromGeneralTo2D = function(genPosition) {
+	var leafletPosition = L.latLng(genPosition.coordinates[1], genPosition.coordinates[0]);
+	return leafletPosition;
+}
 
-// // inversa
-// C3D.from2DToGeneral = function(leafletPosition) {
-// 	var genPosition = {
-// 		coordinates: [leafletPosition.lng, leafletPosition.lat],
-// 		levelId: C3D.actualLevelId;
-// 	}
-// 	return genPosition;
-// }
+// inversa
+C3D.from2DToGeneral = function(leafletPosition) {
+	var genPosition = {
+		coordinates: [leafletPosition.lng, leafletPosition.lat],
+		levelId: C3D.actualPosition.levelId
+	}
+	return genPosition;
+}
 
-// C3D.from2Dto3D = function(leafletPosition) {
-// 	var genPosition = C3D.from2DToGeneral(leafletPosition);
-// 	var threePosition = C3D.fromGeneralTo3D(genPosition);
-// 	return threePosition;
-// }
+C3D.from2Dto3D = function(leafletPosition) {
+	var genPosition = C3D.from2DToGeneral(leafletPosition);
+	var threePosition = C3D.fromGeneralTo3D(genPosition);
+	return threePosition;
+}
 
-// C3D.from3Dto2D = function(threePosition) {
-// 	var genPosition = C3D.from3DToGeneral(threePosition);
-// 	var leafletPosition = C3D.fromGeneralTo2D(genPosition);
-// 	return leafletPosition;
-// }
+C3D.from3Dto2D = function(threePosition) {
+	var genPosition = C3D.from3DToGeneral(threePosition);
+	var leafletPosition = C3D.fromGeneralTo2D(genPosition);
+	return leafletPosition;
+}

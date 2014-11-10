@@ -2,36 +2,52 @@ extends main
 
 block internal_content
 	script.
+		// init socket
 		var socket = io('/users');
-		var userIcon =  L.AwesomeMarkers.icon( C3D.config.style['user'] );
-		var position = {};
-		position.latlng = new L.LatLng(-2,13.5);
-		position.level = C3D.getActualLevelId();
+		socket.emit('updatePosition', C3D.actualPosition);
+		
+		var marker;
+		var user3d;
+		
+		if (!{enable_2D}) {
+			//set the icon for the navigation
+			var userIcon =  L.AwesomeMarkers.icon( C3D.config.style['location'] );
+			var actualLatLng = C3D.fromGeneralTo2D(C3D.actualPosition);
+	
+			var marker = L.marker(actualLatLng, {
+			    icon: userIcon,
+			    draggable: true
+			});
+			
+			marker.addTo(C3D.index[C3D.actualPosition.levelId].layer2D.userMarkers);		
+			marker.bindPopup('<b>[' + actualLatLng.lat + '; ' + actualLatLng.lng + ']</b>');
+			
+			
+			marker.on('drag', function(e) {
+				actualLatLng = marker.getLatLng();
+				marker.bindPopup('<b>[' + actualLatLng.lat + '; ' + actualLatLng.lng + ']</b>');
+				
+				C3D.actualPosition = C3D.from2DtoGeneral(actualLatLng);
+				socket.emit('updatePosition', C3D.actualPosition);
+				
+			});
+			
 
-		var marker = L.marker(position.latlng, {
-		    icon: userIcon,
-		    draggable: true
-		});
 		
-		marker.addTo(C3D.index[position.level].layer2D.userMarkers);		
-		marker.bindPopup('<b>[' + position.latlng.lat + '; ' + position.latlng.lng + ']</b>');
-		socket.emit('updatePosition', position);
+		}
 		
-		marker.on('drag', function(e) {
-			position.latlng = marker.getLatLng();
-			position.level =  C3D.getActualLevelId();
-			socket.emit('updatePosition', position);
-			marker.setLatLng(position.latlng);
-			marker.bindPopup('<b>[' + position.latlng.lat + '; ' + position.latlng.lng + ']</b>');
-		});
+
+		
 
 		C3D.on('selectFeature', function(idObject) {
 			if(C3D.index[idObject].properties.class === 'level') {
-				C3D.index[position.level].layer2D.userMarkers.removeLayer(marker);
-				position.level = C3D.getActualLevelId();
-				socket.emit('updatePosition', position);
-				marker.addTo(C3D.index[position.level].layer2D.userMarkers);
-				C3D.camera3D.parent.parent.position.z = C3D.index[idObject].properties.tVector[2] + 1.8;
+				C3D.index[C3D.actualPosition.levelId].layer2D.userMarkers.removeLayer(marker);
+				marker.addTo(C3D.index[idObject].layer2D.userMarkers);
+				
+				C3D.actualPosition.levelId = C3D.index[idObject];
+				socket.emit('updatePosition', C3D.actualPosition);
+				
+				C3D.camera3D.parent.parent.position = C3D.index[idObject].properties.tVector[2] + 1.8;
 			}
 		});
 		
