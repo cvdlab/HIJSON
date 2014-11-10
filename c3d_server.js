@@ -73,7 +73,7 @@ C3D.generateGeoJSON = function() {
 
 	var geoJSONmap = {};
     var includedArchitectureClasses = ['level', 'room', 'door', 'internal_wall', 'external_wall'];
-    var includedFurtituresClasses = ['server', 'surveillanceCamera','fireExtinguisher','hotspot','antenna','table'];
+    var includedFurtituresClasses = ['server', 'surveillanceCamera','fireExtinguisher','hotspot','antenna'];
 	var includedClasses = includedArchitectureClasses.concat(includedFurtituresClasses);
     var queue = [];
     var obj;

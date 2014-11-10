@@ -81,6 +81,11 @@
 	    {
 		    "prefix": "fa",
 		    "icon": "square-o"
+	    },
+	    "chair": 
+	    {
+		    "prefix": "fa",
+		    "icon": "minus"
 	    }
     }
 }
