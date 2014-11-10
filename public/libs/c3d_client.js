@@ -138,12 +138,21 @@ C3D.init3D = function() {
     var ambientLight = new THREE.AmbientLight(ambiColor);
     scene.add(ambientLight);
     
-    var directionalLight = new THREE.SpotLight( ambiColor, 15 );
-    directionalLight.position.set( 20, 100, 0 );
-    directionalLight.lookAt(0,0,0);
-   
-    scene.add(directionalLight);
-    
+    var directionalLight = new THREE.DirectionalLight( 0xFFFFFF );
+    directionalLight.position.set( 30, 30, 30 );
+    directionalLight.castShadow = true;
+    directionalLight.shadowCameraNear = 10;
+    directionalLight.shadowCameraFar = 100;
+    directionalLight.shadowCameraLeft = -100;
+    directionalLight.shadowCameraRight = 100;
+    directionalLight.shadowCameraTop = 100;
+    directionalLight.shadowCameraBottom = -100;
+    directionalLight.intensity = 1;
+    directionalLight.shadowMapHeight = 1024;
+    directionalLight.shadowMapWidth = 1024;
+    directionalLight.shadowCameraVisible = true;
+    directionalLight.lookAt(scene.position);
+    scene.add( directionalLight );
     var axisHelper = new THREE.AxisHelper(3);
     scene.add(axisHelper); 
         
@@ -426,8 +435,10 @@ C3D.generator3D['server'] = function (feature) {
     var geometry = new THREE.BoxGeometry(dimensions[0], dimensions[1], dimensions[2]);
     var material = new THREE.MeshLambertMaterial( {color: 0x6a6a6a} );
     var wireMaterial = new THREE.MeshLambertMaterial( {color: 0x000000, wireframe: true, wireframeLinewidth: 2} );
-    var server = new THREE.SceneUtils.createMultiMaterialObject(geometry, [material, wireMaterial]);
+    //var server = new THREE.SceneUtils.createMultiMaterialObject(geometry, [material, wireMaterial]);
+    var server = new THREE.Mesh(geometry, material);
     server.position.z += dimensions[2]/2;
+    
     server.castShadow = true;
 
     return server;
@@ -472,6 +483,7 @@ C3D.generator3D['surveillanceCamera'] = function(feature) {
     camera.add(rod);
 
     camera.position.x += widthBody/2 + heightRod/2;
+    camera.castShadow = true;
 
     return camera;
 }
@@ -502,6 +514,7 @@ C3D.generator3D['hotspot'] = function(feature) {
     hotspot.add(antennaSx);
     hotspot.position.z += 0.1/2;
 
+    hotspot.castShadow = true;
     return hotspot;
 };
 
@@ -534,10 +547,12 @@ C3D.generator3D['light'] = function(feature) {
     light.add(groupNeon);
     light.position.z -= (height/2) + 0.001;
 
+    //light.castShadow = true;
+
     return light;
 } 
 
-
+    //BISOGNA RIFARE IL MODELLO!!! (Ci penso, io. MS)
 C3D.generator3D['antenna'] = function(feature) {
     var radius_down = 0.02;
     var radius_up = 0.01;
@@ -557,6 +572,8 @@ C3D.generator3D['antenna'] = function(feature) {
     var antenna = new THREE.Object3D();
 
     antenna.add(model);
+
+    antenna.castShadow = true;
     return antenna;
 };
 
@@ -588,6 +605,7 @@ C3D.generator3D['fireExtinguisher'] = function(feature) {
     fireExtinguisher.add(cylinder);
     fireExtinguisher.position.z += 0.61/2;
 
+    fireExtinguisher.castShadow = true;
     return fireExtinguisher;
 }
 
@@ -678,7 +696,9 @@ C3D.generator3D['external_wall'] = function(feature) {
 	wall.position.y += feature.properties.thickness/2;
 
     wall.receiveShadow = true;
-	return container;	
+    wall.castShadow = true;
+	
+    return container;	
 }
 
 C3D.generator3D['internal_wall'] = function(feature) {
@@ -701,9 +721,11 @@ C3D.generator3D['internal_wall'] = function(feature) {
 	container.add(wall);
 	wall.rotation.x += Math.PI/2;
 	wall.position.y += feature.properties.thickness/2;
-    wall.castShadow = true;
-    wall.receiveShadow = true;
-	return container;
+    
+    container.castShadow = true;
+    container.receiveShadow = true;
+	
+    return container;
 }
 
 C3D.generator3D['door'] = function(feature) {
@@ -731,6 +753,7 @@ C3D.generator3D['room'] = function(feature) {
     });
 
     var model = new THREE.Mesh(C3D.generatePolygon(feature.geometry), material);
+    
     model.receiveShadow = true;
 
     return model;
