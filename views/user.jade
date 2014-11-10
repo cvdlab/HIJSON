@@ -9,19 +9,19 @@ block internal_content
 		var marker;
 		var user3d;
 		
+		
 		if (#{enable_2D}) {
-			//set the icon for the navigation
-			var userIcon =  L.AwesomeMarkers.icon( C3D.config.style['location'] );
+			// 2D Setup: set the icon for the navigation
+			var navIcon =  L.AwesomeMarkers.icon( C3D.config.style['location'] );
 			var actualLatLng = C3D.fromGeneralTo2D(C3D.actualPosition);
-	
 			var marker = L.marker(actualLatLng, {
-			    icon: userIcon,
+			    icon: navIcon,
 			    draggable: true
 			});
-			
 			marker.addTo(C3D.index[C3D.actualPosition.levelId].layer2D.userMarkers);		
 			marker.bindPopup('<b>[' + actualLatLng.lat + '; ' + actualLatLng.lng + ']</b>');
 			
+			// 2D moving
 			marker.on('drag', function(e) {
 				actualLatLng = marker.getLatLng();
 				marker.bindPopup('<b>[' + actualLatLng.lat + '; ' + actualLatLng.lng + ']</b>');
@@ -29,12 +29,24 @@ block internal_content
 				C3D.actualPosition = C3D.from2DtoGeneral(actualLatLng);
 				socket.emit('updatePosition', C3D.actualPosition);
 				
+				// if is active also 3D, move the CUBE when walking in FPV
+				if(#{enable_3D}) {
+					//TODO move the cube
+				}
 			});
 		}
 		
 		if(#{enable_3D}) {
+			
+			//TODO: 3D Setup: add cube to see position also in Trackball mode, like the marker
+			
+			// 3D moving
 			document.addEventListener( 'keydown', function() {
 				C3D.actualPosition = C3D.from3DtoGeneral(C3D.camera3D.parent.parent.position);
+				
+				//TODO move the cube, in FPV it is probably invisible, but when you leave FPV it must be in the right location
+				
+				// if is active also 2D, move the marker when walking in FPV
 				if(#{enable_2D}) {
 					actualLatLng = C3D.fromGeneralTo2D(C3D.actualPosition)
 					marker.setLatLng(actualLatLng);
@@ -49,7 +61,8 @@ block internal_content
 
 		C3D.on('selectFeature', function(idObject) {
 			// level change
-			if(C3D.index[idObject].properties.class === 'level') { 
+			if(C3D.index[idObject].properties.class === 'level') {
+				
 				if (#{enable_2D}) { 
 					// move marker to new level
 					C3D.index[C3D.actualPosition.levelId].layer2D.userMarkers.removeLayer(marker);
@@ -60,8 +73,10 @@ block internal_content
 				C3D.actualPosition.levelId = C3D.index[idObject];
 				socket.emit('updatePosition', C3D.actualPosition);
 				
+				if (#{enable_3D}) {
+					//TODO move user/camera to the new level
+				}
 				
-				C3D.camera3D.parent.parent.position = C3D.index[idObject].properties.tVector[2] + 1.8;
 			}
 		});
 		
