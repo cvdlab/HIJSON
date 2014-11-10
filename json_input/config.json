@@ -66,6 +66,16 @@
 	    {
 		    "prefix": "fa",
 		    "icon": "wifi"
+	    },
+	    "antenna": 
+	    {
+		    "prefix": "fa",
+		    "icon": "signal"
+	    },
+	    "table": 
+	    {
+		    "prefix": "fa",
+		    "icon": "square-o"
 	    }
     }
 }

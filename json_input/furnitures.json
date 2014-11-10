@@ -399,6 +399,40 @@
                 "tVector": [0.05, 2, 2.3],
                 "rVector": [0, 0, 90]
             }
+        },
+
+        {
+            "id": "table_1.1",
+            "type": "Feature",
+            "geometry": 
+            {
+                "type": "Point",
+                "coordinates": [0, 0]
+            },
+            "properties": 
+            {
+                "parent": "room_0.3",
+                "class": "table",
+                "tVector": [2, 2, 0],
+                "rVector": [0, 0, 0]
+            }
+        },
+        
+        {
+            "id": "antenna_1.1",
+            "type": "Feature",
+            "geometry": 
+            {
+                "type": "Point",
+                "coordinates": [0, 0]
+            },
+            "properties": 
+            {
+                "parent": "room_0.3",
+                "class": "antenna",
+                "tVector": [0.3, 0.1, 2.8],
+                "rVector": [0, 0, 0]
+            }
         }
     ]
 }

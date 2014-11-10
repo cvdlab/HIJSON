@@ -559,29 +559,34 @@ C3D.generator3D['light'] = function(feature) {
     return light;
 } 
 
-    //BISOGNA RIFARE IL MODELLO!!! (Ci penso, io. MS)
 C3D.generator3D['antenna'] = function(feature) {
-    var radius_down = 0.02;
-    var radius_up = 0.01;
-    var length = 0.3;
-    var width = 0.1;
-    var depth = 0.2;
-    var height = 0.3;
+    var material = new THREE.MeshBasicMaterial( {color: 0xd9d7d7} );
     
-    var geometry = new THREE.CylinderGeometry( radius_down, radius_up, length, 32);
-    var material = new THREE.MeshLambertMaterial( {color: 0xff0000} );
-    var model = new THREE.Mesh( geometry, material);
-
-    model.rotation.x = Math.PI/2;
-    
-    model.position.z = model.position.z + levelHeight - length;
-
     var antenna = new THREE.Object3D();
+    var geometry = new THREE.BoxGeometry( 0.3, 0.1, 0.3 );
+    var base = new THREE.Mesh( geometry, material );
+    base.position.z += 0.3/2;
+    
 
-    antenna.add(model);
+    var geometry = new THREE.CylinderGeometry( 0.01, 0.01, 0.065, 32 );
+    var baseCylinder = new THREE.Mesh( geometry, material );
+    baseCylinder.position.y += 0.05;
+    baseCylinder.position.z += 0.3/2;
 
-    antenna.receiveShadow = true;
-    antenna.castShadow = true;
+    var geometry = new THREE.CylinderGeometry( 0.001, 0.01, 0.5, 32 );
+    var cylinderAntenna = new THREE.Mesh( geometry, material );
+    cylinderAntenna.rotation.x = Math.PI/2;
+    cylinderAntenna.position.z += 0.3/2 +  0.5/2;
+    cylinderAntenna.position.y += 0.08;
+
+    var geometry = new THREE.SphereGeometry( 0.01, 32, 32 );
+    var sphere = new THREE.Mesh( geometry, material );
+    sphere.position.z += 0.3/2;
+    sphere.position.y += 0.08;
+    antenna.add(base);
+    antenna.add(baseCylinder);
+    antenna.add(cylinderAntenna);
+    antenna.add( sphere );
     return antenna;
 };
 
@@ -615,9 +620,52 @@ C3D.generator3D['fireExtinguisher'] = function(feature) {
 
     fireExtinguisher.receiveShadow = true;
     fireExtinguisher.castShadow = true;
+
     return fireExtinguisher;
 }
 
+C3D.generator3D['table'] = function(feature) {
+    var table = new THREE.Object3D();
+
+    var geometry = new THREE.CylinderGeometry( 0.03, 0.03, 0.8, 32 );
+    var material = new THREE.MeshBasicMaterial( {color: 0xd9d7d7} );
+    
+    var p1 = new THREE.Mesh( geometry, material );
+    p1.rotation.x += Math.PI/2;
+    p1.position.z += 0.8/2;
+
+    var p2 = new THREE.Mesh( geometry, material );
+    p2.rotation.x += Math.PI/2;
+    p2.position.z += 0.8/2;
+    p2.position.y += 1;
+
+    var p3 = new THREE.Mesh( geometry, material );
+    p3.rotation.x += Math.PI/2;
+    p3.position.z += 0.8/2;
+    p3.position.x += 2;
+
+    var p4 = new THREE.Mesh( geometry, material );
+    p4.rotation.x += Math.PI/2;
+    p4.position.z += 0.8/2;
+    p4.position.y += 1;
+    p4.position.x += 2;
+    
+
+    var geometry = new THREE.BoxGeometry( 2.1, 1.1, 0.04 );
+    var material = new THREE.MeshBasicMaterial( {color: 0x9b8c75} );
+    var plane = new THREE.Mesh( geometry, material );
+    plane.position.x -= 0.05 - 2.1/2;
+    plane.position.y -= 0.05 - 1.1/2;
+    plane.position.z += 0.8;
+
+    table.add(p1);
+    table.add(p2);
+    table.add(p3);
+    table.add(p4);
+    table.add(plane);
+
+    return table;
+}
 
 
 
@@ -824,43 +872,43 @@ C3D.orderLayer = function() {
 */
 
 // input: un oggetto posizione generale, output: un THREE.Vector3 da usare come posizione
-C3D.fromGeneralTo3D = function(genPosition) {
-	var threePosition = new THREE.Vector3(genPosition.coordinates[0], C3D.index[genPosition.levelId].properties.tVector[2], -genPosition.coordinates[1]);
-	return threePosition;
-}
+// C3D.fromGeneralTo3D = function(genPosition) {
+// 	var threePosition = new THREE.Vector3(genPosition.coordinates[0], C3D.index[genPosition.levelId].properties.tVector[2], -genPosition.coordinates[1]);
+// 	return threePosition;
+// }
 
-// trasformazione inversa della precedente.
-C3D.from3DToGeneral = function(threePosition) {
-	var genPosition = {
-		coordinates: [threePosition.x, -threePosition.z],
-		levelId: C3D.actualLevelId;
-	}
-	return genPosition;
-}
+// // trasformazione inversa della precedente.
+// C3D.from3DToGeneral = function(threePosition) {
+// 	var genPosition = {
+// 		coordinates: [threePosition.x, -threePosition.z],
+// 		levelId: C3D.actualLevelId;
+// 	}
+// 	return genPosition;
+// }
 
-// input: un oggetto posizione generale, output: un oggetto L.latLng
-C3D.fromGeneralTo2D = function(genPosition) {
-	var leafletPosition = L.latLng(genPosition.coordinates[1], genPosition.coordinates[0]);
-	return leafletPosition;
-}
+// // input: un oggetto posizione generale, output: un oggetto L.latLng
+// C3D.fromGeneralTo2D = function(genPosition) {
+// 	var leafletPosition = L.latLng(genPosition.coordinates[1], genPosition.coordinates[0]);
+// 	return leafletPosition;
+// }
 
-// inversa
-C3D.from2DToGeneral = function(leafletPosition) {
-	var genPosition = {
-		coordinates: [leafletPosition.lng, leafletPosition.lat],
-		levelId: C3D.actualLevelId;
-	}
-	return genPosition;
-}
+// // inversa
+// C3D.from2DToGeneral = function(leafletPosition) {
+// 	var genPosition = {
+// 		coordinates: [leafletPosition.lng, leafletPosition.lat],
+// 		levelId: C3D.actualLevelId;
+// 	}
+// 	return genPosition;
+// }
 
-C3D.from2Dto3D = function(leafletPosition) {
-	var genPosition = C3D.from2DToGeneral(leafletPosition);
-	var threePosition = C3D.fromGeneralTo3D(genPosition);
-	return threePosition;
-}
+// C3D.from2Dto3D = function(leafletPosition) {
+// 	var genPosition = C3D.from2DToGeneral(leafletPosition);
+// 	var threePosition = C3D.fromGeneralTo3D(genPosition);
+// 	return threePosition;
+// }
 
-C3D.from3Dto2D = function(threePosition) {
-	var genPosition = C3D.from3DToGeneral(threePosition);
-	var leafletPosition = C3D.fromGeneralTo2D(genPosition);
-	return leafletPosition;
-}
+// C3D.from3Dto2D = function(threePosition) {
+// 	var genPosition = C3D.from3DToGeneral(threePosition);
+// 	var leafletPosition = C3D.fromGeneralTo2D(genPosition);
+// 	return leafletPosition;
+// }
