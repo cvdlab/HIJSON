@@ -4,6 +4,11 @@
         "latitude": 41.799404, 
         "longitude": 12.485177 
     },
+    "startPosition": 
+    {
+        "coordinates": [0,0], 
+        "levelId": "level_0" 
+    },
     "style":
     {
 	    "background": 

@@ -15,10 +15,10 @@ block content
 		script(src='/assets/js/async.js')
 		script(src='/assets/js/bootstrap.min.js')
 		script(src='/socket.io/socket.io.js')
-		if enable_2D
-			include ./includes/js_libraries_2d.jade
-		if enable_3D
-			include ./includes/js_libraries_3d.jade
+		
+		include ./includes/js_libraries_2d.jade
+		
+		include ./includes/js_libraries_3d.jade
 		
 		// C3D Library
 		script(src='/libs/c3d_client.js')
@@ -85,7 +85,9 @@ block content
 			var elements = ['level','building'];
 			for(id in C3D.index)
 				if(elements.indexOf(C3D.index[id].properties.class) > -1)
-					$("#selectLevel").append('<option value=' + id + '>' + id +'</option>')
+					$("#selectLevel").append('<option value=' + id + '>' + id +'</option>');
+			
+			$("#selectLevel").val(C3D.config.startPosition.levelId);
 	
 			$( "#selectLevel" ).on('change', function() {
 				C3D.emit('selectFeature',this.value);

@@ -1,5 +1,6 @@
 var C3D = {};
 
+C3D.actualLevelId = {};
 C3D.handlers = {};
 C3D.generator3D = {};
 
@@ -57,6 +58,8 @@ C3D.setIndexAndParents = function() {
     Inizializzazione 2D    
 */
 C3D.init2D = function() {
+        
+        C3D.index['building'].layer2D = L.layerGroup();
         
         var container2D = $("#container2D");
         var container2DWidth = container2D.width();
@@ -817,25 +820,47 @@ C3D.orderLayer = function() {
 }
 
 /*
-	funzioni di traduzioni coordinate, tra generali, 3D (rotazione) e 2D (latitudine e longitudine). Input ed output è sempre un array di 3 elementi.
+	funzioni di traduzioni coordinate, tra generali, 3D (rotazione) e 2D (latitudine e longitudine). 
 */
 
-// il modello è stato ruotato di 90 gradi antiorario intorno all'asse x, quindi la x resta uguale, lungo y ci va a finire quello che prima si sviluppava lungo z, e lungo le z negative ci va a finire quello che prima si sviluppava in profondità lungo le y positive.
-C3D.fromGeneralTo3D = function(input) {
-	return [input[0], input[2], -input[1]];
+// input: un oggetto posizione generale, output: un THREE.Vector3 da usare come posizione
+C3D.fromGeneralTo3D = function(genPosition) {
+	var threePosition = new THREE.Vector3(genPosition.coordinates[0], C3D.index[genPosition.levelId].properties.tVector[2], -genPosition.coordinates[1]);
+	return threePosition;
 }
 
 // trasformazione inversa della precedente.
-C3D.from3DToGeneral = function(input) {
-	return [input[0], -input[2], input[1]];
+C3D.from3DToGeneral = function(threePosition) {
+	var genPosition = {
+		coordinates: [threePosition.x, -threePosition.z],
+		levelId: C3D.actualLevelId;
+	}
+	return genPosition;
 }
 
-// gli oggetti latlng di leaflet prendono prima la latitudine (y) e poi la longitudine (x). Questa funzione è un po' inutile ma rende coerente il tutto.
-C3D.fromGeneralTo2D = function(input) {
-	return [input[1], input[0], 0];
+// input: un oggetto posizione generale, output: un oggetto L.latLng
+C3D.fromGeneralTo2D = function(genPosition) {
+	var leafletPosition = L.latLng(genPosition.coordinates[1], genPosition.coordinates[0]);
+	return leafletPosition;
 }
 
-// input di questa funzione è [lat, lng, 0], ritorna le coordinate generali, compresa l'altezza impostata tramite l'altezza del piano attuale
-C3D.from2DToGeneral = function(input) {
-	return [input[1], input[0], C3D.index[C3D.getActualLevelId()].properties.tVector[2] ];
+// inversa
+C3D.from2DToGeneral = function(leafletPosition) {
+	var genPosition = {
+		coordinates: [leafletPosition.lng, leafletPosition.lat],
+		levelId: C3D.actualLevelId;
+	}
+	return genPosition;
+}
+
+C3D.from2Dto3D = function(leafletPosition) {
+	var genPosition = C3D.from2DToGeneral(leafletPosition);
+	var threePosition = C3D.fromGeneralTo3D(genPosition);
+	return threePosition;
+}
+
+C3D.from3Dto2D = function(threePosition) {
+	var genPosition = C3D.from3DToGeneral(threePosition);
+	var leafletPosition = C3D.fromGeneralTo2D(genPosition);
+	return leafletPosition;
 }
