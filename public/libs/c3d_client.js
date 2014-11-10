@@ -138,21 +138,21 @@ C3D.init3D = function() {
     var ambientLight = new THREE.AmbientLight(ambiColor);
     scene.add(ambientLight);
     
-    var directionalLight = new THREE.SpotLight( 0xFFFFFF );
-    directionalLight.position.set( 30, 30, 30 );
-    directionalLight.castShadow = true;
-    directionalLight.shadowCameraNear = 10;
-    directionalLight.shadowCameraFar = 100;
-    directionalLight.shadowCameraLeft = -100;
-    directionalLight.shadowCameraRight = 100;
-    directionalLight.shadowCameraTop = 100;
-    directionalLight.shadowCameraBottom = -100;
-    directionalLight.intensity = 1;
-    directionalLight.shadowMapHeight = 1024;
-    directionalLight.shadowMapWidth = 1024;
-    directionalLight.shadowCameraVisible = true;
-    directionalLight.lookAt(scene.position);
-    scene.add( directionalLight );
+    var spotLight = new THREE.SpotLight( 0xFFFFFF );
+    spotLight.position.set( 30, 30, 30 );
+    spotLight.castShadow = true;
+    spotLight.shadowCameraNear = 10;
+    spotLight.shadowCameraFar = 100;
+    spotLight.shadowCameraLeft = -100;
+    spotLight.shadowCameraRight = 100;
+    spotLight.shadowCameraTop = 100;
+    spotLight.shadowCameraBottom = -100;
+    spotLight.intensity = 2;
+    spotLight.shadowMapHeight = 2048;
+    spotLight.shadowMapWidth = 2048;
+    spotLight.shadowCameraVisible = true;
+    spotLight.lookAt(scene.position);
+    scene.add( spotLight );
     var axisHelper = new THREE.AxisHelper(3);
     scene.add(axisHelper); 
         
