@@ -179,19 +179,14 @@ C3D.init3D = function() {
     }
 
     C3D.on('selectFeature', function(idObject) {
-	    C3D.index["building"].obj3D.traverse(function(object) {
-	        object.visible = false;
-	    });
-	    
-	    C3D.index[idObject].obj3D.traverse(function(object) {
-	        object.visible = true;
-	    });
+        C3D.show3DObject(C3D.index["building"].obj3D, false);
+        C3D.show3DObject(C3D.index[idObject].obj3D, true);
 	    
 	    for(var i in C3D.index) {
 	        var elementClass = C3D.index[i].properties.class;
 	        if((elementClass === "internal_wall") || (elementClass === "external_wall")) {
 	            if($.inArray(idObject, C3D.index[i].properties.connections) !== -1) {
-	                C3D.index[i].obj3D.traverse(function(object) { object.visible = true; });
+	                C3D.show3DObject(C3D.index[i].obj3D, true);
 	            }   
 	        }
 	    } 

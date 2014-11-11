@@ -48,13 +48,9 @@ block internal_content
 					C3D.index[user.position.levelId].obj3D.userModels.add(model);
 					model.position = C3D.fromGeneralTo3D(user.position);
 					if (user.position.levelId === C3D.actualPosition.levelId) {
-						model.traverse(function(object) {
-							object.visible = true;
-						});
+						C3D.show3DObject(model, true);
 					} else {
-						model.traverse(function(object) {
-							object.visible = false;
-						});
+						C3D.show3DObject(model, false);
 					}
 				}
 			}

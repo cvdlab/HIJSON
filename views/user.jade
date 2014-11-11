@@ -75,9 +75,7 @@ block internal_content
 					// move cube to the new level
 					
 					C3D.index[idObject].obj3D.userModels.add(user3D);
-					user3D.traverse(function(object) {
-						object.visible = true;
-					});
+					C3D.show3DObject(user3D, true);
 					
 				}
 				
