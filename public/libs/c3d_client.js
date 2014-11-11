@@ -954,9 +954,9 @@ C3D.orderLayer = function() {
 */
 
 C3D.show3DObject = function(obj3D, booleanValue) {
-        obj3D.traverse(function(obj3D) { 
-            obj3D.visible = booleanValue;
-        });
+    obj3D.traverse(function(object) { 
+        object.visible = booleanValue;
+    });
 }
 
 
