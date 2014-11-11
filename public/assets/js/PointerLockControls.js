@@ -141,6 +141,10 @@ THREE.PointerLockControls = function ( camera ) {
 
 	}();
 
+
+	var oldPosition = yawObject.position.clone();
+	var lastPositionUpdate = Date.now();
+	
 	this.update = function () {
 
 		if ( scope.enabled === false ) return;
@@ -177,7 +181,16 @@ THREE.PointerLockControls = function ( camera ) {
 			canJump = true;
 
 		}
-
+		
+		if( Date.now() - lastPositionUpdate > 1000/25 )	{
+			lastPositionUpdate = Date.now();
+			if (!oldPosition.equals(yawObject.position)) {
+				C3D.emit('FPVmoved');
+				console.log('FPVmoved event fired');
+				oldPosition = yawObject.position.clone();
+			}
+		}
+		
 		prevTime = time;
 
 	};
