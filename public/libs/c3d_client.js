@@ -954,10 +954,6 @@ C3D.orderLayer = function() {
 */
 
 C3D.show3DObject = function(obj3D, booleanValue) {
-        C3D.index["building"].obj3D.traverse(function(object) {
-            object.visible = false;
-        });
-        
         obj3D.traverse(function(obj3D) { 
             obj3D.visible = booleanValue;
         });
