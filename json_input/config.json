@@ -54,12 +54,14 @@
 	    "user": 
 	    {
 		    "prefix": "fa",
-		    "icon": "male"
+		    "icon": "male",
+		    "markerColor": "green"
 	    },
 	    "location": 
 	    {
 		    "prefix": "fa",
-		    "icon": "location-arrow"
+		    "icon": "location-arrow",
+		    "markerColor": "green"
 	    },
 	    "fireExtinguisher": 
 	    {

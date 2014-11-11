@@ -36,8 +36,8 @@ block internal_content
 		}
 		
 		if(#{enable_3D}) {
-			var user3D = C3D.generator3D['cube']();
-			C3D.index[C3D.actualPosition.levelId].obj3D.add(user3D);
+			var user3D = C3D.generator3D['cube']('0x00FF00');
+			C3D.index[C3D.actualPosition.levelId].obj3D.userModels.add(user3D);
 			user3D.position = C3D.fromGeneralTo3D(C3D.actualPosition);
 			
 			// 3D moving
@@ -72,8 +72,13 @@ block internal_content
 				}
 				
 				if (#{enable_3D}) {
-					//C3D.index[C3D.actualPosition.levelId].obj3D.remove(user3D);
-					C3D.index[idObject].obj3D.add(user3D);
+					// move cube to the new level
+					
+					C3D.index[idObject].obj3D.userModels.add(user3D);
+					user3D.traverse(function(object) {
+						object.visible = true;
+					});
+					
 				}
 				
 				// set the new level and emit

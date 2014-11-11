@@ -84,7 +84,7 @@ C3D.init2D = function() {
 	    }
 	    
         C3D.on('selectFeature', function(idObject) {
-		    if(C3D.index[idObject].properties.class === 'level') {
+		    if(C3D.index[idObject].properties.class === 'level' || C3D.index[idObject].properties.class === 'building') {
 		        C3D.map2D.eachLayer(function(layer) { C3D.map2D.removeLayer(layer); });
 		        C3D.index[idObject].layer2D.addTo(C3D.map2D);
 		    }
@@ -365,6 +365,11 @@ C3D.generate3DModel = function() {
             }
             C3D.index[feature.parent.id].obj3D.add(el3D);
         }
+        if(feature.properties.class === 'level') {
+	        var userModels = new THREE.Object3D();
+	        el3D.add(userModels);
+	        el3D.userModels = userModels;
+        }
         for(var i=0;i< feature.children.length;i++) {
             queue.push(feature.children[i]);
         }
@@ -426,7 +431,7 @@ C3D.generate2DModel = function() {
 
 
 
-C3D.generator3D['cube'] = function() {
+C3D.generator3D['cube'] = function(color) {
 	var geometry = new THREE.BoxGeometry(0.5, 0.5, 1.8);
     var material = new THREE.MeshLambertMaterial( {color: 0x00ff00} );
     var cube = new THREE.Mesh(geometry, material);
