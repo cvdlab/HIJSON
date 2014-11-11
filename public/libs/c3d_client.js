@@ -111,7 +111,7 @@ C3D.init2D = function() {
 */ 
 
 C3D.init3D = function() {
-	
+	C3D.FPVenabled = false;
     var container3D = $('#container3D');
     var container3DWidth = container3D.width();
     var container3DHeight = container3D.width()/4*3;
@@ -232,10 +232,11 @@ C3D.init3D = function() {
 				scene.add(pointerLockControls.getObject());
 				trackballControls.enabled = false;
 				pointerLockControls.enabled = true;
+				C3D.FPVenabled = true;
 				$("#pointer").css('display', 'block');
                 //camera.up = new THREE.Vector3(0, 1, 0);
                 camera.position.set(0, 0, 0);
-				pointerLockControls.getObject().position = C3D.fromGeneralTo3D(C3D.actualPosition);
+				pointerLockControls.getObject().position = C3D.fromGeneralTo3DScene(C3D.actualPosition);
 			} else {
                 //C3D.index['building'].obj3D.rotation.x = 0;
 				scene.add(camera); //ripristina la camera originaria
@@ -243,6 +244,7 @@ C3D.init3D = function() {
 				camera.lookAt(scene.position);
 				scene.remove(pointerLockControls.getObject());
 				pointerLockControls.enabled = false;
+				C3D.FPVenabled = false;
 				trackballControls.enabled = true;
 				$("#pointer").css('display', 'none');
 				trackballControls.reset();
@@ -428,7 +430,11 @@ C3D.generator3D['cube'] = function() {
 	var geometry = new THREE.BoxGeometry(0.5, 0.5, 1.8);
     var material = new THREE.MeshLambertMaterial( {color: 0x00ff00} );
     var cube = new THREE.Mesh(geometry, material);
-    return cube;
+    cube.position.z += 0.9;
+    var container = new THREE.Object3D();
+    container.add(cube);
+    return container;
+    
 }
 
 
@@ -942,16 +948,33 @@ C3D.orderLayer = function() {
 	funzioni di traduzioni coordinate, tra generali, 3D (rotazione) e 2D (latitudine e longitudine). 
 */
 
+
+// input: un oggetto posizione generale, output: un THREE.Vector3 da usare come posizione
+C3D.fromGeneralTo3DScene = function(genPosition) {
+	var threePosition = new THREE.Vector3(genPosition.coordinates[0], C3D.index[genPosition.levelId].properties.tVector[2], -genPosition.coordinates[1]);
+	return threePosition;
+}
+
+// trasformazione inversa della precedente.
+C3D.from3DSceneToGeneral = function(threePosition) {
+	var genPosition = {
+		coordinates: [threePosition.x, -threePosition.z],
+		levelId: C3D.actualPosition.levelId
+	}
+	return genPosition;
+}
+
+
 // input: un oggetto posizione generale, output: un THREE.Vector3 da usare come posizione
 C3D.fromGeneralTo3D = function(genPosition) {
-	var threePosition = new THREE.Vector3(genPosition.coordinates[0], 0, -genPosition.coordinates[1]);
+	var threePosition = new THREE.Vector3(genPosition.coordinates[0], genPosition.coordinates[1], 0);
 	return threePosition;
 }
 
 // trasformazione inversa della precedente.
 C3D.from3DToGeneral = function(threePosition) {
 	var genPosition = {
-		coordinates: [threePosition.x, -threePosition.z],
+		coordinates: [threePosition.x, threePosition.y],
 		levelId: C3D.actualPosition.levelId
 	}
 	return genPosition;
