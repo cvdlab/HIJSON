@@ -2,31 +2,38 @@ extends main
 
 block internal_content
 	script.
-		var userIcon =  L.AwesomeMarkers.icon( C3D.config.style['user'] );
+		// init socket
 		var socket = io('/admins');
+		
+		// init for 2D
+		if (#{enable_2D}) {
+			var userIcon =  L.AwesomeMarkers.icon( C3D.config.style['user'] );
+		}
 		
 		socket.on('updateMapUsersConnected', function(usersConnected) {
 			
-			// prendi tutti i piani su leaflet e pulisci i marker degli utenti presenti
-			for(id in C3D.index) {
-				if(C3D.index[id].properties.class === 'level') {
-					C3D.index[id].layer2D.userMarkers.clearLayers();
+			// update 2D
+			if (#{enable_2D}) {
+				// clear all markers
+				for(id in C3D.index) {
+					if(C3D.index[id].properties.class === 'level') {
+						C3D.index[id].layer2D.userMarkers.clearLayers();
+					}
+				}
+				
+				// put new markers
+				for(userToUpdate in usersConnected) { 
+					var user = usersConnected[userToUpdate];
+					var latLng = C3D.fromGeneralTo2D(user.position);
+					var marker = L.marker(latLng, { icon: userIcon });
+					marker.bindPopup("<b>User: </b>" + user.id +'<br><b>[' + latLng.lat + '; ' + latLng.lng + ']</b>');
+					marker.addTo(C3D.index[user.position.levelId].layer2D.userMarkers);
 				}
 			}
 			
-			// per ogni utente nella mappa 
-			for(userToUpdate in usersConnected) { 
-				var user = {
-					id: usersConnected[userToUpdate].id,
-					position:
-					{
-						latlng: usersConnected[userToUpdate].position.latlng,
-						level: usersConnected[userToUpdate].position.level
-					},
-					marker: L.marker((usersConnected[userToUpdate].position.latlng), { icon: userIcon })
-				}
-				user.marker.bindPopup("<b>User: </b>" + user.id +'<br><b>[' + user.position.latlng.lat + '; ' + user.position.latlng.lng + ']</b>');
-				user.marker.addTo(C3D.index[user.position.level].layer2D.userMarkers);
+			// update 3D
+			if (#{enable_3D}) {
+				
 			}
 		});
 		

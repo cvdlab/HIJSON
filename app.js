@@ -126,7 +126,7 @@ var usersConnected = {};
 
 admins.on('connection', function(socket){
 	console.log('Admin connected with id: ' + socket.id);
-	socket.emit('updateMapUsersConnected',usersConnected);
+	socket.emit('updateMapUsersConnected', usersConnected);
 	socket.on('disconnect', function() {
 		console.log('Admin disconnected with id: ' + socket.id);
 	});
@@ -136,10 +136,7 @@ users.on('connection', function(socket){
     console.log('User connected with id: ' + socket.id);
     var user = {
         id: socket.id,
-        position: {
-        	latlng: undefined,
-        	level: undefined
-        }
+        position: {}
     };
     usersConnected[user.id] = user;
 

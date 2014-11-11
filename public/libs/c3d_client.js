@@ -424,6 +424,12 @@ C3D.generate2DModel = function() {
 
 
 
+C3D.generator3D['cube'] = function() {
+	var geometry = new THREE.BoxGeometry(0.5, 0.5, 1.8);
+    var material = new THREE.MeshLambertMaterial( {color: 0x00ff00} );
+    var cube = new THREE.Mesh(geometry, material);
+    return cube;
+}
 
 
 
@@ -733,7 +739,6 @@ C3D.generator3D['chair'] = function(feature) {
 
     return chair;
 }
-
 
 /*
     In seguito sono presenti le funzioni per disegnare l'architettura.
