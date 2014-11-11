@@ -1,8 +1,7 @@
 extends layout
 
 block head
-	// Style
-	link(rel='stylesheet', href='/assets/css/bootstrap.min.css')
+
 	if enable_2D
 		include ./includes/css_2d.jade
 	if enable_3D
@@ -11,16 +10,11 @@ block head
 block content
 	.container-fluid
 		// Default JavaScript libraries
-		script(src='/assets/js/jquery-2.1.1.js')
-		script(src='/assets/js/async.js')
-		script(src='/assets/js/bootstrap.min.js')
 		script(src='/socket.io/socket.io.js')
 		
 		include ./includes/js_libraries_2d.jade
 		
 		include ./includes/js_libraries_3d.jade
-		
-		
 		
 		script.
 			var C3D = JSON.parse('!{C3D_server}');

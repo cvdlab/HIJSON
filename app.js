@@ -27,11 +27,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 //app.use('/users', users);
 
 app.get('/', function(req, res) {
-	res.render('main', {
-		title: 'C3D - Index',
-		enable_2D: true,
-		enable_3D: true,
-		C3D_server: JSON.stringify(C3D)
+	res.render('index', {
+		title: 'C3D - Index'
 	});
 });
 
