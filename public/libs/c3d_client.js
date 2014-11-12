@@ -111,7 +111,7 @@ C3D.init2D = function() {
 */ 
 
 C3D.init3D = function() {
-	C3D.FPVenabled = false;
+	
     var container3D = $('#container3D');
     var container3DWidth = container3D.width();
     var container3DHeight = container3D.width()/4*3;
@@ -227,7 +227,6 @@ C3D.init3D = function() {
 				scene.add(pointerLockControls.getObject());
 				trackballControls.enabled = false;
 				pointerLockControls.enabled = true;
-				C3D.FPVenabled = true;
 				$("#pointer").css('display', 'block');
                 //camera.up = new THREE.Vector3(0, 1, 0);
                 camera.position.set(0, 0, 0);
@@ -239,7 +238,6 @@ C3D.init3D = function() {
 				camera.lookAt(scene.position);
 				scene.remove(pointerLockControls.getObject());
 				pointerLockControls.enabled = false;
-				C3D.FPVenabled = false;
 				trackballControls.enabled = true;
 				$("#pointer").css('display', 'none');
 				trackballControls.reset();
