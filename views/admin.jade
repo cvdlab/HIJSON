@@ -47,7 +47,7 @@ block internal_content
 					var model = C3D.generator3D['cube']('0xFF0000');
 					C3D.index[user.position.levelId].obj3D.userModels.add(model);
 					model.position = C3D.fromGeneralTo3D(user.position);
-					if (user.position.levelId === C3D.actualPosition.levelId) {
+					if ((user.position.levelId === C3D.actualPosition.levelId) || (C3D.actualPosition.levelId === 'building')) {
 						C3D.show3DObject(model, true);
 					} else {
 						C3D.show3DObject(model, false);
