@@ -58,7 +58,7 @@ block internal_content
 		
 		// level change
 		C3D.on('selectFeature', function(idObject) {
-			if(C3D.index[idObject].properties.class === 'level') {
+			if((C3D.index[idObject].properties.class === 'level') || (C3D.index[idObject].properties.class === 'building')) {
 				
 			
 				
