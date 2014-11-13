@@ -66,10 +66,12 @@ THREE.PointerLockControls = function ( camera ) {
 				moveRight = true;
 				break;
 
+			/*
 			case 32: // space
 				if ( canJump === true ) velocity.y += 130;
 				canJump = false;
 				break;
+			*/
 
 		}
 
@@ -174,6 +176,7 @@ THREE.PointerLockControls = function ( camera ) {
 		yawObject.translateY( velocity.y * delta ); 
 		yawObject.translateZ( velocity.z * delta );
 
+		/*
 		if ( yawObject.position.y < 1.7) {
 
 			velocity.y = 0;
@@ -182,6 +185,7 @@ THREE.PointerLockControls = function ( camera ) {
 			canJump = true;
 
 		}
+		*/
 		
 		// ADDITION FOR SENDING POSITION
 		if( time - lastPositionUpdate > 1000/25 )	{
