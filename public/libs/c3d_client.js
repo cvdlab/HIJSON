@@ -148,21 +148,10 @@ C3D.init3D = function() {
     var ambientLight = new THREE.AmbientLight(ambiColor);
     scene.add(ambientLight);
     
-    var spotLight = new THREE.SpotLight( 0xFFFFFF );
-    spotLight.position.set( 30, 30, 30 );
-    spotLight.castShadow = true;
-    spotLight.shadowCameraNear = 10;
-    spotLight.shadowCameraFar = 100;
-    spotLight.shadowCameraLeft = -100;
-    spotLight.shadowCameraRight = 100;
-    spotLight.shadowCameraTop = 100;
-    spotLight.shadowCameraBottom = -100;
-    spotLight.intensity = 2;
-    spotLight.shadowMapHeight = 2048;
-    spotLight.shadowMapWidth = 2048;
-    spotLight.shadowCameraVisible = true;
-    spotLight.lookAt(scene.position);
-    scene.add( spotLight );
+    var directionalLight = new THREE.SpotLight(0xFFFFFF);
+    directionalLight.shadowCameraVisible = true;
+    scene.add( directionalLight );
+
     var axisHelper = new THREE.AxisHelper(3);
     scene.add(axisHelper); 
         
@@ -370,6 +359,31 @@ C3D.generate3DModel = function() {
     }
     C3D.index['building'].obj3D.rotation.x = -Math.PI/2;
     C3D.scene3D.add(C3D.index["building"].obj3D);
+    
+    setLight();
+
+    function setLight() {
+        var light = C3D.scene3D.__lights[1];
+        var sceneCenter = new THREE.Object3D();
+        sceneCenter.position = C3D.getCentroid();
+        light.position.set(sceneCenter.position.x,sceneCenter.position.y + 50,sceneCenter.position.z);
+        light.castShadow = true;
+        light.shadowCameraNear = 0;
+        light.shadowCameraFar = light.position.y;
+        light.shadowCameraLeft = -sceneCenter.position.z;
+        light.shadowCameraRight = sceneCenter.position.z;
+        light.shadowCameraTop = sceneCenter.position.x;
+        light.shadowCameraBottom = -sceneCenter.position.x;
+        light.intensity = 2;
+        light.shadowMapHeight = 2048;
+        light.shadowMapWidth = 2048;
+
+
+
+
+        light.target.position = C3D.getCentroid();
+    }
+
 } // Chiude generate3DModel
 
 
@@ -1015,4 +1029,11 @@ C3D.from3Dto2D = function(threePosition) {
 	var genPosition = C3D.from3DToGeneral(threePosition);
 	var leafletPosition = C3D.fromGeneralTo2D(genPosition);
 	return leafletPosition;
+}
+
+C3D.getCentroid = function() {
+    var boundingBox = new THREE.BoundingBoxHelper( C3D.index['building'].obj3D,0xff0000 );
+    boundingBox.update();
+    var center = new THREE.Vector3( (boundingBox.box.min.x + boundingBox.box.max.x)/2, (boundingBox.box.min.y + boundingBox.box.max.y)/2, (boundingBox.box.min.z + boundingBox.box.max.z)/2 );
+    return center;
 }
