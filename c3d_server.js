@@ -230,4 +230,6 @@ function absoluteCoords(obj) {
     }
 }
 
+C3D.parseJSON();
+
 module.exports = C3D;

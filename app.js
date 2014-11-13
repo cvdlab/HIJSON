@@ -1,12 +1,16 @@
+console.log('REMEMBER TO START THIS APPLICATION WITH \'npm start\' and not \'node app.js\'');
+
 var express = require('express');
 var path = require('path');
-//var favicon = require('serve-favicon');
-//var logger = require('morgan');
-//var cookieParser = require('cookie-parser');
-//var bodyParser = require('body-parser');
+var favicon = require('serve-favicon');
+var logger = require('morgan');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
 
-//var routes = require('./routes/index');
-//var users = require('./routes/users');
+var C3D = require('./c3d_server');
+
+var routes = require('./routes/index');
+var users = require('./routes/users');
 
 var app = express();
 
@@ -18,37 +22,13 @@ app.locals.pretty = true;
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
 //app.use(logger('dev'));
-//app.use(bodyParser.json());
-//app.use(bodyParser.urlencoded({ extended: false }));
-//app.use(cookieParser());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-//app.use('/', routes);
+app.use('/', routes);
 //app.use('/users', users);
-
-app.get('/', function(req, res) {
-	res.render('index', {
-		title: 'C3D - Index'
-	});
-});
-
-app.get('/admin', function(req, res) {
-	res.render('admin', {
-		title: 'C3D - Admin',
-		enable_2D: true,
-		enable_3D: true,
-		C3D_server: JSON.stringify(C3D)
-	});
-});
-
-app.get('/user', function(req, res) {
-	res.render('user', {
-		title: 'C3D - user',
-		enable_2D: true,
-		enable_3D: true,
-		C3D_server: JSON.stringify(C3D)
-	});
-});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -78,56 +58,6 @@ app.use(function(err, req, res, next) {
     res.render('error', {
         message: err.message,
         error: {}
-    });
-});
-
-var C3D = require('./c3d_server.js');
-C3D.parseJSON();
-
-//var debug = require('debug')('c3d');
-
-app.set('port', process.env.PORT || 3000);
-
-/*
-var server = app.listen(app.get('port'), function() {
-  debug('Express server listening on port ' + server.address().port);
-});
-*/
-
-var server = app.listen(app.get('port'));
-console.log('Server running on port: '+app.get('port'));
-
-//socket.io
-var io = require('socket.io')(server);
-var admins = io.of('/admins');
-var users = io.of('/users');
-var usersConnected = {};
-
-admins.on('connection', function(socket){
-	console.log('Admin connected with id: ' + socket.id);
-	socket.emit('updateMapUsersConnected', usersConnected);
-	socket.on('disconnect', function() {
-		console.log('Admin disconnected with id: ' + socket.id);
-	});
-});
-
-users.on('connection', function(socket){
-    console.log('User connected with id: ' + socket.id);
-    var user = {
-        id: socket.id,
-        position: {}
-    };
-    usersConnected[user.id] = user;
-
-    socket.on('disconnect', function(){
-        console.log('User disconnected with id: ' + socket.id);
-        delete usersConnected[socket.id];
-        admins.emit('updateMapUsersConnected', usersConnected);
-    });
-
-    socket.on('updatePosition', function(position){
-        user.position = position;
-        admins.emit('updateMapUsersConnected', usersConnected);
     });
 });
 

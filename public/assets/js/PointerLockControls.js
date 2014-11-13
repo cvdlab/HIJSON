@@ -141,9 +141,10 @@ THREE.PointerLockControls = function ( camera ) {
 
 	}();
 
-
+	// ADDITION FOR SENDING POSITION
 	var oldPosition = yawObject.position.clone();
-	var lastPositionUpdate = Date.now();
+	var lastPositionUpdate = performance.now();
+	// END ADDITION
 	
 	this.update = function () {
 
@@ -182,14 +183,16 @@ THREE.PointerLockControls = function ( camera ) {
 
 		}
 		
-		if( Date.now() - lastPositionUpdate > 1000/25 )	{
-			lastPositionUpdate = Date.now();
+		// ADDITION FOR SENDING POSITION
+		if( time - lastPositionUpdate > 1000/25 )	{
+			lastPositionUpdate = time;
 			if (!oldPosition.equals(yawObject.position)) {
 				C3D.emit('FPVmoved');
-				console.log('FPVmoved event fired');
+				//console.log('FPVmoved event fired');
 				oldPosition = yawObject.position.clone();
 			}
 		}
+		// END ADDITION
 		
 		prevTime = time;
 
