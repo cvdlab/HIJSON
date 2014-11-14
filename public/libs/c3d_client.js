@@ -1,5 +1,5 @@
 var C3D = C3D || {};
-C3D.interactiveFeatures = ['server','surveillanceCamera','hotspot','antenna','fireExtinguisher'];
+C3D.interactiveFeatures = ['server','surveillanceCamera','hotspot','antenna','fireExtinguisher','badgeReader'];
 C3D.interactiveFeatures3D = [];
 /*
     Generazione dell'indice e settaggio dei parent agli elementi.
@@ -301,7 +301,6 @@ C3D.init3D = function() {
     			var raycaster = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
     		}
     		var intersects = raycaster.intersectObjects(C3D.interactiveFeatures3D);
-            console.log(intersects);
     		if (intersects.length > 0) {
     		  	C3D.emit('showFeatureInfo', intersects[0].object.feature.id);
     		}
@@ -925,6 +924,13 @@ C3D.generator3D['room'] = function(feature) {
     return model;
 }
 
+C3D.generator3D['badgeReader'] = function(feature) {
+    var geometry = new THREE.BoxGeometry( 0.2, 0.3, 0.25 );
+    var material = new THREE.MeshBasicMaterial( {color: 0x1c1c1c} );
+    var badgeReader = new THREE.Mesh( geometry, material );
+    badgeReader.position.z += 0.4/2;
+    return badgeReader;
+}
 
 /*
     Funzioni di supporto

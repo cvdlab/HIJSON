@@ -109,6 +109,25 @@ block content
 			});
 
 			C3D.on('showFeatureInfo', function(idObject){
+				showFeatureInfo = {};
+				showFeatureInfo['badgeReader'] = function(s) {
+					s = s.concat('<p class="lead">Users connected</p>');
+					s = s.concat('<table class="table table-hover">');
+						s = s.concat('<tr>');
+							s = s.concat('<th>ID</th>');
+							s = s.concat('<th>level</th>');
+						s = s.concat('</tr>');
+					console.log(mapUsersConnected);
+					for(var i in mapUsersConnected) {
+						s = s.concat('<tr>');
+							s = s.concat('<th>' + mapUsersConnected[i].id + '</th>');
+							s = s.concat('<th>' + mapUsersConnected[i].position.levelId +'</th>');
+						s = s.concat('</tr>');						
+					}
+					s = s.concat('</table>');
+					
+					return s;
+				}
 				$('#info').empty();
 				var feature = C3D.index[idObject];
 				if($.inArray(feature.properties.class, C3D.interactiveFeatures) !== -1) {
@@ -119,8 +138,11 @@ block content
 					if(feature.properties.url !== undefined)
 						s = s.concat('<dt>url</dt><dd>'+ feature.properties.url +'</dd>');					
 					s = s.concat('</dl>');
+					s = showFeatureInfo[feature.properties.class](s);
 					$('#info').append(s);
 				}
+
+
 			});	
 
 			C3D.on('selectFeature', function(idObject) {

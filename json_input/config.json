@@ -88,6 +88,11 @@
 	    {
 		    "prefix": "fa",
 		    "icon": "minus"
+	    },
+	    "badgeReader": 
+	    {
+		    "prefix": "fa",
+		    "icon": "ticket"
 	    }
     }
 }

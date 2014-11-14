@@ -466,6 +466,22 @@
                 "tVector": [2.8, 3.2, 0],
                 "rVector": [0, 0, 180]
             }
+        },
+        {
+            "id": "badgeReader_1.h",
+            "type": "Feature",
+            "geometry": 
+            {
+                "type": "Point",
+                "coordinates": [0, 0]
+            },
+            "properties": 
+            {
+                "parent": "hall_0.1",
+                "class": "badgeReader",
+                "tVector": [1, 0.28, 1],
+                "rVector": [0, 0, 90]
+            }
         }
     ]
 }
