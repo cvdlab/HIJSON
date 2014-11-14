@@ -4,14 +4,14 @@ block internal_content
 	script.
 		// init socket
 		var socket = io('/admins');
-		
+		var mapUsersConnected;
 		// init for 2D
 		if (#{enable_2D}) {
 			var userIcon =  L.AwesomeMarkers.icon( C3D.config.style['user'] );
 		}
 		
 		socket.on('updateMapUsersConnected', function(usersConnected) {
-			
+			mapUsersConnected = usersConnected;
 			// update 2D
 			if (#{enable_2D}) {
 				// clear all markers
@@ -59,13 +59,8 @@ block internal_content
 		// level change
 		C3D.on('selectFeature', function(idObject) {
 			if((C3D.index[idObject].properties.class === 'level') || (C3D.index[idObject].properties.class === 'building')) {
-				
-			
-				
 				// update the general position
 				C3D.actualPosition.levelId = idObject;
-				
-				
 			}
 		});
 		

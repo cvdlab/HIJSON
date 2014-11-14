@@ -80,7 +80,6 @@ block content
 					button.btn.btn-default.btn-lg(id="startFPV") Start FPV
 					
 		script.
-			var interactiveFeatures = ['server','surveillanceCamera','hotspot','antenna','fireExtinguisher'];
 			var elements = ['level','building'];
 			for(id in C3D.index)
 				if(elements.indexOf(C3D.index[id].properties.class) > -1)
@@ -109,10 +108,10 @@ block content
 				C3D.emit('startFPV');
 			});
 
-			C3D.on('selectFeature', function(idObject){
+			C3D.on('showFeatureInfo', function(idObject){
 				$('#info').empty();
 				var feature = C3D.index[idObject];
-				if($.inArray(feature.properties.class, interactiveFeatures) !== -1) {
+				if($.inArray(feature.properties.class, C3D.interactiveFeatures) !== -1) {
 					var s = '<dl class="dl-horizontal">';
 					s = s.concat('<dt>id</dt><dd>' + feature.id +'</dd>');
 					s = s.concat('<dt>class</dt><dd>'+ feature.properties.class +'</dd>');
@@ -121,10 +120,11 @@ block content
 						s = s.concat('<dt>url</dt><dd>'+ feature.properties.url +'</dd>');					
 					s = s.concat('</dl>');
 					$('#info').append(s);
-
-
-
 				}
-			});					  
+			});	
+
+			C3D.on('selectFeature', function(idObject) {
+					C3D.emit('showFeatureInfo',idObject);
+			});				  
 
 		block internal_content

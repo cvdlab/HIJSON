@@ -1,5 +1,6 @@
 var C3D = C3D || {};
-
+C3D.interactiveFeatures = ['server','surveillanceCamera','hotspot','antenna','fireExtinguisher'];
+C3D.interactiveFeatures3D = [];
 /*
     Generazione dell'indice e settaggio dei parent agli elementi.
 */
@@ -141,16 +142,16 @@ C3D.init3D = function() {
     var renderer = new THREE.WebGLRenderer();
     renderer.setClearColor(new THREE.Color(C3D.config.style.background.color, 1.0)); 
     renderer.setSize(container3DWidth, container3DHeight);
-    renderer.shadowMapEnabled = true;
+    renderer.shadowMapEnabled = false;
     container3D.append(renderer.domElement);
 
     var ambiColor = "#1c1c1c";
     var ambientLight = new THREE.AmbientLight(ambiColor);
     scene.add(ambientLight);
     
-    var directionalLight = new THREE.SpotLight(0xFFFFFF);
-    directionalLight.shadowCameraVisible = true;
-    scene.add( directionalLight );
+    var spotLight = new THREE.SpotLight(0xFFFFFF);
+    spotLight.shadowCameraVisible = true;
+    scene.add( spotLight );
 
     var axisHelper = new THREE.AxisHelper(3);
     scene.add(axisHelper); 
@@ -271,29 +272,41 @@ C3D.init3D = function() {
 	
 	
 	// mouse interaction
-	/*
+	
 	var projector = new THREE.Projector();
-	document.addEventListener('mousedown', onDocumentMouseDown, false);
-	function onDocumentMouseDown(event) {
-		event.preventDefault();
-		if (document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element) {
-			var vector = new THREE.Vector3(0, 0, 0.5);
-			projector.unprojectVector(vector, camera);
-			var raycaster = new THREE.Raycaster( vector, pointerLockControls.getDirection( new THREE.Vector3(0, 0, 0) ).clone() );
-		} else {
-			var vector = new THREE.Vector3((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1, 0.5);
-			projector.unprojectVector(vector, camera);
-			var raycaster = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
-		}
-		var intersects = raycaster.intersectObjects(toIntersect);
-		if (intersects.length > 0) {
-			intersects[0].object.interact && intersects[0].object.interact();
-		}
+	document.getElementById('container3D').addEventListener('mousedown', onDocumentMouseDown, false);
+	
+    function onDocumentMouseDown(event) {
+    		var container3D = $('#container3D');
+            var container3DWidth = container3D.width();
+            var container3DHeight = container3D.width()/4*3;
+            event.preventDefault();
+    		if (document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element) {
+    			console.log('clickPL');
+                var raycaster = new THREE.Raycaster();
+                var direction = new THREE.Vector3( 0, 0, -1 );
+                var rotation = new THREE.Euler(0, 0, 0, "YXZ");
+
+                rotation.set(C3D.camera3D.parent.rotation.x, C3D.camera3D.parent.parent.rotation.y, 0);
+                raycaster.ray.direction.copy(direction).applyEuler(rotation);
+                raycaster.ray.origin.copy(C3D.camera3D.parent.parent.position);
+                
+       //          var vector = new THREE.Vector3(0, 0, 0.5);
+    			// projector.unprojectVector(vector, C3D.camera3D);
+    			// var raycaster = new THREE.Raycaster( vector, pointerLockControls.getDirection( new THREE.Vector3(0, 0, 0) ).clone() );
+    		} else {
+                console.log('clickTB');
+    			var vector = new THREE.Vector3((event.clientX / container3DWidth) * 2 - 1, -(event.clientY / container3DHeight) * 2 + 1, 0.5);
+    			projector.unprojectVector(vector, camera);
+    			var raycaster = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
+    		}
+    		var intersects = raycaster.intersectObjects(C3D.interactiveFeatures3D);
+            console.log(intersects);
+    		if (intersects.length > 0) {
+    		  	C3D.emit('showFeatureInfo', intersects[0].object.feature.id);
+    		}
 	}
-	var toIntersect = [];
-	*/
-
-
+    
 	/*
 	// questo serviva nell'esempio per verificare se si stava sopra un cubo
 	var rayMove = new THREE.Raycaster();
@@ -332,7 +345,7 @@ C3D.generate3DModel = function() {
         if(feature.properties.class in C3D.generator3D) {
             var el3D = C3D.generator3D[feature.properties.class](feature);
             feature.obj3D = el3D;
-
+            el3D.feature = feature;
             if (feature.properties.rVector !== undefined) {
                 var conv = Math.PI/180;
                 var rotation = [
@@ -356,8 +369,13 @@ C3D.generate3DModel = function() {
         for(var i=0;i< feature.children.length;i++) {
             queue.push(feature.children[i]);
         }
+
+        if($.inArray(feature.properties.class, C3D.interactiveFeatures)> -1) {
+            C3D.interactiveFeatures3D.push(el3D);
+        }
     }
     C3D.index['building'].obj3D.rotation.x = -Math.PI/2;
+
     C3D.scene3D.add(C3D.index["building"].obj3D);
     
     setLight();
@@ -366,21 +384,15 @@ C3D.generate3DModel = function() {
         var light = C3D.scene3D.__lights[1];
         var sceneCenter = new THREE.Object3D();
         sceneCenter.position = C3D.getCentroid();
-        light.position.set(sceneCenter.position.x,sceneCenter.position.y + 50,sceneCenter.position.z);
+        light.shadowCameraVisible = true;
+        light.position.set(sceneCenter.position.x*2 + 10,sceneCenter.position.y + 20,sceneCenter.position.z);
         light.castShadow = true;
-        light.shadowCameraNear = 0;
-        light.shadowCameraFar = light.position.y;
-        light.shadowCameraLeft = -sceneCenter.position.z;
-        light.shadowCameraRight = sceneCenter.position.z;
-        light.shadowCameraTop = sceneCenter.position.x;
-        light.shadowCameraBottom = -sceneCenter.position.x;
+        light.shadowCameraNear = 0.1;
+        light.shadowCameraFar = light.position.y*2;
+        light.shadowCameraFov = sceneCenter.position.x*4;
         light.intensity = 2;
-        light.shadowMapHeight = 2048;
-        light.shadowMapWidth = 2048;
-
-
-
-
+        light.shadowMapHeight = 4096;
+        light.shadowMapWidth = 4096;
         light.target.position = C3D.getCentroid();
     }
 
@@ -522,7 +534,9 @@ C3D.generator3D['surveillanceCamera'] = function(feature) {
     
     camera.receiveShadow = true;
     camera.castShadow = true;
-
+    var box = new THREE.Box3();
+    box.setFromObject(camera);
+    camera.add(box);
     return camera;
 }
 
@@ -624,35 +638,36 @@ C3D.generator3D['antenna'] = function(feature) {
 
 
 C3D.generator3D['fireExtinguisher'] = function(feature) {
-    var fireExtinguisher = new THREE.Object3D();
-    var material = new THREE.MeshLambertMaterial( {color: 0xff0000} );
-    var bodyGeometry = new THREE.CylinderGeometry( 0.1, 0.1, 0.61, 32 );
+    var boxGeometry = new THREE.BoxGeometry(0.5,0.3, 0.9);
+    var boxMaterial = new THREE.MeshBasicMaterial( {color: 0xff0000, transparent: true, opacity: 0.1} );
+    var fireExtinguisher = new THREE.Mesh(boxGeometry,boxMaterial);
+    
+    var material = new THREE.MeshBasicMaterial( {color: 0xff0000} );
+    var bodyGeometry = new THREE.CylinderGeometry( 0.1, 0.1, 0.6, 32 );
     var body = new THREE.Mesh( bodyGeometry, material );
     body.rotation.x = Math.PI/2;
+    body.position.z -= 0.3/2 - 0.01;
     fireExtinguisher.add(body);
 
     var geometrySphereUp = new THREE.SphereGeometry( 0.1, 32, 32 );
     var sphereUp = new THREE.Mesh( geometrySphereUp, material );
-    sphereUp.position.z += 0.3;
+    sphereUp.position.z += 0.3/2;
     fireExtinguisher.add(sphereUp);
     
     var headGeometry = new THREE.BoxGeometry(0.02, 0.02, 0.2);
-    var materialBlack = new THREE.MeshLambertMaterial( {color: 0x000000} );
-    var head = new THREE.Mesh( headGeometry, materialBlack );
-    head.position.z += 0.4;
+    var materialHead = new THREE.MeshBasicMaterial( {color: 0x000000} );
+    var head = new THREE.Mesh( headGeometry, materialHead );
+    head.position.z += 0.5/2;
     fireExtinguisher.add(head);
 
+    var materialCylinder = new THREE.MeshBasicMaterial( {color: 0x000000} );
     var cylinderGeometry = new THREE.CylinderGeometry( 0.015, 0.08, 0.25, 32 );
-    var cylinder = new THREE.Mesh(cylinderGeometry, materialBlack);
-    cylinder.position.z += 0.48;
+    var cylinder = new THREE.Mesh(cylinderGeometry, materialCylinder);
+    cylinder.position.z += 0.33;
     cylinder.rotation.z = Math.PI/2;
     cylinder.position.x += 0.12;
     fireExtinguisher.add(cylinder);
-    fireExtinguisher.position.z += 0.61/2;
-
-    fireExtinguisher.receiveShadow = true;
-    fireExtinguisher.castShadow = true;
-
+    fireExtinguisher.position.z += 0.9/2;
     return fireExtinguisher;
 }
 
@@ -822,7 +837,7 @@ C3D.generateWallGeometry = function (wallFeature) {
 }
 
 C3D.generator3D['external_wall'] = function(feature) {
-    var material = new THREE.MeshLambertMaterial({ 
+    var material = new THREE.MeshPhongMaterial({ 
     	color: C3D.config.style.external_wall.color, 
         side: THREE.DoubleSide
 	});
@@ -842,14 +857,16 @@ C3D.generator3D['external_wall'] = function(feature) {
 	wall.rotation.x += Math.PI/2;
 	wall.position.y += feature.properties.thickness/2;
 
-    container.receiveShadow = true;
-    container.castShadow = true;
+    //wall.castShadow = true;
+    wall.receiveShadow = true;
+    // container.receiveShadow = true;
+    // container.castShadow = true;
 	
     return container;	
 }
 
 C3D.generator3D['internal_wall'] = function(feature) {
-    var material = new THREE.MeshLambertMaterial({ 
+    var material = new THREE.MeshPhongMaterial({ 
         color: C3D.config.style.internal_wall.color, 
         side: THREE.DoubleSide
     });
@@ -869,8 +886,10 @@ C3D.generator3D['internal_wall'] = function(feature) {
 	wall.rotation.x += Math.PI/2;
 	wall.position.y += feature.properties.thickness/2;
     
-    container.castShadow = true;
-    container.receiveShadow = true;
+    wall.castShadow = true;
+    //wall.receiveShadow = true;    
+    // container.castShadow = true;
+    // container.receiveShadow = true;
 	
     return container;
 }
