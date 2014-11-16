@@ -1,6 +1,8 @@
 var C3D = C3D || {};
-C3D.interactiveFeatures = ['server','surveillanceCamera','hotspot','antenna','fireExtinguisher','badgeReader'];
-C3D.interactiveFeatures3D = [];
+
+C3D.architectureFeatures = ['level', 'room', 'internal_wall', 'external_wall', 'door'];
+C3D.interactiveFeatures = ['server', 'surveillanceCamera', 'hotspot', 'antenna', 'fireExtinguisher', 'badgeReader','internal_wall'];
+C3D.features3D = C3D.architectureFeatures.concat(C3D.interactiveFeatures);
 /*
     Generazione dell'indice e settaggio dei parent agli elementi.
 */
@@ -300,10 +302,16 @@ C3D.init3D = function() {
     			projector.unprojectVector(vector, camera);
     			var raycaster = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
     		}
-    		var intersects = raycaster.intersectObjects(C3D.interactiveFeatures3D);
-    		if (intersects.length > 0) {
-    		  	C3D.emit('showFeatureInfo', intersects[0].object.feature.id);
-    		}
+
+    		var intersects = raycaster.intersectObjects(C3D.interactiveFeatures);
+            console.log(intersects);
+            if((intersects.length > 0) )
+                C3D.emit('showFeatureInfo', intersects[0].object.feature.id);
+    		 
+             // && ($.inArray(intersect[0].object.feature.properties.class, C3D.interactiveFeatures)> -1) 
+      //       if ((intersects.length > 0)) {
+    		//   	C3D.emit('showFeatureInfo', intersects[0].object.feature.id);
+    		// }
 	}
     
 	/*
@@ -370,7 +378,7 @@ C3D.generate3DModel = function() {
         }
 
         if($.inArray(feature.properties.class, C3D.interactiveFeatures)> -1) {
-            C3D.interactiveFeatures3D.push(el3D);
+            C3D.interactiveFeatures.push(el3D);
         }
     }
     C3D.index['building'].obj3D.rotation.x = -Math.PI/2;
@@ -639,7 +647,7 @@ C3D.generator3D['antenna'] = function(feature) {
 C3D.generator3D['fireExtinguisher'] = function(feature) {
     var boxGeometry = new THREE.BoxGeometry(0.5,0.3, 0.9);
     var boxMaterial = new THREE.MeshBasicMaterial( {color: 0xff0000, transparent: true, opacity: 0.1} );
-    var fireExtinguisher = new THREE.Mesh(boxGeometry,boxMaterial);
+    var fireExtinguisher = new THREE.Mesh(boxGeometry, boxMaterial);
     
     var material = new THREE.MeshBasicMaterial( {color: 0xff0000} );
     var bodyGeometry = new THREE.CylinderGeometry( 0.1, 0.1, 0.6, 32 );
@@ -667,6 +675,7 @@ C3D.generator3D['fireExtinguisher'] = function(feature) {
     cylinder.position.x += 0.12;
     fireExtinguisher.add(cylinder);
     fireExtinguisher.position.z += 0.9/2;
+
     return fireExtinguisher;
 }
 
