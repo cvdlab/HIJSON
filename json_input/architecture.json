@@ -461,7 +461,7 @@
                     "type": "LineString",
                     "coordinates": 
                     [ 
-                       [0, 0], [1, 0] 
+                       [0, 0], [2, 0] 
                     ]  
                   
               },
@@ -471,7 +471,7 @@
                     "parent": "wall_0.H-S",
                     "thickness": 5,
                     "description": "Door room1",
-                    "tVector": [2, 0, 0],
+                    "tVector": [1.5, 0, 0],
                     "rVector": [0, 0, 0]
               }
         },

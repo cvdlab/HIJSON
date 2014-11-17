@@ -217,8 +217,17 @@ C3D.init3D = function() {
 			if (document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element) {
 				
                 //C3D.index['building'].obj3D.rotation.x = -Math.PI/2;
-				pointerLockControls = new THREE.PointerLockControls(camera);
-				scene.add(pointerLockControls.getObject());
+				pointerLockControls = new THREE.PointerLockControls(camera, {
+                    cameraHeight: 1.7,
+                    jumpEnabled: false,
+                    collisionsEnabled: true,
+                    horizontalRadius: 0.5,
+                    overHead: 0,
+                    stepHeight: 0,
+                    obstaclesArray: C3D.obstaclesFeatures
+                });
+                
+                scene.add(pointerLockControls.getObject());
 				trackballControls.enabled = false;
 				pointerLockControls.enabled = true;
 				$("#pointer").css('display', 'block');
@@ -960,8 +969,11 @@ C3D.generator3D['badgeReader'] = function(feature) {
     var geometry = new THREE.BoxGeometry( 0.2, 0.3, 0.25 );
     var material = new THREE.MeshBasicMaterial( {color: 0x1c1c1c} );
     var badgeReader = new THREE.Mesh( geometry, material );
-    badgeReader.position.z += 0.4/2;
-    return badgeReader;
+    
+    var model = C3D.packageModel(badgeReader);
+
+
+    return model;
 }
 
 /*
