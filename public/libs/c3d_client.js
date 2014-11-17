@@ -390,7 +390,7 @@ C3D.generate3DModel = function() {
     function setLight() {
         var light = C3D.scene3D.__lights[1];
         var sceneCenter = new THREE.Object3D();
-        sceneCenter.position = C3D.getCentroid();
+        sceneCenter.position = C3D.getCentroid(C3D.index['building'].obj3D);
         light.shadowCameraVisible = true;
         light.position.set(sceneCenter.position.x*2 + 10,sceneCenter.position.y + 20,sceneCenter.position.z);
         light.castShadow = true;
@@ -400,8 +400,9 @@ C3D.generate3DModel = function() {
         light.intensity = 2;
         light.shadowMapHeight = 4096;
         light.shadowMapWidth = 4096;
-        light.target.position = C3D.getCentroid();
+        light.target.position = C3D.getCentroid(C3D.index['building'].obj3D);
     }
+
 
 } // Chiude generate3DModel
 
@@ -491,12 +492,13 @@ C3D.generator3D['server'] = function (feature) {
     var wireMaterial = new THREE.MeshLambertMaterial( {color: 0x000000, wireframe: true, wireframeLinewidth: 2} );
     //var server = new THREE.SceneUtils.createMultiMaterialObject(geometry, [material, wireMaterial]);
     var server = new THREE.Mesh(geometry, material);
-    server.position.z += dimensions[2]/2;
+    //server.position.z += dimensions[2]/2;
     
     server.receiveShadow = true;
     server.castShadow = true;
+    var model = C3D.packageModel(server);
 
-    return server;
+    return model;
 };
 
 
@@ -535,16 +537,16 @@ C3D.generator3D['surveillanceCamera'] = function(feature) {
 
     camera.add(bodyCamera);
     camera.add(cameraLens);
-    camera.add(rod);
 
-    camera.position.x += widthBody/2 + heightRod/2;
     
     camera.receiveShadow = true;
     camera.castShadow = true;
     var box = new THREE.Box3();
     box.setFromObject(camera);
     camera.add(box);
-    return camera;
+
+    var model = C3D.packageModel(camera);
+    return model;
 }
 
 
@@ -571,11 +573,12 @@ C3D.generator3D['hotspot'] = function(feature) {
     hotspot.add(body);
     hotspot.add(antennaDx);
     hotspot.add(antennaSx);
-    hotspot.position.z += 0.1/2;
 
     hotspot.receiveShadow = true;
     hotspot.castShadow = true;
-    return hotspot;
+    var model = C3D.packageModel(hotspot);
+    
+    return model;
 };
 
 
@@ -640,43 +643,47 @@ C3D.generator3D['antenna'] = function(feature) {
     antenna.add(baseCylinder);
     antenna.add(cylinderAntenna);
     antenna.add( sphere );
-    return antenna;
+
+    var model = C3D.packageModel(antenna);
+    return model;
 };
 
 
 C3D.generator3D['fireExtinguisher'] = function(feature) {
-    var boxGeometry = new THREE.BoxGeometry(0.5,0.3, 0.9);
-    var boxMaterial = new THREE.MeshBasicMaterial( {color: 0xff0000, transparent: true, opacity: 0.1} );
-    var fireExtinguisher = new THREE.Mesh(boxGeometry, boxMaterial);
+
+    var fireExtinguisher = new THREE.Object3D();
     
     var material = new THREE.MeshBasicMaterial( {color: 0xff0000} );
     var bodyGeometry = new THREE.CylinderGeometry( 0.1, 0.1, 0.6, 32 );
     var body = new THREE.Mesh( bodyGeometry, material );
     body.rotation.x = Math.PI/2;
-    body.position.z -= 0.3/2 - 0.01;
+    
     fireExtinguisher.add(body);
 
     var geometrySphereUp = new THREE.SphereGeometry( 0.1, 32, 32 );
     var sphereUp = new THREE.Mesh( geometrySphereUp, material );
-    sphereUp.position.z += 0.3/2;
+    sphereUp.position.z += 0.3;
+    
     fireExtinguisher.add(sphereUp);
     
     var headGeometry = new THREE.BoxGeometry(0.02, 0.02, 0.2);
     var materialHead = new THREE.MeshBasicMaterial( {color: 0x000000} );
     var head = new THREE.Mesh( headGeometry, materialHead );
-    head.position.z += 0.5/2;
+    head.position.z += 0.4;
+    
     fireExtinguisher.add(head);
 
     var materialCylinder = new THREE.MeshBasicMaterial( {color: 0x000000} );
     var cylinderGeometry = new THREE.CylinderGeometry( 0.015, 0.08, 0.25, 32 );
     var cylinder = new THREE.Mesh(cylinderGeometry, materialCylinder);
-    cylinder.position.z += 0.33;
+    cylinder.position.z += 0.5;
     cylinder.rotation.z = Math.PI/2;
-    cylinder.position.x += 0.12;
+    cylinder.position.x += 0.1;
+    
     fireExtinguisher.add(cylinder);
-    fireExtinguisher.position.z += 0.9/2;
-
-    return fireExtinguisher;
+    
+    var model = C3D.packageModel(fireExtinguisher);    
+    return  model;
 }
 
 C3D.generator3D['table'] = function(feature) {
@@ -719,7 +726,9 @@ C3D.generator3D['table'] = function(feature) {
     table.add(p4);
     table.add(plane);
 
-    return table;
+    var model = C3D.packageModel(table);
+
+    return model;
 }
 
 C3D.generator3D['chair'] = function(feature) {
@@ -778,8 +787,9 @@ C3D.generator3D['chair'] = function(feature) {
     chair.add(p4);
     chair.add(p5);
     chair.add(p6);
-
-    return chair;
+    var model = C3D.packageModel(chair);
+    
+    return model;
 }
 
 /*
@@ -990,7 +1000,26 @@ C3D.orderLayer = function() {
         }
     }
 }
-
+C3D.packageModel = function (model3D) {
+        
+        var bbox = new THREE.BoundingBoxHelper(model3D, 0xff0000);
+        bbox.update();
+    
+        var boxGeometry = new THREE.BoxGeometry( bbox.box.size().x, bbox.box.size().y, bbox.box.size().z );
+        var boxMaterial = new THREE.MeshBasicMaterial( {color: 0x000000, transparent: true, opacity: 0.3, wireframe: true} );
+        var el3D = new THREE.Mesh( boxGeometry, boxMaterial );
+    
+        el3D.add(model3D);
+    
+        var bboxCentroid = C3D.getCentroid(bbox);
+    
+        model3D.position.set(-bboxCentroid.x,-bboxCentroid.y,-bboxCentroid.z);    
+    
+        el3D.position.z = bbox.box.size().z/2;
+        console.log(el3D);
+        
+        return el3D;
+    }
 /* 
     Funzione che prendei in input un obj3D e un booleano ed effettua il traverse
 */
@@ -1065,8 +1094,9 @@ C3D.from3Dto2D = function(threePosition) {
 	return leafletPosition;
 }
 
-C3D.getCentroid = function() {
-    var boundingBox = new THREE.BoundingBoxHelper( C3D.index['building'].obj3D,0xff0000 );
+
+C3D.getCentroid = function(object3D) {
+    var boundingBox = new THREE.BoundingBoxHelper(object3D,0xff0000 );
     boundingBox.update();
     var center = new THREE.Vector3( (boundingBox.box.min.x + boundingBox.box.max.x)/2, (boundingBox.box.min.y + boundingBox.box.max.y)/2, (boundingBox.box.min.z + boundingBox.box.max.z)/2 );
     return center;

@@ -159,7 +159,7 @@
             {
                 "parent": "room_0.1",
                 "class": "surveillanceCamera",
-                "tVector": [0.1, 8, 3.5],
+                "tVector": [0.3, 8, 3.5],
                 "rVector": [0, 0, 0]
             }
         },
@@ -176,7 +176,7 @@
             {
                 "parent": "room_0.1",
                 "class": "surveillanceCamera",
-                "tVector": [5, 0.2, 2.8],
+                "tVector": [5, 0.3, 2.8],
                 "rVector": [0, 0, 90]
             }
         },
@@ -362,7 +362,7 @@
             {
                 "parent": "room_0.1",
                 "class": "fireExtinguisher",
-                "tVector": [0.35, 13, 0.5],
+                "tVector": [1, 1, 0.5],
                 "rVector": [0, 0, 0]
             }
         },
@@ -396,7 +396,7 @@
             {
                 "parent": "room_0.1",
                 "class": "hotspot",
-                "tVector": [0.05, 2, 2.3],
+                "tVector": [0.3, 2, 2.3],
                 "rVector": [0, 0, 90]
             }
         },
@@ -447,7 +447,7 @@
             {
                 "parent": "room_1.3",
                 "class": "chair",
-                "tVector": [2.8, 1.6, 0],
+                "tVector": [2, 1.5, 0],
                 "rVector": [0, 0, 0]
             }
         },
@@ -463,7 +463,7 @@
             {
                 "parent": "room_1.3",
                 "class": "chair",
-                "tVector": [2.8, 3.2, 0],
+                "tVector": [2, 2.8, 0],
                 "rVector": [0, 0, 180]
             }
         },
