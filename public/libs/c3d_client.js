@@ -1,9 +1,10 @@
 var C3D = C3D || {};
 
-C3D.obstaclesClasses = ['level', 'room', 'internal_wall', 'external_wall', 'door'];
-C3D.interactiveClasses = ['server', 'surveillanceCamera', 'hotspot', 'antenna', 'fireExtinguisher', 'badgeReader','internal_wall'];
+C3D.obstaclesClasses = ['room', 'internal_wall', 'external_wall'];
+C3D.interactiveClasses = ['server', 'surveillanceCamera', 'hotspot', 'antenna', 'fireExtinguisher', 'badgeReader'];
 
 C3D.interactiveFeatures = [];
+C3D.obstaclesFeatures = [];
 /*
     Generazione dell'indice e settaggio dei parent agli elementi.
 */
@@ -384,6 +385,18 @@ C3D.generate3DModel = function() {
 
         if($.inArray(feature.properties.class, C3D.interactiveClasses)> -1) {
             C3D.interactiveFeatures.push(el3D);
+        }
+
+        if($.inArray(feature.properties.class, C3D.obstaclesClasses)> -1) {
+            if(feature.properties.class === 'internal_wall' || feature.properties.class === 'external_wall')
+            {
+                C3D.obstaclesFeatures.push(el3D.wall);
+            }
+            else
+            {
+                C3D.obstaclesFeatures.push(el3D);
+            }
+
         }
     }
     C3D.index['building'].obj3D.rotation.x = -Math.PI/2;
