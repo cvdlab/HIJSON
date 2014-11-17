@@ -2,7 +2,7 @@ var C3D = C3D || {};
 
 C3D.obstaclesClasses = ['level', 'room', 'internal_wall', 'external_wall', 'door'];
 C3D.interactiveClasses = ['server', 'surveillanceCamera', 'hotspot', 'antenna', 'fireExtinguisher', 'badgeReader','internal_wall'];
-C3D.unionClasses = C3D.obstaclesClasses.concat(C3D.interactiveClasses);
+
 C3D.interactiveFeatures = [];
 /*
     Generazione dell'indice e settaggio dei parent agli elementi.
