@@ -223,7 +223,7 @@ C3D.init3D = function() {
                     collisionsEnabled: true,
                     horizontalRadius: 0.5,
                     overHead: 0,
-                    stepHeight: 0,
+                    stepHeight: 0.1,
                     obstaclesArray: C3D.obstaclesFeatures
                 });
                 
@@ -395,7 +395,6 @@ C3D.generate3DModel = function() {
         }
 
         if($.inArray(feature.properties.class, C3D.interactiveClasses)> -1) {
-            console.log(feature.properties.class);
             C3D.interactiveFeatures.push(el3D);
         }
 

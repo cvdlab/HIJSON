@@ -190,13 +190,9 @@ THREE.PointerLockControls = function ( camera, parameters ) {
 	
 	var collisionDistances = {
 		front: this.horizontalRadius,
-		front_left: 0,
 		left: this.horizontalRadius,
-		back_left: 0,
 		back: this.horizontalRadius,
-		back_right: 0,
 		right: this.horizontalRadius,
-		front_right: 0,
 		up: this.overHead,
 		down: this.cameraHeight
 	};
@@ -230,26 +226,18 @@ THREE.PointerLockControls = function ( camera, parameters ) {
 	
 	var collisions = {
 		front: false,
-		front_left: false,
 		left: false,
-		back_left: false,
 		back: false,
-		back_right: false,
 		right: false,
-		front_right: false,
 		up: false,
 		down: false
 	};
 	
 	var computeCollisionDirection = {
 		front: function() { return getWalkingDirection(new THREE.Vector3(0,0,0)).applyEuler(new THREE.Euler(0,0,0)); },
-		front_left: function() { return getWalkingDirection(new THREE.Vector3(0,0,0)).applyEuler(new THREE.Euler(0,Math.PI*1/4,0)); },
 		left: function() { return getWalkingDirection(new THREE.Vector3(0,0,0)).applyEuler(new THREE.Euler(0,Math.PI*2/4,0)); },
-		back_left: function() { return getWalkingDirection(new THREE.Vector3(0,0,0)).applyEuler(new THREE.Euler(0,Math.PI*3/4,0)); },
 		back: function() { return getWalkingDirection(new THREE.Vector3(0,0,0)).applyEuler(new THREE.Euler(0,Math.PI,0)); },
-		back_right: function() { return getWalkingDirection(new THREE.Vector3(0,0,0)).applyEuler(new THREE.Euler(0,-Math.PI*3/4,0)); },
 		right: function() { return getWalkingDirection(new THREE.Vector3(0,0,0)).applyEuler(new THREE.Euler(0,-Math.PI*2/4,0)); },
-		front_right: function() { return getWalkingDirection(new THREE.Vector3(0,0,0)).applyEuler(new THREE.Euler(0,-Math.PI*1/4,0)); },
 		up: function() { return new THREE.Vector3(0,1,0); },
 		down: function() { return new THREE.Vector3(0,-1,0); }
 	};
@@ -316,15 +304,26 @@ THREE.PointerLockControls = function ( camera, parameters ) {
 			
 			if(collisions.up) console.log('detected up');
 			
-			if (collisions.front || collisions.front_left || collisions.front_right) velocity.z = Math.max( 0, velocity.z );
+			if (collisions.front) { 
+				velocity.z = Math.max( 0, velocity.z );
+			}
 			
-			if (collisions.left || collisions.front_left || collisions.back_left) velocity.x = Math.max( 0, velocity.x );
+			if (collisions.left) {
+				velocity.x = Math.max( 0, velocity.x );
+			}
 			
-			if (collisions.back || collisions.back_left || collisions.back_right) velocity.z = Math.min( 0, velocity.z );
+			if (collisions.back) {
+				velocity.z = Math.min( 0, velocity.z );
+			}
 			
-			if (collisions.right || collisions.front_right || collisions.back_right) velocity.x = Math.min( 0, velocity.x );
+			if (collisions.right) {
+				velocity.x = Math.min( 0, velocity.x );
+			}
 			
-			if (collisions.up) velocity.y = Math.min( 0, velocity.y );	
+			if (collisions.up) {
+				velocity.y = Math.min( 0, velocity.y );
+			}
+			
 			if (collisions.down) { 
 				velocity.y = Math.max( 0, velocity.y ); 
 				canJump = true;
