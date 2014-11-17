@@ -1,8 +1,9 @@
 var C3D = C3D || {};
 
-C3D.architectureFeatures = ['level', 'room', 'internal_wall', 'external_wall', 'door'];
-C3D.interactiveFeatures = ['server', 'surveillanceCamera', 'hotspot', 'antenna', 'fireExtinguisher', 'badgeReader','internal_wall'];
-C3D.features3D = C3D.architectureFeatures.concat(C3D.interactiveFeatures);
+C3D.obstaclesClasses = ['level', 'room', 'internal_wall', 'external_wall', 'door'];
+C3D.interactiveClasses = ['server', 'surveillanceCamera', 'hotspot', 'antenna', 'fireExtinguisher', 'badgeReader','internal_wall'];
+C3D.unionClasses = C3D.obstaclesClasses.concat(C3D.interactiveClasses);
+C3D.interactiveFeatures = [];
 /*
     Generazione dell'indice e settaggio dei parent agli elementi.
 */
@@ -381,7 +382,7 @@ C3D.generate3DModel = function() {
             queue.push(feature.children[i]);
         }
 
-        if($.inArray(feature.properties.class, C3D.interactiveFeatures)> -1) {
+        if($.inArray(feature.properties.class, C3D.interactiveClasses)> -1) {
             C3D.interactiveFeatures.push(el3D);
         }
     }
