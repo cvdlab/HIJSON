@@ -874,13 +874,24 @@ C3D.generator3D['external_wall'] = function(feature) {
 	container.add(wall);
 	wall.rotation.x += Math.PI/2;
 	wall.position.y += feature.properties.thickness/2;
+    
+        var bbox = new THREE.BoundingBoxHelper(container, 0xff0000);
+        bbox.update();
+    
+        var boxGeometry = new THREE.BoxGeometry( bbox.box.size().x, bbox.box.size().y, bbox.box.size().z );
+        var boxMaterial = new THREE.MeshBasicMaterial( {color: 0x000000, transparent: true, opacity: 0.3, wireframe: true} );
+        var el3D = new THREE.Mesh( boxGeometry, boxMaterial );
+    
+        el3D.add(wall);
+    
+        var bboxCentroid = C3D.getCentroid(bbox);
+        
+        container.position.set(-bboxCentroid.x,-bboxCentroid.y,-bboxCentroid.z);    
+        wall.position.z -= bbox.box.size().z/2;
+        el3D.position.x += bbox.box.size().x/2;
+        wall.position.x -= bbox.box.size().x/2;
 
-    //wall.castShadow = true;
-    wall.receiveShadow = true;
-    // container.receiveShadow = true;
-    // container.castShadow = true;
-	
-    return container;	
+        return el3D;	
 }
 
 C3D.generator3D['internal_wall'] = function(feature) {
@@ -904,12 +915,7 @@ C3D.generator3D['internal_wall'] = function(feature) {
 	wall.rotation.x += Math.PI/2;
 	wall.position.y += feature.properties.thickness/2;
     
-    wall.castShadow = true;
-    //wall.receiveShadow = true;    
-    // container.castShadow = true;
-    // container.receiveShadow = true;
-	
-    return container;
+    return container;   
 }
 
 C3D.generator3D['door'] = function(feature) {
@@ -1016,10 +1022,10 @@ C3D.packageModel = function (model3D) {
         model3D.position.set(-bboxCentroid.x,-bboxCentroid.y,-bboxCentroid.z);    
     
         el3D.position.z = bbox.box.size().z/2;
-        console.log(el3D);
         
         return el3D;
     }
+
 /* 
     Funzione che prendei in input un obj3D e un booleano ed effettua il traverse
 */
