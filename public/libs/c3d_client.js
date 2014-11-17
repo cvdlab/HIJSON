@@ -306,7 +306,7 @@ C3D.init3D = function() {
     		}
 
     		var intersects = raycaster.intersectObjects(C3D.unionFeatures);
-            console.log(intersects[0].object.feature.id);
+            //console.log(intersects[0].object.feature.id);
 
             if((intersects.length > 0)&&(intersects[0].object.feature !== undefined)) {
                 if($.inArray(intersects[0].object.feature.properties.class, C3D.interactiveClasses)> -1) {
@@ -612,7 +612,7 @@ C3D.generator3D['light'] = function(feature) {
     var externalCubeMaterial = new THREE.MeshLambertMaterial({
                                                                 color:0xE7E6DD,
                                                                 transparent: true, 
-                                                                opacity: 0.3, 
+                                                                opacity: 0.5, 
                                                                 side: THREE.DoubleSide
                                                             });
     var model3D = new THREE.Mesh(externalCubeGeometry, externalCubeMaterial);
@@ -629,7 +629,7 @@ C3D.generator3D['light'] = function(feature) {
         groupNeon.add(neon);
     }
     light.add(groupNeon);
-    // light.position.z -= (height/2) + 0.001;
+    //light.position.z -= (height/2) + 0.001;
 
     var model = C3D.packageModel(light);
     
