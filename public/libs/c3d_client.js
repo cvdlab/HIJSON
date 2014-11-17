@@ -1,7 +1,7 @@
 var C3D = C3D || {};
 
 C3D.obstaclesClasses = ['room', 'internal_wall', 'external_wall'];
-C3D.interactiveClasses = ['server', 'surveillanceCamera', 'hotspot', 'antenna', 'fireExtinguisher', 'badgeReader'];
+C3D.interactiveClasses = ['server', 'surveillanceCamera', 'hotspot', 'antenna', 'fireExtinguisher', 'badgeReader', 'light'];
 
 C3D.interactiveFeatures = [];
 C3D.obstaclesFeatures = [];
@@ -305,15 +305,17 @@ C3D.init3D = function() {
     			var raycaster = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
     		}
 
-    		var intersects = raycaster.intersectObjects(C3D.interactiveFeatures);
-            console.log(intersects);
-            if((intersects.length > 0) )
-                C3D.emit('showFeatureInfo', intersects[0].object.feature.id);
-    		 
-             // && ($.inArray(intersect[0].object.feature.properties.class, C3D.interactiveFeatures)> -1) 
-      //       if ((intersects.length > 0)) {
-    		//   	C3D.emit('showFeatureInfo', intersects[0].object.feature.id);
-    		// }
+    		var intersects = raycaster.intersectObjects(C3D.unionFeatures);
+            console.log(intersects[0].object.feature.id);
+
+            if((intersects.length > 0)&&(intersects[0].object.feature !== undefined)) {
+                if($.inArray(intersects[0].object.feature.properties.class, C3D.interactiveClasses)> -1) {
+                    C3D.emit('showFeatureInfo', intersects[0].object.feature.id);
+                }
+            }
+            else {
+                C3D.emit('clearFeatureInfo');
+            }  
 	}
     
 	/*
@@ -384,6 +386,7 @@ C3D.generate3DModel = function() {
         }
 
         if($.inArray(feature.properties.class, C3D.interactiveClasses)> -1) {
+            console.log(feature.properties.class);
             C3D.interactiveFeatures.push(el3D);
         }
 
@@ -402,7 +405,7 @@ C3D.generate3DModel = function() {
     C3D.index['building'].obj3D.rotation.x = -Math.PI/2;
 
     C3D.scene3D.add(C3D.index["building"].obj3D);
-    
+    C3D.unionFeatures = C3D.obstaclesFeatures.concat(C3D.interactiveFeatures);
     setLight();
 
     function setLight() {
@@ -626,11 +629,11 @@ C3D.generator3D['light'] = function(feature) {
         groupNeon.add(neon);
     }
     light.add(groupNeon);
-    light.position.z -= (height/2) + 0.001;
+    // light.position.z -= (height/2) + 0.001;
 
-    //light.castShadow = true;
-
-    return light;
+    var model = C3D.packageModel(light);
+    
+    return model;
 } 
 
 C3D.generator3D['antenna'] = function(feature) {

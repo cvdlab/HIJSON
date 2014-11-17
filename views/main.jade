@@ -157,6 +157,10 @@ block content
 
 			C3D.on('selectFeature', function(idObject) {
 					C3D.emit('showFeatureInfo',idObject);
+			});	
+
+			C3D.on('clearFeatureInfo', function(idObject) {
+				$('#info').empty();
 			});				  
 
 		block internal_content
