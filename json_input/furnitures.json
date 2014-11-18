@@ -159,7 +159,7 @@
             {
                 "parent": "room_0.1",
                 "class": "surveillanceCamera",
-                "tVector": [0.3, 8, 3.5],
+                "tVector": [0.3, 8, 3.2],
                 "rVector": [0, 0, 0]
             }
         },
@@ -192,7 +192,7 @@
             {
                 "parent": "room_0.1",
                 "class": "light",
-                "tVector": [3.5, 3, 3.44],
+                "tVector": [3.5, 3, 3.14],
                 "rVector": [0, 0, 0]
             }
         },
@@ -209,7 +209,7 @@
             {
                 "parent": "room_0.1",
                 "class": "light",
-                "tVector": [7, 3, 3.44],
+                "tVector": [7, 3, 3.14],
                 "rVector": [0, 0, 0]
             }
         },
@@ -226,7 +226,7 @@
             {
                 "parent": "room_0.1",
                 "class": "light",
-                "tVector": [3.5, 6, 3.44],
+                "tVector": [3.5, 6, 3.14],
                 "rVector": [0, 0, 0]
             }
         },
@@ -243,7 +243,7 @@
             {
                 "parent": "room_0.1",
                 "class": "light",
-                "tVector": [7, 6, 3.44],
+                "tVector": [7, 6, 3.14],
                 "rVector": [0, 0, 0]
             }
         },
@@ -260,7 +260,7 @@
             {
                 "parent": "room_0.1",
                 "class": "light",
-                "tVector": [3.5, 9, 3.44],
+                "tVector": [3.5, 9, 3.14],
                 "rVector": [0, 0, 0]
             }
         },
@@ -277,7 +277,7 @@
             {
                 "parent": "room_0.1",
                 "class": "light",
-                "tVector": [7, 9, 3.44],
+                "tVector": [7, 9, 3.14],
                 "rVector": [0, 0, 0]
             }
         },
@@ -294,7 +294,7 @@
             {
                 "parent": "room_0.1",
                 "class": "light",
-                "tVector": [3.5, 12, 3.44],
+                "tVector": [3.5, 12, 3.14],
                 "rVector": [0, 0, 0]
             }
         },
@@ -311,7 +311,7 @@
             {
                 "parent": "room_0.1",
                 "class": "light",
-                "tVector": [7, 12, 3.44],
+                "tVector": [7, 12, 3.14],
                 "rVector": [0, 0, 0]
             }
         },
@@ -328,7 +328,7 @@
             {
                 "parent": "room_0.1",
                 "class": "light",
-                "tVector": [3.5, 15, 3.44],
+                "tVector": [3.5, 15, 3.14],
                 "rVector": [0, 0, 0]
             }
         },
@@ -345,7 +345,7 @@
             {
                 "parent": "room_0.1",
                 "class": "light",
-                "tVector": [7, 15, 3.44],
+                "tVector": [7, 15, 3.14],
                 "rVector": [0, 0, 0]
             }
         },

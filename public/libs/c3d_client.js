@@ -215,7 +215,7 @@ C3D.init3D = function() {
 		//questo evento viene richiamato ad ogni attivazione/disattivazione del pointerlock, in paricolare il blocco if all'avvio del pointerlock, il blocco else alla disattivazione del pointerlock
 		var pointerlockchange = function(event) {
 			if (document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element) {
-				
+				C3D.show3DObject(C3D.index["building"].obj3D, true);
                 //C3D.index['building'].obj3D.rotation.x = -Math.PI/2;
 				pointerLockControls = new THREE.PointerLockControls(camera, {
                     cameraHeight: 1.7,
@@ -236,6 +236,9 @@ C3D.init3D = function() {
 				pointerLockControls.getObject().position = C3D.fromGeneralTo3DScene(C3D.actualPosition);
 				pointerLockControls.getObject().position.y += 1.7;
 			} else {
+                var actualLevel = C3D.getActualLevelId();
+                console.log(actualLevel);
+                C3D.emit('selectFeature', actualLevel);
                 //C3D.index['building'].obj3D.rotation.x = 0;
 				scene.add(camera); //ripristina la camera originaria
 				camera.position.set(-40,-40,40);
@@ -616,16 +619,15 @@ C3D.generator3D['light'] = function(feature) {
     var light = new THREE.Object3D();
     var height = 0.05;
     var width = 0.6;
-    var externalCubeGeometry = new THREE.BoxGeometry(width,width,height);
-    var externalCubeMaterial = new THREE.MeshLambertMaterial({
+    var externalPlaneGeometry = new THREE.PlaneGeometry(width,width);
+    var externalPlaneMaterial = new THREE.MeshLambertMaterial({
                                                                 color:0xE7E6DD,
-                                                                transparent: true, 
-                                                                opacity: 0.5, 
                                                                 side: THREE.DoubleSide
                                                             });
-    var model3D = new THREE.Mesh(externalCubeGeometry, externalCubeMaterial);
-    
-    light.add(model3D);
+
+    var plane3D = new THREE.Mesh(externalPlaneGeometry, externalPlaneMaterial);
+    plane3D.position.z += height;
+    light.add(plane3D);
     var groupNeon = new THREE.Object3D();
     var neonMaterial = new THREE.MeshLambertMaterial( {color: 0xffffff} );
     var neonGeometry = new THREE.CylinderGeometry( 0.015, 0.015, 0.58, 32 );
