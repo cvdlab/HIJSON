@@ -29,6 +29,7 @@
                 "parent": "building",
                 "description": "Mura perimetrali box_0",
                 "height": 3.5,
+                "thickness": 0.3,
                 "tVector": [0, 0, 0],
                 "rVector": [0, 0, 0]
             }
@@ -665,6 +666,7 @@
                 "parent": "building",
                 "description": "Mura perimetrali box_1",
                 "height": 3.5,
+                "thickness": 0.3,
                 "tVector": [0, 0, 3.5],
                 "rVector": [0, 0, 0]
             }

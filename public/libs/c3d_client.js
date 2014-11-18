@@ -183,7 +183,7 @@ C3D.init3D = function() {
 	                C3D.show3DObject(C3D.index[i].obj3D, true);
 	            }   
 	        }
-	    } 
+	    }
     });
 
 	var havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
@@ -942,11 +942,32 @@ C3D.generator3D['door'] = function(feature) {
 }
 
 C3D.generator3D['level'] = function(feature) {
-    var material = new THREE.LineBasicMaterial({ 
-        color:C3D.config.style.level.color, 
-        linewidth: feature.properties.thickness 
+ //    var material = new THREE.LineBasicMaterial({ 
+ //        color:C3D.config.style.level.color, 
+ //        linewidth: feature.properties.thickness 
+ //    });
+	// return new THREE.Line(C3D.generateLineString(feature.geometry), material);
+    
+    var material = new THREE.MeshPhongMaterial({ 
+        color: C3D.config.style.level.color, 
+        side: THREE.DoubleSide
     });
-	return new THREE.Line(C3D.generateLineString(feature.geometry), material);
+    
+    var shape = C3D.generatePolygonShape(feature.geometry);
+    
+    var extrudedGeometry = shape.extrude({
+                curveSegments: 1,
+                steps: 1,
+                amount: feature.properties.thickness,
+                bevelEnabled: false
+            });
+            
+    var floor = new THREE.Mesh(extrudedGeometry, material);
+    var container = new THREE.Object3D();
+    container.add(floor);
+    floor.position.z -= feature.properties.thickness- 0.01;
+    
+    return container;   
 }
 
 C3D.generator3D['room'] = function(feature) {
@@ -1030,7 +1051,7 @@ C3D.packageModel = function (model3D) {
         bbox.update();
     
         var boxGeometry = new THREE.BoxGeometry( bbox.box.size().x, bbox.box.size().y, bbox.box.size().z );
-        var boxMaterial = new THREE.MeshBasicMaterial( {color: 0x000000, transparent: true, opacity: 0.3, wireframe: true} );
+        var boxMaterial = new THREE.MeshBasicMaterial( {color: 0x000000, transparent: true, opacity: 0} );
         var el3D = new THREE.Mesh( boxGeometry, boxMaterial );
     
         el3D.add(model3D);
@@ -1040,6 +1061,7 @@ C3D.packageModel = function (model3D) {
         model3D.position.set(-bboxCentroid.x,-bboxCentroid.y,-bboxCentroid.z);    
     
         el3D.position.z = bbox.box.size().z/2;
+        el3D.package = true;
         
         return el3D;
     }
@@ -1049,9 +1071,23 @@ C3D.packageModel = function (model3D) {
 */
 
 C3D.show3DObject = function(obj3D, booleanValue) {
-    obj3D.traverse(function(object) { 
-        object.visible = booleanValue;
-    });
+    console.log(obj3D);
+    if(booleanValue) {
+        obj3D.traverse(function(object) { 
+            if((object.material !== undefined) && (object.package === undefined)) {
+                object.material.opacity = 1;
+            }
+        });
+    }
+    else
+    {
+        obj3D.traverse(function(object) { 
+            if((object.material !== undefined) && (object.package === undefined)) {
+                object.material.transparent = true;
+                object.material.opacity = 0.1;
+            }
+        });    
+    }
 }
 
 
