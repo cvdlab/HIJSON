@@ -74,20 +74,18 @@ C3D.init2D = function() {
         C3D.index['building'].layer2D = L.layerGroup();
         
         var container2D = $("#container2D");
-        var container3D = $("#container3D");
-        var container2DWidth = container3D.width()/4;
-        var container2DHeight = container2DWidth/4*3;
+        var container2DWidth = container2D.width();
+        var container2DHeight = container2D.width()/4*3;
         container2D.css('height', container2DHeight);
-		C3D.map2D = L.map('container2D', { zoomControl: false, scrollWheelZoom: false}).setView([0, 0], 3);
-		$(".leaflet-container").css({"background": "transparent"});
-	    $(".leaflet-control-attribution").css({"visibility": "hidden"});
-        window.addEventListener('resize', onWindowResize2D, false);
+
+		C3D.map2D = L.map('container2D').setView([0, 0], 3);
+		$(".leaflet-container").css({"background": C3D.config.style.background.color});
+	    window.addEventListener('resize', onWindowResize2D, false);
 	
 	    function onWindowResize2D() {
-            var container2DWidth = container3D.width()/4;
-            var container2DHeight = container2DWidth/4*3;
+	        container2DWidth = container2D.width();
+	        container2DHeight = container2D.width()/4*3;
 	        container2D.css('height', container2DHeight);
-            C3D.map2D.fitBounds(C3D.getRoom(C3D.index[C3D.getActualLevelId()]).layer2D.getBounds());
 	    }
 	    
         C3D.on('selectFeature', function(idObject) {
@@ -101,7 +99,7 @@ C3D.init2D = function() {
             C3D.orderLayer();
         });
         
-
+        
 		//Quando si posizionera' sulla mappa 
         // L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
         //     maxZoom: 18,
@@ -121,12 +119,12 @@ C3D.init3D = function() {
 	
     var container3D = $('#container3D');
     var container3DWidth = container3D.width();
-    var container3DHeight = container3D.width()/16*9;
+    var container3DHeight = container3D.width()/4*3;
     container3D.css('height', container3DHeight);
     
     var stats = new Stats();
     stats.setMode(0); // 0: fps, 1: ms
-    //container3D.append(stats.domElement);
+    container3D.append(stats.domElement);
    
     var scene = new THREE.Scene();
     C3D.scene3D = scene;
@@ -166,7 +164,7 @@ C3D.init3D = function() {
 
     function onWindowResize3D() {
         container3DWidth = container3D.width();
-        container3DHeight = container3D.width()/16*9;
+        container3DHeight = container3D.width()/4*3;
         container3D.css('height', container3DHeight);
     
         camera.aspect = container3DWidth / container3DHeight;
@@ -1074,40 +1072,37 @@ C3D.packageModel = function (model3D) {
     Funzione che prendei in input un obj3D e un booleano ed effettua il traverse
 */
 
-
-// C3D.show3DObject = function(obj3D, booleanValue) {
-//     if((obj3D.feature !== undefined) && (obj3D.feature.type === 'architecture')) {
-//         if(booleanValue) {
-//             obj3D.traverse(function(object) { 
-//                 if((object.material !== undefined)) {
-//                     object.material.transparent = false;
-//                     object.material.opacity = 1;
-//                 }
-//             });
-//         }
-//         else
-//         {
-//             obj3D.traverse(function(object) { 
-//                 if((object.material !== undefined)) {
-//                     object.material.transparent = true;
-//                     object.material.opacity = 0.1;
-//                 }
-//             });    
-//         }
-//     }
-//     else
-//     {
-//         obj3D.traverse(function(object) { 
-//             object.visible = booleanValue;
-//         });   
-//     }
-// }
+/*
+C3D.show3DObject = function(obj3D, booleanValue) {
+    console.log(obj3D);
+    if(booleanValue) {
+        obj3D.traverse(function(object) { 
+            if((object.material !== undefined) && (object.package === undefined)) {
+                object.material.opacity = 1;
+            }
+        });
+    }
+    else
+    {
+        obj3D.traverse(function(object) { 
+            if((object.material !== undefined) && (object.package === undefined)) {
+                object.material.transparent = true;
+                object.material.opacity = 0.1;
+            }
+        });    
+    }
+}
+*/
 
 C3D.show3DObject = function(obj3D, booleanValue) {
-        obj3D.traverse(function(object) { 
-            object.visible = booleanValue;
-        });   
+
+    obj3D.traverse(function(object) { 
+        object.visible = booleanValue;
+    });
+
 }
+
+
 /*
 	funzioni di traduzioni coordinate, tra generali, 3D (rotazione) e 2D (latitudine e longitudine). 
 */

@@ -1,6 +1,15 @@
 {
-    "id": "architectures",
     "type": "FeatureCollection",
+    "id": "building",
+    "properties":
+    {
+        "coordinates": 
+        {
+            "latitude":41.799404, 
+            "longitude": 12.485177 
+        },
+        "class": "building"
+    },
     "features": 
     [
         {
@@ -18,7 +27,7 @@
             {
                 "class": "level",
                 "parent": "building",
-                "description": "Mura perimetrali level_0",
+                "description": "Mura perimetrali box_0",
                 "height": 3.5,
                 "thickness": 0.3,
                 "tVector": [0, 0, 0],
@@ -42,7 +51,7 @@
                     "class": "external_wall",
                     "parent": "level_0",
                     "thickness": 0.3,
-                    "description": "Mura esterne",
+                    "description": "1_S",
                     "tVector": [0, 0, 0],
                     "rVector": [0, 0, 0],
                     "connections": ["room_0.1"]
@@ -65,7 +74,7 @@
                     "class": "external_wall",
                     "thickness": 0.3,
                     "parent": "level_0",
-                    "description": "Mura esterne",
+                    "description": "Mura esterno",
                     "tVector": [0, 0, 0],
                     "rVector": [0, 0, 90],
                     "connections": ["room_0.1"]
@@ -88,7 +97,7 @@
                     "class": "external_wall",
                     "parent": "level_0",
                     "thickness": 0.3,                    
-                    "description": "Mura esterne",
+                    "description": "Mura esterno",
                     "tVector": [0, 19, 0],
                     "rVector": [0, 0, 0],
                     "connections": ["room_0.1"]
@@ -111,7 +120,7 @@
                     "class": "external_wall",
                     "thickness": 0.3,
                     "parent": "level_0",
-                    "description": "Mura interne",
+                    "description": "Mura interno",
                     "tVector": [11, 19, 0],
                     "rVector": [0, 0, 0],
                     "connections": ["room_0.2"]
@@ -134,7 +143,7 @@
                     "class": "external_wall",
                     "thickness": 0.3,
                     "parent": "level_0",
-                    "description": "mura interne",
+                    "description": "Mura interno",
                     "tVector": [21, 19, 0],
                     "rVector": [0, 0, 0],
                     "connections": ["room_0.3"]
@@ -157,7 +166,7 @@
                     "class": "external_wall",
                     "thickness": 0.3,
                     "parent": "level_0",
-                    "description": "mura interne",
+                    "description": "Mura interno",
                     "tVector": [31, 11, 0],
                     "rVector": [0, 0, 90],
                     "connections": ["room_0.3"]
@@ -181,7 +190,7 @@
                     "class": "external_wall",
                     "thickness": 0.3,
                     "parent": "level_0",
-                    "description": "mura interne",
+                    "description": "Mura interno",
                     "tVector": [31, 8, 0],
                     "rVector": [0, 0, 90],
                     "connections": ["hall_0.1"]
@@ -204,7 +213,7 @@
                     "class": "external_wall",
                     "thickness": 0.3,
                     "parent": "level_0",
-                    "description": "mura interne",
+                    "description": "Mura interno",
                     "tVector": [31, 0, 0],
                     "rVector": [0, 0, 90],
                     "connections": ["room_0.4"]
@@ -227,7 +236,7 @@
                     "class": "external_wall",
                     "thickness": 0.3,
                     "parent": "level_0",
-                    "description": "mura interne",
+                    "description": "Mura interno",
                     "tVector": [16, 0, 0],
                     "rVector": [0, 0, 0],
                     "connections": ["room_0.4"]
@@ -251,7 +260,7 @@
                     "class": "external_wall",
                     "thickness": 0.3,
                     "parent": "level_0",
-                    "description": "mura interne",
+                    "description": "Mura interno",
                     "tVector": [11, 0, 0],
                     "rVector": [0, 0, 0],
                     "connections": ["hall_0.1"]
@@ -275,7 +284,7 @@
                     "class": "internal_wall",
                     "thickness": 0.1,
                     "parent": "level_0",
-                    "description": "mura interne",
+                    "description": "Mura interno",
                     "tVector": [11, 11, 0],
                     "rVector": [0, 0, 0],
                     "connections": ["room_0.2", "hall_0.1"]
@@ -299,7 +308,7 @@
                     "class": "internal_wall",
                     "thickness": 0.1,
                     "parent": "level_0",
-                    "description": "mura interne",
+                    "description": "Mura interno",
                     "tVector": [21, 11, 0],
                     "rVector": [0, 0, 0],
                     "connections": ["room_0.3", "hall_0.1"]
@@ -323,7 +332,7 @@
                     "class": "internal_wall",
                     "thickness": 0.1,
                     "parent": "level_0",
-                    "description": "mura interne",
+                    "description": "Mura interno",
                     "tVector": [21, 11, 0],
                     "rVector": [0, 0, 90],
                     "connections": ["room_0.2", "room_0.3"]
@@ -347,7 +356,7 @@
                     "class": "internal_wall",
                     "thickness": 0.1,
                     "parent": "level_0",
-                    "description": "mura interne",
+                    "description": "Mura interno",
                     "tVector": [16, 0, 0],
                     "rVector": [0, 0, 90],
                     "connections": ["room_0.4", "hall_0.1"]
@@ -371,7 +380,7 @@
                     "class": "internal_wall",
                     "thickness": 0.1,
                     "parent": "level_0",
-                    "description": "mura interne",
+                    "description": "Mura interno",
                     "tVector": [16, 8, 0],
                     "rVector": [0, 0, 0],
                     "connections": ["room_0.4", "hall_0.1"]
@@ -394,7 +403,7 @@
                     "class": "internal_wall",
                     "thickness": 0.1,
                     "parent": "level_0",
-                    "description": "mura interne",
+                    "description": "Mura interno",
                     "tVector": [11, 11, 0],
                     "rVector": [0, 0, 90],
                     "connections": ["room_0.1", "room_0.2"]
@@ -417,7 +426,7 @@
                     "class": "internal_wall",
                     "thickness": 0.1,
                     "parent": "level_0",
-                    "description": "mura interne",
+                    "description": "Mura interno",
                     "tVector": [11, 0, 0],
                     "rVector": [0, 0, 90],
                     "connections": ["room_0.1", "hall_0.1"]
@@ -440,7 +449,7 @@
                     "class": "door",
                     "parent": "wall_0.1-H",
                     "thickness": 5,
-                    "description": "Porta Room0.1-H",
+                    "description": "Door room1 H",
                     "tVector": [3, 0, 0],
                     "rVector": [0, 0, 0]
               }
@@ -462,7 +471,7 @@
                     "class": "door",
                     "parent": "wall_0.H-S",
                     "thickness": 5,
-                    "description": "Porta ingresso",
+                    "description": "Door room1",
                     "tVector": [1.5, 0, 0],
                     "rVector": [0, 0, 0]
               }
@@ -484,7 +493,7 @@
                     "class": "door",
                     "parent": "wall_0.2-H",
                     "thickness": 5,
-                    "description": "Porta Room0.2-H",
+                    "description": "Door room1",
                     "tVector": [4, 0, 0],
                     "rVector": [0, 0, 0]
               }
@@ -506,7 +515,7 @@
                     "class": "door",
                     "parent": "wall_0.3-H",
                     "thickness": 5,
-                    "description": "Porta Room0.3-H",
+                    "description": "Door room1",
                     "tVector": [4, 0, 0],
                     "rVector": [0, 0, 0]
               }
@@ -529,7 +538,7 @@
                     "class": "door",
                     "parent": "wall_0.4-H-N",
                     "thickness": 5,
-                    "description": "Porta Room0.4-H",
+                    "description": "Door room1",
                     "tVector": [7, 0, 0],
                     "rVector": [0, 0, 0]
               }
@@ -655,7 +664,7 @@
             {
                 "class": "level",
                 "parent": "building",
-                "description": "Mura perimetrali level_1",
+                "description": "Mura perimetrali box_1",
                 "height": 3.5,
                 "thickness": 0.3,
                 "tVector": [0, 0, 3.5],
@@ -679,7 +688,7 @@
                     "class": "external_wall",
                     "thickness": 0.3,
                     "parent": "level_1",
-                    "description": "Mura esterne",
+                    "description": "1_S",
                     "tVector": [0, 0, 0],
                     "rVector": [0, 0, 0],
                     "connections": ["room_1.1"]
@@ -702,7 +711,7 @@
                     "class": "external_wall",
                     "thickness": 0.3,
                     "parent": "level_1",
-                    "description": "mura esterne",
+                    "description": "Mura esterno",
                     "tVector": [0, 0, 0],
                     "rVector": [0, 0, 90],
                     "connections": ["room_1.1"]
@@ -725,7 +734,7 @@
                     "class": "external_wall",
                     "thickness": 0.3,
                     "parent": "level_1",
-                    "description": "mura esterne",
+                    "description": "Mura esterno",
                     "tVector": [0, 19, 0],
                     "rVector": [0, 0, 0],
                     "connections": ["room_1.1"]
@@ -748,7 +757,7 @@
                     "class": "external_wall",
                     "thickness": 0.3,
                     "parent": "level_1",
-                    "description": "mura interne",
+                    "description": "Mura interno",
                     "tVector": [11, 19, 0],
                     "rVector": [0, 0, 0],
                     "connections": ["room_1.2"]
@@ -771,7 +780,7 @@
                     "class": "external_wall",
                     "thickness": 0.3,
                     "parent": "level_1",
-                    "description": "mura interne",
+                    "description": "Mura interno",
                     "tVector": [21, 19, 0],
                     "rVector": [0, 0, 0],
                     "connections": ["room_1.3"]
@@ -794,7 +803,7 @@
                     "class": "external_wall",
                     "thickness": 0.3,
                     "parent": "level_1",
-                    "description": "mura interne",
+                    "description": "Mura interno",
                     "tVector": [31, 11, 0],
                     "rVector": [0, 0, 90],
                     "connections": ["room_1.3"]
@@ -818,7 +827,7 @@
                     "class": "external_wall",
                     "thickness": 0.3,
                     "parent": "level_1",
-                    "description": "mura interne",
+                    "description": "Mura interno",
                     "tVector": [31, 8, 0],
                     "rVector": [0, 0, 90],
                     "connections": ["hall_1.1"]
@@ -841,7 +850,7 @@
                     "class": "external_wall",
                     "thickness": 0.3,
                     "parent": "level_1",
-                    "description": "mura interne",
+                    "description": "Mura interno",
                     "tVector": [31, 0, 0],
                     "rVector": [0, 0, 90],
                     "connections": ["room_1.4"]
@@ -864,7 +873,7 @@
                     "class": "external_wall",
                     "thickness": 0.3,
                     "parent": "level_1",
-                    "description": "mura interne",
+                    "description": "Mura interno",
                     "tVector": [16, 0, 0],
                     "rVector": [0, 0, 0],
                     "connections": ["room_1.4"]
@@ -888,7 +897,7 @@
                     "class": "external_wall",
                     "thickness": 0.3,
                     "parent": "level_1",
-                    "description": "mura interne",
+                    "description": "Mura interno",
                     "tVector": [11, 0, 0],
                     "rVector": [0, 0, 0],
                     "connections": ["hall_1.1"]
@@ -912,7 +921,7 @@
                     "class": "internal_wall",
                     "thickness": 0.1,
                     "parent": "level_1",
-                    "description": "mura interne",
+                    "description": "Mura interno",
                     "tVector": [11, 11, 0],
                     "rVector": [0, 0, 0],
                     "connections": ["room_1.2", "hall_1.1"]
@@ -936,7 +945,7 @@
                     "class": "internal_wall",
                     "thickness": 0.1,
                     "parent": "level_1",
-                    "description": "mura interne",
+                    "description": "Mura interno",
                     "tVector": [21, 11, 0],
                     "rVector": [0, 0, 0],
                     "connections": ["room_1.3", "hall_1.1"]
@@ -960,7 +969,7 @@
                     "class": "internal_wall",
                     "thickness": 0.1,
                     "parent": "level_1",
-                    "description": "mura interne",
+                    "description": "Mura interno",
                     "tVector": [21, 11, 0],
                     "rVector": [0, 0, 90],
                     "connections": ["room_1.2", "room_1.3"]
@@ -984,7 +993,7 @@
                     "class": "internal_wall",
                     "thickness": 0.1,
                     "parent": "level_1",
-                    "description": "mura interne",
+                    "description": "Mura interno",
                     "tVector": [16, 0, 0],
                     "rVector": [0, 0, 90],
                     "connections": ["room_1.4", "hall_1.1"]
@@ -1008,7 +1017,7 @@
                     "class": "internal_wall",
                     "thickness": 0.1,
                     "parent": "level_1",
-                    "description": "mura interne",
+                    "description": "Mura interno",
                     "tVector": [16, 8, 0],
                     "rVector": [0, 0, 0],
                     "connections": ["room_1.4", "hall_1.1"]
@@ -1031,7 +1040,7 @@
                     "class": "internal_wall",
                     "thickness": 0.1,
                     "parent": "level_1",
-                    "description": "mura interne",
+                    "description": "Mura interno",
                     "tVector": [11, 11, 0],
                     "rVector": [0, 0, 90],
                     "connections": ["room_1.1", "room_1.2"]
@@ -1054,7 +1063,7 @@
                     "class": "internal_wall",
                     "thickness": 0.1,
                     "parent": "level_1",
-                    "description": "mura interne",
+                    "description": "Mura interno",
                     "tVector": [11, 0, 0],
                     "rVector": [0, 0, 90],
                     "connections": ["room_1.1", "hall_1.1"]
@@ -1078,7 +1087,7 @@
                     "class": "door",
                     "parent": "wall_1.1-H",
                     "thickness": 5,
-                    "description": "Porta room1.1-H",
+                    "description": "Door room1 H",
                     "tVector": [3, 0, 0],
                     "rVector": [0, 0, 0]
               }
@@ -1100,7 +1109,7 @@
                     "class": "door",
                     "parent": "wall_1.2-H",
                     "thickness": 5,
-                    "description": "Porta room1.2-H",
+                    "description": "Door room1",
                     "tVector": [4, 0, 0],
                     "rVector": [0, 0, 0]
               }
@@ -1122,7 +1131,7 @@
                     "class": "door",
                     "parent": "wall_1.3-H",
                     "thickness": 5,
-                    "description": "Porta room1.3-H",
+                    "description": "Door room1",
                     "tVector": [4, 0, 0],
                     "rVector": [0, 0, 0]
               }
@@ -1145,7 +1154,7 @@
                     "class": "door",
                     "parent": "wall_1.4-H-N",
                     "thickness": 5,
-                    "description": "Porta room1.4-H",
+                    "description": "Door room1",
                     "tVector": [7, 0, 0],
                     "rVector": [0, 0, 0]
               }

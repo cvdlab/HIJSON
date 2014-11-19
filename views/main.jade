@@ -25,35 +25,26 @@ block content
 		.page-header
 			h1= title
 		.row
-			.col-md-9
-				.row
-					if (enable_2D && enable_3D)	
-						.col-md-12
-							#container3D
-								#container2D
-								#pointer
-								#plerror
-					else if (enable_2D && !enable_3D)	
-						.col-md-8.col-md-offset-2
-							h3 2D
-							#container2D 	
-					else if (!enable_2D && enable_3D)
-						.col-md-8.col-md-offset-2
-							h3 3D
-							#container3D
-								#pointer
-								#plerror
-			.col-md-3
-				if enable_3D
-					h3 3D Controls			
-					button.btn.btn-default.btn-lg(id="startFPV") Start FPV								
-				h3 Navigator
-				.lead Select Level: 
-					select#selectLevel
-				.lead Select Room:
-					select#selectRoom(disabled = true)
-				h3 Feature info
-				#info
+			if (enable_2D && enable_3D)	
+				.col-md-6
+					h3 2D
+					#container2D 
+				.col-md-6
+					h3 3D
+					#container3D
+						#pointer
+						#plerror
+			else if (enable_2D && !enable_3D)	
+				.col-md-8.col-md-offset-2
+					h3 2D
+					#container2D 	
+			else if (!enable_2D && enable_3D)
+				.col-md-8.col-md-offset-2
+					h3 3D
+					#container3D
+						#pointer
+						#plerror
+
 		if enable_2D
 			script.
 				C3D.init2D();
@@ -69,8 +60,10 @@ block content
 		
 
 		.row
-			.col-md-12
+			.col-md-6
 				h3 Building Controls
+			.col-md-6
+				h3 Feature info
 		.row
 			.col-md-3
 				.lead Select Level: 
@@ -78,7 +71,14 @@ block content
 			.col-md-3
 				.lead Select Room:
 					select#selectRoom(disabled = true)
+			.col-md-6#info
 		
+		if enable_3D
+			h3 3D Controls			
+			.row
+				.col-md-3
+					button.btn.btn-default.btn-lg(id="startFPV") Start FPV
+					
 		script.
 			var elements = ['level','building'];
 			for(id in C3D.index)
@@ -143,10 +143,10 @@ block content
 				$('#info').empty();
 				var feature = C3D.index[idObject];
 				if($.inArray(feature.properties.class, C3D.interactiveClasses) !== -1) {
-					var s = '<dl class="dl">';
-					s = s.concat('<dt>ID</dt><dd>' + feature.id +'</dd><br>');
-					s = s.concat('<dt>class</dt><dd>'+ feature.properties.class +'</dd><br>');
-					s = s.concat('<dt>Position</dt><dd>[' + feature.obj3D.position.x + '; ' +  feature.obj3D.position.y + ']</dd><br>');
+					var s = '<dl class="dl-horizontal">';
+					s = s.concat('<dt>id</dt><dd>' + feature.id +'</dd>');
+					s = s.concat('<dt>class</dt><dd>'+ feature.properties.class +'</dd>');
+					s = s.concat('<dt>Position</dt><dd>[' + feature.obj3D.position.x + '; ' +  feature.obj3D.position.y + ']</dd>');
 					if(feature.properties.url !== undefined)
 						s = s.concat('<dt>url</dt><dd>'+ feature.properties.url +'</dd>');					
 					s = s.concat('</dl>');

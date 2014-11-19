@@ -46,7 +46,6 @@ C3D.parseJSON = function() {
 	                var feature = data.features[i];
 	                var obj = {};
 	                obj.id = feature.id;
-	                obj.type = input_name;
 	                //obj.parent = C3D.index[feature.properties.parent];
 	                C3D.index[feature.properties.parent].children.push(obj);
 	                obj.children = [];
