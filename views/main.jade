@@ -31,6 +31,7 @@ block content
 					#container2D 
 				.col-md-6
 					h3 3D
+						button.btn.btn-info.btn-xs.pull-right#startFPV Start FPV
 					#container3D
 						#pointer
 						#plerror
@@ -41,6 +42,7 @@ block content
 			else if (!enable_2D && enable_3D)
 				.col-md-8.col-md-offset-2
 					h3 3D
+						button.btn.btn-info.btn-xs.pull-right#startFPV Start FPV
 					#container3D
 						#pointer
 						#plerror
@@ -55,9 +57,7 @@ block content
 				C3D.init3D();
 				C3D.generate3DModel();
 		
-		.page-header
-			h1 Controls
-		
+		hr
 
 		.row
 			.col-md-6
@@ -73,11 +73,7 @@ block content
 					select#selectRoom(disabled = true)
 			.col-md-6#info
 		
-		if enable_3D
-			h3 3D Controls			
-			.row
-				.col-md-3
-					button.btn.btn-default.btn-lg(id="startFPV") Start FPV
+
 					
 		script.
 			var elements = ['level','building'];
