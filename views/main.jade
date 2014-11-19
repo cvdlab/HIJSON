@@ -58,43 +58,76 @@ block content
 				C3D.generate3DModel();
 		
 		hr
-
+		
 		.row
-			.col-md-6
+			.col-md-6#navigator
 				h3 Navigator
-				select#selectLevel
-				select#selectRoom(disabled = true)
 			.col-md-6
-				h3 Object Informations
+				h3 Feature Information
 				#info
 
-		
-
-					
 		script.
-			var elements = ['level','building'];
-			for(id in C3D.index)
-				if(elements.indexOf(C3D.index[id].properties.class) > -1)
-					$("#selectLevel").append('<option value=' + id + '>' + id +'</option>');
+			var menuArray = [];
+			var notShowThisFeatures = ['internal_wall', 'external_wall'];
+			var indexSelectElement = 0;
+			var selectElement = document.createElement('select');
+			selectElement.indexValue = indexSelectElement;
 			
-			$("#selectLevel").val(C3D.config.startPosition.levelId);
-	
-			C3D.emit('selectFeature', C3D.actualPosition.levelId);
-	
-			$( "#selectLevel" ).on('change', function() {
-				C3D.emit('selectFeature',this.value);
+			menuArray.push(selectElement);
+			
+			$("#navigator").append(selectElement);
+			
+			for(id in C3D.tree.children) {
+				var optionElement = document.createElement('option');
+				optionElement.value = C3D.tree.children[id].id;
+				optionElement.innerHTML = C3D.tree.children[id].id;
+				selectElement.appendChild(optionElement);
+			}
+
+			selectElement.addEventListener('change', function()  {
+				generateSelectOption(selectElement);
+			});
+
+			function generateSelectOption(selectElement) {
+				//1. get dell'id del select selezionato e del rispettivo valore
+				var idSelect = selectElement.indexValue;
+				var idObject = selectElement.value;
+
+				//2. emit evento della selezione avvenuta per la visualizzazione 
+				C3D.emit('selectFeature', idObject);
 				
-				// in aggiunta viene popolato il secondo menù con le room
-				$("#selectRoom").prop('disabled', false);
-				$('#selectRoom option').each( function () { $(this).remove(); } );
-				for(id in C3D.index)
-					if( (C3D.index[id].properties.parent === this.value) && (C3D.index[id].properties.class === 'room') )
-						$("#selectRoom").append('<option value=' + id + '>' + id +'</option>');
-			});
-	
-			$( "#selectRoom" ).on('change', function() {
-				C3D.emit('selectFeature', this.value);
-			});
+				//3. Rimozione select successivi
+				for(var i=(idSelect + 1); i < menuArray.length; i++) {
+					menuArray[i].remove();
+				}
+
+				//4. Riduzione array
+				var removed = menuArray.splice(idSelect, menuArray.length-idSelect-1);
+
+				//5. Inserimento nuovo select
+				indexSelectElement = (menuArray.length + 1);
+				console.log(C3D.index[idObject].children.length);
+				
+				if(C3D.index[idObject].children.length > 0) {
+					var newSelectElement = document.createElement('select');
+					newSelectElement.indexValue = indexSelectElement;
+					
+					for(id in C3D.index[idObject].children) {
+						if(!(notShowThisFeatures.indexOf(C3D.index[idObject].children[id].properties.class)> -1)){
+							var optionElement = document.createElement('option');
+							optionElement.value = C3D.index[idObject].children[id].id;
+							optionElement.innerHTML = C3D.index[idObject].children[id].id;
+							newSelectElement.appendChild(optionElement);
+						}
+					}
+					$("#navigator").append(newSelectElement);
+					menuArray.push(newSelectElement);
+					//6. Aggiunta eventListener
+					newSelectElement.addEventListener('change', function()  {
+						generateSelectOption(newSelectElement);
+					});
+				}
+			}
 
 			$( "#startFPV" ).on('click', function() {
 				C3D.emit('startFPV');
@@ -147,9 +180,9 @@ block content
 					$('#info').append(s);
 				}
 			});	
-
+		
 			C3D.on('selectFeature', function(idObject) {
-					C3D.emit('showFeatureInfo',idObject);
+				C3D.emit('showFeatureInfo',idObject);
 			});	
 
 			C3D.on('clearFeatureInfo', function(idObject) {
