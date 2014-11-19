@@ -1,0 +1,167 @@
+extends layout
+
+block head
+
+	if enable_2D
+		include ./includes/css_2d.jade
+	if enable_3D
+		include ./includes/css_3d.jade
+
+block content
+	.container-fluid
+		// Default JavaScript libraries
+		script(src='/socket.io/socket.io.js')
+		
+		include ./includes/js_libraries_2d.jade
+		
+		include ./includes/js_libraries_3d.jade
+		
+		script.
+			var C3D = JSON.parse('!{C3D_server}');
+		
+		// C3D Library
+		script(src='/libs/c3d_client.js')
+		
+		.page-header
+			h1= title
+		.row
+			.col-md-9
+				.row
+					if (enable_2D && enable_3D)	
+						.col-md-12
+							#container3D
+								#container2D
+								#pointer
+								#plerror
+					else if (enable_2D && !enable_3D)	
+						.col-md-8.col-md-offset-2
+							h3 2D
+							#container2D 	
+					else if (!enable_2D && enable_3D)
+						.col-md-8.col-md-offset-2
+							h3 3D
+							#container3D
+								#pointer
+								#plerror
+			.col-md-3
+				if enable_3D
+					h3 3D Controls			
+					button.btn.btn-default.btn-lg(id="startFPV") Start FPV								
+				h3 Navigator
+				.lead Select Level: 
+					select#selectLevel
+				.lead Select Room:
+					select#selectRoom(disabled = true)
+				h3 Feature info
+				#info
+		if enable_2D
+			script.
+				C3D.init2D();
+				C3D.generate2DModel();
+				
+		if enable_3D 
+			script.
+				C3D.init3D();
+				C3D.generate3DModel();
+		
+		.page-header
+			h1 Controls
+		
+
+		.row
+			.col-md-12
+				h3 Building Controls
+		.row
+			.col-md-3
+				.lead Select Level: 
+					select#selectLevel
+			.col-md-3
+				.lead Select Room:
+					select#selectRoom(disabled = true)
+		
+		script.
+			var elements = ['level','building'];
+			for(id in C3D.index)
+				if(elements.indexOf(C3D.index[id].properties.class) > -1)
+					$("#selectLevel").append('<option value=' + id + '>' + id +'</option>');
+			
+			$("#selectLevel").val(C3D.config.startPosition.levelId);
+	
+			C3D.emit('selectFeature', C3D.actualPosition.levelId);
+	
+			$( "#selectLevel" ).on('change', function() {
+				C3D.emit('selectFeature',this.value);
+				
+				// in aggiunta viene popolato il secondo menù con le room
+				$("#selectRoom").prop('disabled', false);
+				$('#selectRoom option').each( function () { $(this).remove(); } );
+				for(id in C3D.index)
+					if( (C3D.index[id].properties.parent === this.value) && (C3D.index[id].properties.class === 'room') )
+						$("#selectRoom").append('<option value=' + id + '>' + id +'</option>');
+			});
+	
+			$( "#selectRoom" ).on('change', function() {
+				C3D.emit('selectFeature', this.value);
+			});
+
+			$( "#startFPV" ).on('click', function() {
+				C3D.emit('startFPV');
+			});
+
+			C3D.on('showFeatureInfo', function(idObject){
+				showFeatureInfo = {};
+
+				showFeatureInfo['badgeReader'] = function(s) {
+					if(!(jQuery.isEmptyObject(mapUsersConnected))) {
+						s = s.concat('<p class="lead">Users connected</p>');
+						s = s.concat('<table class="table table-hover">');
+							s = s.concat('<tr>');
+								s = s.concat('<th>ID</th>');
+								s = s.concat('<th>level</th>');
+							s = s.concat('</tr>');
+						console.log(mapUsersConnected);
+
+						for(var i in mapUsersConnected) {
+							s = s.concat('<tr>');
+								s = s.concat('<th>' + mapUsersConnected[i].id + '</th>');
+								s = s.concat('<th>' + mapUsersConnected[i].position.levelId +'</th>');
+							s = s.concat('</tr>');						
+							}
+						s = s.concat('</table>');
+					}
+					else {
+						s = s.concat('<p>No users are connected.</p>');
+					}
+					return s;
+				}
+
+				showFeatureInfo['light'] = function(s) {
+					s = s.concat('<h4>Light Options</h4>');
+					return s;
+				}
+
+				$('#info').empty();
+				var feature = C3D.index[idObject];
+				if($.inArray(feature.properties.class, C3D.interactiveClasses) !== -1) {
+					var s = '<dl class="dl">';
+					s = s.concat('<dt>ID</dt><dd>' + feature.id +'</dd><br>');
+					s = s.concat('<dt>class</dt><dd>'+ feature.properties.class +'</dd><br>');
+					s = s.concat('<dt>Position</dt><dd>[' + feature.obj3D.position.x + '; ' +  feature.obj3D.position.y + ']</dd><br>');
+					if(feature.properties.url !== undefined)
+						s = s.concat('<dt>url</dt><dd>'+ feature.properties.url +'</dd>');					
+					s = s.concat('</dl>');
+					if(feature.properties.class in showFeatureInfo)
+						s = showFeatureInfo[feature.properties.class](s);
+					$('#info').append(s);
+				}
+			});	
+
+			C3D.on('selectFeature', function(idObject) {
+					C3D.emit('showFeatureInfo',idObject);
+			});	
+
+			C3D.on('clearFeatureInfo', function(idObject) {
+				$('#info').empty();
+			});				  
+
+		block internal_content
