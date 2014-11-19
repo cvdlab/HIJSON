@@ -1072,37 +1072,40 @@ C3D.packageModel = function (model3D) {
     Funzione che prendei in input un obj3D e un booleano ed effettua il traverse
 */
 
-/*
-C3D.show3DObject = function(obj3D, booleanValue) {
-    console.log(obj3D);
-    if(booleanValue) {
-        obj3D.traverse(function(object) { 
-            if((object.material !== undefined) && (object.package === undefined)) {
-                object.material.opacity = 1;
-            }
-        });
-    }
-    else
-    {
-        obj3D.traverse(function(object) { 
-            if((object.material !== undefined) && (object.package === undefined)) {
-                object.material.transparent = true;
-                object.material.opacity = 0.1;
-            }
-        });    
-    }
-}
-*/
+
+// C3D.show3DObject = function(obj3D, booleanValue) {
+//     if((obj3D.feature !== undefined) && (obj3D.feature.type === 'architecture')) {
+//         if(booleanValue) {
+//             obj3D.traverse(function(object) { 
+//                 if((object.material !== undefined)) {
+//                     object.material.transparent = false;
+//                     object.material.opacity = 1;
+//                 }
+//             });
+//         }
+//         else
+//         {
+//             obj3D.traverse(function(object) { 
+//                 if((object.material !== undefined)) {
+//                     object.material.transparent = true;
+//                     object.material.opacity = 0.1;
+//                 }
+//             });    
+//         }
+//     }
+//     else
+//     {
+//         obj3D.traverse(function(object) { 
+//             object.visible = booleanValue;
+//         });   
+//     }
+// }
 
 C3D.show3DObject = function(obj3D, booleanValue) {
-
-    obj3D.traverse(function(object) { 
-        object.visible = booleanValue;
-    });
-
+        obj3D.traverse(function(object) { 
+            object.visible = booleanValue;
+        });   
 }
-
-
 /*
 	funzioni di traduzioni coordinate, tra generali, 3D (rotazione) e 2D (latitudine e longitudine). 
 */
