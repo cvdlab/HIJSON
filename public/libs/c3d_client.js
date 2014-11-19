@@ -1072,6 +1072,7 @@ C3D.packageModel = function (model3D) {
     Funzione che prendei in input un obj3D e un booleano ed effettua il traverse
 */
 
+/*
 C3D.show3DObject = function(obj3D, booleanValue) {
     console.log(obj3D);
     if(booleanValue) {
@@ -1090,6 +1091,15 @@ C3D.show3DObject = function(obj3D, booleanValue) {
             }
         });    
     }
+}
+*/
+
+C3D.show3DObject = function(obj3D, booleanValue) {
+
+    obj3D.traverse(function(object) { 
+        object.visible = booleanValue;
+    });
+
 }
 
 
