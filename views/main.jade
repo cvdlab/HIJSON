@@ -80,6 +80,11 @@ block content
 			
 			$("#navigator").append(selectElement);
 			
+			var optionElement = document.createElement('option');
+			optionElement.value = 'building';
+			optionElement.innerHTML = 'building';
+			selectElement.appendChild(optionElement);
+
 			for(id in C3D.tree.children) {
 				var optionElement = document.createElement('option');
 				optionElement.value = C3D.tree.children[id].id;

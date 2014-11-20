@@ -4,7 +4,7 @@ var C3D = {
     input: {
 	    config: 'json_input/config.json',
 	    architecture: 'json_input/architecture.json',
-	    furnitures: 'json_input/furnitures.json'
+	    //furnitures: 'json_input/furnitures.json'
     }
 }
 
@@ -14,7 +14,50 @@ var C3D = {
 
 C3D.createSoJSON = function() {
 	    var data = JSON.parse(fs.readFileSync('json_input/sogei.json', 'utf8'));
-	    console.log(data);
+	    
+	    var result = {
+	    	id: 'architectures',
+	    	type: 'FeatureCollection',
+	    	features: [] 
+	    };
+	    var level = {
+	    	type: 'Feature',
+	    	id: 'Level_0_EST',
+	    	geometry: {
+	    		type: 'Polygon',
+	    		coordinates: [
+	    			[ [0, 0], [20,0], [20,10], [0,10], [0,0] ]
+	    		]
+	    	},
+	    	properties: {
+	    		class: 'level',
+	    		parent: 'building',
+	    		rVector: data.rVector,
+	    		tVector: data.tVector
+	    	}
+
+	    };
+	    result.features.push(level);
+	    for(i in data.children) {
+		    var feature = {
+		    	type: 'Feature',
+		    	id: 'Room_EST.' + i,
+		    	geometry: {
+		    		type: 'Polygon',
+		    		coordinates: data.children[i].coordinates
+		    	},
+		    	properties: {
+		    		class: 'room',
+		    		parent: 'Level_0_EST',
+		    		rVector: data.children[i].rVector,
+		    		tVector: data.children[i].tVector
+		    	}
+		    };
+
+		   	result.features.push(feature);
+	    
+	    }
+		fs.writeFileSync('json_input/architecture.json', JSON.stringify(result));
 }
 
 C3D.parseJSON = function() {
@@ -236,7 +279,7 @@ function absoluteCoords(obj) {
     }
 }
 
-//C3D.parseJSON();
 C3D.createSoJSON();
+C3D.parseJSON();
 
 module.exports = C3D;

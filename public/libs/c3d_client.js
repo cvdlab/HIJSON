@@ -133,7 +133,7 @@ C3D.init3D = function() {
     var camera = new THREE.PerspectiveCamera(45, container3DWidth / container3DHeight, 0.1, 1000);
     C3D.camera3D = camera;
     
-    camera.position.set(-40,40,40);
+    camera.position.set(-400,400,400);
     camera.up = new THREE.Vector3(0,1,0);
     camera.lookAt(scene.position);
 	
@@ -237,7 +237,7 @@ C3D.init3D = function() {
 				pointerLockControls.getObject().position = C3D.fromGeneralTo3DScene(C3D.actualPosition);
 				pointerLockControls.getObject().position.y += 1.7;
 			} else {
-                var actualLevel = C3D.getActualLevelId();
+                var actualLevel = C3D.actualPosition.levelId;
                 console.log(actualLevel);
                 C3D.emit('selectFeature', actualLevel);
                 //C3D.index['building'].obj3D.rotation.x = 0;
@@ -456,10 +456,10 @@ C3D.generate2DModel = function() {
 		C3D.index[geoJSONlevel].layer2D.userMarkers = markers;
 	}
 	
-    C3D.index['level_0'].layer2D.addTo(C3D.map2D);
+    //C3D.index['level_0'].layer2D.addTo(C3D.map2D);
 
-	C3D.map2D.fitBounds(C3D.index['level_0'].layer2D.getBounds());
-    C3D.orderLayer();	
+	//C3D.map2D.fitBounds(C3D.index['level_0'].layer2D.getBounds());
+    //C3D.orderLayer();	
 	
 	function styleFunction(feature) {
 		return C3D.config.style[feature.properties.class];
@@ -944,33 +944,36 @@ C3D.generator3D['door'] = function(feature) {
     return new THREE.Line(C3D.generateLineString(feature.geometry), material);
 }
 
-C3D.generator3D['level'] = function(feature) {
- //    var material = new THREE.LineBasicMaterial({ 
- //        color:C3D.config.style.level.color, 
- //        linewidth: feature.properties.thickness 
- //    });
-	// return new THREE.Line(C3D.generateLineString(feature.geometry), material);
+// C3D.generator3D['level'] = function(feature) {
+//  //    var material = new THREE.LineBasicMaterial({ 
+//  //        color:C3D.config.style.level.color, 
+//  //        linewidth: feature.properties.thickness 
+//  //    });
+// 	// return new THREE.Line(C3D.generateLineString(feature.geometry), material);
     
-    var material = new THREE.MeshPhongMaterial({ 
-        color: C3D.config.style.level.color, 
-        side: THREE.DoubleSide
-    });
+//     var material = new THREE.MeshPhongMaterial({ 
+//         color: C3D.config.style.level.color, 
+//         side: THREE.DoubleSide
+//     });
     
-    var shape = C3D.generatePolygonShape(feature.geometry);
+//     var shape = C3D.generatePolygonShape(feature.geometry);
     
-    var extrudedGeometry = shape.extrude({
-                curveSegments: 1,
-                steps: 1,
-                amount: feature.properties.thickness,
-                bevelEnabled: false
-            });
+//     var extrudedGeometry = shape.extrude({
+//                 curveSegments: 1,
+//                 steps: 1,
+//                 amount: feature.properties.thickness,
+//                 bevelEnabled: false
+//             });
             
-    var floor = new THREE.Mesh(extrudedGeometry, material);
-    var container = new THREE.Object3D();
-    container.add(floor);
-    floor.position.z -= feature.properties.thickness- 0.01;
+//     var floor = new THREE.Mesh(extrudedGeometry, material);
+//     var container = new THREE.Object3D();
+//     container.add(floor);
+//     floor.position.z -= feature.properties.thickness- 0.01;
     
-    return container;   
+//     return container;   
+// }
+C3D.generator3D['level'] = function(feature) {
+    return new THREE.Object3D();
 }
 
 C3D.generator3D['room'] = function(feature) {

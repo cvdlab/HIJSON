@@ -1,4 +1,4 @@
 {
-  "ext": "js,jade,json",
+  "ext": "js,jade",
   "verbose": true
 }
