@@ -20,43 +20,46 @@ C3D.createSoJSON = function() {
 	    	type: 'FeatureCollection',
 	    	features: [] 
 	    };
-	    var level = {
-	    	type: 'Feature',
-	    	id: 'Level_0_EST',
-	    	geometry: {
-	    		type: 'Polygon',
-	    		coordinates: [
-	    			[ [0, 0], [20,0], [20,10], [0,10], [0,0] ]
-	    		]
-	    	},
-	    	properties: {
-	    		class: 'level',
-	    		parent: 'building',
-	    		rVector: data.rVector,
-	    		tVector: data.tVector
-	    	}
-
-	    };
-	    result.features.push(level);
-	    for(i in data.children) {
-		    var feature = {
+	    for(var i in data)
+	    {
+		    var level = {
 		    	type: 'Feature',
-		    	id: 'Room_EST.' + i,
+		    	id: data[i].id,
 		    	geometry: {
 		    		type: 'Polygon',
-		    		coordinates: data.children[i].coordinates
+		    		coordinates: [
+		    			[ [0, 0], [20,0], [20,10], [0,10], [0,0] ]
+		    		]
 		    	},
 		    	properties: {
-		    		class: 'room',
-		    		parent: 'Level_0_EST',
-		    		rVector: data.children[i].rVector,
-		    		tVector: data.children[i].tVector
+		    		class: 'level',
+		    		parent: 'building',
+		    		rVector: data[i].rVector,
+		    		tVector: data[i].tVector
 		    	}
-		    };
 
-		   	result.features.push(feature);
-	    
-	    }
+		    };
+		    result.features.push(level);
+		    
+		    for(var j in data[i].children) {
+			    var feature = {
+			    	type: 'Feature',
+			    	id: data[i].id +'.' j,
+			    	geometry: {
+			    		type: 'Polygon',
+			    		coordinates: data[i].children[j].coordinates
+			    	},
+			    	properties: {
+			    		class: 'room',
+			    		parent: data[i].id,
+			    		rVector: data[i].children[j].rVector,
+			    		tVector: data[i].children[j].tVector
+			    	}
+			    };
+
+			   	result.features.push(feature);
+		    
+		    }
 		fs.writeFileSync('json_input/architecture.json', JSON.stringify(result));
 }
 

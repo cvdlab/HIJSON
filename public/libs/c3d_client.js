@@ -455,11 +455,12 @@ C3D.generate2DModel = function() {
 		markers.addTo(C3D.index[geoJSONlevel].layer2D);
 		C3D.index[geoJSONlevel].layer2D.userMarkers = markers;
 	}
-	
-    //C3D.index['level_0'].layer2D.addTo(C3D.map2D);
 
-	//C3D.map2D.fitBounds(C3D.index['level_0'].layer2D.getBounds());
-    //C3D.orderLayer();	
+    var firstView = C3D.tree.children[0].layer2D;
+    firstView.addTo(C3D.map2D);
+
+	C3D.map2D.fitBounds(firstView.getBounds());
+    C3D.orderLayer();	
 	
 	function styleFunction(feature) {
 		return C3D.config.style[feature.properties.class];

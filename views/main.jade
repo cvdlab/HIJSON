@@ -74,7 +74,6 @@ block content
 			var selectElement = document.createElement('select');
 			selectElement.indexValue = indexSelectElement;
 			selectElement.className = 'form-control';
-			console.log(selectElement);
 
 			menuArray.push(selectElement);
 			
@@ -105,7 +104,6 @@ block content
 				
 				//3. Rimozione select successivi
 				for(var i=(idSelect + 1); i < menuArray.length; i++) {
-					console.log(menuArray[i]);
 					menuArray[i].remove();
 				}
 
@@ -154,7 +152,6 @@ block content
 								s = s.concat('<th>ID</th>');
 								s = s.concat('<th>level</th>');
 							s = s.concat('</tr>');
-						console.log(mapUsersConnected);
 
 						for(var i in mapUsersConnected) {
 							s = s.concat('<tr>');
