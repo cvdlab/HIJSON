@@ -12,6 +12,11 @@ var C3D = {
     Funzione che genera albero ed indice a partire dai file json
  */ 
 
+C3D.createSoJSON = function() {
+	    var data = JSON.parse(fs.readFileSync('json_input/sogei.json', 'utf8'));
+	    console.log(data);
+}
+
 C3D.parseJSON = function() {
 	
 	C3D.tree = {
@@ -231,6 +236,7 @@ function absoluteCoords(obj) {
     }
 }
 
-C3D.parseJSON();
+//C3D.parseJSON();
+C3D.createSoJSON();
 
 module.exports = C3D;

@@ -60,8 +60,9 @@ block content
 		hr
 		
 		.row
-			.col-md-6#navigator
+			.col-md-6
 				h3 Navigator
+				#navigator
 			.col-md-6
 				h3 Feature Information
 				#info
@@ -72,7 +73,9 @@ block content
 			var indexSelectElement = 0;
 			var selectElement = document.createElement('select');
 			selectElement.indexValue = indexSelectElement;
-			
+			selectElement.className = 'form-control';
+			console.log(selectElement);
+
 			menuArray.push(selectElement);
 			
 			$("#navigator").append(selectElement);
@@ -92,26 +95,28 @@ block content
 				//1. get dell'id del select selezionato e del rispettivo valore
 				var idSelect = selectElement.indexValue;
 				var idObject = selectElement.value;
-
 				//2. emit evento della selezione avvenuta per la visualizzazione 
 				C3D.emit('selectFeature', idObject);
 				
 				//3. Rimozione select successivi
 				for(var i=(idSelect + 1); i < menuArray.length; i++) {
+					console.log(menuArray[i]);
 					menuArray[i].remove();
 				}
 
 				//4. Riduzione array
-				var removed = menuArray.splice(idSelect, menuArray.length-idSelect-1);
+				var removed = menuArray.splice(idSelect+1, menuArray.length-idSelect-1);
 
 				//5. Inserimento nuovo select
-				indexSelectElement = (menuArray.length + 1);
-				console.log(C3D.index[idObject].children.length);
-				
+				if(idSelect < menuArray.length)
+					indexSelectElement = idSelect + 1;
+				else
+					indexSelectElement = (menuArray.length);
+
 				if(C3D.index[idObject].children.length > 0) {
 					var newSelectElement = document.createElement('select');
 					newSelectElement.indexValue = indexSelectElement;
-					
+					newSelectElement.className = 'form-control';
 					for(id in C3D.index[idObject].children) {
 						if(!(notShowThisFeatures.indexOf(C3D.index[idObject].children[id].properties.class)> -1)){
 							var optionElement = document.createElement('option');
