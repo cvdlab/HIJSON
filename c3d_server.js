@@ -13,54 +13,55 @@ var C3D = {
  */ 
 
 C3D.createSoJSON = function() {
-	    var data = JSON.parse(fs.readFileSync('json_input/sogei.json', 'utf8'));
+    var data = JSON.parse(fs.readFileSync('json_input/sogei.json', 'utf8'));
+    
+    var result = {
+    	id: 'architectures',
+    	type: 'FeatureCollection',
+    	features: [] 
+    };
+    for(var i in data)
+    {
+	    var level = {
+	    	type: 'Feature',
+	    	id: data[i].id,
+	    	geometry: {
+	    		type: 'Polygon',
+	    		coordinates: [
+	    			[ [0, 0], [20,0], [20,10], [0,10], [0,0] ]
+	    		]
+	    	},
+	    	properties: {
+	    		class: 'level',
+	    		parent: 'building',
+	    		rVector: data[i].rVector,
+	    		tVector: data[i].tVector
+	    	}
+	    }
+
+	    result.features.push(level);
 	    
-	    var result = {
-	    	id: 'architectures',
-	    	type: 'FeatureCollection',
-	    	features: [] 
-	    };
-	    for(var i in data)
-	    {
-		    var level = {
+	    for(var j in data[i].children) {
+		    var feature = {
 		    	type: 'Feature',
-		    	id: data[i].id,
+		    	id: data[i].id +'.' + j,
 		    	geometry: {
 		    		type: 'Polygon',
-		    		coordinates: [
-		    			[ [0, 0], [20,0], [20,10], [0,10], [0,0] ]
-		    		]
+		    		coordinates: data[i].children[j].coordinates
 		    	},
 		    	properties: {
-		    		class: 'level',
-		    		parent: 'building',
-		    		rVector: data[i].rVector,
-		    		tVector: data[i].tVector
+		    		class: 'room',
+		    		parent: data[i].id,
+		    		rVector: data[i].children[j].rVector,
+		    		tVector: data[i].children[j].tVector
 		    	}
-
 		    };
-		    result.features.push(level);
-		    
-		    for(var j in data[i].children) {
-			    var feature = {
-			    	type: 'Feature',
-			    	id: data[i].id +'.' j,
-			    	geometry: {
-			    		type: 'Polygon',
-			    		coordinates: data[i].children[j].coordinates
-			    	},
-			    	properties: {
-			    		class: 'room',
-			    		parent: data[i].id,
-			    		rVector: data[i].children[j].rVector,
-			    		tVector: data[i].children[j].tVector
-			    	}
-			    };
 
-			   	result.features.push(feature);
-		    
-		    }
-		fs.writeFileSync('json_input/architecture.json', JSON.stringify(result));
+		   	result.features.push(feature);
+	    
+	    }
+	}
+	fs.writeFileSync('json_input/architecture.json', JSON.stringify(result));
 }
 
 C3D.parseJSON = function() {

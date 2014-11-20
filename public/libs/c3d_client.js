@@ -133,7 +133,7 @@ C3D.init3D = function() {
     var camera = new THREE.PerspectiveCamera(45, container3DWidth / container3DHeight, 0.1, 1000);
     C3D.camera3D = camera;
     
-    camera.position.set(-400,400,400);
+    camera.position.set(-200,200,200);
     camera.up = new THREE.Vector3(0,1,0);
     camera.lookAt(scene.position);
 	
@@ -436,7 +436,9 @@ C3D.generate3DModel = function() {
         light.target.position = C3D.getCentroid(C3D.index['building'].obj3D);
     }
 
-
+    var centroid = C3D.getCentroid(C3D.index['building'].obj3D);
+    C3D.index['building'].obj3D.position.set(-centroid.x, -centroid.y, -centroid.z);
+    
 } // Chiude generate3DModel
 
 
