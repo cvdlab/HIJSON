@@ -238,7 +238,6 @@ C3D.init3D = function() {
 				pointerLockControls.getObject().position.y += 1.7;
 			} else {
                 var actualLevel = C3D.actualPosition.levelId;
-                console.log(actualLevel);
                 C3D.emit('selectFeature', actualLevel);
                 //C3D.index['building'].obj3D.rotation.x = 0;
 				scene.add(camera); //ripristina la camera originaria
@@ -457,7 +456,6 @@ C3D.generate2DModel = function() {
 		markers.addTo(C3D.index[geoJSONlevel].layer2D);
 		C3D.index[geoJSONlevel].layer2D.userMarkers = markers;
 	}
-
     var firstView = C3D.index[C3D.actualPosition.levelId].layer2D;
     firstView.addTo(C3D.map2D);
 
@@ -1148,7 +1146,7 @@ C3D.from3DToGeneral = function(threePosition) {
 
 // input: un oggetto posizione generale, output: un oggetto L.latLng
 C3D.fromGeneralTo2D = function(genPosition) {
-    var convertedCoordinates = C3D.fromMetersToDegrees(genPosition.coordinates);
+    var convertedCoordinates = C3D.fromXYToLngLat(genPosition.coordinates);
     var leafletPosition = L.latLng(convertedCoordinates[1], convertedCoordinates[0]);
 
 	return leafletPosition;
@@ -1157,40 +1155,59 @@ C3D.fromGeneralTo2D = function(genPosition) {
 // inversa
 C3D.from2DToGeneral = function(leafletPosition) {
     var genPosition = {
-		coordinates: C3D.fromDegreesToMeters([leafletPosition.lng, leafletPosition.lat]),
+		coordinates: C3D.fromLngLatToXY([leafletPosition.lng, leafletPosition.lat]),
 		levelId: C3D.actualPosition.levelId
 	}
 	return genPosition;
 }
 
-C3D.fromMetersToDegrees = function (coordinates) {
-    var newCoords = {
-        lat: coordinates[1]/(60*1852),
-        lng: coordinates[0]/(60*1852*Math.cos(coordinates[0]/(60*1852)))
-    };
-    coordinates[0] = newCoords.lng + C3D.config.originCoordinates.lng;
-    coordinates[1] = newCoords.lat + C3D.config.originCoordinates.lat;
+C3D.fromXYToLngLat = function (coordinates) {
+    var x = coordinates[0];    
+    var y = coordinates[1];
 
-    return coordinates;
+    var lng = x/(60*1852*Math.cos(y/(60*1852)));
+    var lat = y/(60*1852);
+    
+    var lng = lng + C3D.config.originCoordinates.lng;
+    var lat = lat + C3D.config.originCoordinates.lat;
+
+    var newCoords = [];
+
+    newCoords[0] = lng;
+    newCoords[1] = lat;
+
+    return newCoords;
 }
 
-C3D.fromDegreesToMeters = function(coordinates) {
-    coordinates[0] = coordinates[0] * 60 * 1852 * Math.cos(coordinates[1]);
-    coordinates[1] = coordinates[1] * 60 * 1852;
+C3D.fromLngLatToXY = function(coordinates) {
+    var lng = coordinates[0];    
+    var lat = coordinates[1];
 
-    return coordinates;
+    lng = lng - C3D.config.originCoordinates.lng;
+    lat = lat - C3D.config.originCoordinates.lat;
+
+    var x = lng * 60 * 1852 * Math.cos(lat);
+    var y = lat * 60 * 1852;
+
+    var newCoords = [];
+    newCoords[0] = x;
+    newCoords[1] = y;
+    
+    return newCoords;
 }
 
 C3D.from2Dto3D = function(leafletPosition) {
 	var genPosition = C3D.from2DToGeneral(leafletPosition);
 	var threePosition = C3D.fromGeneralTo3D(genPosition);
-	return threePosition;
+	
+    return threePosition;
 }
 
 C3D.from3Dto2D = function(threePosition) {
 	var genPosition = C3D.from3DToGeneral(threePosition);
 	var leafletPosition = C3D.fromGeneralTo2D(genPosition);
-	return leafletPosition;
+	
+    return leafletPosition;
 }
 
 C3D.getCentroid = function(object3D) {

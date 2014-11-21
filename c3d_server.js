@@ -284,15 +284,16 @@ function absoluteCoords(obj) {
 }
 
 function fromMetersToDegrees(coordinates) {
-	var newCoords = {
-		lat: coordinates[1]/(60*1852),
-		lng: coordinates[0]/(60*1852*Math.cos(coordinates[0]/(60*1852)))
+	var newCoords = [];
+	var coords = {
+		lat: coordinates[1]/(60 * 1852),
+		lng: coordinates[0]/(60 * 1852 * Math.cos(coordinates[0]/(60 * 1852)))
 	};
 
-	coordinates[0] = newCoords.lng + C3D.config.originCoordinates.lng;
-	coordinates[1] = newCoords.lat + C3D.config.originCoordinates.lat;
+	newCoords[0] = coords.lng + C3D.config.originCoordinates.lng;
+	newCoords[1] = coords.lat + C3D.config.originCoordinates.lat;
 
-	return coordinates;
+	return newCoords;
 }
 
 function convertToDegrees(geoJSONmap) {
