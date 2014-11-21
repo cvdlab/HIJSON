@@ -3,7 +3,7 @@ var fs = require('fs');
 var C3D = {
     input: {
 	    config: 'json_input/config.json',
-	    architecture: 'json_input/architecture.json',
+	    architecture: 'json_input/architecture_old.json',
 	    //furnitures: 'json_input/furnitures.json'
     }
 }
@@ -178,7 +178,7 @@ C3D.generateGeoJSON = function() {
         }
 		
 	}
-	C3D.geoJSONmap = geoJSONmap;
+	C3D.geoJSONmap = convertToDegrees(geoJSONmap);
 }
 
 function getCMT(obj) {
@@ -281,6 +281,53 @@ function absoluteCoords(obj) {
         	return undefined;
         	break;
     }
+}
+
+function fromMetersToDegrees(coordinates) {
+	var newCoords = {
+		lat: coordinates[1]/(60*1852),
+		lng: coordinates[0]/(60*1852*Math.cos(coordinates[0]/(60*1852)))
+	};
+
+	coordinates[0] = newCoords.lng + C3D.config.originCoordinates.lng;
+	coordinates[1] = newCoords.lat + C3D.config.originCoordinates.lat;
+
+	return coordinates;
+}
+
+function convertToDegrees(geoJSONmap) {
+	for(level in geoJSONmap) {
+		geoJSONobject = geoJSONmap[level];
+		for(feature in geoJSONobject.features) {
+			var object = geoJSONobject.features[feature];
+			switch (object.geometry.type) {
+		        case "Point":
+		            object.geometry.coordinates = fromMetersToDegrees(object.geometry.coordinates);
+		            break;
+		        case "LineString": 
+		        	var coords = object.geometry.coordinates;
+		        	for (var i = 0; i < coords.length; i++)
+		        	{
+			        	coords[i] = fromMetersToDegrees(coords[i]);
+		        	}
+		            break;
+		        case "Polygon":
+		        	var coords = object.geometry.coordinates;
+		        	for (var i = 0; i < coords.length; i++)
+		        	{
+			        	for (var j = 0; j < coords[i].length; j++)
+			        	{
+			        		coords[i][j] = fromMetersToDegrees(coords[i][j]);
+						}
+			        }
+		            break;
+		        default:
+		        	return undefined;
+		        	break;
+    		}
+		}
+	}
+	return geoJSONmap;	
 }
 
 C3D.createSoJSON();

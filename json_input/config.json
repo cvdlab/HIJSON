@@ -1,13 +1,13 @@
 {
-    "coordinates": 
+    "originCoordinates": 
     {
-        "latitude": 41.799404, 
-        "longitude": 12.485177 
+        "lat": 41.799404, 
+        "lng": 12.485177 
     },
     "startPosition": 
     {
         "coordinates": [0, 0], 
-        "levelId": "Level_0_SUD" 
+        "levelId": "level_0" 
     },
     "style":
     {

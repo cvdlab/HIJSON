@@ -91,9 +91,10 @@ C3D.init2D = function() {
 	    
         C3D.on('selectFeature', function(idObject) {
 		    if(C3D.index[idObject].properties.class === 'level' || C3D.index[idObject].properties.class === 'building') {
-		        C3D.map2D.eachLayer(function(layer) { C3D.map2D.removeLayer(layer); });
-		        C3D.index[idObject].layer2D.addTo(C3D.map2D);
+                C3D.map2D.removeLayer(C3D.index[C3D.actualPosition.levelId].layer2D); 
+                C3D.index[idObject].layer2D.addTo(C3D.map2D);
 		    }
+
 		    if(C3D.index[idObject].properties.class !== 'building') 
 		        C3D.map2D.fitBounds(C3D.getRoom(C3D.index[idObject]).layer2D.getBounds());
 
@@ -101,14 +102,13 @@ C3D.init2D = function() {
         });
         
         
-		//Quando si posizionera' sulla mappa 
-        // L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
-        //     maxZoom: 18,
-        //     attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
-        //         '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-        //         'Imagery © <a href="http://mapbox.com">Mapbox</a>',
-        //     id: 'examples.map-i875mjb7'
-        // }).addTo(map);
+        L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+                '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+                'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+            id: 'examples.map-i875mjb7'
+        }).addTo(C3D.map2D);
 
 }
 
@@ -436,8 +436,8 @@ C3D.generate3DModel = function() {
         light.target.position = C3D.getCentroid(C3D.index['building'].obj3D);
     }
 
-    var centroid = C3D.getCentroid(C3D.index['building'].obj3D);
-    C3D.index['building'].obj3D.position.set(-centroid.x, -centroid.y, -centroid.z);
+    // var centroid = C3D.getCentroid(C3D.index['building'].obj3D);
+    // C3D.index['building'].obj3D.position.set(-centroid.x, -centroid.y, -centroid.z);
     
 } // Chiude generate3DModel
 
@@ -458,7 +458,7 @@ C3D.generate2DModel = function() {
 		C3D.index[geoJSONlevel].layer2D.userMarkers = markers;
 	}
 
-    var firstView = C3D.tree.children[0].layer2D;
+    var firstView = C3D.index[C3D.actualPosition.levelId].layer2D;
     firstView.addTo(C3D.map2D);
 
 	C3D.map2D.fitBounds(firstView.getBounds());
@@ -1148,17 +1148,37 @@ C3D.from3DToGeneral = function(threePosition) {
 
 // input: un oggetto posizione generale, output: un oggetto L.latLng
 C3D.fromGeneralTo2D = function(genPosition) {
-	var leafletPosition = L.latLng(genPosition.coordinates[1], genPosition.coordinates[0]);
+    var convertedCoordinates = C3D.fromMetersToDegrees(genPosition.coordinates);
+    var leafletPosition = L.latLng(convertedCoordinates[1], convertedCoordinates[0]);
+
 	return leafletPosition;
 }
 
 // inversa
 C3D.from2DToGeneral = function(leafletPosition) {
     var genPosition = {
-		coordinates: [leafletPosition.lng, leafletPosition.lat],
+		coordinates: C3D.fromDegreesToMeters([leafletPosition.lng, leafletPosition.lat]),
 		levelId: C3D.actualPosition.levelId
 	}
 	return genPosition;
+}
+
+C3D.fromMetersToDegrees = function (coordinates) {
+    var newCoords = {
+        lat: coordinates[1]/(60*1852),
+        lng: coordinates[0]/(60*1852*Math.cos(coordinates[0]/(60*1852)))
+    };
+    coordinates[0] = newCoords.lng + C3D.config.originCoordinates.lng;
+    coordinates[1] = newCoords.lat + C3D.config.originCoordinates.lat;
+
+    return coordinates;
+}
+
+C3D.fromDegreesToMeters = function(coordinates) {
+    coordinates[0] = coordinates[0] * 60 * 1852 * Math.cos(coordinates[1]);
+    coordinates[1] = coordinates[1] * 60 * 1852;
+
+    return coordinates;
 }
 
 C3D.from2Dto3D = function(leafletPosition) {
@@ -1172,7 +1192,6 @@ C3D.from3Dto2D = function(threePosition) {
 	var leafletPosition = C3D.fromGeneralTo2D(genPosition);
 	return leafletPosition;
 }
-
 
 C3D.getCentroid = function(object3D) {
     var boundingBox = new THREE.BoundingBoxHelper(object3D,0xff0000 );
