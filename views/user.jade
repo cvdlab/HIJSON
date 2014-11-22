@@ -6,7 +6,6 @@ block internal_content
 		var socket = io('/users');
 		
 		// emit the initial position to the server for admins update
-		console.log(C3D.actualPosition.coordinates);
 		socket.emit('updatePosition', C3D.actualPosition);
 		
 		var marker;
