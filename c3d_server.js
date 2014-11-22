@@ -332,7 +332,7 @@ function convertToDegrees(geoJSONmap) {
 	return geoJSONmap;	
 }
 
-C3D.createSoJSON();
+//C3D.createSoJSON();
 C3D.parseJSON();
 
 module.exports = C3D;
