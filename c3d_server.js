@@ -3,8 +3,8 @@ var fs = require('fs');
 var C3D = {
     input: {
 	    config: 'json_input/config.json',
-	    architecture: 'json_input/architecture_old.json',
-	    //furnitures: 'json_input/furnitures.json'
+	    architecture: 'json_input/architecture_demo.json',
+	    furnitures: 'json_input/furnitures_demo.json'
     }
 }
 
@@ -13,7 +13,7 @@ var C3D = {
  */ 
 
 C3D.createSoJSON = function() {
-    var data = JSON.parse(fs.readFileSync('json_input/sogei.json', 'utf8'));
+    var data = JSON.parse(fs.readFileSync('json_input/raw_sogei.json', 'utf8'));
     
     var result = {
     	id: 'architectures',
@@ -61,7 +61,7 @@ C3D.createSoJSON = function() {
 	    
 	    }
 	}
-	fs.writeFileSync('json_input/architecture.json', JSON.stringify(result));
+	fs.writeFileSync('json_input/architecture_sogei.json', JSON.stringify(result));
 }
 
 C3D.parseJSON = function() {
@@ -283,15 +283,16 @@ function absoluteCoords(obj) {
     }
 }
 
-function fromMetersToDegrees(coordinates) {
-	var newCoords = [];
-	var coords = {
-		lat: coordinates[1]/(60 * 1852),
-		lng: coordinates[0]/(60 * 1852 * Math.cos(coordinates[0]/(60 * 1852)))
-	};
+function fromXYToLngLat(coordinates) {
+	var x = coordinates[0];
+	var y = coordinates[1];
+	
+	var lat = (y/(60 * 1852)) + C3D.config.originCoordinates.lat;
+	var lng = (x/(60 * 1852 * Math.cos(lat * (Math.PI/180)))) + C3D.config.originCoordinates.lng;
 
-	newCoords[0] = coords.lng + C3D.config.originCoordinates.lng;
-	newCoords[1] = coords.lat + C3D.config.originCoordinates.lat;
+	var newCoords = [];
+	newCoords[0] = lng;
+	newCoords[1] = lat;
 
 	return newCoords;
 }
@@ -303,13 +304,13 @@ function convertToDegrees(geoJSONmap) {
 			var object = geoJSONobject.features[feature];
 			switch (object.geometry.type) {
 		        case "Point":
-		            object.geometry.coordinates = fromMetersToDegrees(object.geometry.coordinates);
+		            object.geometry.coordinates = fromXYToLngLat(object.geometry.coordinates);
 		            break;
 		        case "LineString": 
 		        	var coords = object.geometry.coordinates;
 		        	for (var i = 0; i < coords.length; i++)
 		        	{
-			        	coords[i] = fromMetersToDegrees(coords[i]);
+			        	coords[i] = fromXYToLngLat(coords[i]);
 		        	}
 		            break;
 		        case "Polygon":
@@ -318,7 +319,7 @@ function convertToDegrees(geoJSONmap) {
 		        	{
 			        	for (var j = 0; j < coords[i].length; j++)
 			        	{
-			        		coords[i][j] = fromMetersToDegrees(coords[i][j]);
+			        		coords[i][j] = fromXYToLngLat(coords[i][j]);
 						}
 			        }
 		            break;

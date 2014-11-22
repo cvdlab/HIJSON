@@ -43,7 +43,6 @@ block internal_content
 			var user3D = C3D.generator3D['cube']('0x00FF00');
 			C3D.index[C3D.actualPosition.levelId].obj3D.userModels.add(user3D);
 			user3D.position = C3D.fromGeneralTo3D(C3D.actualPosition);
-			console.log(C3D.actualPosition);
 			// 3D moving
 			// the FPVmoved event is fired by the pointerlock library on position change, max 25 times/sec
 			C3D.on( 'FPVmoved', function() {
@@ -59,7 +58,6 @@ block internal_content
 					marker.setLatLng(actualLatLng);
 					marker.bindPopup('<b>[' + actualLatLng.lat + '; ' + actualLatLng.lng + ']</b>');
 				}
-				console.log(C3D.actualPosition);
 				// emit the new position to the server for admins update
 				socket.emit('updatePosition', C3D.actualPosition);	
 			});

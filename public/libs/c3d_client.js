@@ -38,6 +38,9 @@ C3D.actualPosition = {
 	coordinates: [C3D.config.startPosition.coordinates[0], C3D.config.startPosition.coordinates[1]],
 	levelId: C3D.config.startPosition.levelId
 };
+
+//console.log(C3D.actualPosition.levelId);
+
 C3D.handlers = {};
 C3D.generator3D = {};
 
@@ -1161,33 +1164,27 @@ C3D.from2DToGeneral = function(leafletPosition) {
 	return genPosition;
 }
 
+
 C3D.fromXYToLngLat = function (coordinates) {
-    var x = coordinates[0];    
-    var y = coordinates[1];
+	var x = coordinates[0];
+	var y = coordinates[1];
+	
+	var lat = (y/(60 * 1852)) + C3D.config.originCoordinates.lat;
+	var lng = (x/(60 * 1852 * Math.cos(lat * (Math.PI/180)))) + C3D.config.originCoordinates.lng;
 
-    var lng = x/(60*1852*Math.cos(y/(60*1852)));
-    var lat = y/(60*1852);
-    
-    var lng = lng + C3D.config.originCoordinates.lng;
-    var lat = lat + C3D.config.originCoordinates.lat;
+	var newCoords = [];
+	newCoords[0] = lng;
+	newCoords[1] = lat;
 
-    var newCoords = [];
-
-    newCoords[0] = lng;
-    newCoords[1] = lat;
-
-    return newCoords;
+	return newCoords;
 }
 
 C3D.fromLngLatToXY = function(coordinates) {
     var lng = coordinates[0];    
     var lat = coordinates[1];
-
-    lng = lng - C3D.config.originCoordinates.lng;
-    lat = lat - C3D.config.originCoordinates.lat;
-
-    var x = lng * 60 * 1852 * Math.cos(lat);
-    var y = lat * 60 * 1852;
+    
+    var x = (lng - C3D.config.originCoordinates.lng) * (60 * 1852 * Math.cos(lat * (Math.PI/180)));
+    var y = (lat - C3D.config.originCoordinates.lng) * (60 * 1852);
 
     var newCoords = [];
     newCoords[0] = x;
