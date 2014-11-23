@@ -895,7 +895,7 @@ C3D.generateWallGeometry = function (wallFeature) {
 }
 
 C3D.generator3D['external_wall'] = function(feature) {
-    var material = new THREE.MeshPhongMaterial({ 
+    var material = new THREE.MeshLambertMaterial({ 
     	color: C3D.config.style.external_wall.color, 
         side: THREE.DoubleSide
 	});
@@ -920,7 +920,7 @@ C3D.generator3D['external_wall'] = function(feature) {
 }
 
 C3D.generator3D['internal_wall'] = function(feature) {
-    var material = new THREE.MeshPhongMaterial({ 
+    var material = new THREE.MeshLambertMaterial({ 
         color: C3D.config.style.internal_wall.color, 
         side: THREE.DoubleSide
     });
@@ -958,7 +958,7 @@ C3D.generator3D['door'] = function(feature) {
 
 	//return new THREE.Line(C3D.generateLineString(feature.geometry), material);
     
-    var material = new THREE.MeshPhongMaterial({ 
+    var material = new THREE.MeshLambertMaterial({ 
         color: C3D.config.style.level.color, 
         side: THREE.DoubleSide
     });
