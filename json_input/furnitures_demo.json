@@ -840,7 +840,7 @@
                 "parent": "room_0.2",
                 "class": "fireExtinguisher",
                 "tVector": [0.25, 2, 0.5],
-                "rVector": [0, 0, 0]
+                "rVector": [0, 0, 90]
             }
         },
         
@@ -1393,7 +1393,7 @@
         },
         
         {
-            "id": "antenna_1.1",
+            "id": "antenna_1_room1.3",
             "type": "Feature",
             "geometry": 
             {
@@ -1404,8 +1404,8 @@
             {
                 "parent": "room_1.3",
                 "class": "antenna",
-                "tVector": [0.3, 0.1, 2.8],
-                "rVector": [0, 0, 0]
+                "tVector": [0.1, 0.3, 2.4],
+                "rVector": [0, 0, -90]
             }
         },
         
@@ -1487,7 +1487,7 @@
                 "parent": "room_1.2",
                 "class": "fireExtinguisher",
                 "tVector": [0.25, 2, 0.5],
-                "rVector": [0, 0, 0]
+                "rVector": [0, 0, 90]
             }
         },
         

@@ -585,7 +585,7 @@ C3D.generator3D['surveillanceCamera'] = function(feature) {
     var box = new THREE.Box3();
     box.setFromObject(camera);
     camera.add(box);
-
+    camera.rotation.y += Math.PI*1/9;
     var model = C3D.packageModel(camera);
     return model;
 }
@@ -693,7 +693,7 @@ C3D.generator3D['fireExtinguisher'] = function(feature) {
 
     var fireExtinguisher = new THREE.Object3D();
     
-    var material = new THREE.MeshBasicMaterial( {color: 0xff0000} );
+    var material = new THREE.MeshLambertMaterial( {color: 0xff0000} );
     var bodyGeometry = new THREE.CylinderGeometry( 0.1, 0.1, 0.6, 32 );
     var body = new THREE.Mesh( bodyGeometry, material );
     body.rotation.x = Math.PI/2;
@@ -707,13 +707,13 @@ C3D.generator3D['fireExtinguisher'] = function(feature) {
     fireExtinguisher.add(sphereUp);
     
     var headGeometry = new THREE.BoxGeometry(0.02, 0.02, 0.2);
-    var materialHead = new THREE.MeshBasicMaterial( {color: 0x000000} );
+    var materialHead = new THREE.MeshLambertMaterial( {color: 0x000000} );
     var head = new THREE.Mesh( headGeometry, materialHead );
     head.position.z += 0.4;
     
     fireExtinguisher.add(head);
 
-    var materialCylinder = new THREE.MeshBasicMaterial( {color: 0x000000} );
+    var materialCylinder = new THREE.MeshLambertMaterial( {color: 0x000000} );
     var cylinderGeometry = new THREE.CylinderGeometry( 0.015, 0.08, 0.25, 32 );
     var cylinder = new THREE.Mesh(cylinderGeometry, materialCylinder);
     cylinder.position.z += 0.5;
