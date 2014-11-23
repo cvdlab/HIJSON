@@ -1033,8 +1033,8 @@
             {
                 "parent": "room_1.1",
                 "class": "table",
-                "tVector": [5, 2, 0],
-                "rVector": [0, 0, 90]
+                "tVector": [3.5, 2.5, 0],
+                "rVector": [0, 0, 0]
             }
         },
         
@@ -1050,11 +1050,11 @@
             {
                 "parent": "room_1.1",
                 "class": "table",
-                "tVector": [5, 6, 0],
-                "rVector": [0, 0, 90]
+                "tVector": [5.5, 2.5, 0],
+                "rVector": [0, 0, 0]
             }
         },
-        
+
         {
             "id": "table_3_room_1.1",
             "type": "Feature",
@@ -1067,11 +1067,314 @@
             {
                 "parent": "room_1.1",
                 "class": "table",
-                "tVector": [5, 10, 0],
-                "rVector": [0, 0, 90]
+                "tVector": [7.5, 2.5, 0],
+                "rVector": [0, 0, 0]
             }
         },
-        
+
+        {
+            "id": "chair_1_room1.1",
+            "type": "Feature",
+            "geometry": 
+            {
+                "type": "Point",
+                "coordinates": [0, 0]
+            },
+            "properties": 
+            {
+                "parent": "room_1.1",
+                "class": "chair",
+                "tVector": [3.5, 2, 0],
+                "rVector": [0, 0, 0]
+            }
+        },
+
+        {
+            "id": "chair_2_room1.1",
+            "type": "Feature",
+            "geometry": 
+            {
+                "type": "Point",
+                "coordinates": [0, 0]
+            },
+            "properties": 
+            {
+                "parent": "room_1.1",
+                "class": "chair",
+                "tVector": [5.5, 2, 0],
+                "rVector": [0, 0, 0]
+            }
+        },
+
+        {
+            "id": "chair_3_room1.1",
+            "type": "Feature",
+            "geometry": 
+            {
+                "type": "Point",
+                "coordinates": [0, 0]
+            },
+            "properties": 
+            {
+                "parent": "room_1.1",
+                "class": "chair",
+                "tVector": [7.5, 2, 0],
+                "rVector": [0, 0, 0]
+            }
+        },
+
+
+        {
+            "id": "chair_4_room1.1",
+            "type": "Feature",
+            "geometry": 
+            {
+                "type": "Point",
+                "coordinates": [0, 0]
+            },
+            "properties": 
+            {
+                "parent": "room_1.1",
+                "class": "chair",
+                "tVector": [3.5, 5, 0],
+                "rVector": [0, 0, 180]
+            }
+        },
+
+        {
+            "id": "chair_5_room1.1",
+            "type": "Feature",
+            "geometry": 
+            {
+                "type": "Point",
+                "coordinates": [0, 0]
+            },
+            "properties": 
+            {
+                "parent": "room_1.1",
+                "class": "chair",
+                "tVector": [5.5, 5, 0],
+                "rVector": [0, 0, 180]
+            }
+        },
+
+        {
+            "id": "chair_6_room1.1",
+            "type": "Feature",
+            "geometry": 
+            {
+                "type": "Point",
+                "coordinates": [0, 0]
+            },
+            "properties": 
+            {
+                "parent": "room_1.1",
+                "class": "chair",
+                "tVector": [7.5, 5, 0],
+                "rVector": [0, 0, 180]
+            }
+        },
+
+        {
+            "id": "chair_7_room1.1",
+            "type": "Feature",
+            "geometry": 
+            {
+                "type": "Point",
+                "coordinates": [0, 0]
+            },
+            "properties": 
+            {
+                "parent": "room_1.1",
+                "class": "chair",
+                "tVector": [3.5, 7, 0],
+                "rVector": [0, 0, 180]
+            }
+        },
+
+        {
+            "id": "chair_8_room1.1",
+            "type": "Feature",
+            "geometry": 
+            {
+                "type": "Point",
+                "coordinates": [0, 0]
+            },
+            "properties": 
+            {
+                "parent": "room_1.1",
+                "class": "chair",
+                "tVector": [5.5, 7, 0],
+                "rVector": [0, 0, 180]
+            }
+        },
+
+        {
+            "id": "chair_9_room1.1",
+            "type": "Feature",
+            "geometry": 
+            {
+                "type": "Point",
+                "coordinates": [0, 0]
+            },
+            "properties": 
+            {
+                "parent": "room_1.1",
+                "class": "chair",
+                "tVector": [7.5, 7, 0],
+                "rVector": [0, 0, 180]
+            }
+        },
+
+        {
+            "id": "chair_10_room1.1",
+            "type": "Feature",
+            "geometry": 
+            {
+                "type": "Point",
+                "coordinates": [0, 0]
+            },
+            "properties": 
+            {
+                "parent": "room_1.1",
+                "class": "chair",
+                "tVector": [3.5, 9, 0],
+                "rVector": [0, 0, 180]
+            }
+        },
+
+        {
+            "id": "chair_11_room1.1",
+            "type": "Feature",
+            "geometry": 
+            {
+                "type": "Point",
+                "coordinates": [0, 0]
+            },
+            "properties": 
+            {
+                "parent": "room_1.1",
+                "class": "chair",
+                "tVector": [5.5, 9, 0],
+                "rVector": [0, 0, 180]
+            }
+        },
+
+        {
+            "id": "chair_12_room1.1",
+            "type": "Feature",
+            "geometry": 
+            {
+                "type": "Point",
+                "coordinates": [0, 0]
+            },
+            "properties": 
+            {
+                "parent": "room_1.1",
+                "class": "chair",
+                "tVector": [7.5, 9, 0],
+                "rVector": [0, 0, 180]
+            }
+        },
+        {
+            "id": "chair_13_room1.1",
+            "type": "Feature",
+            "geometry": 
+            {
+                "type": "Point",
+                "coordinates": [0, 0]
+            },
+            "properties": 
+            {
+                "parent": "room_1.1",
+                "class": "chair",
+                "tVector": [1.5, 9, 0],
+                "rVector": [0, 0, 180]
+            }
+        },
+        {
+            "id": "chair_14_room1.1",
+            "type": "Feature",
+            "geometry": 
+            {
+                "type": "Point",
+                "coordinates": [0, 0]
+            },
+            "properties": 
+            {
+                "parent": "room_1.1",
+                "class": "chair",
+                "tVector": [9.5, 9, 0],
+                "rVector": [0, 0, 180]
+            }
+        },
+
+        {
+            "id": "chair_15_room1.1",
+            "type": "Feature",
+            "geometry": 
+            {
+                "type": "Point",
+                "coordinates": [0, 0]
+            },
+            "properties": 
+            {
+                "parent": "room_1.1",
+                "class": "chair",
+                "tVector": [1.5, 7, 0],
+                "rVector": [0, 0, 180]
+            }
+        },
+        {
+            "id": "chair_16_room1.1",
+            "type": "Feature",
+            "geometry": 
+            {
+                "type": "Point",
+                "coordinates": [0, 0]
+            },
+            "properties": 
+            {
+                "parent": "room_1.1",
+                "class": "chair",
+                "tVector": [9.5, 7, 0],
+                "rVector": [0, 0, 180]
+            }
+        },
+
+        {
+            "id": "chair_17_room1.1",
+            "type": "Feature",
+            "geometry": 
+            {
+                "type": "Point",
+                "coordinates": [0, 0]
+            },
+            "properties": 
+            {
+                "parent": "room_1.1",
+                "class": "chair",
+                "tVector": [1.5, 5, 0],
+                "rVector": [0, 0, 180]
+            }
+        },
+        {
+            "id": "chair_18_room1.1",
+            "type": "Feature",
+            "geometry": 
+            {
+                "type": "Point",
+                "coordinates": [0, 0]
+            },
+            "properties": 
+            {
+                "parent": "room_1.1",
+                "class": "chair",
+                "tVector": [9.5, 5, 0],
+                "rVector": [0, 0, 180]
+            }
+        },
+
         {
             "id": "table_room_1.3",
             "type": "Feature",
@@ -1151,6 +1454,155 @@
                 "parent": "hall_0.1",
                 "class": "badgeReader",
                 "tVector": [1, 0.28, 1],
+                "rVector": [0, 0, 90]
+            }
+        },
+        {
+            "id": "fireExtinguisher_1_room_1.1",
+            "type": "Feature",
+            "geometry": 
+            {
+                "type": "Point",
+                "coordinates": [0, 0]
+            },
+            "properties": 
+            {
+                "parent": "room_1.1",
+                "class": "fireExtinguisher",
+                "tVector": [0.25, 1, 0.5],
+                "rVector": [0, 0, 90]
+            }
+        },
+
+        {
+            "id": "fireExtinguisher_1_room_1.2",
+            "type": "Feature",
+            "geometry": 
+            {
+                "type": "Point",
+                "coordinates": [0, 0]
+            },
+            "properties": 
+            {
+                "parent": "room_1.2",
+                "class": "fireExtinguisher",
+                "tVector": [0.25, 2, 0.5],
+                "rVector": [0, 0, 0]
+            }
+        },
+        
+        {
+            "id": "fireExtinguisher_1_hall_1.1",
+            "type": "Feature",
+            "geometry": 
+            {
+                "type": "Point",
+                "coordinates": [0, 0]
+            },
+            "properties": 
+            {
+                "parent": "hall_1.1",
+                "class": "fireExtinguisher",
+                "tVector": [4, 0.25, 0.5],
+                "rVector": [0, 0, 180]
+            }
+        },
+        {
+            "id": "fireExtinguisher_2_hall_1.1",
+            "type": "Feature",
+            "geometry": 
+            {
+                "type": "Point",
+                "coordinates": [0, 0]
+            },
+            "properties": 
+            {
+                "parent": "hall_1.1",
+                "class": "fireExtinguisher",
+                "tVector": [18, 8.25, 0.5],
+                "rVector": [0, 0, 180]
+            }
+        },
+
+        {
+            "id": "camera_room_1.1",
+            "type": "Feature",
+            "geometry": 
+            {
+                "type": "Point",
+                "coordinates": [0, 0]
+            },
+            "properties": 
+            {
+                "parent": "room_1.1",
+                "class": "surveillanceCamera",
+                "tVector": [5, 0.3, 2.8],
+                "rVector": [0, 0, 90]
+            }
+        },
+        
+        {
+            "id": "camera_hall_1.1",
+            "type": "Feature",
+            "geometry": 
+            {
+                "type": "Point",
+                "coordinates": [0, 0]
+            },
+            "properties": 
+            {
+                "parent": "hall_1.1",
+                "class": "surveillanceCamera",
+                "tVector": [0.3, 10, 2.8],
+                "rVector": [0, 0, 0]
+            }
+        },
+        {
+            "id": "hotspot_1_room_1.1",
+            "type": "Feature",
+            "geometry": 
+            {
+                "type": "Point",
+                "coordinates": [0, 0]
+            },
+            "properties": 
+            {
+                "parent": "room_1.1",
+                "class": "hotspot",
+                "tVector": [0.3, 5, 2.3],
+                "rVector": [0, 0, 90]
+            }
+        },
+        
+        {
+            "id": "hotspot_1_room_1.3",
+            "type": "Feature",
+            "geometry": 
+            {
+                "type": "Point",
+                "coordinates": [0, 0]
+            },
+            "properties": 
+            {
+                "parent": "room_1.3",
+                "class": "hotspot",
+                "tVector": [0.3, 2, 2.3],
+                "rVector": [0, 0, 90]
+            }
+        },
+        {
+            "id": "hotspot_1_room_1.4",
+            "type": "Feature",
+            "geometry": 
+            {
+                "type": "Point",
+                "coordinates": [0, 0]
+            },
+            "properties": 
+            {
+                "parent": "room_1.4",
+                "class": "hotspot",
+                "tVector": [0.3, 4, 2.3],
                 "rVector": [0, 0, 90]
             }
         }
