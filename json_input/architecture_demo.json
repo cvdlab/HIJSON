@@ -1254,6 +1254,28 @@
                     "tVector": [11, 0, 0],
                     "rVector": [0, 0, 0]
               }
+        },
+        {
+            "type": "Feature",
+            "id": "level_2",
+            "geometry": 
+            {
+                "type": "Polygon",
+                "coordinates": 
+                [ 
+                    [ [0, 0], [31, 0], [31, 19], [0, 19], [0, 0] ]
+                ]  
+            },
+            "properties": 
+            {
+                "class": "level",
+                "parent": "building",
+                "description": "Mura perimetrali level_2",
+                "height": 3.5,
+                "thickness": 0.3,
+                "tVector": [0, 0, 7],
+                "rVector": [0, 0, 0]
+            }
         }
 
     ]

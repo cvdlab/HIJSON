@@ -136,7 +136,7 @@ C3D.init3D = function() {
     var camera = new THREE.PerspectiveCamera(45, container3DWidth / container3DHeight, 0.1, 1000);
     C3D.camera3D = camera;
     
-    camera.position.set(-200,200,200);
+    camera.position.set(-30,30,30);
     camera.up = new THREE.Vector3(0,1,0);
     camera.lookAt(scene.position);
 	
@@ -147,7 +147,7 @@ C3D.init3D = function() {
     //var FPenabled = false;
 	var objects = [];
     
-    var renderer = new THREE.WebGLRenderer();
+    var renderer = new THREE.WebGLRenderer({antialias: true});
     renderer.setClearColor(new THREE.Color(C3D.config.style.background.color, 1.0)); 
     renderer.setSize(container3DWidth, container3DHeight);
     renderer.shadowMapEnabled = false;
@@ -409,6 +409,10 @@ C3D.generate3DModel = function() {
             {
                 C3D.obstaclesFeatures.push(el3D.wall);
             }
+            else if(feature.properties.class === 'level')
+            {
+	            C3D.obstaclesFeatures.push(el3D.floor);
+            }
             else
             {
                 C3D.obstaclesFeatures.push(el3D);
@@ -525,7 +529,7 @@ C3D.generator3D['server'] = function (feature) {
     else { var dimensions = feature.properties.dimensions; }
     
     var geometry = new THREE.BoxGeometry(dimensions[0], dimensions[1], dimensions[2]);
-    var material = new THREE.MeshLambertMaterial( {color: 0x6a6a6a} );
+    var material = new THREE.MeshLambertMaterial( {color: 0xf49530} );
     var wireMaterial = new THREE.MeshLambertMaterial( {color: 0x000000, wireframe: true, wireframeLinewidth: 2} );
     //var server = new THREE.SceneUtils.createMultiMaterialObject(geometry, [material, wireMaterial]);
     var server = new THREE.Mesh(geometry, material);
@@ -541,7 +545,7 @@ C3D.generator3D['server'] = function (feature) {
 
 C3D.generator3D['surveillanceCamera'] = function(feature) {
 
-    var material = new THREE.MeshLambertMaterial( {color: 0xffffff} );
+    var material = new THREE.MeshLambertMaterial( {color: 0x38a9dc} );
     var camera = new THREE.Object3D();
     
 
@@ -590,7 +594,7 @@ C3D.generator3D['surveillanceCamera'] = function(feature) {
 C3D.generator3D['hotspot'] = function(feature) {
     var hotspot = new THREE.Object3D();
 
-    var material = new THREE.MeshLambertMaterial( {color: 0xc0c0c0} );
+    var material = new THREE.MeshLambertMaterial( {color: 0x38a9dc} );
     var bodyGeometry = new THREE.BoxGeometry( 0.1, 0.02, 0.1);
     var body = new THREE.Mesh( bodyGeometry, material );
 
@@ -652,7 +656,7 @@ C3D.generator3D['light'] = function(feature) {
 } 
 
 C3D.generator3D['antenna'] = function(feature) {
-    var material = new THREE.MeshLambertMaterial( {color: 0xd9d7d7} );
+    var material = new THREE.MeshLambertMaterial( {color: 0x38a9dc} );
     
     var antenna = new THREE.Object3D();
     var geometry = new THREE.BoxGeometry( 0.3, 0.1, 0.3 );
@@ -940,6 +944,7 @@ C3D.generator3D['internal_wall'] = function(feature) {
     return container;   
 }
 
+/*
 C3D.generator3D['door'] = function(feature) {
     var material = new THREE.LineBasicMaterial({ 
         color: C3D.config.style.door.color, 
@@ -947,38 +952,35 @@ C3D.generator3D['door'] = function(feature) {
     });
     return new THREE.Line(C3D.generateLineString(feature.geometry), material);
 }
+*/
 
-// C3D.generator3D['level'] = function(feature) {
-//  //    var material = new THREE.LineBasicMaterial({ 
-//  //        color:C3D.config.style.level.color, 
-//  //        linewidth: feature.properties.thickness 
-//  //    });
-// 	// return new THREE.Line(C3D.generateLineString(feature.geometry), material);
+ C3D.generator3D['level'] = function(feature) {
+
+	//return new THREE.Line(C3D.generateLineString(feature.geometry), material);
     
-//     var material = new THREE.MeshPhongMaterial({ 
-//         color: C3D.config.style.level.color, 
-//         side: THREE.DoubleSide
-//     });
+    var material = new THREE.MeshPhongMaterial({ 
+        color: C3D.config.style.level.color, 
+        side: THREE.DoubleSide
+    });
     
-//     var shape = C3D.generatePolygonShape(feature.geometry);
+    var shape = C3D.generatePolygonShape(feature.geometry);
     
-//     var extrudedGeometry = shape.extrude({
-//                 curveSegments: 1,
-//                 steps: 1,
-//                 amount: feature.properties.thickness,
-//                 bevelEnabled: false
-//             });
+    var extrudedGeometry = shape.extrude({
+                curveSegments: 1,
+                steps: 1,
+                amount: feature.properties.thickness,
+                bevelEnabled: false
+    });
             
-//     var floor = new THREE.Mesh(extrudedGeometry, material);
-//     var container = new THREE.Object3D();
-//     container.add(floor);
-//     floor.position.z -= feature.properties.thickness- 0.01;
+    var floor = new THREE.Mesh(extrudedGeometry, material);
+    var container = new THREE.Object3D();
+    container.add(floor);
+    container.floor = floor;
+	floor.position.z -= feature.properties.thickness-0.01;
     
-//     return container;   
-// }
-C3D.generator3D['level'] = function(feature) {
-    return new THREE.Object3D();
+    return container;   
 }
+
 
 C3D.generator3D['room'] = function(feature) {
     var material = new THREE.MeshLambertMaterial({
@@ -997,7 +999,7 @@ C3D.generator3D['room'] = function(feature) {
 
 C3D.generator3D['badgeReader'] = function(feature) {
     var geometry = new THREE.BoxGeometry( 0.2, 0.3, 0.25 );
-    var material = new THREE.MeshBasicMaterial( {color: 0x1c1c1c} );
+    var material = new THREE.MeshLambertMaterial( {color: 0x38a9dc} );
     var badgeReader = new THREE.Mesh( geometry, material );
     
     var model = C3D.packageModel(badgeReader);
@@ -1184,7 +1186,7 @@ C3D.fromLngLatToXY = function(coordinates) {
     var lat = coordinates[1];
     
     var x = (lng - C3D.config.originCoordinates.lng) * (60 * 1852 * Math.cos(lat * (Math.PI/180)));
-    var y = (lat - C3D.config.originCoordinates.lng) * (60 * 1852);
+    var y = (lat - C3D.config.originCoordinates.lat) * (60 * 1852);
 
     var newCoords = [];
     newCoords[0] = x;
