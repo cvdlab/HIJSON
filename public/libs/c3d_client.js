@@ -158,8 +158,12 @@ C3D.init3D = function() {
     scene.add(ambientLight);
     
     var spotLight = new THREE.SpotLight(0xFFFFFF);
-    spotLight.shadowCameraVisible = true;
+    spotLight.position.set(-40,50,-50);
     scene.add( spotLight );
+    
+    var spotLight2 = new THREE.SpotLight(0xFFFFFF);
+    spotLight2.position.set(50,50,60);
+    scene.add( spotLight2 );
 
     var axisHelper = new THREE.AxisHelper(3);
     scene.add(axisHelper); 
@@ -424,7 +428,7 @@ C3D.generate3DModel = function() {
 
     C3D.scene3D.add(C3D.index["building"].obj3D);
     C3D.unionFeatures = C3D.obstaclesFeatures.concat(C3D.interactiveFeatures);
-    setLight();
+    //setLight();
 
     function setLight() {
         var light = C3D.scene3D.__lights[1];
