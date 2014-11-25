@@ -1,4 +1,5 @@
 var fs = require('fs');
+require('numeric');
 
 var C3D = {
     input: {
@@ -87,6 +88,10 @@ C3D.parseJSON = function() {
 	    {
 		    C3D.config = data;
 		    console.log('Configuration loaded.');
+		    C3D.transformationMatrix = computeMatrix(C3D.config.landmarks);
+		    C3D.inverseTransformationMatrix = numeric.inv(C3D.transformationMatrix);
+		    console.log('Matrix: ' + C3D.transformationMatrix);
+		   	console.log('Inverse matrix: ' + C3D.inverseTransformationMatrix);
 	    }
 	    else
 	    {
@@ -287,14 +292,8 @@ function fromXYToLngLat(coordinates) {
 	var x = coordinates[0];
 	var y = coordinates[1];
 	
-	var lat = (y/(60 * 1852)) + C3D.config.originCoordinates.lat;
-	var lng = (x/(60 * 1852 * Math.cos(lat * (Math.PI/180)))) + C3D.config.originCoordinates.lng;
-
-	var newCoords = [];
-	newCoords[0] = lng;
-	newCoords[1] = lat;
-
-	return newCoords;
+	var coords = applyTransformation(coordinates, C3D.transformationMatrix);
+	return coords;
 }
 
 function convertToDegrees(geoJSONmap) {
@@ -332,7 +331,47 @@ function convertToDegrees(geoJSONmap) {
 	return geoJSONmap;	
 }
 
+function computeMatrix(landmarks) {
+	var x1 = landmarks[0].local[0];
+	var y1 = landmarks[0].local[1];
+	var x2 = landmarks[1].local[0];
+	var y2 = landmarks[1].local[1];
+	var x3 = landmarks[2].local[0];
+	var y3 = landmarks[2].local[1];
+	var X1 = landmarks[0].lnglat[0];
+	var Y1 = landmarks[0].lnglat[1];
+	var X2 = landmarks[1].lnglat[0];
+	var Y2 = landmarks[1].lnglat[1];
+	var X3 = landmarks[2].lnglat[0];
+	var Y3 = landmarks[2].lnglat[1];
+
+	var matrixA = 
+	[
+		[x1,	y1,		0,		0,		1,		0],
+		[0,		0,		x1,		y1,		0,		1],
+		[x2, 	y2,		0,		0,		1,		0],
+		[0,		0,		x2,		y2,		0,		1],
+		[x3,	y3,		0,		0,		1,		0],
+		[0,		0,		x3,		y3,		0,		1]
+	];
+
+	var vectorB =
+	[
+		X1, Y1, X2, Y2, X3, Y3
+	];
+
+	var sol = numeric.solve(matrixA, vectorB);
+	var transformationMatrix =
+	[
+		[sol[0], sol[1], sol[4]],
+		[sol[2], sol[3], sol[5]],
+		[0, 0, 1]
+	];
+
+	return transformationMatrix;
+}
+
 //C3D.createSoJSON();
 C3D.parseJSON();
-
+computeMatrix(C3D.config.landmarks);
 module.exports = C3D;

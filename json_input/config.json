@@ -1,14 +1,36 @@
 {
-    "originCoordinates": 
+    "originCoordinates":
     {
-        "lat": 41.799404, 
-        "lng": 12.485177 
+    	"lat": 41,
+    	"lng": 12
     },
+
+    "landmarks": 
+	[
+		{
+			"local": [ 0, 9.5],
+			"lnglat": [9.5, 0]
+		},
+		
+		{
+			"local": [ 15.5, 19],
+			"lnglat": [19, -15.5]
+		
+		},
+		
+		{
+			"local": [ 31, 9.5],
+			"lnglat": [9.5, -31]
+
+		}
+	],
+
     "startPosition": 
     {
         "coordinates": [13.5, 1], 
         "levelId": "level_0"
     },
+
     "style":
     {
 	    "background": 

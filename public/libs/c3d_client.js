@@ -1172,31 +1172,11 @@ C3D.from2DToGeneral = function(leafletPosition) {
 
 
 C3D.fromXYToLngLat = function (coordinates) {
-	var x = coordinates[0];
-	var y = coordinates[1];
-	
-	var lat = (y/(60 * 1852)) + C3D.config.originCoordinates.lat;
-	var lng = (x/(60 * 1852 * Math.cos(lat * (Math.PI/180)))) + C3D.config.originCoordinates.lng;
-
-	var newCoords = [];
-	newCoords[0] = lng;
-	newCoords[1] = lat;
-
-	return newCoords;
+    return C3D.applyTransformation(coordinates, C3D.transformationMatrix);
 }
 
 C3D.fromLngLatToXY = function(coordinates) {
-    var lng = coordinates[0];    
-    var lat = coordinates[1];
-    
-    var x = (lng - C3D.config.originCoordinates.lng) * (60 * 1852 * Math.cos(lat * (Math.PI/180)));
-    var y = (lat - C3D.config.originCoordinates.lat) * (60 * 1852);
-
-    var newCoords = [];
-    newCoords[0] = x;
-    newCoords[1] = y;
-    
-    return newCoords;
+    return C3D.applyTransformation(coordinates, C3D.inverseTransformationMatrix);
 }
 
 C3D.from2Dto3D = function(leafletPosition) {
@@ -1218,4 +1198,8 @@ C3D.getCentroid = function(object3D) {
     boundingBox.update();
     var center = new THREE.Vector3( (boundingBox.box.min.x + boundingBox.box.max.x)/2, (boundingBox.box.min.y + boundingBox.box.max.y)/2, (boundingBox.box.min.z + boundingBox.box.max.z)/2 );
     return center;
+}
+
+C3D.applyTransformation = function (v, m) {
+    return [ v[0]*m[0][0] + v[1]*m[0][1] + m[0][2], v[0]*m[1][0] + v[1]*m[1][1] + m[1][2] ];
 }
