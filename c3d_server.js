@@ -216,11 +216,14 @@ function rotationMatrix(grades) {
 }
 
 function matrixProduct(a,b) {
+/*
 	return [
 		[ a[0][0]*b[0][0] + a[0][1]*b[1][0] + a[0][2]*b[2][0], a[0][0]*b[0][1] + a[0][1]*b[1][1] + a[0][2]*b[2][1], a[0][0]*b[0][2] + a[0][1]*b[1][2] + a[0][2]*b[2][2] ],
 		[ a[1][0]*b[0][0] + a[1][1]*b[1][0] + a[1][2]*b[2][0], a[1][0]*b[0][1] + a[1][1]*b[1][1] + a[1][2]*b[2][1], a[1][0]*b[0][2] + a[1][1]*b[1][2] + a[1][2]*b[2][2] ],
 		[ a[2][0]*b[0][0] + a[2][1]*b[1][0] + a[2][2]*b[2][0], a[2][0]*b[0][1] + a[2][1]*b[1][1] + a[2][2]*b[2][1], a[2][0]*b[0][2] + a[2][1]*b[1][2] + a[2][2]*b[2][2] ]
 	]
+*/
+	return numeric.dot(a,b);
 }
 
 function applyTransformation(v, m) {
@@ -289,11 +292,7 @@ function absoluteCoords(obj) {
 }
 
 function fromXYToLngLat(coordinates) {
-	var x = coordinates[0];
-	var y = coordinates[1];
-	
-	var coords = applyTransformation(coordinates, C3D.transformationMatrix);
-	return coords;
+	return applyTransformation(coordinates, C3D.transformationMatrix);
 }
 
 function convertToDegrees(geoJSONmap) {
@@ -373,5 +372,4 @@ function computeMatrix(landmarks) {
 
 //C3D.createSoJSON();
 C3D.parseJSON();
-computeMatrix(C3D.config.landmarks);
 module.exports = C3D;
