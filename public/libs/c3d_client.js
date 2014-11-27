@@ -128,7 +128,7 @@ C3D.init3D = function() {
     
     var stats = new Stats();
     stats.setMode(0); // 0: fps, 1: ms
-    container3D.append(stats.domElement);
+    //container3D.append(stats.domElement);
    
     var scene = new THREE.Scene();
     C3D.scene3D = scene;
@@ -136,7 +136,7 @@ C3D.init3D = function() {
     var camera = new THREE.PerspectiveCamera(45, container3DWidth / container3DHeight, 0.1, 1000);
     C3D.camera3D = camera;
     
-    camera.position.set(-30,30,30);
+    camera.position.set(40,50,40);
     camera.up = new THREE.Vector3(0,1,0);
     camera.lookAt(scene.position);
 	
