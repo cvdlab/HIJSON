@@ -1,0 +1,84 @@
+# Tutorial di utilizzo del visualizzatore xGeoJSON 
+
+## Formato xGeoJSON
+Il formato dato come input al visualizzatore é un'estensione di GeoJSON, chiamato xGeoJSON.
+xGeoJSON nasce al fine di soddisfare le esigenze tipiche della modellazione indoor.
+Si differenzia dal formato xGeoJSON per due principali caratteristiche: gli elementi sono strutturati secondo un ordinamento gerarchico
+e le coordinate sono specificate in metri e relative al genitore nel suddetto sistema gerarchico.
+
+## File in input
+In ingresso vengono forniti tre file:
+
+* **config.json**: contiene tutte le informazioni iniziali per la configurazione generale. In particolare la descrizione delle tre coppie
+	di coordinate utili al posizionamento su una mappa cartografica;
+* **architecture.json**: file xGeoJSON, contiene tutte le informazioni di livello architetturale;
+* **furnitures.json**: file xGeoJSON, contiene tutti gli elementi d'arredo.
+
+## Struttura xGeoJSON
+Ogni elemento di xGeoJSON rispetta la struttura di GeoJSON. Ogni elemento é un oggetto JSON con quattro proprietá fisse:
+* **id**:identifica univocamente un elemento;
+* **type**: fissato sempre a 'Feature';
+* **geometry**: rispecchia una geometria GeoJSON. Le coordinate sono in metri e partono sempre dall'origine. Per gli oggetti di arredamento si utilizza un Point con coordinate [0.0, 0.0];
+* **properties**: contiene proprietá aggiuntive utili per la rappresentazione dell'elemento. 
+
+
+#### Properties di xGeoJSON
+Alcune proprietá sono obbligatorie:
+* **parent**: identifica il genitore dell'elemento;
+* **class**: identifica il tipo di oggetto che si vuole rappresentare. 
+
+Le classi al momento presenti per le architetture sono:
+* **level**;
+* **external_wall**;
+* **internal_wall**;
+* **door**;
+* **room**.
+  
+Le classi per gli arredamenti invece sono:
+* **light**;
+* **antenna**;
+* **fire extinguisher**;
+* **hotspot**;
+* **table**;
+* **chair**;
+* **badge reader**;
+* **server**;
+* **surveillance camera**.
+
+
+Altre proprietá sono opzionali:
+* **tVector**: identifica il vettore di traslazione;
+* **rVector**: identifica il vettore di rotazione;
+* **description**;
+* **height**: rappresenta lo sviluppo in altezza dell'elemento;
+* **thickness**: rappresenta lo spessore (in metri) per le classi level e wall;
+* **connections**: proprietá obbligatoria per le classi wall, definita come un array degli id delle stanze confinanti;
+* **dimensions**: Definisce le dimensioni del modello. Contiene larghezza, altezza e spessore per alcuni elementi di arredamento, ad esempio server.
+
+##Avvio dell'applicazione
+L'applicazione consiste in una componente server scritta in nodeJS che effettua un primo preprocessamento dei dati, effettuando il parsing dei file in ingresso. 
+Per avviare il server é sufficiente invocare il seguente comando nella root dell'applicazione: `npm start`.
+L'applicazione si mette in ascolto sulla porta 3000.
+
+##Utilizzo dell'applicazione
+Il software presente nella versione attuale due tipi di interfacce:
+* **admin**: monitoraggio;
+* **user**: navigazione.
+
+##Navigazione
+![user](img/user.jpg "user")
+
+Al momento l'interfaccia presenta due tipi di visualizzazione:
+* **2D**: mappa Leaflet, rappresenta la modellazione 2D collocata su una mappa cartografica del modello rappresentato;
+* **3D**: visualizzazione 3D del modello.
+Questa modalitá permette di esplorare il modello descritto in ingresso. Avendo a disposizione un browser che supporta la libreria PointerLock, é possibile navigare il modello3D in prima persona.
+
+![navigazione](img/navigazione.jpg "navigazione")
+
+##Monitoraggio
+![admin](img/admin.jpg "admin")
+
+Questa interfaccia é analoga alla precedente, con l'unica differenza di essere predisposta alla ricezione da parte del server degli aggiornamenti di posizione da parte delle navigazioni effettuate come user.
+Al momento il monitoraggio si basa su simulazioni, ma in futuro si prevede l'integrazione con un sistema di navigazione indoor.
+
+![Monitoraggio](img/monitoraggio.jpg "monitoraggio")
