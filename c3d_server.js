@@ -1,5 +1,6 @@
 var fs = require('fs');
 require('numeric');
+var poly2tri = require('poly2tri');
 
 var C3D = {
     input: {
@@ -104,7 +105,7 @@ C3D.parseJSON = function() {
 	                var obj = {};
 	                obj.id = feature.id;
 	                obj.type = input_name;
-	                //obj.parent = C3D.index[feature.properties.parent];
+	                obj.parent = C3D.index[feature.properties.parent];
 	                C3D.index[feature.properties.parent].children.push(obj);
 	                obj.children = [];
 	                obj.geometry = feature.geometry;
@@ -122,8 +123,13 @@ C3D.parseJSON = function() {
     process.stdout.write('Generating geoJson layers... ');
     C3D.generateGeoJSON();
     console.log('Done.');
-    
+    C3D.createGraph();
+    for(id in C3D.index) {
+    	C3D.index[id].parent = {};
+    }
+
     C3D.index = {};
+    
     console.log('C3D initialization complete.');
 }
 
@@ -328,6 +334,61 @@ function convertToDegrees(geoJSONmap) {
 		}
 	}
 	return geoJSONmap;	
+}
+
+C3D.createGraph = function () {
+	var graph = {};
+	for(id in C3D.index) {
+		if(C3D.index[id].properties.class === 'room' || C3D.index[id].properties.class === 'door') {
+			graph[id] = {
+				adj: {},
+				pos: []
+			}
+		}
+	}
+
+	for(id in graph) {
+		C3D.pos = getCentroid(C3D.index[id]);
+		if(C3D.index[id].properties.class === 'door') {
+			for(i in C3D.index[id].parent.properties.connections) {
+				graph[id].adj[C3D.index[id].parent.properties.connections[i]] = 1;
+				graph[C3D.index[id].parent.properties.connections[i]].adj[id] = 1;				
+			}
+		}
+	}
+	C3D.pathGraph = graph;
+}
+
+function getCentroid(obj) {
+	var centroid;
+	if(obj.properties.class === 'door') {
+		centroid = obj.geometry.coordinates[1];
+		centroid[0] += obj.properties.tVector[0];
+		centroid[1] += obj.properties.tVector[1];
+		return centroid;
+	}
+	else 
+	{
+		var contour = [];
+		var hole = [];
+
+		for(j in obj.geometry.coordinates[0]) {
+			contour.push(new poly2tri.Point(obj.geometry.coordinates[0][j][0],obj.geometry.coordinates[0][j][1]));
+		}
+		var swctx = new poly2tri.SweepContext(contour);
+		if(obj.geometry.coordinates[1] !== undefined) {
+		    for (var i = 1; i < coords.length; i++) {
+        		for (var j = 0; j < coords[i].length; j++) {
+					hole.push(new poly2tri.Point(obj.geometry.coordinates[i][j][0],obj.geometry.coordinates[i][j][1]));
+        		}
+    		}
+    		swctx.addHole(hole);			
+		}
+		swctx.triangulate();
+		var triangles = swctx.getTriangles();
+		console.log(triangles);
+		return triangles;
+	}
 }
 
 function computeMatrix(landmarks) {

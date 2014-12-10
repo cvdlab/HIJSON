@@ -13,6 +13,7 @@
     "jade": "~1.6.0",
     "morgan": "~1.3.0",
     "numeric": "^1.2.6",
+    "poly2tri": "^1.3.5",
     "serve-favicon": "~2.1.3",
     "socket.io": "~1.1.0"
   }
