@@ -10,6 +10,7 @@ var C3D = {
     }
 }
 
+var tria; 
 /*
     Funzione che genera albero ed indice a partire dai file json
  */ 
@@ -337,58 +338,129 @@ function convertToDegrees(geoJSONmap) {
 }
 
 C3D.createGraph = function () {
-	var graph = {};
+	var graph = [];
+	var subGraph = [];
 	for(id in C3D.index) {
-		if(C3D.index[id].properties.class === 'room' || C3D.index[id].properties.class === 'door') {
-			graph[id] = {
-				adj: {},
-				pos: []
-			}
+		if(C3D.index[id].properties.class === 'door' || C3D.index[id].properties.class === 'room') {
+			createSubGraph(C3D.index[id]);
 		}
 	}
-
-	for(id in graph) {
-		C3D.pos = getCentroid(C3D.index[id]);
-		if(C3D.index[id].properties.class === 'door') {
-			for(i in C3D.index[id].parent.properties.connections) {
-				graph[id].adj[C3D.index[id].parent.properties.connections[i]] = 1;
-				graph[C3D.index[id].parent.properties.connections[i]].adj[id] = 1;				
-			}
-		}
-	}
-	C3D.pathGraph = graph;
 }
 
-function getCentroid(obj) {
-	var centroid;
-	if(obj.properties.class === 'door') {
-		centroid = obj.geometry.coordinates[1];
-		centroid[0] += obj.properties.tVector[0];
-		centroid[1] += obj.properties.tVector[1];
-		return centroid;
-	}
-	else 
-	{
-		var contour = [];
-		var hole = [];
+function createSubGraph(object) {
+	if(object.properties.class === 'door') {
+		var graphNode = {
+			type: 'graph',
+			id: 'n_' + object.id,
+			geometry: {
+				type: 'Point',
+				coordinates: [0, 0]
+			},
+			properties: {
+				tVector: [(object.geometry.coordinates[1][0]/2), 0, 0],
+				rVector: [0, 0, 0],
+				parent: object.id,
+				adj: {}
+			},
+			children: []
 
-		for(j in obj.geometry.coordinates[0]) {
-			contour.push(new poly2tri.Point(obj.geometry.coordinates[0][j][0],obj.geometry.coordinates[0][j][1]));
 		}
-		var swctx = new poly2tri.SweepContext(contour);
-		if(obj.geometry.coordinates[1] !== undefined) {
-		    for (var i = 1; i < coords.length; i++) {
-        		for (var j = 0; j < coords[i].length; j++) {
-					hole.push(new poly2tri.Point(obj.geometry.coordinates[i][j][0],obj.geometry.coordinates[i][j][1]));
-        		}
-    		}
-    		swctx.addHole(hole);			
-		}
-		swctx.triangulate();
-		var triangles = swctx.getTriangles();
-		console.log(triangles);
-		return triangles;
+		object.children.push(graphNode);
 	}
+
+	if(object.properties.class === 'room') {
+		var triangles = getTriangles(object);
+		var i = 0;
+			var bucket = [];
+		for(tri in triangles) {
+
+			var triangle = triangles[tri];
+			tria = triangle;
+			for(edge in triangle.constrained_edge) {
+				var constrainedEdge = triangle.constrained_edge[edge];
+				if(!constrainedEdge) {
+					var graphNode = {
+						type: 'graph',
+						id: 'n_'+ i + '_' + object.id,
+						geometry: {
+							type: 'Point',
+							coordinates: [0, 0]
+						},
+						properties: {
+							tVector: [0, 0, 0],
+							rVector: [0, 0, 0],
+							parent: object.id,
+							adj: {}
+						},
+						children: []
+					}
+					
+					var tVect = [];
+					switch(edge) {
+						case '0': 
+							var midPoint = getMidPoint(triangle.points_[1], triangle.points_[2]);
+							break;
+						case '1': 
+							var midPoint = getMidPoint(triangle.points_[0], triangle.points_[2]);
+							break;
+						case '2': 
+							var midPoint = getMidPoint(triangle.points_[0], triangle.points_[1]);
+							break;
+					}
+					tVect = [midPoint[0], midPoint[1], 0];
+					if(!(nodeInBucket(tVect,bucket))) {
+						graphNode.id = 'n_'+ i + '_' + object.id;
+						graphNode.properties.tVector = tVect;
+						bucket.push(graphNode);
+						i++;
+					}
+
+				}
+			}
+
+		}
+			for(node in bucket) {
+				var graphNode = bucket[node];
+				object.children.push(graphNode);
+			}	
+	}
+}
+
+function nodeInBucket(tVect, bucket) {
+	var bool = false;
+	
+	for(node in bucket) {
+		var graphNode = bucket[node];
+		if(tVect[0] === graphNode.properties.tVector[0] && tVect[1] === graphNode.properties.tVector[1] ) {
+			bool = true;
+		}
+	}
+	return bool;
+}
+function getMidPoint(point1, point2) {
+	return [((point1.x + point2.x)/2), ((point1.y + point2.y)/2)]
+}
+
+function getTriangles(object) {
+	var contour = [];
+	var hole = [];
+
+	for(j in object.geometry.coordinates[0]) {
+		contour.push(new poly2tri.Point(object.geometry.coordinates[0][j][0],object.geometry.coordinates[0][j][1]));
+	}
+	var swctx = new poly2tri.SweepContext(contour);
+	if(object.geometry.coordinates[1] !== undefined) {
+	    for (var i = 1; i < coords.length; i++) {
+    		for (var j = 0; j < coords[i].length; j++) {
+				hole.push(new poly2tri.Point(object.geometry.coordinates[i][j][0],object.geometry.coordinates[i][j][1]));
+    		}
+		}
+		swctx.addHole(hole);			
+	}
+	swctx.triangulate();
+	var triangles = swctx.getTriangles();
+
+	return triangles;
 }
 
 function computeMatrix(landmarks) {
