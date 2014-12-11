@@ -371,9 +371,14 @@ function createSubGraph(object) {
 	if(object.properties.class === 'room') {
 		var triangles = getTriangles(object);
 		var i = 0;
-			var bucket = [];
+			var bucket = {
+				main: [],
+				buckets: {}
+			};
+		
 		for(tri in triangles) {
-
+			var idTriangles = object.id + '_' + tri; 
+			bucket.buckets[idTriangles] = [];
 			var triangle = triangles[tri];
 			tria = triangle;
 			for(edge in triangle.constrained_edge) {
@@ -408,29 +413,52 @@ function createSubGraph(object) {
 							break;
 					}
 					tVect = [midPoint[0], midPoint[1], 0];
+					graphNode.id = 'n_'+ i + '_' + object.id;
+					graphNode.properties.tVector = tVect;
+
+					bucket.buckets[idTriangles].push(graphNode);
 					if(!(nodeInBucket(tVect,bucket))) {
-						graphNode.id = 'n_'+ i + '_' + object.id;
-						graphNode.properties.tVector = tVect;
-						bucket.push(graphNode);
+						bucket.main.push(graphNode);
 						i++;
 					}
-
 				}
 			}
-
 		}
-			for(node in bucket) {
-				var graphNode = bucket[node];
-				object.children.push(graphNode);
-			}	
+
+		for(id in bucket.buckets) {
+			var smallBucket = bucket.buckets[id];
+			if(smallBucket.length >= 2){
+				connectNodes(smallBucket,bucket.main);
+			}
+		}
+
+		for(node in bucket.main) {
+			var graphNode = bucket[node];
+			object.children.push(graphNode);
+		}	
 	}
+}
+
+function connectNodes(smallBucket, mainBucket) {
+	var idNode_1 = smallBucket[0].id;
+	var idNode_2 = smallBucket[1].id;
+	//Fare gli opportuni adj al mainBucket
+	for(idNode in mainBucket) {
+		var node = mainBucket[idNode];
+		if(node.id === idNode_1) {
+			node.properties.adj[idNode_2] = 1;
+		}
+		if(node.id === idNode_2) {
+			node.properties.adj[idNode_1] = 1;
+		}
+	}	
 }
 
 function nodeInBucket(tVect, bucket) {
 	var bool = false;
 	
-	for(node in bucket) {
-		var graphNode = bucket[node];
+	for(node in bucket.main) {
+		var graphNode = bucket.main[node];
 		if(tVect[0] === graphNode.properties.tVector[0] && tVect[1] === graphNode.properties.tVector[1] ) {
 			bool = true;
 		}
