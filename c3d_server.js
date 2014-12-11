@@ -10,7 +10,6 @@ var C3D = {
     }
 }
 
-var tria; 
 /*
     Funzione che genera albero ed indice a partire dai file json
  */ 
@@ -384,21 +383,7 @@ function createSubGraph(object) {
 			for(edge in triangle.constrained_edge) {
 				var constrainedEdge = triangle.constrained_edge[edge];
 				if(!constrainedEdge) {
-					var graphNode = {
-						type: 'graph',
-						id: 'n_'+ i + '_' + object.id,
-						geometry: {
-							type: 'Point',
-							coordinates: [0, 0]
-						},
-						properties: {
-							tVector: [0, 0, 0],
-							rVector: [0, 0, 0],
-							parent: object.id,
-							adj: {}
-						},
-						children: []
-					}
+
 					
 					var tVect = [];
 					switch(edge) {
@@ -413,47 +398,88 @@ function createSubGraph(object) {
 							break;
 					}
 					tVect = [midPoint[0], midPoint[1], 0];
-					graphNode.id = 'n_'+ i + '_' + object.id;
-					graphNode.properties.tVector = tVect;
-
-					bucket.buckets[idTriangles].push(graphNode);
-					if(!(nodeInBucket(tVect,bucket))) {
+					
+					if(!(nodeInBucket(tVect,bucket))) {				
+						var graphNode = {
+							type: 'graph',
+							id: 'n_'+ i + '_' + object.id,
+							geometry: {
+								type: 'Point',
+								coordinates: [0, 0]
+							},
+							properties: {
+								tVector: tVect,
+								rVector: [0, 0, 0],
+								parent: object.id,
+								adj: {}
+							},
+							children: []
+						}
+						bucket.buckets[idTriangles].push(graphNode);
 						bucket.main.push(graphNode);
 						i++;
+					}
+					else
+					{
+						bucket.buckets[idTriangles].push(getNode(tVect,bucket.main));
 					}
 				}
 			}
 		}
-
 		for(id in bucket.buckets) {
 			var smallBucket = bucket.buckets[id];
 			if(smallBucket.length >= 2){
+				console.log(id);
 				connectNodes(smallBucket,bucket.main);
 			}
 		}
 
 		for(node in bucket.main) {
-			var graphNode = bucket[node];
+			var graphNode = bucket.main[node];
 			object.children.push(graphNode);
-		}	
+		}
 	}
 }
 
-function connectNodes(smallBucket, mainBucket) {
-	var idNode_1 = smallBucket[0].id;
-	var idNode_2 = smallBucket[1].id;
-	//Fare gli opportuni adj al mainBucket
+function getNode(tVect, mainBucket) {
 	for(idNode in mainBucket) {
-		var node = mainBucket[idNode];
-		if(node.id === idNode_1) {
-			node.properties.adj[idNode_2] = 1;
+		var bucketNode = mainBucket[idNode];
+		if(tVect[0] === bucketNode.properties.tVector[0] && tVect[1] === bucketNode.properties.tVector[1]) {
+			return bucketNode;			
 		}
-		if(node.id === idNode_2) {
-			node.properties.adj[idNode_1] = 1;
-		}
-	}	
+	}
+	console.log('Error');
 }
 
+function connectNodes(smallBucket, mainBucket) {
+	var node_0 = smallBucket[0];
+	var node_1 = smallBucket[1];
+	for(idNode in mainBucket) {
+		var node = mainBucket[idNode];
+		if(node_0.properties.tVector[0] === node.properties.tVector[0] && node_0.properties.tVector[1] === node.properties.tVector[1]) {
+			node.properties.adj[node_1.id] = distanceBetweenTwoPoints(node_0, node_1);				
+		}
+		if(node_1.properties.tVector[0] === node.properties.tVector[0] && node_1.properties.tVector[1] === node.properties.tVector[1]) {
+			node.properties.adj[node_0.id] = distanceBetweenTwoPoints(node_0, node_1);				
+		}
+	}
+}
+
+function distanceBetweenTwoPoints(node_0, node_1) {
+	return Math.sqrt( 
+		(
+			Math.pow(
+				(node_1.properties.tVector[0] - node_0.properties.tVector[0])
+			,2) 
+			+ 
+		(
+			Math.pow(
+				(node_1.properties.tVector[1] - node_0.properties.tVector[1])
+			,2)
+		)
+		)
+		);
+}
 function nodeInBucket(tVect, bucket) {
 	var bool = false;
 	
