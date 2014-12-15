@@ -108,6 +108,7 @@ C3D.parseJSON = function() {
 	                obj.parent = C3D.index[feature.properties.parent];
 	                C3D.index[feature.properties.parent].children.push(obj);
 	                obj.children = [];
+	                obj.graph = [];
 	                obj.geometry = feature.geometry;
 	                obj.properties = feature.properties;
 	                C3D.index[feature.id] = obj;
@@ -337,11 +338,26 @@ function convertToDegrees(geoJSONmap) {
 }
 
 C3D.createGraph = function () {
-	var graph = [];
-	var subGraph = [];
+	//Creazione sottografi
 	for(id in C3D.index) {
 		if(C3D.index[id].properties.class === 'door' || C3D.index[id].properties.class === 'room') {
 			createSubGraph(C3D.index[id]);
+		}
+	}
+
+	//Collegamenti porte-stanze
+	for(id in C3D.index) {
+		if(C3D.index[id].properties.class === 'door') {
+			var door = C3D.index[id];
+			var connections = C3D.index[door.properties.parent].properties.connections;
+			for(var i=0; i<connections.length; i++){
+				var idRoom = connections[i];			
+				var room = C3D.index[idRoom];
+				var nearestNode = getNearestNode(door.graph[0], room.graph);
+				door.graph[0].adj = [];
+				door.graph[0].adj[nearestNode.id] = nearestNode.distance;
+				nearestNode.node.properties.adj[id] = nearestNode.distance;
+			}
 		}
 	}
 }
@@ -364,7 +380,7 @@ function createSubGraph(object) {
 			children: []
 
 		}
-		object.children.push(graphNode);
+		object.graph.push(graphNode);
 	}
 
 	if(object.properties.class === 'room') {
@@ -372,20 +388,35 @@ function createSubGraph(object) {
 		var i = 0;
 			var bucket = {
 				main: [],
-				buckets: {}
+				buckets: []
 			};
 		
 		for(tri in triangles) {
-			var idTriangles = object.id + '_' + tri; 
-			bucket.buckets[idTriangles] = [];
+			var idTriangle = object.id + '_' + tri; 
+			bucket.buckets[idTriangle] = [];
 			var triangle = triangles[tri];
-			tria = triangle;
+			var v0 = {
+				x: triangle.points_[0].x,
+				y: triangle.points_[0].y
+			}
+
+			var v1 = {
+				x: triangle.points_[1].x,
+				y: triangle.points_[1].y
+			}
+
+			var v2 = {
+				x: triangle.points_[2].x,
+				y: triangle.points_[2].y
+			}
+
+			bucket.buckets[idTriangle].centroid = createNode(calcuteTriangleMidPoint(v0, v1, v2), object.id, tri);
+			bucket.main.push(bucket.buckets[idTriangle].centroid);
+			bucket.buckets[idTriangle].mid = [];
 			for(edge in triangle.constrained_edge) {
 				var constrainedEdge = triangle.constrained_edge[edge];
 				if(!constrainedEdge) {
-
-					
-					var tVect = [];
+				var tVect = [];
 					switch(edge) {
 						case '0': 
 							var midPoint = getMidPoint(triangle.points_[1], triangle.points_[2]);
@@ -415,30 +446,96 @@ function createSubGraph(object) {
 							},
 							children: []
 						}
-						bucket.buckets[idTriangles].push(graphNode);
+						bucket.buckets[idTriangle].mid.push(graphNode);
 						bucket.main.push(graphNode);
 						i++;
 					}
 					else
 					{
-						bucket.buckets[idTriangles].push(getNode(tVect,bucket.main));
+						bucket.buckets[idTriangle].mid.push(getNode(tVect,bucket.main));
 					}
 				}
 			}
 		}
+
+		//Collegamento tra punti medi 
 		for(id in bucket.buckets) {
 			var smallBucket = bucket.buckets[id];
 			if(smallBucket.length >= 2){
-				console.log(id);
 				connectNodes(smallBucket,bucket.main);
 			}
 		}
 
+		//Collegamento tra centroidi e punti medi
+		for(id in bucket.buckets) {
+			var smallBucket = bucket.buckets[id];
+			connectCentroid(smallBucket);
+		}		
+
+		//Aggiunta dei nodi all'oggetto (sottografo)
 		for(node in bucket.main) {
 			var graphNode = bucket.main[node];
-			object.children.push(graphNode);
+			object.graph.push(graphNode);
 		}
 	}
+}
+function getNearestNode(nodeDoor, graphRoom) {
+	var distanceNodes = [];
+	var i = 0;
+	for(idNode in graphRoom) {
+		var nodeRoom = graphRoom[idNode];
+		distanceNodes[i] = {
+			node: nodeRoom,
+			distance: distanceBetweenTwoPoints(nodeDoor, nodeRoom)
+		};
+		console.log(distanceNodes[i].node.id + ': ' + distanceNodes[i].distance);
+		i++;
+	}
+	var nearestNode = {
+		node: distanceNodes[0].node,
+		distance: distanceNodes[0].distance
+	}
+	for(var j=0; j<distanceNodes.length; j++) {
+		if(distanceNodes[j].distance<nearestNode.minimumDistance) {
+			nearestNode.minimumDistance = distanceNodes[j].distance;
+			nearestNode.node = distanceNodes[j].node;
+		}
+	}
+
+	return nearestNode;
+}
+
+function connectCentroid(bucket) {
+	var centroid = bucket.centroid;
+	for(idNode in bucket.mid) {
+		var node = bucket.mid[idNode];
+		var distance = distanceBetweenTwoPoints(centroid, node);
+		node.properties.adj[centroid.id] = distance;
+		centroid.properties.adj[node.id] = distance;	
+	}
+}
+
+function createNode(tVector, objectId, triangleId) {
+	var graphNode = {
+		type: 'graph',
+		id: 'c_' + triangleId + '_' + objectId,
+		geometry: {
+			type: 'Point',
+			coordinates: [0, 0]
+		},
+		properties: {
+			tVector: [0,0 , 0],
+			rVector: [0, 0, 0],
+			parent: objectId,
+			adj: {}
+		},
+		children: []
+	}
+	graphNode.properties.tVector = tVector;
+	return graphNode;
+}
+function calcuteTriangleMidPoint(point0, point1, point2) {
+		return [((point0.x + point1.x + point2.x)/3), ((point0.y + point1.y + point2.y)/3),0 ]
 }
 
 function getNode(tVect, mainBucket) {
