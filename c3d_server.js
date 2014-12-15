@@ -121,14 +121,20 @@ C3D.parseJSON = function() {
         }
     }
     
+
+    process.stdout.write('Generating graph for paths... ');
+    C3D.createGraph();
+    console.log('Done.');
+    
     process.stdout.write('Generating geoJson layers... ');
     C3D.generateGeoJSON();
     console.log('Done.');
-    C3D.createGraph();
+
+    
+    // clean for JSON stringify
     for(id in C3D.index) {
     	C3D.index[id].parent = {};
     }
-
     C3D.index = {};
     
     console.log('C3D initialization complete.');
@@ -262,7 +268,7 @@ function getLevel(obj) {
 function absoluteCoords(obj) {
 	
 	var matrix = getCMT(obj);
-	
+	console.log(obj.id);
 	switch (obj.geometry.type) {
         case "Point":
             return applyTransformation(obj.geometry.coordinates, matrix);
@@ -380,20 +386,22 @@ function createSubGraph(object) {
 			children: []
 
 		}
+		object.children.push(graphNode);
 		object.graph.push(graphNode);
 	}
 
 	if(object.properties.class === 'room') {
 		var triangles = getTriangles(object);
 		var i = 0;
-			var bucket = {
-				main: [],
-				buckets: []
-			};
+		
+		var bucket = {
+			main: [],
+			buckets: []
+		};
 		
 		for(tri in triangles) {
 			var idTriangle = object.id + '_' + tri; 
-			bucket.buckets[idTriangle] = [];
+			bucket.buckets[idTriangle] = {};
 			var triangle = triangles[tri];
 			var v0 = {
 				x: triangle.points_[0].x,
@@ -458,6 +466,7 @@ function createSubGraph(object) {
 			}
 		}
 
+/*
 		//Collegamento tra punti medi 
 		for(id in bucket.buckets) {
 			var smallBucket = bucket.buckets[id];
@@ -465,6 +474,7 @@ function createSubGraph(object) {
 				connectNodes(smallBucket,bucket.main);
 			}
 		}
+*/
 
 		//Collegamento tra centroidi e punti medi
 		for(id in bucket.buckets) {
@@ -475,7 +485,10 @@ function createSubGraph(object) {
 		//Aggiunta dei nodi all'oggetto (sottografo)
 		for(node in bucket.main) {
 			var graphNode = bucket.main[node];
+			graphNode.parent = C3D.index[graphNode.properties.parent];
+			object.children.push(graphNode);
 			object.graph.push(graphNode);
+			C3D.index[graphNode.id] = graphNode;
 		}
 	}
 }
