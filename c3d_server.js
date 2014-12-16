@@ -112,6 +112,10 @@ C3D.parseJSON = function() {
 	                obj.geometry = feature.geometry;
 	                obj.properties = feature.properties;
 	                C3D.index[feature.id] = obj;
+
+			        var localMatrix = objMatrix(obj);
+					var globalMatrix = getCMT(C3D.index[obj.properties.parent]);
+					obj.CMT = matrixProduct(globalMatrix, localMatrix);
             	}
         	} 
 			else 
@@ -161,13 +165,9 @@ C3D.generateGeoJSON = function() {
 
         if(includedClasses.indexOf(obj.properties.class) > -1)
         {
-	        var localMatrix = objMatrix(obj);
-			var globalMatrix = getCMT(C3D.index[obj.properties.parent]);
-			C3D.index[obj.id].CMT = matrixProduct(globalMatrix, localMatrix);
-			
+
             //console.log('(2D) Oggetto in fase di generazione: ' + obj.id);
-			var level = getLevel(obj);			
-			
+			var level = getLevel(obj);		
 			if(!(level in geoJSONmap)) {
 				geoJSONmap[level] = {
 					type: "FeatureCollection",
@@ -268,7 +268,6 @@ function getLevel(obj) {
 function absoluteCoords(obj) {
 	
 	var matrix = getCMT(obj);
-	console.log(obj.id);
 	switch (obj.geometry.type) {
         case "Point":
             return applyTransformation(obj.geometry.coordinates, matrix);
@@ -356,6 +355,7 @@ C3D.createGraph = function () {
 		if(C3D.index[id].properties.class === 'door') {
 			var door = C3D.index[id];
 			var connections = C3D.index[door.properties.parent].properties.connections;
+			
 			for(var i=0; i<connections.length; i++){
 				var idRoom = connections[i];			
 				var room = C3D.index[idRoom];
@@ -386,12 +386,17 @@ function createSubGraph(object) {
 			children: []
 
 		}
+        var localMatrix = objMatrix(graphNode);
+		var globalMatrix = getCMT(C3D.index[graphNode.properties.parent]);
+		graphNode.CMT = matrixProduct(globalMatrix, localMatrix);
+
 		object.children.push(graphNode);
 		object.graph.push(graphNode);
 	}
 
 	if(object.properties.class === 'room') {
 		var triangles = getTriangles(object);
+		
 		var i = 0;
 		
 		var bucket = {
@@ -417,8 +422,13 @@ function createSubGraph(object) {
 				x: triangle.points_[2].x,
 				y: triangle.points_[2].y
 			}
+			var centroid = createNode(calcuteTriangleMidPoint(v0, v1, v2), object.id, tri)
+			bucket.buckets[idTriangle].centroid = centroid;
+	        
+	        var localMatrix = objMatrix(centroid);
+			var globalMatrix = getCMT(C3D.index[centroid.properties.parent]);
+			centroid.CMT = matrixProduct(globalMatrix, localMatrix);
 
-			bucket.buckets[idTriangle].centroid = createNode(calcuteTriangleMidPoint(v0, v1, v2), object.id, tri);
 			bucket.main.push(bucket.buckets[idTriangle].centroid);
 			bucket.buckets[idTriangle].mid = [];
 			for(edge in triangle.constrained_edge) {
@@ -454,6 +464,10 @@ function createSubGraph(object) {
 							},
 							children: []
 						}
+						var localMatrix = objMatrix(graphNode);
+						var globalMatrix = getCMT(C3D.index[graphNode.properties.parent]);
+						graphNode.CMT = matrixProduct(globalMatrix, localMatrix);
+						
 						bucket.buckets[idTriangle].mid.push(graphNode);
 						bucket.main.push(graphNode);
 						i++;
@@ -462,6 +476,7 @@ function createSubGraph(object) {
 					{
 						bucket.buckets[idTriangle].mid.push(getNode(tVect,bucket.main));
 					}
+
 				}
 			}
 		}
@@ -475,7 +490,7 @@ function createSubGraph(object) {
 			}
 		}
 */
-
+		
 		//Collegamento tra centroidi e punti medi
 		for(id in bucket.buckets) {
 			var smallBucket = bucket.buckets[id];
@@ -485,6 +500,7 @@ function createSubGraph(object) {
 		//Aggiunta dei nodi all'oggetto (sottografo)
 		for(node in bucket.main) {
 			var graphNode = bucket.main[node];
+
 			graphNode.parent = C3D.index[graphNode.properties.parent];
 			object.children.push(graphNode);
 			object.graph.push(graphNode);
@@ -492,6 +508,7 @@ function createSubGraph(object) {
 		}
 	}
 }
+
 function getNearestNode(nodeDoor, graphRoom) {
 	var distanceNodes = [];
 	var i = 0;
@@ -499,18 +516,19 @@ function getNearestNode(nodeDoor, graphRoom) {
 		var nodeRoom = graphRoom[idNode];
 		distanceNodes[i] = {
 			node: nodeRoom,
-			distance: distanceBetweenTwoPoints(nodeDoor, nodeRoom)
-		};
-		console.log(distanceNodes[i].node.id + ': ' + distanceNodes[i].distance);
+			distance: distanceBetweenTwoNodes(nodeDoor, nodeRoom)
+		}
 		i++;
 	}
+
 	var nearestNode = {
 		node: distanceNodes[0].node,
 		distance: distanceNodes[0].distance
 	}
+
 	for(var j=0; j<distanceNodes.length; j++) {
-		if(distanceNodes[j].distance<nearestNode.minimumDistance) {
-			nearestNode.minimumDistance = distanceNodes[j].distance;
+		if(distanceNodes[j].distance<nearestNode.distance) {
+			nearestNode.distance = distanceNodes[j].distance;
 			nearestNode.node = distanceNodes[j].node;
 		}
 	}
@@ -522,7 +540,7 @@ function connectCentroid(bucket) {
 	var centroid = bucket.centroid;
 	for(idNode in bucket.mid) {
 		var node = bucket.mid[idNode];
-		var distance = distanceBetweenTwoPoints(centroid, node);
+		var distance = distanceBetweenTwoNodes(centroid, node);
 		node.properties.adj[centroid.id] = distance;
 		centroid.properties.adj[node.id] = distance;	
 	}
@@ -567,29 +585,35 @@ function connectNodes(smallBucket, mainBucket) {
 	for(idNode in mainBucket) {
 		var node = mainBucket[idNode];
 		if(node_0.properties.tVector[0] === node.properties.tVector[0] && node_0.properties.tVector[1] === node.properties.tVector[1]) {
-			node.properties.adj[node_1.id] = distanceBetweenTwoPoints(node_0, node_1);				
+			node.properties.adj[node_1.id] = distanceBetweenTwoNodes(node_0, node_1);				
 		}
 		if(node_1.properties.tVector[0] === node.properties.tVector[0] && node_1.properties.tVector[1] === node.properties.tVector[1]) {
-			node.properties.adj[node_0.id] = distanceBetweenTwoPoints(node_0, node_1);				
+			node.properties.adj[node_0.id] = distanceBetweenTwoNodes(node_0, node_1);				
 		}
 	}
 }
 
-function distanceBetweenTwoPoints(node_0, node_1) {
+function distanceBetweenTwoNodes(node_0, node_1) {
+	return distanceBetweenTwoPoints(getAbsoluteCoords(node_0), getAbsoluteCoords(node_1));
+}
+
+function distanceBetweenTwoPoints(point_0, point_1) {
 	return Math.sqrt( 
 		(
 			Math.pow(
-				(node_1.properties.tVector[0] - node_0.properties.tVector[0])
+				(point_1[0] - point_0[0])
 			,2) 
 			+ 
 		(
 			Math.pow(
-				(node_1.properties.tVector[1] - node_0.properties.tVector[1])
+				(point_1[1] - point_0[1])
 			,2)
 		)
 		)
-		);
+		);	
 }
+
+
 function nodeInBucket(tVect, bucket) {
 	var bool = false;
 	
@@ -601,6 +625,7 @@ function nodeInBucket(tVect, bucket) {
 	}
 	return bool;
 }
+
 function getMidPoint(point1, point2) {
 	return [((point1.x + point2.x)/2), ((point1.y + point2.y)/2)]
 }
@@ -667,6 +692,9 @@ function computeMatrix(landmarks) {
 	return transformationMatrix;
 }
 
+function getAbsoluteCoords(object) {
+    return applyTransformation([0, 0], object.CMT);
+}
 //C3D.createSoJSON();
 C3D.parseJSON();
 module.exports = C3D;

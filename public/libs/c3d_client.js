@@ -1200,6 +1200,10 @@ C3D.getCentroid = function(object3D) {
     return center;
 }
 
+C3D.getAbsoluteCoords = function(object) {
+    return C3D.applyTransformation([0, 0], object.CMT);
+}
+
 C3D.applyTransformation = function (v, m) {
     return [ v[0]*m[0][0] + v[1]*m[0][1] + m[0][2], v[0]*m[1][0] + v[1]*m[1][1] + m[1][2] ];
 }
