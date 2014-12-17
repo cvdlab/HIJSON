@@ -150,6 +150,9 @@ C3D.generateGeoJSON = function() {
     var includedArchitectureClasses = ['level', 'room', 'door', 'internal_wall', 'external_wall'];
     var includedFurtituresClasses = ['server', 'surveillanceCamera','fireExtinguisher','hotspot','antenna','badgeReader'];
 	var includedClasses = includedArchitectureClasses.concat(includedFurtituresClasses);
+	if (C3D.config.showGraph) {
+		includedClasses.push('graphNode');
+	}
     var queue = [];
     var obj;
 
@@ -165,8 +168,6 @@ C3D.generateGeoJSON = function() {
 
         if(includedClasses.indexOf(obj.properties.class) > -1)
         {
-
-            //console.log('(2D) Oggetto in fase di generazione: ' + obj.id);
 			var level = getLevel(obj);		
 			if(!(level in geoJSONmap)) {
 				geoJSONmap[level] = {
@@ -189,6 +190,28 @@ C3D.generateGeoJSON = function() {
 			};
 			
 			geoJSONmap[level].features.push(newObj);
+			
+			if (C3D.config.showGraph && obj.properties.class === 'graphNode') {
+				var k = 0;
+				for (node in obj.properties.adj) {
+					var adiacent = C3D.index[node];
+					var newObj = {};
+					
+					newObj.type = "Feature";
+					newObj.id = obj.id+"_arc_"+k;
+					newObj.geometry = {
+						type: "LineString",
+						coordinates: [ getAbsoluteCoords(obj) , getAbsoluteCoords(adiacent) ]
+					};
+					
+					newObj.properties = {
+						class: "graphArc"
+					};
+					
+					geoJSONmap[level].features.push(newObj);
+					k++;				
+				}
+			}
 		}
 		
 		for(var i = 0; i < obj.children.length; i++) {
@@ -378,6 +401,7 @@ function createSubGraph(object) {
 				coordinates: [0, 0]
 			},
 			properties: {
+				class: 'graphNode',
 				tVector: [(object.geometry.coordinates[1][0]/2), 0, 0],
 				rVector: [0, 0, 0],
 				parent: object.id,
@@ -457,6 +481,7 @@ function createSubGraph(object) {
 								coordinates: [0, 0]
 							},
 							properties: {
+								class: 'graphNode',
 								tVector: tVect,
 								rVector: [0, 0, 0],
 								parent: object.id,
@@ -555,7 +580,8 @@ function createNode(tVector, objectId, triangleId) {
 			coordinates: [0, 0]
 		},
 		properties: {
-			tVector: [0,0 , 0],
+			class: 'graphNode',
+			tVector: [0, 0, 0],
 			rVector: [0, 0, 0],
 			parent: objectId,
 			adj: {}
@@ -599,18 +625,10 @@ function distanceBetweenTwoNodes(node_0, node_1) {
 
 function distanceBetweenTwoPoints(point_0, point_1) {
 	return Math.sqrt( 
-		(
-			Math.pow(
-				(point_1[0] - point_0[0])
-			,2) 
-			+ 
-		(
-			Math.pow(
-				(point_1[1] - point_0[1])
-			,2)
-		)
-		)
-		);	
+		Math.pow( (point_1[0] - point_0[0]), 2) 
+		+ 
+		Math.pow( (point_1[1] - point_0[1]), 2)
+	);	
 }
 
 

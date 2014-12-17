@@ -479,12 +479,16 @@ C3D.generate2DModel = function() {
 	
 	function furnitureMarker(feature, latlng) {
 		
-		if (C3D.config.style[feature.properties.class] !== undefined) {
-			var markerIcon = L.AwesomeMarkers.icon(C3D.config.style[feature.properties.class]);
+		if (feature.properties.class === 'graphNode') {
+			return L.circleMarker(latlng);
 		} else {
-			var markerIcon = L.AwesomeMarkers.icon({ icon: "asterisk" });
+			if (C3D.config.style[feature.properties.class] !== undefined) {
+				var markerIcon = L.AwesomeMarkers.icon(C3D.config.style[feature.properties.class]);
+			} else {
+				var markerIcon = L.AwesomeMarkers.icon({ icon: "asterisk" });
+			}
+			return L.marker(latlng, {icon: markerIcon});
 		}
-		return L.marker(latlng, {icon: markerIcon});
 	}
 	
 	function onEachFeature(feature, layer) {
@@ -493,7 +497,7 @@ C3D.generate2DModel = function() {
             //mouseout: resetHighlight,
             click: selectFeature
         });
-        C3D.index[feature.id].layer2D = layer;
+        if (C3D.index[feature.id]) C3D.index[feature.id].layer2D = layer;
     }
 
     function selectFeature(e) {
@@ -1048,7 +1052,7 @@ C3D.getActualLevelId = function() {
 */
 
 C3D.orderLayer = function() {
-    var orderClass = ['room','external_wall','internal_wall','door'];
+    var orderClass = ['room','external_wall','internal_wall','door','graphNode','graphArc'];
     while(orderClass.length !== 0) {
         var classElement = orderClass.shift();
         for(idLayer in C3D.map2D._layers) {
