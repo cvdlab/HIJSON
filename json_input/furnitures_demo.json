@@ -1642,6 +1642,60 @@
                 "tVector": [4, 5, 0],
                 "rVector": [0, 0, 0]
             }
+        },
+        {
+            "id": "server_pol2_room_1.3",
+            "type": "Feature",
+            "geometry": 
+            {
+                "type": "Polygon",
+                "coordinates": [[
+                    [0, 0], [1, 0], [1, 1], [0, 1]
+                    ]]
+            },
+            "properties": 
+            {
+                "parent": "room_1.3",
+                "class": "server_polygon",
+                "tVector": [6, 6, 0],
+                "rVector": [0, 0, 0]
+            }
+        },
+        {
+            "id": "server_pol3_room_1.3",
+            "type": "Feature",
+            "geometry": 
+            {
+                "type": "Polygon",
+                "coordinates": [[
+                    [0, 0], [1, 0], [1, 1], [0, 1]
+                    ]]
+            },
+            "properties": 
+            {
+                "parent": "room_1.3",
+                "class": "server_polygon",
+                "tVector": [1, 5, 0],
+                "rVector": [0, 0, 0]
+            }
+        },
+        {
+            "id": "server_pol4_room_1.3",
+            "type": "Feature",
+            "geometry": 
+            {
+                "type": "Polygon",
+                "coordinates": [[
+                    [0, 0], [1, 0], [1, 1], [0, 1]
+                    ]]
+            },
+            "properties": 
+            {
+                "parent": "room_1.3",
+                "class": "server_polygon",
+                "tVector": [5, 1, 0],
+                "rVector": [0, 0, 0]
+            }
         }
     ]
 }
