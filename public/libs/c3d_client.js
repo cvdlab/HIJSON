@@ -1052,7 +1052,7 @@ C3D.getActualLevelId = function() {
 */
 
 C3D.orderLayer = function() {
-    var orderClass = ['room','external_wall','internal_wall','door','graphNode','graphArc'];
+    var orderClass = ['room','external_wall','internal_wall','door','graphNode','graphArc','server_polygon'];
     while(orderClass.length !== 0) {
         var classElement = orderClass.shift();
         for(idLayer in C3D.map2D._layers) {

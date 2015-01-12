@@ -1605,6 +1605,43 @@
                 "tVector": [0.1, 4, 2.3],
                 "rVector": [0, 0, 90]
             }
+        },
+
+        {
+            "id": "server_pol_room_1.3",
+            "type": "Feature",
+            "geometry": 
+            {
+                "type": "Polygon",
+                "coordinates": [[
+                    [0, 0], [1, 0], [1, 1], [0, 1]
+                    ]]
+            },
+            "properties": 
+            {
+                "parent": "room_1.3",
+                "class": "server_polygon",
+                "tVector": [2, 3, 0],
+                "rVector": [0, 0, 0]
+            }
+        },
+        {
+            "id": "server_pol1_room_1.3",
+            "type": "Feature",
+            "geometry": 
+            {
+                "type": "Polygon",
+                "coordinates": [[
+                    [0, 0], [1, 0], [1, 1], [0, 1]
+                    ]]
+            },
+            "properties": 
+            {
+                "parent": "room_1.3",
+                "class": "server_polygon",
+                "tVector": [4, 5, 0],
+                "rVector": [0, 0, 0]
+            }
         }
     ]
 }

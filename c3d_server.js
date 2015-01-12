@@ -148,7 +148,7 @@ C3D.generateGeoJSON = function() {
 
 	var geoJSONmap = {};
     var includedArchitectureClasses = ['level', 'room', 'door', 'internal_wall', 'external_wall'];
-    var includedFurtituresClasses = ['server', 'surveillanceCamera','fireExtinguisher','hotspot','antenna','badgeReader'];
+    var includedFurtituresClasses = ['server', 'surveillanceCamera','fireExtinguisher','hotspot','antenna','badgeReader', 'server_polygon'];
 	var includedClasses = includedArchitectureClasses.concat(includedFurtituresClasses);
 	if (C3D.config.showGraph) {
 		includedClasses.push('graphNode');
@@ -194,11 +194,8 @@ C3D.generateGeoJSON = function() {
 
 			if (C3D.config.showGraph && obj.properties.class === 'graphNode') {
 				var k = 0;
-				console.log('nodo Analizzato: ' + obj.id);
 				for (node in obj.properties.adj) {
-					console.log('Adiacenza: ' + node);
 					var adiacent = C3D.index[node];
-					console.log(adiacent);
 					var newObj = {};
 					
 					newObj.type = "Feature";
@@ -389,16 +386,11 @@ C3D.createGraph = function () {
 			var door = C3D.index[id];
 			var doorNode = door.graph[0];
 			var connections = C3D.index[door.properties.parent].properties.connections;
-			console.log('');
-			console.log('Door node: '+doorNode.id+' Connections: ');
 			for (key in connections) {
 				var idRoom = connections[key];
 				var nearestNode = getNearestNode(doorNode, C3D.index[idRoom].graph);
 				var roomNode = nearestNode.node;
 				var distance = nearestNode.distance;
-				
-				process.stdout.write(idRoom+', nearest node: ');
-				console.log(roomNode.id+' with distance: '+distance);
 				
 				doorNode.properties.adj[roomNode.id] = distance;
 				roomNode.properties.adj[doorNode.id] = distance;
@@ -689,9 +681,10 @@ function getTriangles(object) {
 		    var child = object.children[k];
 		    if (child.geometry.type === 'Polygon') {
 			    var perimeter = child.geometry.coordinates[0];
+			    var tVector = child.properties.tVector;
 		        var hole = [];
 		        for (j in perimeter) { //scorro le singole coordinate dei vari perimetri
-					hole.push(new poly2tri.Point(perimeter[j][0], perimeter[j][1]));
+					hole.push(new poly2tri.Point(perimeter[j][0] + tVector[0], perimeter[j][1] + tVector[1]));
 		        }
 		        swctx.addHole(hole);
 		    }
