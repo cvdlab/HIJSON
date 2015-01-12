@@ -192,7 +192,6 @@ C3D.generateGeoJSON = function() {
 			
 			geoJSONmap[level].features.push(newObj);
 			
-
 			if (C3D.config.showGraph && obj.properties.class === 'graphNode') {
 				var k = 0;
 				for (node in obj.properties.adj) {
@@ -203,10 +202,7 @@ C3D.generateGeoJSON = function() {
 					newObj.id = obj.id+"_arc_"+k;
 					newObj.geometry = {
 						type: "LineString",
-						coordinates: [ 
-						getAbsoluteCoords(obj), 
-						getAbsoluteCoords(adiacent) 
-						]
+						coordinates: [ getAbsoluteCoords(obj) , getAbsoluteCoords(adiacent) ]
 					};
 					
 					newObj.properties = {
@@ -217,7 +213,6 @@ C3D.generateGeoJSON = function() {
 					k++;				
 				}
 			}
-
 		}
 		
 		for(var i = 0; i < obj.children.length; i++) {
@@ -381,29 +376,21 @@ C3D.createGraph = function () {
 	}
 
 	//Collegamenti porte-stanze
-
 	for(id in C3D.index) {
 		if(C3D.index[id].properties.class === 'door') {
 			var door = C3D.index[id];
-			var doorNode = door.graph[0];
 			var connections = C3D.index[door.properties.parent].properties.connections;
-			console.log('');
-			console.log('Door node: '+doorNode.id+' Connections: ');
-			for (key in connections) {
-				var idRoom = connections[key];
-				var nearestNode = getNearestNode(doorNode, C3D.index[idRoom].graph);
-				var roomNode = nearestNode.node;
-				var distance = nearestNode.distance;
-				
-				process.stdout.write(idRoom+', nearest node: ');
-				console.log(roomNode.id+' with distance: '+distance);
-				
-				doorNode.properties.adj[roomNode.id] = distance;
-				//roomNode.properties.adj[doorNode.id] = distance;
+			
+			for(var i=0; i<connections.length; i++){
+				var idRoom = connections[i];			
+				var room = C3D.index[idRoom];
+				var nearestNode = getNearestNode(door.graph[0], room.graph);
+				door.graph[0].adj = [];
+				door.graph[0].adj[nearestNode.id] = nearestNode.distance;
+				nearestNode.node.properties.adj[id] = nearestNode.distance;
 			}
 		}
 	}
-
 }
 
 function createSubGraph(object) {
@@ -423,6 +410,7 @@ function createSubGraph(object) {
 				adj: {}
 			},
 			children: []
+
 		}
         var localMatrix = objMatrix(graphNode);
 		var globalMatrix = getCMT(C3D.index[graphNode.properties.parent]);
@@ -663,44 +651,25 @@ function getMidPoint(point1, point2) {
 }
 
 function getTriangles(object) {
-	if (object.geometry.type === 'Polygon') {
-		var coords = object.geometry.coordinates;
-		var perimeter = coords[0];
-		var contour = [];
-	
-		for(j in perimeter) {
-			contour.push(new poly2tri.Point(perimeter[j][0], perimeter[j][1]));
-		}
-		var swctx = new poly2tri.SweepContext(contour);
-		
-	    for (var i = 1; i < coords.length; i++) { //scorro eventuali holes
-		    var perimeter = coords[i];
-	        var hole = [];
-	        for (j in perimeter) { //scorro le singole coordinate dei vari perimetri
-				hole.push(new poly2tri.Point(perimeter[j][0], perimeter[j][1]));
-	        }
-	        swctx.addHole(hole);
-	    }
-	    
-	    for (k in object.children) {
-		    var child = object.children[k];
-		    if (child.geometry.type === 'Polygon') {
-			    var perimeter = child.geometry.coordinates[0];
-		        var hole = [];
-		        for (j in perimeter) { //scorro le singole coordinate dei vari perimetri
-					hole.push(new poly2tri.Point(perimeter[j][0], perimeter[j][1]));
-		        }
-		        swctx.addHole(hole);
-		    }
-	    }
-		
-		swctx.triangulate();
-		var triangles = swctx.getTriangles();
-	
-		return triangles;
-	} else {
-		console.log('error, you can triangulate only polygons');
+	var contour = [];
+	var hole = [];
+
+	for(j in object.geometry.coordinates[0]) {
+		contour.push(new poly2tri.Point(object.geometry.coordinates[0][j][0],object.geometry.coordinates[0][j][1]));
 	}
+	var swctx = new poly2tri.SweepContext(contour);
+	if(object.geometry.coordinates[1] !== undefined) {
+	    for (var i = 1; i < coords.length; i++) {
+    		for (var j = 0; j < coords[i].length; j++) {
+				hole.push(new poly2tri.Point(object.geometry.coordinates[i][j][0],object.geometry.coordinates[i][j][1]));
+    		}
+		}
+		swctx.addHole(hole);			
+	}
+	swctx.triangulate();
+	var triangles = swctx.getTriangles();
+
+	return triangles;
 }
 
 function computeMatrix(landmarks) {
