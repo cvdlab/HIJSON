@@ -194,12 +194,16 @@ C3D.generateGeoJSON = function() {
 
 			if (C3D.config.showGraph && obj.properties.class === 'graphNode') {
 				var k = 0;
+				console.log('nodo Analizzato: ' + obj.id);
 				for (node in obj.properties.adj) {
+					console.log('Adiacenza: ' + node);
 					var adiacent = C3D.index[node];
+					console.log(adiacent);
 					var newObj = {};
 					
 					newObj.type = "Feature";
-					newObj.id = obj.id+"_arc_"+k;
+					newObj.id = obj.id + "_arc_" + k;
+					
 					newObj.geometry = {
 						type: "LineString",
 						coordinates: [ 
@@ -397,7 +401,7 @@ C3D.createGraph = function () {
 				console.log(roomNode.id+' with distance: '+distance);
 				
 				doorNode.properties.adj[roomNode.id] = distance;
-				//roomNode.properties.adj[doorNode.id] = distance;
+				roomNode.properties.adj[doorNode.id] = distance;
 			}
 		}
 	}
@@ -428,6 +432,7 @@ function createSubGraph(object) {
 
 		object.children.push(graphNode);
 		object.graph.push(graphNode);
+		C3D.index[graphNode.id] = graphNode;
 	}
 
 	if(object.properties.class === 'room') {
