@@ -65,6 +65,83 @@ C3D.createSoJSON = function() {
 	}
 	fs.writeFileSync('json_input/architecture_sogei.json', JSON.stringify(result));
 }
+C3D.parseIoTLar = function() {
+	process.stdout.write('Parse IoT Lar file...');	
+	var data = JSON.parse(fs.readFileSync('json_input/edificio.json', 'utf8'));
+
+    var result = {
+    	id: 'architectures',
+    	type: 'FeatureCollection',
+    	features: [] 
+    };
+
+    for(var i in data) {
+		var feature = data[i];
+		result.features.push(feature);
+    }
+	process.stdout.write('\nWriting file parsed...');
+	fs.writeFileSync('json_input/edificio_parsed.json', JSON.stringify(result));
+	process.stdout.write('\nEnd writing.');
+	C3D.parsingFeaturesCollections(result);
+}
+
+C3D.parsingFeaturesCollections = function(collection) {
+	C3D.tree = {
+	    id: 'building',
+	    properties: {
+	        class: 'Edificio'
+	    },
+	    children: []
+    };
+
+    C3D.index = {};
+    
+    C3D.index['Edificio'] = C3D.tree;
+
+	if (collection.type == "FeatureCollection") 
+	{
+		console.log('FeatureCollection detected. ID: ' + collection.id +'.');
+		for(var i = 0; i < collection.features.length; i++)
+		{
+	        var feature = collection.features[i];
+	        var obj = {};
+	        obj.id = feature.id;
+	        obj.type = collection.id;
+	        obj.parent = C3D.index[feature.properties.parent];
+	        C3D.index[feature.properties.parent].children.push(obj);
+	        obj.children = [];
+	        obj.graph = [];
+	        obj.geometry = feature.geometry;
+	        obj.properties = feature.properties;
+	        C3D.index[feature.id] = obj;
+
+	        var localMatrix = objMatrix(obj);
+			var globalMatrix = getCMT(C3D.index[obj.properties.parent]);
+			obj.CMT = matrixProduct(globalMatrix, localMatrix);
+		}
+	} 
+	else 
+	{   
+		console.log('ERROR: No FeatureCollection detected.');
+	}
+	process.stdout.write('Parsing finished.');
+    // process.stdout.write('Generating graph for paths... ');
+    // C3D.createGraph();
+    // console.log('Done.');
+    
+    process.stdout.write('Generating geoJson layers... ');
+    C3D.generateGeoJSON();
+    console.log('Done.');
+   
+    // clean for JSON stringify
+    for(id in C3D.index) {
+    	C3D.index[id].parent = {};
+    	console.log(C3D.index[id].parent);
+    }
+    C3D.index = {};
+    
+    console.log('\nC3D initialization complete.');
+}
 
 C3D.parseJSON = function() {
 	
@@ -150,9 +227,9 @@ C3D.generateGeoJSON = function() {
     var includedArchitectureClasses = ['level', 'room', 'door', 'internal_wall', 'external_wall'];
     var includedFurtituresClasses = ['server', 'surveillanceCamera','fireExtinguisher','hotspot','antenna','badgeReader'];
 	var includedClasses = includedArchitectureClasses.concat(includedFurtituresClasses);
-	if (C3D.config.showGraph) {
-		includedClasses.push('graphNode');
-	}
+	// if (C3D.config.showGraph) {
+	// 	includedClasses.push('graphNode');
+	// }
     var queue = [];
     var obj;
 
@@ -164,7 +241,7 @@ C3D.generateGeoJSON = function() {
     
     while(queue.length > 0) {
         obj = queue.shift();
-        
+        console.log(obj);
 
         if(includedClasses.indexOf(obj.properties.class) > -1)
         {
@@ -282,11 +359,12 @@ function objMatrix(object) {
 }
 
 function getLevel(obj) {
+	console.log(obj.properties);
 	var ancestor = obj;
-	while (ancestor.properties.class !== 'level') {
+	while (ancestor.properties.class !== 'level' ||ancestor.properties.class !== 'assembly') {
 		ancestor = C3D.index[ancestor.properties.parent];
 	}
-	if (ancestor.properties.class === 'building') {
+	if (ancestor.properties.class === 'building' || ancestor.properties.class === 'edificio') {
 		return undefined;
 	} else {
 		return ancestor.id;
@@ -744,6 +822,6 @@ function computeMatrix(landmarks) {
 function getAbsoluteCoords(object) {
     return applyTransformation([0, 0], object.CMT);
 }
-//C3D.createSoJSON();
-C3D.parseJSON();
+C3D.parseIoTLar();
+//C3D.parseJSON();
 module.exports = C3D;
