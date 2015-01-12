@@ -77,15 +77,19 @@ C3D.parseIoTLar = function() {
 
     for(var i in data) {
 		var feature = data[i];
+		feature.id = feature.id.toString();
 		result.features.push(feature);
     }
+
 	process.stdout.write('\nWriting file parsed...');
 	fs.writeFileSync('json_input/edificio_parsed.json', JSON.stringify(result));
 	process.stdout.write('\nEnd writing.');
+
 	C3D.parsingFeaturesCollections(result);
 }
 
 C3D.parsingFeaturesCollections = function(collection) {
+
 	C3D.tree = {
 	    id: 'building',
 	    properties: {
