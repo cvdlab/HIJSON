@@ -235,6 +235,7 @@ function getCMT(obj) {
 	}
 }
 
+
 function translationMatrix(x,y) {
 	return [
 		[ 1, 0, x ],
