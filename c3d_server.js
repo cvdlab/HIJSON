@@ -150,8 +150,10 @@ C3D.generateGeoJSON = function() {
     var includedArchitectureClasses = ['level', 'room', 'door', 'internal_wall', 'external_wall'];
     var includedFurtituresClasses = ['server', 'surveillanceCamera','fireExtinguisher','hotspot','antenna','badgeReader', 'server_polygon'];
 	var includedClasses = includedArchitectureClasses.concat(includedFurtituresClasses);
+	
 	if (C3D.config.showGraph) {
 		includedClasses.push('graphNode');
+	
 	}
     var queue = [];
     var obj;
@@ -168,7 +170,9 @@ C3D.generateGeoJSON = function() {
 
         if(includedClasses.indexOf(obj.properties.class) > -1)
         {
-			var level = getLevel(obj);		
+			var level = getLevel(obj);
+			
+			// create the feature collection for the level if not exists	
 			if(!(level in geoJSONmap)) {
 				geoJSONmap[level] = {
 					type: "FeatureCollection",
@@ -177,21 +181,18 @@ C3D.generateGeoJSON = function() {
 			}
 			
 			var newObj = {};
-			
 			newObj.type = "Feature";
 			newObj.id = obj.id;
 			newObj.geometry = {
 				type: obj.geometry.type,
 				coordinates: absoluteCoords(obj)
 			};
-			
 			newObj.properties = {
 				class: obj.properties.class
 			};
-			
 			geoJSONmap[level].features.push(newObj);
 			
-
+			// add representation of graph arcs
 			if (C3D.config.showGraph && obj.properties.class === 'graphNode') {
 				var k = 0;
 				for (node in obj.properties.adj) {
@@ -204,8 +205,8 @@ C3D.generateGeoJSON = function() {
 					newObj.geometry = {
 						type: "LineString",
 						coordinates: [ 
-						getAbsoluteCoords(obj), 
-						getAbsoluteCoords(adiacent) 
+							getAbsoluteCoords(obj), 
+							getAbsoluteCoords(adiacent) 
 						]
 					};
 					
@@ -217,14 +218,14 @@ C3D.generateGeoJSON = function() {
 					k++;				
 				}
 			}
-
 		}
 		
 		for(var i = 0; i < obj.children.length; i++) {
             queue.push(obj.children[i]);
         }
-		
 	}
+	
+	// put the map in real-world coordinates
 	C3D.geoJSONmap = convertToDegrees(geoJSONmap);
 }
 
@@ -375,7 +376,7 @@ C3D.createGraph = function () {
 	//Creazione sottografi
 	for(id in C3D.index) {
 		if(C3D.index[id].properties.class === 'door' || C3D.index[id].properties.class === 'room') {
-			createSubGraph(C3D.index[id]);
+			createSubGraph_noCentroids(C3D.index[id]);
 		}
 	}
 
@@ -467,7 +468,7 @@ function createSubGraph(object) {
 			for(edge in triangle.constrained_edge) {
 				var constrainedEdge = triangle.constrained_edge[edge];
 				if(!constrainedEdge) {
-				var tVect = [];
+					var tVect = [];
 					switch(edge) {
 						case '0': 
 							var midPoint = getMidPoint(triangle.points_[1], triangle.points_[2]);
@@ -542,6 +543,166 @@ function createSubGraph(object) {
 		}
 	}
 }
+
+function createSubGraph_noCentroids(object) {
+	if(object.properties.class === 'door') {
+		var graphNode = {
+			type: 'graph',
+			id: 'n_' + object.id,
+			geometry: {
+				type: 'Point',
+				coordinates: [0, 0]
+			},
+			properties: {
+				class: 'graphNode',
+				tVector: [(object.geometry.coordinates[1][0]/2), 0, 0],
+				rVector: [0, 0, 0],
+				parent: object.id,
+				adj: {}
+			},
+			children: []
+		}
+        var localMatrix = objMatrix(graphNode);
+		var globalMatrix = getCMT(C3D.index[graphNode.properties.parent]);
+		graphNode.CMT = matrixProduct(globalMatrix, localMatrix);
+
+		object.children.push(graphNode);
+		object.graph.push(graphNode);
+		C3D.index[graphNode.id] = graphNode;
+	}
+
+	if(object.properties.class === 'room') {
+		var triangles = getTriangles(object);
+		
+		var i = 0;
+		
+		var bucket = {
+			main: [],
+			buckets: []
+		};
+		
+		for(tri in triangles) {
+			var idTriangle = object.id + '_' + tri; 
+			bucket.buckets[idTriangle] = {};
+			var triangle = triangles[tri];
+/*
+			var v0 = {
+				x: triangle.points_[0].x,
+				y: triangle.points_[0].y
+			}
+
+			var v1 = {
+				x: triangle.points_[1].x,
+				y: triangle.points_[1].y
+			}
+
+			var v2 = {
+				x: triangle.points_[2].x,
+				y: triangle.points_[2].y
+			}
+			var centroid = createNode(calcuteTriangleMidPoint(v0, v1, v2), object.id, tri)
+			bucket.buckets[idTriangle].centroid = centroid;
+	        
+	        var localMatrix = objMatrix(centroid);
+			var globalMatrix = getCMT(C3D.index[centroid.properties.parent]);
+			centroid.CMT = matrixProduct(globalMatrix, localMatrix);
+
+			bucket.main.push(bucket.buckets[idTriangle].centroid);
+*/
+			bucket.buckets[idTriangle].mid = [];
+			for(edge in triangle.constrained_edge) {
+				var constrainedEdge = triangle.constrained_edge[edge];
+				if(!constrainedEdge) {
+					var tVect = [];
+					switch(edge) {
+						case '0': 
+							var midPoint = getMidPoint(triangle.points_[1], triangle.points_[2]);
+							break;
+						case '1': 
+							var midPoint = getMidPoint(triangle.points_[0], triangle.points_[2]);
+							break;
+						case '2': 
+							var midPoint = getMidPoint(triangle.points_[0], triangle.points_[1]);
+							break;
+					}
+					tVect = [midPoint[0], midPoint[1], 0];
+					
+					if(!(nodeInBucket(tVect,bucket))) {				
+						var graphNode = {
+							type: 'graph',
+							id: 'n_'+ i + '_' + object.id,
+							geometry: {
+								type: 'Point',
+								coordinates: [0, 0]
+							},
+							properties: {
+								class: 'graphNode',
+								tVector: tVect,
+								rVector: [0, 0, 0],
+								parent: object.id,
+								adj: {}
+							},
+							children: []
+						}
+						var localMatrix = objMatrix(graphNode);
+						var globalMatrix = getCMT(C3D.index[graphNode.properties.parent]);
+						graphNode.CMT = matrixProduct(globalMatrix, localMatrix);
+						
+						bucket.buckets[idTriangle].mid.push(graphNode);
+						bucket.main.push(graphNode);
+						i++;
+					}
+					else
+					{
+						bucket.buckets[idTriangle].mid.push(getNode(tVect,bucket.main));
+					}
+
+				}
+			}
+		}
+
+
+		//Collegamento tra punti medi 
+		for(id in bucket.buckets) {
+			var smallBucket = bucket.buckets[id];
+			if(smallBucket.mid.length >= 2){
+				var nodesToConnect = smallBucket.mid;
+				//connectNodes(smallBucket,bucket.main);
+				for(key in nodesToConnect) {
+					var selectedNode = nodesToConnect[key];
+					for (otherKey in nodesToConnect) {
+						if (otherKey !== key) {
+							var otherNode = nodesToConnect[otherKey];
+							var distance = distanceBetweenTwoNodes(selectedNode, otherNode);
+							selectedNode.properties.adj[otherNode.id] = distance;
+						}
+					}
+				}
+			}
+		}
+
+		
+/*
+		//Collegamento tra centroidi e punti medi
+		for(id in bucket.buckets) {
+			var smallBucket = bucket.buckets[id];
+			connectCentroid(smallBucket);
+		}	
+*/	
+
+		//Aggiunta dei nodi all'oggetto (sottografo)
+		for(node in bucket.main) {
+			var graphNode = bucket.main[node];
+
+			graphNode.parent = C3D.index[graphNode.properties.parent];
+			object.children.push(graphNode);
+			object.graph.push(graphNode);
+			C3D.index[graphNode.id] = graphNode;
+		}
+	}
+}
+
+
 
 function getNearestNode(nodeDoor, graphRoom) {
 	var distanceNodes = [];
@@ -731,9 +892,9 @@ function computeMatrix(landmarks) {
 	var sol = numeric.solve(matrixA, vectorB);
 	var transformationMatrix =
 	[
-		[sol[0], sol[1], sol[4]],
-		[sol[2], sol[3], sol[5]],
-		[0, 0, 1]
+		[sol[0],	sol[1],		sol[4]],
+		[sol[2],	sol[3],		sol[5]],
+		[0,			0,			1]
 	];
 
 	return transformationMatrix;

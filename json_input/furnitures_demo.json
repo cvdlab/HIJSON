@@ -8,15 +8,18 @@
             "type": "Feature",
             "geometry": 
             {
-                "type": "Point",
-                "coordinates": [0, 0]
+                "type": "Polygon",
+                "coordinates": 
+                [
+                   [ [0, 0], [2, 0], [2, 3], [0, 3] ]
+                ]
             },
             "properties": 
             {
                 "parent": "room_0.1",
-                "class": "server",
-                "dimensions": [2, 3, 3],
-                "tVector": [2, 7, 0],
+                "class": "server_polygon",
+                "height": 3,
+                "tVector": [1, 5.5, 0],
                 "rVector": [0, 0, 0]
             }
         },
@@ -25,15 +28,18 @@
             "type": "Feature",
             "geometry": 
             {
-                "type": "Point",
-                "coordinates": [0, 0]
+                "type": "Polygon",
+                "coordinates": 
+                [
+                   [ [0, 0], [2, 0], [2, 3], [0, 3] ]
+                ]
             },
             "properties": 
             {
                 "parent": "room_0.1",
-                "class": "server",
-                "dimensions": [2, 3, 3],
-                "tVector": [2, 11, 0],
+                "class": "server_polygon",
+                "height": 3,
+                "tVector": [1, 9.5, 0],
                 "rVector": [0, 0, 0]
             }
         },
@@ -42,15 +48,18 @@
             "type": "Feature",
             "geometry": 
             {
-                "type": "Point",
-                "coordinates": [0, 0]
+                "type": "Polygon",
+                "coordinates": 
+                [
+                   [ [0, 0], [2, 0], [2, 3], [0, 3] ]
+                ]
             },
             "properties": 
             {
                 "parent": "room_0.1",
-                "class": "server",
-                "dimensions": [2, 3, 3],
-                "tVector": [2, 15, 0],
+                "class": "server_polygon",
+                "height": 3,
+                "tVector": [1, 13.5, 0],
                 "rVector": [0, 0, 0]
             }
         },
@@ -59,51 +68,58 @@
             "type": "Feature",
             "geometry": 
             {
-                "type": "Point",
-                "coordinates": [0, 0]
+                "type": "Polygon",
+                "coordinates": 
+                [
+                   [ [0, 0], [2, 0], [2, 3], [0, 3] ]
+                ]
             },
             "properties": 
             {
                 "parent": "room_0.1",
-                "class": "server",
-                "dimensions": [2, 3, 3],
-                "tVector": [6, 7, 0],
+                "class": "server_polygon",
+                "height": 3,
+                "tVector": [5, 5.5, 0],
                 "rVector": [0, 0, 0]
             }
         },
-
         {
             "id": "server_5_room_0.1",
             "type": "Feature",
             "geometry": 
             {
-                "type": "Point",
-                "coordinates": [0, 0]
+                "type": "Polygon",
+                "coordinates": 
+                [
+                   [ [0, 0], [2, 0], [2, 3], [0, 3] ]
+                ]
             },
             "properties": 
             {
                 "parent": "room_0.1",
-                "class": "server",
-                "dimensions": [2, 3, 3],
-                "tVector": [6, 11, 0],
+                "class": "server_polygon",
+                "height": 3,
+                "tVector": [5, 9.5, 0],
                 "rVector": [0, 0, 0]
             }
         },
-        
         {
             "id": "server_6_room_0.1",
             "type": "Feature",
             "geometry": 
             {
-                "type": "Point",
-                "coordinates": [0, 0]
+                "type": "Polygon",
+                "coordinates": 
+                [
+                   [ [0, 0], [2, 0], [2, 3], [0, 3] ]
+                ]
             },
             "properties": 
             {
                 "parent": "room_0.1",
-                "class": "server",
-                "dimensions": [2, 3, 3],
-                "tVector": [6, 15, 0],
+                "class": "server_polygon",
+                "height": 3,
+                "tVector": [5, 13.5, 0],
                 "rVector": [0, 0, 0]
             }
         },
@@ -113,15 +129,39 @@
             "type": "Feature",
             "geometry": 
             {
-                "type": "Point",
-                "coordinates": [0, 0]
+                "type": "Polygon",
+                "coordinates": 
+                [
+                   [ [0, 0], [2, 0], [2, 3], [0, 3] ]
+                ]
             },
             "properties": 
             {
                 "parent": "room_0.4",
-                "class": "server",
-                "dimensions": [2, 3, 3],
+                "class": "server_polygon",
+                "height": 3,
                 "tVector": [10, 3, 0],
+                "rVector": [0, 0, 0]
+            }
+        },
+        
+        {
+            "id": "server_2_room_0.4",
+            "type": "Feature",
+            "geometry": 
+            {
+                "type": "Polygon",
+                "coordinates": 
+                [
+                   [ [0, 0], [2, 0], [2, 3], [0, 3] ]
+                ]
+            },
+            "properties": 
+            {
+                "parent": "room_0.4",
+                "class": "server_polygon",
+                "height": 3,
+                "tVector": [5, 3, 0],
                 "rVector": [0, 0, 0]
             }
         },
@@ -131,14 +171,17 @@
             "type": "Feature",
             "geometry": 
             {
-                "type": "Point",
-                "coordinates": [0, 0]
+                "type": "Polygon",
+                "coordinates": 
+                [
+                   [ [0, 0], [2, 0], [2, 3], [0, 3] ]
+                ]
             },
             "properties": 
             {
                 "parent": "room_0.2",
-                "class": "server",
-                "dimensions": [2, 3, 3],
+                "class": "server_polygon",
+                "height": 3,
                 "tVector": [2, 4, 0],
                 "rVector": [0, 0, 0]
             }
