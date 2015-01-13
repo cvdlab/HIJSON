@@ -375,7 +375,7 @@ function convertToDegrees(geoJSONmap) {
 C3D.createGraph = function () {
 	//Creazione sottografi
 	for(id in C3D.index) {
-		if(C3D.index[id].properties.class === 'door' || C3D.index[id].properties.class === 'room') {
+		if(C3D.index[id].properties.class === 'door' || C3D.index[id].properties.class === 'room' || C3D.index[id].type === 'furnitures') {
 			createSubGraph_noCentroids(C3D.index[id]);
 		}
 	}
@@ -399,6 +399,16 @@ C3D.createGraph = function () {
 		}
 	}
 
+	//Collegamenti furnitures-stanze
+	for(id in C3D.index) {
+		if(C3D.index[id].type === 'furnitures') {
+			var furniture = C3D.index[id];
+			var furnitureNode = furniture.graph[0];
+			var nearestNode = getNearestNode(furnitureNode, getRoom(furniture));
+			furnitureNode.properties.adj[nearestNode.id] = nearestNode.node;
+			nearestNode.node.properties.adj[furnitureNode.id] = furnitureNode;
+		}
+	}
 }
 
 function createSubGraph(object) {
@@ -456,6 +466,7 @@ function createSubGraph(object) {
 				x: triangle.points_[2].x,
 				y: triangle.points_[2].y
 			}
+
 			var centroid = createNode(calcuteTriangleMidPoint(v0, v1, v2), object.id, tri)
 			bucket.buckets[idTriangle].centroid = centroid;
 	        
@@ -700,18 +711,34 @@ function createSubGraph_noCentroids(object) {
 			C3D.index[graphNode.id] = graphNode;
 		}
 	}
+
+	if(object.type === 'furnitures') {
+		var node;
+		if(object.geometry.type === 'Point') {
+			node = createNode(object.properties.tVector, object.id, '');
+
+		}
+		if(object.geometry.type === 'Polygon') {
+			node = createNode(object.properties.nodeTVector, object.id, '');
+		}
+
+		node.parent = C3D.index[node.properties.parent];
+		object.children.push(node);
+		object.graph.push(node);
+		C3D.index[node.id] = node;
+	}
 }
 
 
 
-function getNearestNode(nodeDoor, graphRoom) {
+function getNearestNode(sourceNode, graphRoom) {
 	var distanceNodes = [];
 	var i = 0;
 	for(idNode in graphRoom) {
 		var nodeRoom = graphRoom[idNode];
 		distanceNodes[i] = {
 			node: nodeRoom,
-			distance: distanceBetweenTwoNodes(nodeDoor, nodeRoom)
+			distance: distanceBetweenTwoNodes(sourceNode, nodeRoom)
 		}
 		i++;
 	}
@@ -761,6 +788,7 @@ function createNode(tVector, objectId, triangleId) {
 	graphNode.properties.tVector = tVector;
 	return graphNode;
 }
+
 function calcuteTriangleMidPoint(point0, point1, point2) {
 		return [((point0.x + point1.x + point2.x)/3), ((point0.y + point1.y + point2.y)/3),0 ]
 }
@@ -903,6 +931,17 @@ function computeMatrix(landmarks) {
 function getAbsoluteCoords(object) {
     return applyTransformation([0, 0], object.CMT);
 }
+
+function getRoom(obj) {
+    var ancestor = obj;
+    if(obj.properties.class !== 'building' && obj.properties.class !== 'level') {
+        while(ancestor.properties.class !== 'room') {
+            ancestor = ancestor.parent;
+        }
+    }
+    return ancestor;
+}
+
 //C3D.createSoJSON();
 C3D.parseJSON();
 module.exports = C3D;
