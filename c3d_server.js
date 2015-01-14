@@ -7,7 +7,8 @@ var C3D = {
 	    config: 'json_input/config.json',
 	    architecture: 'json_input/architecture_demo.json',
 	    furnitures: 'json_input/furnitures_demo.json'
-    }
+    },
+    graph: {}
 }
 
 /*
@@ -134,7 +135,10 @@ C3D.parseJSON = function() {
     C3D.generateGeoJSON();
     console.log('Done.');
 
-    
+    process.stdout.write('Generating map ... ');
+    C3D.createMap()
+    console.log('Done.');
+
     // clean for JSON stringify
     for(id in C3D.index) {
     	C3D.index[id].parent = {};
@@ -371,6 +375,17 @@ function convertToDegrees(geoJSONmap) {
 		}
 	}
 	return geoJSONmap;	
+}
+
+
+C3D.createMap = function() {
+	var map = {};
+	for(id in C3D.index) {
+		for(idNode in C3D.index[id].graph) {
+			map[C3D.index[id].graph[idNode].id] = C3D.index[id].graph[idNode].properties.adj;
+		}
+	}
+	C3D.graph = map;
 }
 
 C3D.createGraph = function () {
@@ -685,11 +700,11 @@ function createSubGraph_noCentroids(object) {
 	if(object.type === 'furnitures') {
 		var node;
 		if(object.geometry.type === 'Point') {
-			node = createNode([0, 0, 0], object.id, '');
+			node = createNode([0, 0, 0], object.id, 'subNode');
 
 		}
 		if(object.geometry.type === 'Polygon') {
-			node = createNode(object.properties.nodeTVector, object.id, '');
+			node = createNode(object.properties.nodeTVector, object.id, 'subNode');
 		}
 		var localMatrix = objMatrix(node);
 		var globalMatrix = getCMT(C3D.index[node.properties.parent]);

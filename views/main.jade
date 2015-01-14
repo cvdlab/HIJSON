@@ -11,7 +11,8 @@ block content
 	.container-fluid
 		// Default JavaScript libraries
 		script(src='/socket.io/socket.io.js')
-		
+		script(src='/assets/js/graph.js')		
+
 		include ./includes/js_libraries_2d.jade
 		
 		include ./includes/js_libraries_3d.jade
@@ -60,12 +61,15 @@ block content
 		hr
 		
 		.row
-			.col-md-6
+			.col-md-4
 				h3 Navigator
 				#navigator
-			.col-md-6
+			.col-md-4
 				h3 Feature Information
 				#info
+			.col-md-4
+				h3 Get directions
+				#getDirection
 
 		script.
 			var menuArray = [];
