@@ -196,6 +196,7 @@ C3D.generateGeoJSON = function() {
 			if (C3D.config.showGraph && obj.properties.class === 'graphNode') {
 				var k = 0;
 				for (node in obj.properties.adj) {
+					console.log(obj.id + ': ' + node);
 					var adiacent = C3D.index[node];
 					var newObj = {};
 					
@@ -404,9 +405,9 @@ C3D.createGraph = function () {
 		if(C3D.index[id].type === 'furnitures') {
 			var furniture = C3D.index[id];
 			var furnitureNode = furniture.graph[0];
-			var nearestNode = getNearestNode(furnitureNode, getRoom(furniture));
-			furnitureNode.properties.adj[nearestNode.id] = nearestNode.node;
-			nearestNode.node.properties.adj[furnitureNode.id] = furnitureNode;
+			var nearestNode = getNearestNode(furnitureNode, getRoom(furniture).graph);
+			furnitureNode.properties.adj[nearestNode.node.id] = nearestNode.distance;
+			nearestNode.node.properties.adj[furnitureNode.id] = nearestNode.distance;
 		}
 	}
 }
@@ -596,30 +597,7 @@ function createSubGraph_noCentroids(object) {
 			var idTriangle = object.id + '_' + tri; 
 			bucket.buckets[idTriangle] = {};
 			var triangle = triangles[tri];
-/*
-			var v0 = {
-				x: triangle.points_[0].x,
-				y: triangle.points_[0].y
-			}
 
-			var v1 = {
-				x: triangle.points_[1].x,
-				y: triangle.points_[1].y
-			}
-
-			var v2 = {
-				x: triangle.points_[2].x,
-				y: triangle.points_[2].y
-			}
-			var centroid = createNode(calcuteTriangleMidPoint(v0, v1, v2), object.id, tri)
-			bucket.buckets[idTriangle].centroid = centroid;
-	        
-	        var localMatrix = objMatrix(centroid);
-			var globalMatrix = getCMT(C3D.index[centroid.properties.parent]);
-			centroid.CMT = matrixProduct(globalMatrix, localMatrix);
-
-			bucket.main.push(bucket.buckets[idTriangle].centroid);
-*/
 			bucket.buckets[idTriangle].mid = [];
 			for(edge in triangle.constrained_edge) {
 				var constrainedEdge = triangle.constrained_edge[edge];
@@ -692,14 +670,6 @@ function createSubGraph_noCentroids(object) {
 			}
 		}
 
-		
-/*
-		//Collegamento tra centroidi e punti medi
-		for(id in bucket.buckets) {
-			var smallBucket = bucket.buckets[id];
-			connectCentroid(smallBucket);
-		}	
-*/	
 
 		//Aggiunta dei nodi all'oggetto (sottografo)
 		for(node in bucket.main) {
@@ -715,13 +685,17 @@ function createSubGraph_noCentroids(object) {
 	if(object.type === 'furnitures') {
 		var node;
 		if(object.geometry.type === 'Point') {
-			node = createNode(object.properties.tVector, object.id, '');
+			node = createNode([0, 0, 0], object.id, '');
 
 		}
 		if(object.geometry.type === 'Polygon') {
 			node = createNode(object.properties.nodeTVector, object.id, '');
 		}
-
+		var localMatrix = objMatrix(node);
+		var globalMatrix = getCMT(C3D.index[node.properties.parent]);
+		var nodeCMT = matrixProduct(globalMatrix, localMatrix);
+		node.CMT = nodeCMT;
+		
 		node.parent = C3D.index[node.properties.parent];
 		object.children.push(node);
 		object.graph.push(node);
@@ -754,7 +728,6 @@ function getNearestNode(sourceNode, graphRoom) {
 			nearestNode.node = distanceNodes[j].node;
 		}
 	}
-
 	return nearestNode;
 }
 
