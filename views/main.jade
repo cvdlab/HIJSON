@@ -145,6 +145,13 @@ block content
 				C3D.emit('startFPV');
 			});
 
+			$( "#getDirection" ).on('click', function() {
+				var fromNode = selectFromNode.indexValue;
+				var toNode = selectToNode.indexValue;
+				C3D.emit('getDirection',fromNode, toNode);
+				console.log('fired');
+			});
+
 			C3D.on('showFeatureInfo', function(idObject){
 				showFeatureInfo = {};
 
@@ -199,6 +206,31 @@ block content
 			C3D.on('clearFeatureInfo', function(idObject) {
 				$('#info').empty();
 			});				  
+
+		script.
+			var selectFromNodeElement = document.createElement('select');
+			selectFromNodeElement.className = 'form-control';
+
+			var selectToNodeElement = document.createElement('select');
+			selectToNodeElement.className = 'form-control';
+			
+			$("#getDirection").append(selectFromNodeElement);
+			$("#getDirection").append(selectToNodeElement);
+			
+
+			for(id in C3D.graph) {
+				var optionElement = document.createElement('option');
+				optionElement.value = C3D.index[id].id;
+				optionElement.innerHTML = C3D.index[id].id;
+				selectFromNodeElement.appendChild(optionElement);
+			}
+
+			for(id in C3D.graph) {
+				var optionElement = document.createElement('option');
+				optionElement.value = C3D.index[id].id;
+				optionElement.innerHTML = C3D.index[id].id;
+				selectToNodeElement.appendChild(optionElement);
+			}
 
 		block internal_content
 		hr
