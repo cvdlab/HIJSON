@@ -19,6 +19,7 @@ block content
 		
 		script.
 			var C3D = JSON.parse('!{C3D_server}');
+			var graphManager = new Graph(C3D.graph);
 		
 		// C3D Library
 		script(src='/libs/c3d_client.js')
@@ -69,8 +70,28 @@ block content
 				#info
 			.col-md-4
 				h3 Get directions
-				#getDirection
-
+				select.form-control#directionsFrom
+				select.form-control#directionsTo
+				button.btn.btn-default#getDirections Get Directions
+				
+				script.
+					var fromSelect = document.getElementById('directionsFrom');
+					var toSelect = document.getElementById('directionsTo');
+					for(id in C3D.graph) {
+						var optionElement = document.createElement('option');
+						optionElement.value = id;
+						optionElement.innerHTML = id;
+						fromSelect.appendChild(optionElement);
+						var clonedElement = optionElement.cloneNode(true);
+						toSelect.appendChild(clonedElement);
+					}
+					document.getElementById('getDirections').addEventListener('click', function()  {
+						var fromValue = fromSelect.value;
+						var toValue = toSelect.value;
+						var path = graphManager.findShortestPath(fromValue,toValue);
+						console.log(path);
+					});
+					
 		script.
 			var menuArray = [];
 			var notShowThisFeatures = ['internal_wall', 'external_wall'];
@@ -145,13 +166,6 @@ block content
 				C3D.emit('startFPV');
 			});
 
-			$( "#getDirection" ).on('click', function() {
-				var fromNode = selectFromNode.indexValue;
-				var toNode = selectToNode.indexValue;
-				C3D.emit('getDirection',fromNode, toNode);
-				console.log('fired');
-			});
-
 			C3D.on('showFeatureInfo', function(idObject){
 				showFeatureInfo = {};
 
@@ -206,31 +220,6 @@ block content
 			C3D.on('clearFeatureInfo', function(idObject) {
 				$('#info').empty();
 			});				  
-
-		script.
-			var selectFromNodeElement = document.createElement('select');
-			selectFromNodeElement.className = 'form-control';
-
-			var selectToNodeElement = document.createElement('select');
-			selectToNodeElement.className = 'form-control';
-			
-			$("#getDirection").append(selectFromNodeElement);
-			$("#getDirection").append(selectToNodeElement);
-			
-
-			for(id in C3D.graph) {
-				var optionElement = document.createElement('option');
-				optionElement.value = C3D.index[id].id;
-				optionElement.innerHTML = C3D.index[id].id;
-				selectFromNodeElement.appendChild(optionElement);
-			}
-
-			for(id in C3D.graph) {
-				var optionElement = document.createElement('option');
-				optionElement.value = C3D.index[id].id;
-				optionElement.innerHTML = C3D.index[id].id;
-				selectToNodeElement.appendChild(optionElement);
-			}
 
 		block internal_content
 		hr

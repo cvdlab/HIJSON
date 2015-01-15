@@ -127,7 +127,7 @@ C3D.parseJSON = function() {
     }
     
 
-    process.stdout.write('Generating graph for paths... ');
+    process.stdout.write('Generating subgraphs... ');
     C3D.createGraph();
     console.log('Done.');
     
@@ -135,7 +135,7 @@ C3D.parseJSON = function() {
     C3D.generateGeoJSON();
     console.log('Done.');
 
-    process.stdout.write('Generating map ... ');
+    process.stdout.write('Generating complete graph... ');
     C3D.createMap()
     console.log('Done.');
 
@@ -200,7 +200,6 @@ C3D.generateGeoJSON = function() {
 			if (C3D.config.showGraph && obj.properties.class === 'graphNode') {
 				var k = 0;
 				for (node in obj.properties.adj) {
-					console.log(obj.id + ': ' + node);
 					var adiacent = C3D.index[node];
 					var newObj = {};
 					
