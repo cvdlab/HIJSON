@@ -401,7 +401,13 @@ C3D.createGraph = function () {
 		if(C3D.index[id].properties.class === 'door') {
 			var door = C3D.index[id];
 			var doorNode = door.graph[0];
-			var connections = C3D.index[door.properties.parent].properties.connections;
+			if(door.properties.connections === undefined) {
+				var connections = C3D.index[door.properties.parent].properties.connections;
+			}
+			else {
+				var connections = door.properties.connections;
+			}
+
 			for (key in connections) {
 				var idRoom = connections[key];
 				var nearestNode = getNearestNode(doorNode, C3D.index[idRoom].graph);

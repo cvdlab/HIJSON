@@ -184,7 +184,7 @@
                     "description": "mura interne",
                     "tVector": [31, 8, 0],
                     "rVector": [0, 0, 90],
-                    "connections": ["hall_0.1"]
+                    "connections": ["elevator_0.1"]
               }
         },
         {
@@ -290,7 +290,7 @@
                     "type": "LineString",
                     "coordinates": 
                     [ 
-                       [0, 0], [10, 0] 
+                       [0, 0], [7, 0] 
                     ]  
                   
               },
@@ -303,6 +303,29 @@
                     "tVector": [21, 11, 0],
                     "rVector": [0, 0, 0],
                     "connections": ["room_0.3", "hall_0.1"]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "wall_0.3-elevator",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [3, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "internal_wall",
+                    "thickness": 0.1,
+                    "parent": "level_0",
+                    "description": "mura interne",
+                    "tVector": [28, 11, 0],
+                    "rVector": [0, 0, 0],
+                    "connections": ["room_0.3", "elevator_0.1"]
               }
         },
 
@@ -362,7 +385,7 @@
                     "type": "LineString",
                     "coordinates": 
                     [ 
-                       [0, 0], [15, 0] 
+                       [0, 0], [12, 0] 
                     ]  
                   
               },
@@ -375,6 +398,29 @@
                     "tVector": [16, 8, 0],
                     "rVector": [0, 0, 0],
                     "connections": ["room_0.4", "hall_0.1"]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "wall_0.4-Elevator_0.1",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [3, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "internal_wall",
+                    "thickness": 0.1,
+                    "parent": "level_0",
+                    "description": "mura interne",
+                    "tVector": [28, 8, 0],
+                    "rVector": [0, 0, 0],
+                    "connections": ["room_0.4", "elevator_0.1"]
               }
         },
         {
@@ -627,7 +673,7 @@
                     "type": "Polygon",
                     "coordinates": 
                     [ 
-                       [ [0, 0], [5, 0], [5, 8], [20, 8], [20, 11], [0, 11] ]
+                       [ [0, 0], [5, 0], [5, 8], [17, 8], [17, 11], [0, 11] ]
                     ]  
                   
               },
@@ -821,7 +867,7 @@
                     "description": "mura interne",
                     "tVector": [31, 8, 0],
                     "rVector": [0, 0, 90],
-                    "connections": ["hall_1.1"]
+                    "connections": ["elevator_1.1"]
               }
         },
         {
@@ -927,7 +973,7 @@
                     "type": "LineString",
                     "coordinates": 
                     [ 
-                       [0, 0], [10, 0] 
+                       [0, 0], [7, 0] 
                     ]  
                   
               },
@@ -943,6 +989,29 @@
               }
         },
 
+        {
+              "type": "Feature",
+              "id": "wall_1.3-elevator_1.1",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [3, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "internal_wall",
+                    "thickness": 0.1,
+                    "parent": "level_1",
+                    "description": "mura interne",
+                    "tVector": [28, 11, 0],
+                    "rVector": [0, 0, 0],
+                    "connections": ["room_1.3", "elevator_1.1"]
+              }
+        },
         {
               "type": "Feature",
               "id": "wall_1.2-3",
@@ -999,7 +1068,7 @@
                     "type": "LineString",
                     "coordinates": 
                     [ 
-                       [0, 0], [15, 0] 
+                       [0, 0], [12, 0] 
                     ]  
                   
               },
@@ -1012,6 +1081,30 @@
                     "tVector": [16, 8, 0],
                     "rVector": [0, 0, 0],
                     "connections": ["room_1.4", "hall_1.1"]
+              }
+        },
+
+        {
+              "type": "Feature",
+              "id": "wall_1.4-H-Elevator_1.1",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [3, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "internal_wall",
+                    "thickness": 0.1,
+                    "parent": "level_1",
+                    "description": "mura interne",
+                    "tVector": [28, 8, 0],
+                    "rVector": [0, 0, 0],
+                    "connections": ["room_1.4", "elevator_1.1"]
               }
         },
         {
@@ -1276,7 +1369,142 @@
                 "tVector": [0, 0, 7],
                 "rVector": [0, 0, 0]
             }
-        }
+        },
+        {
+              "type": "Feature",
+              "id": "elevator_0.1",
+              "geometry": 
+              {
+                    "type": "Polygon",
+                    "coordinates": 
+                    [ 
+                       [ [0, 0], [3, 0], [3, 3], [0, 3] ]
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "room",
+                    "parent": "level_0",
+                    "description": "elevator_0.1",
+                    "tVector": [28, 8, 0],
+                    "rVector": [0, 0, 0]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "wall_elevator_0.1",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [3, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "internal_wall",
+                    "thickness": 0.1,
+                    "parent": "level_0",
+                    "description": "mura elevator",
+                    "tVector": [28, 8, 0],
+                    "rVector": [0, 0, 90],
+                    "connections": ["hall_0.1", "elevator_0.1"]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "door_elevator_0.1",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [1, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "door",
+                    "parent": "wall_elevator_0.1",
+                    "thickness": 5,
+                    "description": "Porta ascensore level_0",
+                    "tVector": [1, 0, 0],
+                    "rVector": [0, 0, 0],
+                    "connections" : ["hall_0.1", "elevator_1.1", "elevator_0.1"]
+              }
+        },
 
+
+        {
+              "type": "Feature",
+              "id": "elevator_1.1",
+              "geometry": 
+              {
+                    "type": "Polygon",
+                    "coordinates": 
+                    [ 
+                       [ [0, 0], [3, 0], [3, 3], [0, 3] ]
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "room",
+                    "parent": "level_1",
+                    "description": "elevator_1.1",
+                    "tVector": [28, 8, 0],
+                    "rVector": [0, 0, 0]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "wall_elevator_1.1",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [3, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "internal_wall",
+                    "thickness": 0.1,
+                    "parent": "level_1",
+                    "description": "mura elevator",
+                    "tVector": [28, 8, 0],
+                    "rVector": [0, 0, 90],
+                    "connections": ["hall_1.1", "elevator_1.1"]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "door_elevator_1.1",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [1, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "door",
+                    "parent": "wall_elevator_1.1",
+                    "thickness": 5,
+                    "description": "Porta ascensore level_1",
+                    "tVector": [1, 0, 0],
+                    "rVector": [0, 0, 0],
+                    "connections" : ["hall_1.1", "elevator_0.1", "elevator_1.1"]
+              }
+        }
     ]
 }

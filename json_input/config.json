@@ -5,7 +5,7 @@
     	"lng": 12
     },
     
-    "showGraph": true,
+    "showGraph": false,
 
     "landmarks": 
 	[
@@ -66,14 +66,8 @@
 	    },
 	    "server": 
 	    {
-		    "prefix": "fa",
-		    "icon": "database",
-		    "markerColor": "orange"
-	    },
-	    "server_polygon": 
-	    {
 		    "weight": 0,
-		    "fillColor": "#ff0000",
+		    "fillColor": "#f49530",
 		    "fillOpacity": 1
 	    },
 	    "surveillanceCamera": 

@@ -5,6 +5,8 @@ C3D.interactiveClasses = ['server', 'surveillanceCamera', 'hotspot', 'antenna', 
 
 C3D.interactiveFeatures = [];
 C3D.obstaclesFeatures = [];
+
+var graphManager = new Graph(C3D.graph);
 /*
     Generazione dell'indice e settaggio dei parent agli elementi.
 */
@@ -531,12 +533,10 @@ Qui sono presenti tutte le funzioni necessarie per generare(3D) gli elementi di 
     - fire Extinguisher
 */
 
-
 C3D.generator3D['server'] = function (feature) {
-    if(feature.properties.dimensions === undefined) { var dimensions = [1,1,2]; }
-    else { var dimensions = feature.properties.dimensions; }
-    
-    var geometry = new THREE.BoxGeometry(dimensions[0], dimensions[1], dimensions[2]);
+    var coords = feature.geometry.coordinates;
+    console.log(coords);
+    var geometry = new THREE.BoxGeometry(coords[0][2][0], coords[0][2][1], feature.properties.height);
     var material = new THREE.MeshLambertMaterial( {color: 0xf49530} );
     var wireMaterial = new THREE.MeshLambertMaterial( {color: 0x000000, wireframe: true, wireframeLinewidth: 2} );
     //var server = new THREE.SceneUtils.createMultiMaterialObject(geometry, [material, wireMaterial]);
@@ -549,7 +549,6 @@ C3D.generator3D['server'] = function (feature) {
 
     return model;
 };
-
 
 C3D.generator3D['surveillanceCamera'] = function(feature) {
 
@@ -1052,14 +1051,16 @@ C3D.getActualLevelId = function() {
 */
 
 C3D.orderLayer = function() {
-    var orderClass = ['room','external_wall','internal_wall','door','graphNode','graphArc','server_polygon'];
+    var orderClass = ['room','external_wall','internal_wall','door','graphNode','graphArc','server','path'];
     while(orderClass.length !== 0) {
         var classElement = orderClass.shift();
         for(idLayer in C3D.map2D._layers) {
             layer = C3D.map2D._layers[idLayer];
             if(layer.feature !== undefined) {
-                if(layer.feature.properties.class === classElement) {
-                    layer.bringToFront();
+                if(layer.feature.properties !== undefined) {
+                    if(layer.feature.properties.class === classElement) {
+                        layer.bringToFront();
+                    }
                 }
             }     
         }
@@ -1211,7 +1212,55 @@ C3D.getAbsoluteCoords = function(object) {
 C3D.applyTransformation = function (v, m) {
     return [ v[0]*m[0][0] + v[1]*m[0][1] + m[0][2], v[0]*m[1][0] + v[1]*m[1][1] + m[1][2] ];
 }
-
-C3D.getDirections = function(fromId, toId) {
-    console.log(fromId, toId);
+C3D.getLevel = function(obj) {
+    var ancestor = obj;
+    while (ancestor.properties.class !== 'level') {
+        ancestor = C3D.index[ancestor.properties.parent];
+    }
+    if (ancestor.properties.class === 'building') {
+        return undefined;
+    } else {
+        return ancestor.id;
+    }
 }
+
+C3D.on('getDirections', function(directionInfo) {
+    for(id in C3D.index) {
+        var obj = C3D.index[id];
+        if(obj.properties.class === 'level' && obj.layer2D.directionsLayer !== undefined) {
+            obj.layer2D.removeLayer(obj.layer2D.directionsLayer);
+        }
+    }
+
+    var fromNodeId = directionInfo.fromNodeId;
+    var toNodeId = directionInfo.toNodeId; 
+    var path = graphManager.findShortestPath(fromNodeId, toNodeId);
+    console.log(path);
+    var pathsGeoJSON = {};
+    for(id in path) {
+
+        var node = C3D.index[ path[id] ];
+        var level = C3D.getLevel(node);
+        if(!(level in pathsGeoJSON)) {
+            pathsGeoJSON[level] = {
+                type: 'Feature',
+                geometry: {
+                    type: 'LineString',
+                    coordinates: []
+                },
+                properties: {
+                    class: 'path'
+                }
+            }
+        }
+        var nodeCoordinates = C3D.getAbsoluteCoords(node);
+        var geographicalCoordinates = C3D.fromXYToLngLat(nodeCoordinates);
+        pathsGeoJSON[level].geometry.coordinates.push(geographicalCoordinates);
+    }
+    console.log(pathsGeoJSON);
+    for(idLevel in pathsGeoJSON) {
+        var layer = L.geoJson(pathsGeoJSON[idLevel]);
+        C3D.index[idLevel].layer2D.addLayer(layer);
+        C3D.index[idLevel].layer2D.directionsLayer = layer;
+    }
+});

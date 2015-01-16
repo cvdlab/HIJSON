@@ -19,7 +19,7 @@ block content
 		
 		script.
 			var C3D = JSON.parse('!{C3D_server}');
-			var graphManager = new Graph(C3D.graph);
+
 		
 		// C3D Library
 		script(src='/libs/c3d_client.js')
@@ -88,8 +88,11 @@ block content
 					document.getElementById('getDirections').addEventListener('click', function()  {
 						var fromValue = fromSelect.value;
 						var toValue = toSelect.value;
-						var path = graphManager.findShortestPath(fromValue,toValue);
-						console.log(path);
+						var directionInfo = {
+							fromNodeId: fromValue,
+							toNodeId: toValue
+						}
+						C3D.emit('getDirections', directionInfo);
 					});
 					
 		script.
