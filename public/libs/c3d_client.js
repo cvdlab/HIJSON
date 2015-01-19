@@ -535,7 +535,6 @@ Qui sono presenti tutte le funzioni necessarie per generare(3D) gli elementi di 
 
 C3D.generator3D['server'] = function (feature) {
     var coords = feature.geometry.coordinates;
-    console.log(coords);
     var geometry = new THREE.BoxGeometry(coords[0][2][0], coords[0][2][1], feature.properties.height);
     var material = new THREE.MeshLambertMaterial( {color: 0xf49530} );
     var wireMaterial = new THREE.MeshLambertMaterial( {color: 0x000000, wireframe: true, wireframeLinewidth: 2} );
@@ -1177,7 +1176,7 @@ C3D.from2DToGeneral = function(leafletPosition) {
 
 
 C3D.fromXYToLngLat = function (coordinates) {
-    return C3D.applyTransformation(coordinates, C3D.transformationMatrix);
+    return C3D.applyTransformation(coordinates, C3D.config.transformationMatrix);
 }
 
 C3D.fromLngLatToXY = function(coordinates) {
