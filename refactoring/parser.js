@@ -66,7 +66,6 @@ function parseJSON(input) {
         	}
         }
     }
-    console.log('Parsing complete.');
 }
 
 module.exports = {

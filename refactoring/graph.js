@@ -4,7 +4,7 @@ var cU = require('./coordinatesUtilities.js');
 
 var createSubGraph = function(data, id) {
 	var object = data.index[id];
-	console.log(object.id);
+	//console.log(object.id);
 	if(object.properties.class === 'door') {
 		var graphNode = {
 			type: 'graph',

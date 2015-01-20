@@ -1,22 +1,28 @@
-var mU = require('./matrixUtilities.js');
+// initialize library object (namespace)
+var coordinatesUtilities = {};
 
-var fromXYToLngLat = function(coordinates, transformationMatrix) {
-	return mU.applyTransformation(coordinates, transformationMatrix);
-};
+// import any dependencies (in browser must be included before this)
+var matrixUtilities = matrixUtilities || require('./matrixUtilities.js');
 
-module.exports = {
-	absoluteCoords: function absoluteCoords(obj) {
-		var matrix = mU.getCMT(obj);
+(function(){
+	// properties of library goes here
+
+	var fromXYToLngLat = function(coordinates, transformationMatrix) {
+		return matrixUtilities.applyTransformation(coordinates, transformationMatrix);
+	};
+	
+	var absoluteCoords = function(obj) {
+		var matrix = matrixUtilities.getCMT(obj);
 		switch (obj.geometry.type) {
 	        case "Point":
-	            return mU.applyTransformation(obj.geometry.coordinates, matrix);
+	            return matrixUtilities.applyTransformation(obj.geometry.coordinates, matrix);
 	            break;
 	        case "LineString": 
 	        	var newCoords = [];
 	        	oldCoords = obj.geometry.coordinates;
 	        	for (var i = 0; i < oldCoords.length; i++)
 	        	{
-	        		var newCouple = mU.applyTransformation(oldCoords[i], matrix);
+	        		var newCouple = matrixUtilities.applyTransformation(oldCoords[i], matrix);
 		        	newCoords.push(newCouple);
 	        	}
 	            return newCoords;
@@ -29,7 +35,7 @@ module.exports = {
 		        	var newPerimeter = [];
 		        	for (var j = 0; j < oldCoords[i].length; j++)
 		        	{
-			        	var newCouple = mU.applyTransformation(oldCoords[i][j], matrix);
+			        	var newCouple = matrixUtilities.applyTransformation(oldCoords[i][j], matrix);
 		        		newPerimeter.push(newCouple);
 		        	}
 		        	newCoords.push(newPerimeter);
@@ -40,9 +46,9 @@ module.exports = {
 	        	return undefined;
 	        	break;
 	    }
-	},
-
-	convertToDegrees: function convertToDegrees(geoJSONmap, transformationMatrix) {
+	};
+	
+	var convertToDegrees = function(geoJSONmap, transformationMatrix) {
 		for(level in geoJSONmap) {
 			geoJSONobject = geoJSONmap[level];
 			for(feature in geoJSONobject.features) {
@@ -75,9 +81,9 @@ module.exports = {
 			}
 		}
 		return geoJSONmap;	
-	},
-
-	computeGeoMatrix: function computeMatrix(landmarks) {
+	};
+	
+	var computeGeoMatrix = function(landmarks) {
 		var x1 = landmarks[0].local[0];
 		var y1 = landmarks[0].local[1];
 		var x2 = landmarks[1].local[0];
@@ -107,6 +113,7 @@ module.exports = {
 		];
 
 		var sol = numeric.solve(matrixA, vectorB);
+		
 		var transformationMatrix =
 		[
 			[sol[0],	sol[1],		sol[4]],
@@ -115,9 +122,23 @@ module.exports = {
 		];
 
 		return transformationMatrix;
-	},
-
-	getPointAbsoluteCoords: function getAbsoluteCoords(object) {
-    	return mU.applyTransformation([0, 0], object.CMT);
+	};
+	
+	var getPointAbsoluteCoords = function(object) {
+    	return matrixUtilities.applyTransformation([0, 0], object.CMT);
+	};
+	// end of library properties
+	
+	// exported things
+	coordinatesUtilities.absoluteCoords = absoluteCoords;
+	coordinatesUtilities.convertToDegrees = convertToDegrees;
+	coordinatesUtilities.computeGeoMatrix = computeGeoMatrix;
+	coordinatesUtilities.getPointAbsoluteCoords = getPointAbsoluteCoords;
+	// end of exported things
+	
+	// export the namespace object
+	if (typeof module !== 'undefined' && module.exports) {
+	  module.exports = coordinatesUtilities;
 	}
-}
+	
+})();
