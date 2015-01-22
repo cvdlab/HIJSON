@@ -24,7 +24,7 @@ block internal_content
 				// put new markers
 				for(userToUpdate in usersConnected) { 
 					var user = usersConnected[userToUpdate];
-					var latLng = C3D.fromGeneralTo2D(user.position);
+					var latLng = coordinatesUtilities.fromGeneralTo2D(user.position, C3D.config.transformationMatrix);
 					var marker = L.marker(latLng, { icon: userIcon });
 					marker.bindPopup("<b>User: </b>" + user.id +'<br><b>[' + latLng.lat + '; ' + latLng.lng + ']</b>');
 					marker.addTo(C3D.index[user.position.levelId].layer2D.userMarkers);
@@ -46,7 +46,7 @@ block internal_content
 					var user = usersConnected[userToUpdate];
 					var model = C3D.generator3D['cube']('0xFF0000');
 					C3D.index[user.position.levelId].obj3D.userModels.add(model);
-					model.position = C3D.fromGeneralTo3D(user.position);
+					model.position = coordinatesUtilities.fromGeneralTo3D(user.position);
 					if ((user.position.levelId === C3D.actualPosition.levelId) || (C3D.actualPosition.levelId === 'building')) {
 						C3D.show3DObject(model, true);
 					} else {

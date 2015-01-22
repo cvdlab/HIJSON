@@ -73,7 +73,7 @@ module.exports = {
 		var input = {
 			config: inputFiles.configPath,
 			architecture: inputFiles.architecturePath,
-			furniture: inputFiles.furniturePath
+			furnitures: inputFiles.furniturePath
 		};
 
 		parseJSON(input);

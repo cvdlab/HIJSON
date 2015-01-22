@@ -7,6 +7,11 @@ C3D.interactiveFeatures = [];
 C3D.obstaclesFeatures = [];
 
 var graphManager = new Graph(C3D.graph);
+
+C3D.actualPosition = {
+    coordinates: [C3D.config.startPosition.coordinates[0], C3D.config.startPosition.coordinates[1]],
+    levelId: C3D.config.startPosition.levelId  
+}
 /*
     Generazione dell'indice e settaggio dei parent agli elementi.
 */
@@ -35,13 +40,6 @@ C3D.setIndexAndParents = function() {
 }
 
 C3D.setIndexAndParents();
-
-C3D.actualPosition = {
-	coordinates: [C3D.config.startPosition.coordinates[0], C3D.config.startPosition.coordinates[1]],
-	levelId: C3D.config.startPosition.levelId
-};
-
-//console.log(C3D.actualPosition.levelId);
 
 C3D.handlers = {};
 C3D.generator3D = {};
@@ -101,7 +99,7 @@ C3D.init2D = function() {
 		    }
 
 		    if(C3D.index[idObject].properties.class !== 'building') 
-		        C3D.map2D.fitBounds(C3D.getRoom(C3D.index[idObject]).layer2D.getBounds());
+		        C3D.map2D.fitBounds(utilities.getRoom(C3D.index[idObject]).layer2D.getBounds());
 
             C3D.orderLayer();
         });
@@ -183,14 +181,14 @@ C3D.init3D = function() {
     }
 
     C3D.on('selectFeature', function(idObject) {
-        C3D.show3DObject(C3D.index["building"].obj3D, false);
-        C3D.show3DObject(C3D.index[idObject].obj3D, true);
+        utilities.show3DObject(C3D.index["building"].obj3D, false);
+        utilities.show3DObject(C3D.index[idObject].obj3D, true);
 	    
 	    for(var i in C3D.index) {
 	        var elementClass = C3D.index[i].properties.class;
 	        if((elementClass === "internal_wall") || (elementClass === "external_wall")) {
 	            if($.inArray(idObject, C3D.index[i].properties.connections) !== -1) {
-	                C3D.show3DObject(C3D.index[i].obj3D, true);
+	                utilities.show3DObject(C3D.index[i].obj3D, true);
 	            }   
 	        }
 	    }
@@ -225,7 +223,7 @@ C3D.init3D = function() {
 		//questo evento viene richiamato ad ogni attivazione/disattivazione del pointerlock, in paricolare il blocco if all'avvio del pointerlock, il blocco else alla disattivazione del pointerlock
 		var pointerlockchange = function(event) {
 			if (document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element) {
-				C3D.show3DObject(C3D.index["building"].obj3D, true);
+				utilities.show3DObject(C3D.index["building"].obj3D, true);
                 //C3D.index['building'].obj3D.rotation.x = -Math.PI/2;
 				pointerLockControls = new THREE.PointerLockControls(camera, {
                     cameraHeight: 1.7,
@@ -243,7 +241,7 @@ C3D.init3D = function() {
 				$("#pointer").css('display', 'block');
                 //camera.up = new THREE.Vector3(0, 1, 0);
                 camera.position.set(0, 0, 0);
-				pointerLockControls.getObject().position = C3D.fromGeneralTo3DScene(C3D.actualPosition);
+				pointerLockControls.getObject().position = coordinatesUtilities.fromGeneralTo3DScene(C3D.actualPosition);
 				pointerLockControls.getObject().position.y += 1.7;
 			} else {
                 var actualLevel = C3D.actualPosition.levelId;
@@ -435,7 +433,7 @@ C3D.generate3DModel = function() {
     function setLight() {
         var light = C3D.scene3D.__lights[1];
         var sceneCenter = new THREE.Object3D();
-        sceneCenter.position = C3D.getCentroid(C3D.index['building'].obj3D);
+        sceneCenter.position = utilities.getCentroid(C3D.index['building'].obj3D);
         light.shadowCameraVisible = true;
         light.position.set(sceneCenter.position.x*2 + 10,sceneCenter.position.y + 20,sceneCenter.position.z);
         light.castShadow = true;
@@ -445,7 +443,7 @@ C3D.generate3DModel = function() {
         light.intensity = 2;
         light.shadowMapHeight = 4096;
         light.shadowMapWidth = 4096;
-        light.target.position = C3D.getCentroid(C3D.index['building'].obj3D);
+        light.target.position = utilities.getCentroid(C3D.index['building'].obj3D);
     }
 
     // var centroid = C3D.getCentroid(C3D.index['building'].obj3D);
@@ -1018,15 +1016,6 @@ C3D.generator3D['badgeReader'] = function(feature) {
     Funzioni di supporto
 */
 
-C3D.getRoom = function(obj) {
-    var ancestor = obj;
-    if(obj.properties.class !== 'building' && obj.properties.class !== 'level') {
-        while(ancestor.properties.class !== 'room') {
-            ancestor = ancestor.parent;
-        }
-    }
-    return ancestor;
-}
 
 /*
     getActualLevelId ritorna il livello che al momento si sta visualizzando.
@@ -1076,7 +1065,7 @@ C3D.packageModel = function (model3D) {
     
         el3D.add(model3D);
     
-        var bboxCentroid = C3D.getCentroid(bbox);
+        var bboxCentroid = utilities.getCentroid(bbox);
     
         model3D.position.set(-bboxCentroid.x,-bboxCentroid.y,-bboxCentroid.z);    
     
@@ -1085,143 +1074,6 @@ C3D.packageModel = function (model3D) {
         
         return el3D;
     }
-
-/* 
-    Funzione che prendei in input un obj3D e un booleano ed effettua il traverse
-*/
-
-/*
-C3D.show3DObject = function(obj3D, booleanValue) {
-    console.log(obj3D);
-    if(booleanValue) {
-        obj3D.traverse(function(object) { 
-            if((object.material !== undefined) && (object.package === undefined)) {
-                object.material.opacity = 1;
-            }
-        });
-    }
-    else
-    {
-        obj3D.traverse(function(object) { 
-            if((object.material !== undefined) && (object.package === undefined)) {
-                object.material.transparent = true;
-                object.material.opacity = 0.1;
-            }
-        });    
-    }
-}
-*/
-
-C3D.show3DObject = function(obj3D, booleanValue) {
-
-    obj3D.traverse(function(object) { 
-        object.visible = booleanValue;
-    });
-
-}
-
-
-/*
-	funzioni di traduzioni coordinate, tra generali, 3D (rotazione) e 2D (latitudine e longitudine). 
-*/
-
-
-// input: un oggetto posizione generale, output: un THREE.Vector3 da usare come posizione
-C3D.fromGeneralTo3DScene = function(genPosition) {
-	var threePosition = new THREE.Vector3(genPosition.coordinates[0], C3D.index[genPosition.levelId].properties.tVector[2], -genPosition.coordinates[1]);
-	return threePosition;
-}
-
-// trasformazione inversa della precedente.
-C3D.from3DSceneToGeneral = function(threePosition) {
-	var genPosition = {
-		coordinates: [threePosition.x, -threePosition.z],
-		levelId: C3D.actualPosition.levelId
-	}
-	return genPosition;
-}
-
-
-// input: un oggetto posizione generale, output: un THREE.Vector3 da usare come posizione
-C3D.fromGeneralTo3D = function(genPosition) {
-	var threePosition = new THREE.Vector3(genPosition.coordinates[0], genPosition.coordinates[1], 0);
-	return threePosition;
-}
-
-// trasformazione inversa della precedente.
-C3D.from3DToGeneral = function(threePosition) {
-	var genPosition = {
-		coordinates: [threePosition.x, threePosition.y],
-		levelId: C3D.actualPosition.levelId
-	}
-	return genPosition;
-}
-
-// input: un oggetto posizione generale, output: un oggetto L.latLng
-C3D.fromGeneralTo2D = function(genPosition) {
-    var convertedCoordinates = C3D.fromXYToLngLat(genPosition.coordinates);
-    var leafletPosition = L.latLng(convertedCoordinates[1], convertedCoordinates[0]);
-
-	return leafletPosition;
-}
-
-// inversa
-C3D.from2DToGeneral = function(leafletPosition) {
-    var genPosition = {
-		coordinates: C3D.fromLngLatToXY([leafletPosition.lng, leafletPosition.lat]),
-		levelId: C3D.actualPosition.levelId
-	}
-	return genPosition;
-}
-
-
-C3D.fromXYToLngLat = function (coordinates) {
-    return C3D.applyTransformation(coordinates, C3D.config.transformationMatrix);
-}
-
-C3D.fromLngLatToXY = function(coordinates) {
-    return C3D.applyTransformation(coordinates, C3D.inverseTransformationMatrix);
-}
-
-C3D.from2Dto3D = function(leafletPosition) {
-	var genPosition = C3D.from2DToGeneral(leafletPosition);
-	var threePosition = C3D.fromGeneralTo3D(genPosition);
-	
-    return threePosition;
-}
-
-C3D.from3Dto2D = function(threePosition) {
-	var genPosition = C3D.from3DToGeneral(threePosition);
-	var leafletPosition = C3D.fromGeneralTo2D(genPosition);
-	
-    return leafletPosition;
-}
-
-C3D.getCentroid = function(object3D) {
-    var boundingBox = new THREE.BoundingBoxHelper(object3D,0xff0000 );
-    boundingBox.update();
-    var center = new THREE.Vector3( (boundingBox.box.min.x + boundingBox.box.max.x)/2, (boundingBox.box.min.y + boundingBox.box.max.y)/2, (boundingBox.box.min.z + boundingBox.box.max.z)/2 );
-    return center;
-}
-
-C3D.getAbsoluteCoords = function(object) {
-    return C3D.applyTransformation([0, 0], object.CMT);
-}
-
-C3D.applyTransformation = function (v, m) {
-    return [ v[0]*m[0][0] + v[1]*m[0][1] + m[0][2], v[0]*m[1][0] + v[1]*m[1][1] + m[1][2] ];
-}
-C3D.getLevel = function(obj) {
-    var ancestor = obj;
-    while (ancestor.properties.class !== 'level') {
-        ancestor = C3D.index[ancestor.properties.parent];
-    }
-    if (ancestor.properties.class === 'building') {
-        return undefined;
-    } else {
-        return ancestor.id;
-    }
-}
 
 C3D.on('getDirections', function(directionInfo) {
     for(id in C3D.index) {
@@ -1239,7 +1091,7 @@ C3D.on('getDirections', function(directionInfo) {
     for(id in path) {
 
         var node = C3D.index[ path[id] ];
-        var level = C3D.getLevel(node);
+        var level = utilities.getLevel(node);
         if(!(level in pathsGeoJSON)) {
             pathsGeoJSON[level] = {
                 type: 'Feature',
@@ -1252,8 +1104,8 @@ C3D.on('getDirections', function(directionInfo) {
                 }
             }
         }
-        var nodeCoordinates = C3D.getAbsoluteCoords(node);
-        var geographicalCoordinates = C3D.fromXYToLngLat(nodeCoordinates);
+        var nodeCoordinates = coordinatesUtilities.getPointAbsoluteCoords(node);
+        var geographicalCoordinates = coordinatesUtilities.fromXYToLngLat(nodeCoordinates, C3D.config.transformationMatrix);
         pathsGeoJSON[level].geometry.coordinates.push(geographicalCoordinates);
     }
     console.log(pathsGeoJSON);

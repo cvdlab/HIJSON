@@ -1,5 +1,5 @@
-var parser = require('./refactoring/parser.js');
-var graph = require('./refactoring/graph.js');
+var parser = require('./public/libs/parser.js');
+var graph = require('./public/libs/graphUtilities.js');
 
 var inputFiles = {
 	configPath: 'json_input/config.json',
