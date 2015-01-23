@@ -5,6 +5,7 @@ C3D.interactiveClasses = ['server', 'surveillanceCamera', 'hotspot', 'antenna', 
 
 C3D.interactiveFeatures = [];
 C3D.obstaclesFeatures = [];
+
 var graphManager = new Graph(C3D.graph);
 
 C3D.actualPosition = {
@@ -540,6 +541,501 @@ C3D.generator3D['cube'] = function(color) {
 
 
 
+/*
+Qui sono presenti tutte le funzioni necessarie per generare(3D) gli elementi di arredamento:
+    - server (Modello creato)
+    - surveillanceCamera (Modello creato)
+    - hotspot (Modello creato)
+    - light (Modello creato)
+    - antenna
+    - fire Extinguisher
+*/
+
+C3D.generator3D['server'] = function (feature) {
+    var coords = feature.geometry.coordinates;
+    var geometry = new THREE.BoxGeometry(coords[0][2][0], coords[0][2][1], feature.properties.height);
+    var material = new THREE.MeshLambertMaterial( {color: 0xf49530} );
+    var wireMaterial = new THREE.MeshLambertMaterial( {color: 0x000000, wireframe: true, wireframeLinewidth: 2} );
+    //var server = new THREE.SceneUtils.createMultiMaterialObject(geometry, [material, wireMaterial]);
+    var server = new THREE.Mesh(geometry, material);
+    //server.position.z += dimensions[2]/2;
+    
+    server.receiveShadow = true;
+    server.castShadow = true;
+    var model = C3D.packageModel(server);
+
+    return model;
+};
+
+C3D.generator3D['surveillanceCamera'] = function(feature) {
+
+    var material = new THREE.MeshLambertMaterial( {color: 0x38a9dc} );
+    var camera = new THREE.Object3D();
+    
+
+    //Creazione corpo macchina
+    var widthBody = 0.2;
+    var depthBody = 0.1;
+    var heightBody = 0.1;
+
+    var bodyCameraGeometry = new THREE.BoxGeometry(widthBody, depthBody, heightBody);
+    var bodyCamera = new THREE.Mesh( bodyCameraGeometry, material );
+
+    //Creazione obiettivo
+    var radiusTopCameraLens = 0.04;
+    var radiusBottomCameraLens = 0.06;
+    var heightCylinderCamenraLens =  0.08;
+    var cameraLensGeometry = new THREE.CylinderGeometry(radiusTopCameraLens, radiusBottomCameraLens, heightCylinderCamenraLens, 32 );
+    var cameraLens = new THREE.Mesh( cameraLensGeometry, material );
+    cameraLens.rotation.z = Math.PI/2;
+    cameraLens.position.x += 2*widthBody/3;
+   
+    //Creazione asse sostegno
+    var radiusTopRod = 0.005;
+    var radiusBottomRod = 0.005;
+    var heightRod = 0.15;
+
+    var rodGeometry = new THREE.CylinderGeometry(radiusTopRod, radiusBottomRod, heightRod, 32 );
+    var rod = new THREE.Mesh( rodGeometry, material );
+    rod.rotation.z = Math.PI/2;
+    rod.position.x -= widthBody/2;
+
+    camera.add(bodyCamera);
+    camera.add(cameraLens);
+
+    
+    camera.receiveShadow = true;
+    camera.castShadow = true;
+    var box = new THREE.Box3();
+    box.setFromObject(camera);
+    camera.add(box);
+    camera.rotation.y += Math.PI*1/9;
+    var model = C3D.packageModel(camera);
+    return model;
+}
+
+
+C3D.generator3D['hotspot'] = function(feature) {
+    var hotspot = new THREE.Object3D();
+
+    var material = new THREE.MeshLambertMaterial( {color: 0x38a9dc} );
+    var bodyGeometry = new THREE.BoxGeometry( 0.1, 0.02, 0.1);
+    var body = new THREE.Mesh( bodyGeometry, material );
+
+
+    var antennaGeometry = new THREE.CylinderGeometry( 0.001, 0.005, 0.1 , 32);
+    var antennaDx= new THREE.Mesh(antennaGeometry, material);
+    var antennaSx= new THREE.Mesh(antennaGeometry, material);
+
+    antennaDx.rotation.x = Math.PI/2;
+    antennaSx.rotation.x = Math.PI/2;
+    antennaSx.position.x += 0.08/2;
+    antennaDx.position.x -= 0.08/2;
+    
+    antennaSx.position.z += 0.05;
+    antennaDx.position.z += 0.05;
+
+    hotspot.add(body);
+    hotspot.add(antennaDx);
+    hotspot.add(antennaSx);
+
+    hotspot.receiveShadow = true;
+    hotspot.castShadow = true;
+    var model = C3D.packageModel(hotspot);
+    
+    return model;
+};
+
+
+C3D.generator3D['light'] = function(feature) {
+
+    var light = new THREE.Object3D();
+    var height = 0.05;
+    var width = 0.6;
+    var externalPlaneGeometry = new THREE.PlaneGeometry(width,width);
+    var externalPlaneMaterial = new THREE.MeshLambertMaterial({
+                                                                color:0xE7E6DD,
+                                                                side: THREE.DoubleSide
+                                                            });
+
+    var plane3D = new THREE.Mesh(externalPlaneGeometry, externalPlaneMaterial);
+    plane3D.position.z += height;
+    light.add(plane3D);
+    var groupNeon = new THREE.Object3D();
+    var neonMaterial = new THREE.MeshLambertMaterial( {color: 0xffffff} );
+    var neonGeometry = new THREE.CylinderGeometry( 0.015, 0.015, 0.58, 32 );
+    var translations = [(-0.075*3), (-0.075), (0.075), (0.075*3)];
+    for(i in translations)
+    {
+        var neon = new THREE.Mesh( neonGeometry, neonMaterial );
+        neon.position.x += translations[i];
+        groupNeon.add(neon);
+    }
+    light.add(groupNeon);
+    //light.position.z -= (height/2) + 0.001;
+
+    var model = C3D.packageModel(light);
+    
+    return model;
+} 
+
+C3D.generator3D['antenna'] = function(feature) {
+    var material = new THREE.MeshLambertMaterial( {color: 0x38a9dc} );
+    
+    var antenna = new THREE.Object3D();
+    var geometry = new THREE.BoxGeometry( 0.3, 0.1, 0.3 );
+    var base = new THREE.Mesh( geometry, material );
+    base.position.z += 0.3/2;
+    
+
+    var geometry = new THREE.CylinderGeometry( 0.01, 0.01, 0.065, 32 );
+    var baseCylinder = new THREE.Mesh( geometry, material );
+    baseCylinder.position.y += 0.05;
+    baseCylinder.position.z += 0.3/2;
+
+    var geometry = new THREE.CylinderGeometry( 0.001, 0.01, 0.5, 32 );
+    var cylinderAntenna = new THREE.Mesh( geometry, material );
+    cylinderAntenna.rotation.x = Math.PI/2;
+    cylinderAntenna.position.z += 0.3/2 +  0.5/2;
+    cylinderAntenna.position.y += 0.08;
+
+    var geometry = new THREE.SphereGeometry( 0.01, 32, 32 );
+    var sphere = new THREE.Mesh( geometry, material );
+    sphere.position.z += 0.3/2;
+    sphere.position.y += 0.08;
+    antenna.add(base);
+    antenna.add(baseCylinder);
+    antenna.add(cylinderAntenna);
+    antenna.add( sphere );
+
+    var model = C3D.packageModel(antenna);
+    return model;
+};
+
+
+C3D.generator3D['fireExtinguisher'] = function(feature) {
+
+    var fireExtinguisher = new THREE.Object3D();
+    
+    var material = new THREE.MeshLambertMaterial( {color: 0xff0000} );
+    var bodyGeometry = new THREE.CylinderGeometry( 0.1, 0.1, 0.6, 32 );
+    var body = new THREE.Mesh( bodyGeometry, material );
+    body.rotation.x = Math.PI/2;
+    
+    fireExtinguisher.add(body);
+
+    var geometrySphereUp = new THREE.SphereGeometry( 0.1, 32, 32 );
+    var sphereUp = new THREE.Mesh( geometrySphereUp, material );
+    sphereUp.position.z += 0.3;
+    
+    fireExtinguisher.add(sphereUp);
+    
+    var headGeometry = new THREE.BoxGeometry(0.02, 0.02, 0.2);
+    var materialHead = new THREE.MeshLambertMaterial( {color: 0x000000} );
+    var head = new THREE.Mesh( headGeometry, materialHead );
+    head.position.z += 0.4;
+    
+    fireExtinguisher.add(head);
+
+    var materialCylinder = new THREE.MeshLambertMaterial( {color: 0x000000} );
+    var cylinderGeometry = new THREE.CylinderGeometry( 0.015, 0.08, 0.25, 32 );
+    var cylinder = new THREE.Mesh(cylinderGeometry, materialCylinder);
+    cylinder.position.z += 0.5;
+    cylinder.rotation.z = Math.PI/2;
+    cylinder.position.x += 0.1;
+    
+    fireExtinguisher.add(cylinder);
+    
+    var model = C3D.packageModel(fireExtinguisher);    
+    return  model;
+}
+
+C3D.generator3D['table'] = function(feature) {
+    var table = new THREE.Object3D();
+
+    var geometry = new THREE.CylinderGeometry( 0.03, 0.03, 0.8, 32 );
+    var material = new THREE.MeshLambertMaterial( {color: 0xd9d7d7} );
+    
+    var p1 = new THREE.Mesh( geometry, material );
+    p1.rotation.x += Math.PI/2;
+    p1.position.z += 0.8/2;
+
+    var p2 = new THREE.Mesh( geometry, material );
+    p2.rotation.x += Math.PI/2;
+    p2.position.z += 0.8/2;
+    p2.position.y += 1;
+
+    var p3 = new THREE.Mesh( geometry, material );
+    p3.rotation.x += Math.PI/2;
+    p3.position.z += 0.8/2;
+    p3.position.x += 2;
+
+    var p4 = new THREE.Mesh( geometry, material );
+    p4.rotation.x += Math.PI/2;
+    p4.position.z += 0.8/2;
+    p4.position.y += 1;
+    p4.position.x += 2;
+    
+
+    var geometry = new THREE.BoxGeometry( 2.1, 1.1, 0.04 );
+    var material = new THREE.MeshLambertMaterial( {color: 0x9b8c75} );
+    var plane = new THREE.Mesh( geometry, material );
+    plane.position.x -= 0.05 - 2.1/2;
+    plane.position.y -= 0.05 - 1.1/2;
+    plane.position.z += 0.8;
+
+    table.add(p1);
+    table.add(p2);
+    table.add(p3);
+    table.add(p4);
+    table.add(plane);
+
+    var model = C3D.packageModel(table);
+
+    return model;
+}
+
+C3D.generator3D['chair'] = function(feature) {
+    var chair = new THREE.Object3D();
+
+    var geometry = new THREE.CylinderGeometry( 0.015, 0.015, 0.5, 32 );
+    var material = new THREE.MeshLambertMaterial( {color: 0xd9d7d7} );
+
+    var p1 = new THREE.Mesh( geometry, material );
+    p1.rotation.x += Math.PI/2;
+    p1.position.z += 0.5/2;
+
+    var p2 = new THREE.Mesh( geometry, material );
+    p2.rotation.x += Math.PI/2;
+    p2.position.z += 0.5/2;
+    p2.position.y += 0.4;
+
+    var p3 = new THREE.Mesh( geometry, material );
+    p3.rotation.x += Math.PI/2;
+    p3.position.z += 0.5/2;
+    p3.position.x += 0.4;
+
+    var p4 = new THREE.Mesh( geometry, material );
+    p4.rotation.x += Math.PI/2;
+    p4.position.z += 0.5/2;
+    p4.position.y += 0.4;
+    p4.position.x += 0.4;
+    
+    var p5 = new THREE.Mesh( geometry, material );
+    p5.rotation.x += Math.PI/2;
+    p5.position.z += 0.5*3/2;
+
+    var p6 = new THREE.Mesh( geometry, material );
+    p6.rotation.x += Math.PI/2;
+    p6.position.z += 0.5*3/2;
+    p6.position.x += 0.4;
+
+    var geometry = new THREE.BoxGeometry( 0.45, 0.45, 0.02 );
+    var material = new THREE.MeshLambertMaterial( {color: 0x9b8c75} );
+    var plane = new THREE.Mesh( geometry, material );
+    plane.position.x += 0.4/2;
+    plane.position.y += 0.4/2;
+    plane.position.z += 0.5;
+    
+    var geometry = new THREE.BoxGeometry( 0.38, 0.02, 0.15);
+    var back = new THREE.Mesh( geometry, material );
+    back.position.x += 0.4/2;
+    back.position.y += 0.001;
+    back.position.z += 0.5*12/7;
+    
+    chair.add(back);
+    chair.add(plane);
+    chair.add(p1);
+    chair.add(p2);
+    chair.add(p3);
+    chair.add(p4);
+    chair.add(p5);
+    chair.add(p6);
+    var model = C3D.packageModel(chair);
+    
+    return model;
+}
+
+/*
+    In seguito sono presenti le funzioni per disegnare l'architettura.
+*/
+C3D.generateLineString = function(geoJSONgeometry) {
+	var lineString = new THREE.Geometry();
+    for(var i = 0; i < geoJSONgeometry.coordinates.length; i++){
+        lineString.vertices.push( new THREE.Vector3( geoJSONgeometry.coordinates[i][0], geoJSONgeometry.coordinates[i][1], 0) );
+    }
+    return lineString;
+}
+
+C3D.generatePolygonShape = function(geoJSONgeometry){
+	var coords = geoJSONgeometry.coordinates;
+	var shape = new THREE.Shape();
+    for (var j = 0; j < coords[0].length; j++) //scorro le singole coordinate del perimetro esterno
+    { 
+        if (j == 0) { // primo punto
+            shape.moveTo(coords[0][j][0], coords[0][j][1]);
+        } else { // altri punti
+            shape.lineTo(coords[0][j][0], coords[0][j][1]);
+        }
+    }
+    for (var i = 1; i < coords.length; i++) { //scorro eventuali holes
+        var hole = new THREE.Path();
+        for (var j = 0; j < coords[i].length; j++) { //scorro le singole coordinate dei vari perimetri
+            if (j == 0) { // primo punto
+                hole.moveTo(coords[i][j][0], coords[i][j][1]);
+            } else { // altri punti
+                hole.lineTo(coords[i][j][0], coords[i][j][1]);
+            }  
+        }
+        shape.holes.push(hole);
+    }
+    return shape;
+}
+
+C3D.generatePolygon = function(geoJSONgeometry) {
+    return C3D.generatePolygonShape(geoJSONgeometry).makeGeometry();  
+}
+
+C3D.generateWallGeometry = function (wallFeature) {
+	var wallLength = wallFeature.geometry.coordinates[1][0];
+	var wallHeight = wallFeature.parent.properties.height;
+	var coordinates = [
+		[ [0, 0], [wallLength, 0], [wallLength, wallHeight], [0, wallHeight] ]
+	];
+	for (var i = 0; i < wallFeature.children.length; i++) {
+		var child = wallFeature.children[i];
+		if (child.properties.class === 'door') {
+			var doorLength = child.geometry.coordinates[1][0];
+//			var doorHeight = child.properties.height;
+			var doorHeight = 2;
+			var doorShift = child.properties.tVector[0];
+			var hole = [
+				[doorShift,0], [doorShift+doorLength, 0], [doorShift+doorLength, doorHeight], [doorShift, doorHeight]	
+			];
+			coordinates.push(hole);
+		}
+	}
+	return { coordinates: coordinates }
+}
+
+C3D.generator3D['external_wall'] = function(feature) {
+    var material = new THREE.MeshLambertMaterial({ 
+    	color: C3D.config.style.external_wall.color, 
+        side: THREE.DoubleSide
+	});
+	
+	var shape = C3D.generatePolygonShape(C3D.generateWallGeometry(feature));
+	
+	var extrudedGeometry = shape.extrude({
+                curveSegments: 1,
+                steps: 1,
+                amount: feature.properties.thickness,
+                bevelEnabled: false
+            });
+            
+	var wall = new THREE.Mesh(extrudedGeometry, material);
+	var container = new THREE.Object3D();
+	container.add(wall);
+	container.wall = wall;
+	wall.rotation.x += Math.PI/2;
+	wall.position.y += feature.properties.thickness/2;    
+
+    return container;	
+}
+
+C3D.generator3D['internal_wall'] = function(feature) {
+    var material = new THREE.MeshLambertMaterial({ 
+        color: C3D.config.style.internal_wall.color, 
+        side: THREE.DoubleSide
+    });
+    
+	var shape = C3D.generatePolygonShape(C3D.generateWallGeometry(feature));
+	
+	var extrudedGeometry = shape.extrude({
+                curveSegments: 1,
+                steps: 1,
+                amount: feature.properties.thickness,
+                bevelEnabled: false
+            });
+            
+	var wall = new THREE.Mesh(extrudedGeometry, material);
+	var container = new THREE.Object3D();
+	container.add(wall);
+	container.wall = wall;
+	wall.rotation.x += Math.PI/2;
+	wall.position.y += feature.properties.thickness/2;
+    
+    return container;   
+}
+
+/*
+C3D.generator3D['door'] = function(feature) {
+    var material = new THREE.LineBasicMaterial({ 
+        color: C3D.config.style.door.color, 
+        linewidth: feature.properties.thickness 
+    });
+    return new THREE.Line(C3D.generateLineString(feature.geometry), material);
+}
+*/
+
+ C3D.generator3D['level'] = function(feature) {
+
+	//return new THREE.Line(C3D.generateLineString(feature.geometry), material);
+    
+    var material = new THREE.MeshLambertMaterial({ 
+        color: C3D.config.style.level.color, 
+        side: THREE.DoubleSide
+    });
+    
+    var shape = C3D.generatePolygonShape(feature.geometry);
+    
+    var extrudedGeometry = shape.extrude({
+                curveSegments: 1,
+                steps: 1,
+                amount: feature.properties.thickness,
+                bevelEnabled: false
+    });
+            
+    var floor = new THREE.Mesh(extrudedGeometry, material);
+    var container = new THREE.Object3D();
+    container.add(floor);
+    container.floor = floor;
+	floor.position.z -= feature.properties.thickness-0.01;
+    
+    return container;   
+}
+
+
+C3D.generator3D['room'] = function(feature) {
+    var material = new THREE.MeshLambertMaterial({
+        color: C3D.config.style.room.fillColor,
+        transparent: false, 
+        opacity: 0.9, 
+        side: THREE.DoubleSide
+    });
+
+    var model = new THREE.Mesh(C3D.generatePolygon(feature.geometry), material);
+    
+    model.receiveShadow = true;
+
+    return model;
+}
+
+C3D.generator3D['badgeReader'] = function(feature) {
+    var geometry = new THREE.BoxGeometry( 0.2, 0.3, 0.25 );
+    var material = new THREE.MeshLambertMaterial( {color: 0x38a9dc} );
+    var badgeReader = new THREE.Mesh( geometry, material );
+    
+    var model = C3D.packageModel(badgeReader);
+
+
+    return model;
+}
+
+/*
+    Funzioni di supporto
+*/
+
 
 /*
     getActualLevelId ritorna il livello che al momento si sta visualizzando.
@@ -578,6 +1074,26 @@ C3D.orderLayer = function() {
         }
     }
 }
+C3D.packageModel = function (model3D) {
+        
+        var bbox = new THREE.BoundingBoxHelper(model3D, 0xff0000);
+        bbox.update();
+    
+        var boxGeometry = new THREE.BoxGeometry( bbox.box.size().x, bbox.box.size().y, bbox.box.size().z );
+        var boxMaterial = new THREE.MeshBasicMaterial( {color: 0x000000, transparent: true, opacity: 0} );
+        var el3D = new THREE.Mesh( boxGeometry, boxMaterial );
+    
+        el3D.add(model3D);
+    
+        var bboxCentroid = utilities.getCentroid(bbox);
+    
+        model3D.position.set(-bboxCentroid.x,-bboxCentroid.y,-bboxCentroid.z);    
+    
+        el3D.position.z = bbox.box.size().z/2;
+        el3D.package = true;
+        
+        return el3D;
+    }
 
 C3D.on('getDirections', function(directionInfo) {
     for(id in C3D.index) {

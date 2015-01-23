@@ -1,6 +1,7 @@
 var fs = require('fs');
-var cU = require('./coordinatesUtilities.js');
-var mU = require('./matrixUtilities.js');
+var coordinatesUtilities = require('./coordinatesUtilities.js');
+var matrixUtilities = require('./matrixUtilities.js');
+var featureFactory = require('./featureFactory.js');
 var utilities = require('./utilities.js');
 require('numeric');
 
@@ -30,7 +31,7 @@ function parseJSON(input) {
 		    
 		    console.log('Configuration loaded.');
 		    
-		    config.transformationMatrix = cU.computeGeoMatrix(config.landmarks);
+		    config.transformationMatrix = coordinatesUtilities.computeGeoMatrix(config.landmarks);
 		    config.inverseTransformationMatrix = numeric.inv(config.transformationMatrix);
 		    
 		    console.log('Matrix: ' + config.transformationMatrix);
@@ -43,23 +44,17 @@ function parseJSON(input) {
 			{
             	console.log('FeatureCollection detected for ' + input_name + '.');
 				for(var key in parsedData.features) {
-	                var feature = parsedData.features[key];
-	                var obj = {};
-	                obj.id = feature.id;
-	                obj.type = input_name;
-	                obj.parent = index[feature.properties.parent];
-	                
-	                index[feature.properties.parent].children.push(obj);
-	                obj.children = [];
-	                obj.graph = [];
-	                obj.geometry = feature.geometry;
-	                obj.properties = feature.properties;
-	                index[feature.id] = obj;
-
-			        var localMatrix = mU.objMatrix(obj);
-					var globalMatrix = mU.getCMT(index[obj.properties.parent]);
-					obj.CMT = mU.matrixProduct(globalMatrix, localMatrix);
+					var feature = parsedData.features[key];
+	                var obj = featureFactory.generateFeature(feature);
+	               	index[obj.id] = obj;
+	               	obj.parent = index[obj.properties.parent];
+	               	obj.parent.children.push(obj);
+			        var localMatrix = matrixUtilities.objMatrix(obj);
+					var globalMatrix = matrixUtilities.getCMT(index[obj.properties.parent]);
+					obj.CMT = matrixUtilities.matrixProduct(globalMatrix, localMatrix);	
+					obj.graph = [];
             	}
+
         	} 
 			else {   
             	console.log('ERROR: No FeatureCollection detected for ' + input_name + '.');
@@ -127,7 +122,7 @@ module.exports = {
 				newObj.id = obj.id;
 				newObj.geometry = {
 					type: obj.geometry.type,
-					coordinates: cU.absoluteCoords(obj)
+					coordinates: coordinatesUtilities.absoluteCoords(obj)
 				};
 				newObj.properties = {
 					class: obj.properties.class
@@ -147,8 +142,8 @@ module.exports = {
 						newObj.geometry = {
 							type: "LineString",
 							coordinates: [ 
-								cU.getPointAbsoluteCoords(obj), 
-								cU.getPointAbsoluteCoords(adiacent) 
+								coordinatesUtilities.getPointAbsoluteCoords(obj), 
+								coordinatesUtilities.getPointAbsoluteCoords(adiacent) 
 							]
 						};
 						
@@ -167,6 +162,6 @@ module.exports = {
 	        }
 		}
 		// put the map in real-world coordinates
-		data.geoJSONmap = cU.convertToDegrees(geoJSONmap, data.config.transformationMatrix);
+		data.geoJSONmap = coordinatesUtilities.convertToDegrees(geoJSONmap, data.config.transformationMatrix);
 	}
 }

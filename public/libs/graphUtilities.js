@@ -15,7 +15,6 @@ var utilities = utilities || require('./utilities.js');
 	// (3) library properties and functions (public an private)
 	var createSubGraph = function(data, id) {
 		var object = data.index[id];
-		//console.log(object.id);
 		if(object.properties.class === 'door') {
 			var graphNode = {
 				type: 'graph',

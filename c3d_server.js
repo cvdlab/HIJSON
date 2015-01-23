@@ -24,16 +24,14 @@ console.log('Creation of geoJSON file completed.');
 
 
 /* Creating geoJSON files */
-console.log('Cleaning index for JSON stringify...');
-cleanIndex();
-console.log('Cleaning completed.');
-
-function cleanIndex() {
-    // clean for JSON stringify
-    for(id in data.index) {
-    	data.index[id].parent = {};
-    }
-    data.index = {};
+console.log('Packing data...');
+var newData = {
+	graph: data.graph,
+	geoJSONmap: data.geoJSONmap,
+	input: parse.simpleInputParse(inputFiles)
 }
+data = newData;
+console.log('Packing completed.');
+
 
 module.exports = data;
