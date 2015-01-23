@@ -133,7 +133,7 @@ var matrixUtilities = matrixUtilities || require('./matrixUtilities.js');
 
 	// input: un oggetto posizione generale, output: un THREE.Vector3 da usare come posizione
 	var fromGeneralTo3DScene = function(genPosition) {
-		var threePosition = new THREE.Vector3(genPosition.coordinates[0], C3D.index[genPosition.levelId].properties.tVector[2], -genPosition.coordinates[1]);
+		var threePosition = new THREE.Vector3(genPosition.coordinates[0], data.index[genPosition.levelId].properties.tVector[2], -genPosition.coordinates[1]);
 		return threePosition;
 	}
 

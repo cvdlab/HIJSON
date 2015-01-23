@@ -40,8 +40,18 @@ var utilities = {};
 		obj3D.traverse(function(object) { 
         	object.visible = booleanValue;
     	});
-	}
+	};
 
+	var getActualLevelId = function() {
+		var id;
+		for(idLayer in data.map2D._layers){
+			layer = data.map2D._layers[idLayer];
+			if(layer.feature !== undefined && layer.feature.properties.class === 'level') {
+				id = layer.feature.id; 
+			}
+		}   
+		return id;
+	}
 	// end of library properties
 	
 	// exported things (public)
@@ -49,6 +59,7 @@ var utilities = {};
 	utilities.getRoom = getRoom;
 	utilities.getCentroid = getCentroid;
 	utilities.show3DObject = show3DObject;
+	utilities.getActualLevelId = getActualLevelId;
 	// end exported things
 	
 	// export the namespace object

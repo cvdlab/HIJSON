@@ -18,7 +18,7 @@ block content
 		include ./includes/js_libraries_3d.jade
 		
 		script.
-			var C3D = JSON.parse('!{C3D_server}');
+			var data = JSON.parse('!{data}');
 
 		
 		// C3D Library
@@ -29,6 +29,10 @@ block content
 		script(src='/libs/matrixUtilities.js')
 		script(src='/libs/coordinatesUtilities.js')
 		script(src='/libs/graphUtilities.js')
+		script(src='/libs/assembler.js')
+		script(src='/libs/eventEmitter.js')
+		script(src='/libs/renderer2D.js')
+		script(src='/libs/renderer3D.js')
 		script(src='/libs/c3d_client.js')
 		
 		.page-header
@@ -58,13 +62,13 @@ block content
 
 		if enable_2D
 			script.
-				C3D.init2D();
-				C3D.generate2DModel();
+				renderer2D.init(data);
+				renderer2D.generate2DModel(data);
 				
 		if enable_3D 
 			script.
-				C3D.init3D();
-				C3D.generate3DModel();
+				renderer3D.init(data);
+				renderer3D.generate3DModel(data);
 		
 		hr
 		
@@ -84,7 +88,7 @@ block content
 				script.
 					var fromSelect = document.getElementById('directionsFrom');
 					var toSelect = document.getElementById('directionsTo');
-					for(id in C3D.graph) {
+					for(id in data.graph) {
 						var optionElement = document.createElement('option');
 						optionElement.value = id;
 						optionElement.innerHTML = id;
@@ -99,7 +103,7 @@ block content
 							fromNodeId: fromValue,
 							toNodeId: toValue
 						}
-						C3D.emit('getDirections', directionInfo);
+						eventEmitter.emit('getDirections', directionInfo);
 					});
 					
 		script.
@@ -119,10 +123,10 @@ block content
 			optionElement.innerHTML = 'building';
 			selectElement.appendChild(optionElement);
 
-			for(id in C3D.tree.children) {
+			for(id in data.tree.children) {
 				var optionElement = document.createElement('option');
-				optionElement.value = C3D.tree.children[id].id;
-				optionElement.innerHTML = C3D.tree.children[id].id;
+				optionElement.value = data.tree.children[id].id;
+				optionElement.innerHTML = data.tree.children[id].id;
 				selectElement.appendChild(optionElement);
 			}
 
@@ -135,7 +139,7 @@ block content
 				var idSelect = selectElement.indexValue;
 				var idObject = selectElement.value;
 				//2. emit evento della selezione avvenuta per la visualizzazione 
-				C3D.emit('selectFeature', idObject);
+				eventEmitter.emit('selectFeature', idObject);
 				
 				//3. Rimozione select successivi
 				for(var i=(idSelect + 1); i < menuArray.length; i++) {
@@ -151,15 +155,15 @@ block content
 				else
 					indexSelectElement = (menuArray.length);
 
-				if(C3D.index[idObject].children.length > 0) {
+				if(data.index[idObject].children.length > 0) {
 					var newSelectElement = document.createElement('select');
 					newSelectElement.indexValue = indexSelectElement;
 					newSelectElement.className = 'form-control';
-					for(id in C3D.index[idObject].children) {
-						if(!(notShowThisFeatures.indexOf(C3D.index[idObject].children[id].properties.class)> -1)){
+					for(id in data.index[idObject].children) {
+						if(!(notShowThisFeatures.indexOf(data.index[idObject].children[id].properties.class)> -1)){
 							var optionElement = document.createElement('option');
-							optionElement.value = C3D.index[idObject].children[id].id;
-							optionElement.innerHTML = C3D.index[idObject].children[id].id;
+							optionElement.value = data.index[idObject].children[id].id;
+							optionElement.innerHTML = data.index[idObject].children[id].id;
 							newSelectElement.appendChild(optionElement);
 						}
 					}
@@ -173,10 +177,10 @@ block content
 			}
 
 			$( "#startFPV" ).on('click', function() {
-				C3D.emit('startFPV');
+				eventEmitter.emit('startFPV');
 			});
 
-			C3D.on('showFeatureInfo', function(idObject){
+			eventEmitter.on('showFeatureInfo', function(idObject){
 				showFeatureInfo = {};
 
 				showFeatureInfo['badgeReader'] = function(s) {
@@ -208,8 +212,8 @@ block content
 				}
 
 				$('#info').empty();
-				var feature = C3D.index[idObject];
-				if($.inArray(feature.properties.class, C3D.interactiveClasses) !== -1) {
+				var feature = data.index[idObject];
+				if($.inArray(feature.properties.class, data.interactiveClasses) !== -1) {
 					var s = '<dl class="dl-horizontal">';
 					s = s.concat('<dt>id</dt><dd>' + feature.id +'</dd>');
 					s = s.concat('<dt>class</dt><dd>'+ feature.properties.class +'</dd>');
@@ -223,11 +227,11 @@ block content
 				}
 			});	
 		
-			C3D.on('selectFeature', function(idObject) {
-				C3D.emit('showFeatureInfo',idObject);
+			eventEmitter.on('selectFeature', function(idObject) {
+				eventEmitter.emit('showFeatureInfo',idObject);
 			});	
 
-			C3D.on('clearFeatureInfo', function(idObject) {
+			eventEmitter.on('clearFeatureInfo', function(idObject) {
 				$('#info').empty();
 			});				  
 

@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var C3D = require('../c3d_server');
+var data = require('../c3d_server');
 
 router.get('/', function(req, res) {
 	res.render('index', {
@@ -13,7 +13,7 @@ router.get('/admin', function(req, res) {
 		title: 'IoT 3D - Admin',
 		enable_2D: true,
 		enable_3D: true,
-		C3D_server: JSON.stringify(C3D)
+		data: JSON.stringify(data)
 	});
 });
 
@@ -22,7 +22,7 @@ router.get('/user', function(req, res) {
 		title: 'IoT 3D - user',
 		enable_2D: true,
 		enable_3D: true,
-		C3D_server: JSON.stringify(C3D)
+		data: JSON.stringify(data)
 	});
 });
 

@@ -10,21 +10,11 @@ var featureFactory = {};
 	var featureClasses = {};
 	// (3) library properties and functions (public an private)
 	var generateFeature = function(feature) {
-		var featureClass = feature.properties.class;
-		var newObject = { };
-
-		featureClass = capitaliseFirstLetter(featureClass);
-		if (typeof module !== 'undefined' && module.exports) {
-			newObject = new featureClasses[featureClass](feature);
-		}
-		else {
-			newObject = new window[featureClass](feature);
-		}
-		return newObject;		
+		var featureClass = capitaliseFirstLetter(feature.properties.class);
+		return new featureClasses[featureClass](feature);	
 	}
 	
-	function capitaliseFirstLetter(featureClass)
-	{
+	function capitaliseFirstLetter(featureClass) {
 	    return featureClass.charAt(0).toUpperCase() + featureClass.slice(1);
 	}
 
@@ -52,10 +42,15 @@ var featureFactory = {};
 	inherits(Server, Feature);
 	
 	featureClasses.Server = Server;	
-	
+	Server.prototype.style = {
+								"weight": 0,
+							    "fillColor": "#f49530",
+							    "fillOpacity": 1
+							};
+
 	Server.prototype.get3DModel = function() {
-		var coords = feature.geometry.coordinates;
-		var geometry = new THREE.BoxGeometry(coords[0][2][0], coords[0][2][1], feature.properties.height);
+		var coords = this.geometry.coordinates;
+		var geometry = new THREE.BoxGeometry(coords[0][2][0], coords[0][2][1], this.properties.height);
 		var material = new THREE.MeshLambertMaterial( {color: 0xf49530} );
 		var wireMaterial = new THREE.MeshLambertMaterial( {color: 0x000000, wireframe: true, wireframeLinewidth: 2} );
 		var server = new THREE.Mesh(geometry, material);
@@ -74,6 +69,10 @@ var featureFactory = {};
 	inherits(SurveillanceCamera, Feature);
 	featureClasses.SurveillanceCamera = SurveillanceCamera;
 
+	SurveillanceCamera.prototype.style = {
+										    prefix: "fa",
+										    icon: "video-camera"
+	    								};
 	SurveillanceCamera.prototype.get3DModel = function() {
 		var material = new THREE.MeshLambertMaterial( {color: 0x38a9dc} );
 		var camera = new THREE.Object3D();
@@ -124,6 +123,10 @@ var featureFactory = {};
 
 	inherits(Hotspot, Feature);
 	featureClasses.Hotspot = Hotspot;
+	Hotspot.prototype.style = {
+									prefix: "fa",
+									icon: "wifi"
+								};
 
 	Hotspot.prototype.get3DModel = function() {
 		var hotspot = new THREE.Object3D();
@@ -199,6 +202,10 @@ var featureFactory = {};
 
 	inherits(Antenna, Feature);
 	featureClasses.Antenna = Antenna;
+	Antenna.prototype.style =	{
+									prefix: "fa",
+									icon: "signal"
+	    						};
 
 	Antenna.prototype.get3DModel = function() {
 	var material = new THREE.MeshLambertMaterial( {color: 0x38a9dc} );
@@ -239,6 +246,11 @@ var featureFactory = {};
 
 	inherits(FireExtinguisher, Feature);
 	featureClasses.FireExtinguisher = FireExtinguisher;
+	FireExtinguisher.prototype.style = {
+										    prefix: "fa",
+										    icon: "fire-extinguisher",
+										    markerColor: "red"
+										};
 
 	FireExtinguisher.prototype.get3DModel = function() {
 		var fireExtinguisher = new THREE.Object3D();
@@ -282,6 +294,11 @@ var featureFactory = {};
 
 	inherits(Table, Feature);
 	featureClasses.Table = Table;
+
+	Table.prototype.style =	{
+								prefix: "fa",
+								icon: "square-o"
+	    					};
 
 	Table.prototype.get3DModel = function() {
 		var table = new THREE.Object3D();
@@ -335,6 +352,10 @@ var featureFactory = {};
 	inherits(Chair, Feature);
 	featureClasses.Chair = Chair;
 
+	Chair.prototype.style = {
+				    			prefix: "fa",
+		    					icon: "minus"
+							};
 	Chair.prototype.get3DModel = function() {
 		var chair = new THREE.Object3D();
 
@@ -402,6 +423,10 @@ var featureFactory = {};
 
 	inherits(BadgeReader, Feature);
 	featureClasses.BadgeReader = BadgeReader;
+	BadgeReader.prototype.style = 	{
+										prefix: "fa",
+										icon: "ticket"
+									};
 
 	BadgeReader.prototype.get3DModel = function() {
 	    var geometry = new THREE.BoxGeometry( 0.2, 0.3, 0.25 );
@@ -420,18 +445,23 @@ var featureFactory = {};
 	inherits(External_wall, Feature);
 	featureClasses.External_wall = External_wall;
 
+	External_wall.prototype.style = {
+										color: "#d8d8d8",
+	    								opacity: 1
+	    							};
+
 	External_wall.prototype.get3DModel = function() {
 	    var material = new THREE.MeshLambertMaterial({ 
-	    	color: config.style.external_wall.color, 
+	    	color: this.style.color, 
 	        side: THREE.DoubleSide
 		});
 		
-		var shape = generatePolygonShape(generateWallGeometry(feature));
+		var shape = generatePolygonShape(generateWallGeometry(this));
 		
 		var extrudedGeometry = shape.extrude({
 	                curveSegments: 1,
 	                steps: 1,
-	                amount: feature.properties.thickness,
+	                amount: this.properties.thickness,
 	                bevelEnabled: false
 	            });
 	            
@@ -440,7 +470,7 @@ var featureFactory = {};
 		container.add(wall);
 		container.wall = wall;
 		wall.rotation.x += Math.PI/2;
-		wall.position.y += feature.properties.thickness/2;    
+		wall.position.y += this.properties.thickness/2;    
 
 	    return container;
 	}
@@ -452,19 +482,24 @@ var featureFactory = {};
 
 	inherits(Internal_wall, Feature);
 	featureClasses.Internal_wall = Internal_wall;
+	
+	Internal_wall.prototype.style = { 
+								    	color: "#e8e8e8",
+	    								opacity: 1
+	    							};
 
 	Internal_wall.prototype.get3DModel = function() {
 	    var material = new THREE.MeshLambertMaterial({ 
-	        color: config.style.internal_wall.color, 
+	        color: this.style.color, 
 	        side: THREE.DoubleSide
 	    });
 	    
-		var shape = generatePolygonShape(generateWallGeometry(feature));
+		var shape = generatePolygonShape(generateWallGeometry(this));
 		
 		var extrudedGeometry = shape.extrude({
 	                curveSegments: 1,
 	                steps: 1,
-	                amount: feature.properties.thickness,
+	                amount: this.properties.thickness,
 	                bevelEnabled: false
 	            });
 	            
@@ -473,7 +508,7 @@ var featureFactory = {};
 		container.add(wall);
 		container.wall = wall;
 		wall.rotation.x += Math.PI/2;
-		wall.position.y += feature.properties.thickness/2;
+		wall.position.y += this.properties.thickness/2;
 	    
 	    return container; 
 	}
@@ -484,19 +519,23 @@ var featureFactory = {};
 
 	inherits(Level, Feature);
 	featureClasses.Level = Level;
+	Level.prototype.style = {
+				    			color: "#ffffff",
+							    opacity: 0
+						    };
 
 	Level.prototype.get3DModel = function() {
 	    var material = new THREE.MeshLambertMaterial({ 
-	        color: config.style.level.color, 
+	        color: this.style.color, 
 	        side: THREE.DoubleSide
 	    });
 	    
-	    var shape = generatePolygonShape(feature.geometry);
+	    var shape = generatePolygonShape(this.geometry);
 	    
 	    var extrudedGeometry = shape.extrude({
 	                curveSegments: 1,
 	                steps: 1,
-	                amount: feature.properties.thickness,
+	                amount: this.properties.thickness,
 	                bevelEnabled: false
 	    });
 	            
@@ -504,7 +543,7 @@ var featureFactory = {};
 	    var container = new THREE.Object3D();
 	    container.add(floor);
 	    container.floor = floor;
-		floor.position.z -= feature.properties.thickness-0.01;
+		floor.position.z -= this.properties.thickness-0.01;
 	    
 	    return container;  	
 	}
@@ -515,6 +554,21 @@ var featureFactory = {};
 
 	inherits(Door, Feature);
 	featureClasses.Door = Door;
+	Door.prototype.style =  {
+								color: "#000000"
+	    					};
+
+	function GraphNode(feature) {
+		Feature.call(this, feature);
+	}
+
+	inherits(GraphNode, Feature);
+	featureClasses.GraphNode = GraphNode;
+	GraphNode.prototype.style =  {
+									fillColor: "#00ff00",
+									fillOpacity: 1,
+									radius: 7
+	    					};
 
 	function Room(feature) {
 		Feature.call(this, feature);
@@ -522,16 +576,20 @@ var featureFactory = {};
 
 	inherits(Room, Feature);
 	featureClasses.Room = Room;
-
+	Room.prototype.style = {
+								weight: 0,
+								fillColor: "#b8b8b8",
+								fillOpacity: 1
+	    					};
 	Room.prototype.get3DModel = function() {
 	    var material = new THREE.MeshLambertMaterial({
-	        color: config.style.room.fillColor,
+	        color: this.style.fillColor,
 	        transparent: false, 
 	        opacity: 0.9, 
 	        side: THREE.DoubleSide
 	    });
 
-	    var model = new THREE.Mesh(generatePolygon(feature.geometry), material);
+	    var model = new THREE.Mesh(generatePolygon(this.geometry), material);
 	    
 	    model.receiveShadow = true;
 

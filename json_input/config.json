@@ -32,91 +32,24 @@
         "coordinates": [13.5, 1], 
         "levelId": "level_0"
     },
-
-    "style":
+	"style":
     {
 	    "background": 
 	    {
 	    	"color": "#f8f8f8"
 		},
-	    "internal_wall": 
-	    {
-	    	"color": "#e8e8e8",
-	    	"opacity": 1
-	    },
-	    "external_wall": 
-	    {
-	    	"color": "#d8d8d8",
-	    	"opacity": 1
-	    },
-	    "level": 
-	    {
-		    "color": "#ffffff",
-		    "opacity": 0
-	    },
-	    "door": 
-	    {
-	    	"color": "#000000"
-	    },
-	    "room": 
-	    {
-		    "weight": 0,
-		    "fillColor": "#b8b8b8",
-		    "fillOpacity": 1
-	    },
-	    "server": 
-	    {
-		    "weight": 0,
-		    "fillColor": "#f49530",
-		    "fillOpacity": 1
-	    },
-	    "surveillanceCamera": 
-	    {
-		    "prefix": "fa",
-		    "icon": "video-camera"
-	    },
-	    "user": 
+		"user": 
 	    {
 		    "prefix": "fa",
 		    "icon": "male",
 		    "markerColor": "green"
 	    },
+
 	    "location": 
 	    {
 		    "prefix": "fa",
 		    "icon": "location-arrow",
 		    "markerColor": "green"
-	    },
-	    "fireExtinguisher": 
-	    {
-		    "prefix": "fa",
-		    "icon": "fire-extinguisher",
-		    "markerColor": "red"
-	    },
-	    "hotspot": 
-	    {
-		    "prefix": "fa",
-		    "icon": "wifi"
-	    },
-	    "antenna": 
-	    {
-		    "prefix": "fa",
-		    "icon": "signal"
-	    },
-	    "table": 
-	    {
-		    "prefix": "fa",
-		    "icon": "square-o"
-	    },
-	    "chair": 
-	    {
-		    "prefix": "fa",
-		    "icon": "minus"
-	    },
-	    "badgeReader": 
-	    {
-		    "prefix": "fa",
-		    "icon": "ticket"
 	    },
 	    "graphNode": 
 	    {
@@ -128,5 +61,5 @@
 	    {
 		    "color": "#00ff00"
 	    }
-    }
+	}
 }

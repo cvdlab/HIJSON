@@ -378,7 +378,7 @@ THREE.PointerLockControls = function ( camera, parameters ) {
 		if( time - lastPositionUpdate > 1000/25 )	{
 			lastPositionUpdate = time;
 			if (!oldPosition.equals(yawObject.position)) {
-				C3D.emit('FPVmoved');
+				eventEmitter.emit('FPVmoved');
 				//console.log('FPVmoved event fired');
 				oldPosition = yawObject.position.clone();
 			}
