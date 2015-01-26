@@ -1,16 +1,22 @@
-// template for js modules that works both in node and browsers
+var eventEmitter = require('./eventEmitter.js');
+var utilities = require('./utilities.js');
 
-// (1) initialize library object (namespace)
-var renderer2D = {};
+var orderLayers = function() {
+	var orderClass = ['room','external_wall','internal_wall','door','graphNode','graphArc','server','path'];
+	while(orderClass.length !== 0) {
+		var classElement = orderClass.shift();
+		for(idLayer in data.map2D._layers) {
+			layer = data.map2D._layers[idLayer];
+			if(layer.feature !== undefined && layer.feature.properties !== undefined && layer.feature.properties.class === classElement) {
+				layer.bringToFront();
+			}
+    	}
+	}
+};
 
-// (2) import any dependencies (in browser must be included before this file)
-// example: var dependency = dependency || require('./dependency');
-var eventEmitter = eventEmitter || require('./eventEmitter.js');
-var utilities = utilities || require('./utilities.js');
-(function(){
+var self = module.exports = {
 	
-	// (3) library properties and functions (public an private)
-	var init = function(data) {
+	init: function(data) {
         
         data.index['building'].layer2D = L.layerGroup();
         
@@ -51,21 +57,9 @@ var utilities = utilities || require('./utilities.js');
                 'Imagery © <a href="http://mapbox.com">Mapbox</a>',
             id: 'examples.map-i875mjb7'
         }).addTo(data.map2D);
-	};
-
-	var orderLayers = function() {
-		var orderClass = ['room','external_wall','internal_wall','door','graphNode','graphArc','server','path'];
-		while(orderClass.length !== 0) {
-			var classElement = orderClass.shift();
-			for(idLayer in data.map2D._layers) {
-				layer = data.map2D._layers[idLayer];
-				if(layer.feature !== undefined && layer.feature.properties !== undefined && layer.feature.properties.class === classElement) {
-					layer.bringToFront();
-				}
-	    	}
-		}
-	};
-	var generate2DModel = function(data) {
+	},
+	
+	generate2DModel: function(data) {
 		for(geoJSONlevel in data.geoJSONmap) {
 			var layer = L.geoJson(data.geoJSONmap[geoJSONlevel], {
 																	style: styleFunction, 
@@ -133,13 +127,5 @@ var utilities = utilities || require('./utilities.js');
 	        eventEmitter.emit('selectFeature', e.target.feature.id);
 	    }
 	}
-	// (4) exported things (public)
-	renderer2D.init = init;
-	renderer2D.generate2DModel = generate2DModel;
 	
-	// (5) export the namespace object
-	if (typeof module !== 'undefined' && module.exports) {
-	  module.exports = renderer2D;
-	}	
-	
-})();
+}
