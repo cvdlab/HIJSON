@@ -8,22 +8,22 @@ var featureFactory = {};
 var utilities = utilities || require('./utilities.js');
 
 var featureClasses = {};
-featureClasses['Feature'] = require('./features/Feature.js');
-featureClasses['Antenna'] = require('./features/Antenna.js');
-featureClasses['BadgeReader'] = require('./features/BadgeReader.js');
-featureClasses['Chair'] = require('./features/Chair.js');
-featureClasses['Door'] = require('./features/Door.js');
-featureClasses['External_wall'] = require('./features/External_wall.js');
-featureClasses['FireExtinguisher'] = require('./features/FireExtinguisher.js');
-featureClasses['GraphNode'] = require('./features/GraphNode.js');
-featureClasses['HotSpot'] = require('./features/HotSpot.js');
-featureClasses['Internal_wall'] = require('./features/Internal_wall.js');
-featureClasses['Level'] = require('./features/Level.js');
-featureClasses['Light'] = require('./features/Light.js');
-featureClasses['Room'] = require('./features/Room.js');
-featureClasses['Server'] = require('./features/Server.js');
-featureClasses['SurveillanceCamera'] = require('./features/SurveillanceCamera.js');
-featureClasses['Table'] = require('./features/Table.js');
+featureClasses['Feature'] = require('../features/Feature.js');
+featureClasses['Antenna'] = require('../features/Antenna.js');
+featureClasses['BadgeReader'] = require('../features/BadgeReader.js');
+featureClasses['Chair'] = require('../features/Chair.js');
+featureClasses['Door'] = require('../features/Door.js');
+featureClasses['External_wall'] = require('../features/External_wall.js');
+featureClasses['FireExtinguisher'] = require('../features/FireExtinguisher.js');
+featureClasses['GraphNode'] = require('../features/GraphNode.js');
+featureClasses['HotSpot'] = require('../features/HotSpot.js');
+featureClasses['Internal_wall'] = require('../features/Internal_wall.js');
+featureClasses['Level'] = require('../features/Level.js');
+featureClasses['Light'] = require('../features/Light.js');
+featureClasses['Room'] = require('../features/Room.js');
+featureClasses['Server'] = require('../features/Server.js');
+featureClasses['SurveillanceCamera'] = require('../features/SurveillanceCamera.js');
+featureClasses['Table'] = require('../features/Table.js');
 
 (function(){
 
