@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var data = require('../c3d_server');
+var data = require('../c3d/c3d_server');
 
 router.get('/', function(req, res) {
 	res.render('index', {

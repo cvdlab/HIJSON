@@ -1,10 +1,10 @@
 var Feature = require('./Feature.js');
 
-Feature.inherits(Antenna, Feature);
-
 function Antenna(feature) {
 	Feature.call(this, feature);
 }
+
+Feature.inherits(Antenna, Feature);
 
 Antenna.prototype.style =	{
 								prefix: "fa",

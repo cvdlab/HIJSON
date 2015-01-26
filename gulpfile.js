@@ -12,7 +12,7 @@ var nodemon = require('gulp-nodemon');
  */
 
 gulp.task('browserify', function() {
-    return browserify('./public/libs/c3d_client.js', {
+    return browserify('./c3d/c3d_client.js', {
     	standalone: 'c3dclient'
     })
     .bundle()

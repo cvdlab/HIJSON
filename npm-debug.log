@@ -7,13 +7,13 @@
 6 info gulp c3d@0.0.0
 7 verbose unsafe-perm in lifecycle true
 8 info c3d@0.0.0 Failed to exec gulp script
-9 error c3d@0.0.0 gulp: `gulp default`
+9 error c3d@0.0.0 gulp: `gulp browserify`
 9 error Exit status 8
 10 error Failed at the c3d@0.0.0 gulp script.
 10 error This is most likely a problem with the c3d package,
 10 error not with npm itself.
 10 error Tell the author that this fails on your system:
-10 error     gulp default
+10 error     gulp browserify
 10 error You can get their info via:
 10 error     npm owner ls c3d
 10 error There is likely additional logging output above.

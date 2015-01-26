@@ -7,7 +7,7 @@ function Feature(feature) {
 	this.children = [];
 }
 
-Feature.prototype.inherits = function(Child, Parent) {
+Feature.inherits = function inherits(Child, Parent) {
 	var F = function() {};
 	F.prototype = Parent.prototype;
 	Child.prototype = new F();

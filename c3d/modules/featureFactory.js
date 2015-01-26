@@ -6,14 +6,16 @@ var featureFactory = {};
 // (2) import any dependencies (in browser must be included before this file)
 // example: var dependency = dependency || require('./dependency');
 var utilities = utilities || require('./utilities.js');
-var requireDir = require('require-dir');
-var featureClasses = requireDir('../features');
+var requireDir = require('requiredir');
+var featureClasses = requireDir(__dirname + '/../features');
 
 (function(){
 
 	// (3) library properties and functions (public an private)
 	var generateFeature = function(feature) {
 		var featureClass = capitaliseFirstLetter(feature.properties.class);
+		console.log(feature.id);
+		console.log(featureClasses);
 		return new featureClasses[featureClass](feature);	
 	}
 	
