@@ -9,3 +9,5 @@ function Door(feature) {
 Door.prototype.style =  {
 							color: "#000000"
     					};
+    					
+module.exports = Door;
