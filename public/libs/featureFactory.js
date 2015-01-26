@@ -5,7 +5,7 @@ var featureFactory = {};
 
 // (2) import any dependencies (in browser must be included before this file)
 // example: var dependency = dependency || require('./dependency');
-
+var utilities = utilities || require('./utilities.js');
 (function(){
 	var featureClasses = {};
 	// (3) library properties and functions (public an private)

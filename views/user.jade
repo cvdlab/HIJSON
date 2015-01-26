@@ -14,7 +14,7 @@ block internal_content
 		if (#{enable_2D}) {
 			// 2D Setup: set the icon for the navigation
 			var navIcon =  L.AwesomeMarkers.icon( data.config.style['location'] );
-			var actualLatLng = coordinatesUtilities.fromGeneralTo2D(data.actualPosition, data.config.transformationMatrix);
+			var actualLatLng = c3dclient.coordinatesUtilities.fromGeneralTo2D(data.actualPosition, data.config.transformationMatrix);
 			var marker = L.marker(actualLatLng, {
 			    icon: navIcon,
 			    draggable: true
@@ -28,10 +28,10 @@ block internal_content
 				actualLatLng = marker.getLatLng();
 				marker.bindPopup('<b>[' + actualLatLng.lat + '; ' + actualLatLng.lng + ']</b>');
 				// update the general position
-				data.actualPosition = coordinatesUtilities.from2DToGeneral(actualLatLng, data.actualPosition, data.config.inverseTransformationMatrix);
+				data.actualPosition = c3dclient.coordinatesUtilities.from2DToGeneral(actualLatLng, data.actualPosition, data.config.inverseTransformationMatrix);
 				// if is active also 3D, move the CUBE when walking in FPV
 				if(#{enable_3D}) {
-					user3D.position = coordinatesUtilities.fromGeneralTo3D(data.actualPosition);
+					user3D.position = c3dclient.coordinatesUtilities.fromGeneralTo3D(data.actualPosition);
 				}
 				
 				// emit the new position to the server for admins update
@@ -40,21 +40,21 @@ block internal_content
 		}
 		
 		if(#{enable_3D}) {
-			var user3D = generator3D['cube']('0x00FF00');
+			var user3D = c3dclient.generator3D['cube']('0x00FF00');
 			data.index[data.actualPosition.levelId].obj3D.userModels.add(user3D);
-			user3D.position = coordinatesUtilities.fromGeneralTo3D(data.actualPosition);
+			user3D.position = c3dclient.coordinatesUtilities.fromGeneralTo3D(data.actualPosition);
 			// 3D movingbe
 			// the FPVmoved event is fired by the pointerlock library on position change, max 25 times/sec
-			eventEmitter.on( 'FPVmoved', function() {
+			c3dclient.eventEmitter.on( 'FPVmoved', function() {
 				// update the general position
-				data.actualPosition = coordinatesUtilities.from3DSceneToGeneral(renderer3D.camera3D.parent.parent.position.clone(), data.actualPosition);
+				data.actualPosition = c3dclient.coordinatesUtilities.from3DSceneToGeneral(c3dclient.renderer3D.camera3D.parent.parent.position.clone(), data.actualPosition);
 				
 				// the pointerlock library automatically moves the camera, but the user model needs to be moved manually
-				user3D.position = coordinatesUtilities.fromGeneralTo3D(data.actualPosition);
+				user3D.position = c3dclient.coordinatesUtilities.fromGeneralTo3D(data.actualPosition);
 				
 				// if is active also 2D, move the marker when walking in FPV
 				if(#{enable_2D}) {
-					actualLatLng = coordinatesUtilities.fromGeneralTo2D(data.actualPosition, data.config.transformationMatrix)
+					actualLatLng = c3dclient.coordinatesUtilities.fromGeneralTo2D(data.actualPosition, data.config.transformationMatrix)
 					marker.setLatLng(actualLatLng);
 					marker.bindPopup('<b>[' + actualLatLng.lat + '; ' + actualLatLng.lng + ']</b>');
 				}
@@ -64,7 +64,7 @@ block internal_content
 		}
 
 		// level change
-		eventEmitter.on('selectFeature', function(idObject) {
+		c3dclient.eventEmitter.on('selectFeature', function(idObject) {
 			if(data.index[idObject].properties.class === 'level') {
 				
 				if (#{enable_2D}) { 
@@ -76,7 +76,7 @@ block internal_content
 				if (#{enable_3D}) {
 					// move cube to the new level
 					data.index[idObject].obj3D.userModels.add(user3D);
-					utilities.show3DObject(user3D, true);
+					c3dclient.utilities.show3DObject(user3D, true);
 				}
 				
 				// update the general position

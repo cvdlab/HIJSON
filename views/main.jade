@@ -22,19 +22,8 @@ block content
 
 		
 		// C3D Library
-		script(src='/assets/js/numeric.min.js')
-		script(src='/assets/js/poly2tri.min.js')
-		script(src='/libs/utilities.js')
-		script(src='/libs/featureFactory.js')
-		script(src='/libs/matrixUtilities.js')
-		script(src='/libs/coordinatesUtilities.js')
-		script(src='/libs/graphUtilities.js')
-		script(src='/libs/assembler.js')
-		script(src='/libs/eventEmitter.js')
-		script(src='/libs/renderer2D.js')
-		script(src='/libs/renderer3D.js')
-		script(src='/libs/c3d_client.js')
-		
+		script(src='/libs/bundle.js')
+
 		.page-header
 			h1= title
 		.row
@@ -62,13 +51,13 @@ block content
 
 		if enable_2D
 			script.
-				renderer2D.init(data);
-				renderer2D.generate2DModel(data);
+				c3dclient.renderer2D.init(data);
+				c3dclient.renderer2D.generate2DModel(data);
 				
 		if enable_3D 
 			script.
-				renderer3D.init(data);
-				renderer3D.generate3DModel(data);
+				c3dclient.renderer3D.init(data);
+				c3dclient.renderer3D.generate3DModel(data);
 		
 		hr
 		
@@ -103,7 +92,7 @@ block content
 							fromNodeId: fromValue,
 							toNodeId: toValue
 						}
-						eventEmitter.emit('getDirections', directionInfo);
+						c3dclient.c3dclient.eventEmitter.emit('getDirections', directionInfo);
 					});
 					
 		script.
@@ -139,7 +128,7 @@ block content
 				var idSelect = selectElement.indexValue;
 				var idObject = selectElement.value;
 				//2. emit evento della selezione avvenuta per la visualizzazione 
-				eventEmitter.emit('selectFeature', idObject);
+				c3dclient.eventEmitter.emit('selectFeature', idObject);
 				
 				//3. Rimozione select successivi
 				for(var i=(idSelect + 1); i < menuArray.length; i++) {
@@ -177,10 +166,10 @@ block content
 			}
 
 			$( "#startFPV" ).on('click', function() {
-				eventEmitter.emit('startFPV');
+				c3dclient.eventEmitter.emit('startFPV');
 			});
 
-			eventEmitter.on('showFeatureInfo', function(idObject){
+			c3dclient.eventEmitter.on('showFeatureInfo', function(idObject){
 				showFeatureInfo = {};
 
 				showFeatureInfo['badgeReader'] = function(s) {
@@ -227,11 +216,11 @@ block content
 				}
 			});	
 		
-			eventEmitter.on('selectFeature', function(idObject) {
-				eventEmitter.emit('showFeatureInfo',idObject);
+			c3dclient.eventEmitter.on('selectFeature', function(idObject) {
+				c3dclient.eventEmitter.emit('showFeatureInfo',idObject);
 			});	
 
-			eventEmitter.on('clearFeatureInfo', function(idObject) {
+			c3dclient.eventEmitter.on('clearFeatureInfo', function(idObject) {
 				$('#info').empty();
 			});				  
 

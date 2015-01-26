@@ -13,7 +13,8 @@
     "poly2tri": "^1.3.5",
     "serve-favicon": "~2.1.3",
     "socket.io": "~1.1.0",
-    "require-dir": "~0.1.0"
+    "require-dir": "~0.1.0",
+    "dijkstrajs": "1.0.0"
   },
   "devDependencies": {
     "browser-sync": "^1.2.1",
@@ -24,6 +25,6 @@
   },  
   "scripts": {
     "start": "node ./bin/www",
-    "gulp-dev": "gulp default"
+    "gulp-dev": "gulp browserify"
   }
 }

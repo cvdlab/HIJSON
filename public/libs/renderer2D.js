@@ -6,7 +6,7 @@ var renderer2D = {};
 // (2) import any dependencies (in browser must be included before this file)
 // example: var dependency = dependency || require('./dependency');
 var eventEmitter = eventEmitter || require('./eventEmitter.js');
-
+var utilities = utilities || require('./utilities.js');
 (function(){
 	
 	// (3) library properties and functions (public an private)
@@ -139,7 +139,7 @@ var eventEmitter = eventEmitter || require('./eventEmitter.js');
 	
 	// (5) export the namespace object
 	if (typeof module !== 'undefined' && module.exports) {
-	  module.exports = render3D;
+	  module.exports = renderer2D;
 	}	
 	
 })();

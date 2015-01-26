@@ -5,7 +5,9 @@ var renderer3D = {};
 
 // (2) import any dependencies (in browser must be included before this file)
 // example: var dependency = dependency || require('./dependency');
-
+var eventEmitter = eventEmitter || require('./eventEmitter.js');
+var utilities = utilities || require('./utilities.js');
+var coordinatesUtilities = coordinatesUtilities || require('./coordinatesUtilities.js');
 (function(){
 	
 	// (3) library properties and functions (public an private)

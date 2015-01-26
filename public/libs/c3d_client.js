@@ -1,13 +1,19 @@
-var data = data || {};
+var dijkstra = require('dijkstrajs');
+var eventEmitter = require('./eventEmitter.js');
+var utilities = require('./utilities.js');
+var assembler = require('./assembler.js');
+var coordinatesUtilities = require('./coordinatesUtilities.js');
+var renderer2D = require('./renderer2D.js');
+var renderer3D = require('./renderer3D.js');
 
 data.obstaclesClasses = ['room', 'internal_wall', 'external_wall'];
 data.interactiveClasses = ['server', 'surveillanceCamera', 'hotspot', 'antenna', 'fireExtinguisher', 'badgeReader', 'light'];
+
 
 data.interactiveFeatures = [];
 data.obstaclesFeatures = [];
 assembler.assembleStructure(data);
 assembler.assembleFeatureCollection(data.input.graph);
-var graphManager = new Graph(data.graph);
 
 data.actualPosition = {
     coordinates: [data.config.startPosition.coordinates[0], data.config.startPosition.coordinates[1]],
@@ -38,9 +44,10 @@ eventEmitter.on('getDirections', function(directionInfo) {
 
     var fromNodeId = directionInfo.fromNodeId;
     var toNodeId = directionInfo.toNodeId; 
-    var path = graphManager.findShortestPath(fromNodeId, toNodeId);
+    var path = dijkstrajs.find_path(data.graph, fromNodeId, toNodeId);
     console.log(path);
     var pathsGeoJSON = {};
+    
     for(id in path) {
 
         var node = data.index[ path[id] ];
@@ -62,9 +69,19 @@ eventEmitter.on('getDirections', function(directionInfo) {
         pathsGeoJSON[level].geometry.coordinates.push(geographicalCoordinates);
     }
     console.log(pathsGeoJSON);
+
     for(idLevel in pathsGeoJSON) {
         var layer = L.geoJson(pathsGeoJSON[idLevel]);
         data.index[idLevel].layer2D.addLayer(layer);
         data.index[idLevel].layer2D.directionsLayer = layer;
     }
 });
+
+module.exports = {
+    renderer2D: renderer2D,
+    renderer3D: renderer3D,
+    eventEmitter: eventEmitter,
+    coordinatesUtilities: coordinatesUtilities,
+    generator3D: generator3D,
+    utilities: utilities
+}
