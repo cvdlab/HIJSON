@@ -1,15 +1,9 @@
-// initialize library object (namespace)
-var coordinatesUtilities = {};
+// (1) dependencies
+var matrixUtilities = require('./matrixUtilities.js');
 
-// import any dependencies (in browser must be included before this)
-var matrixUtilities = matrixUtilities || require('./matrixUtilities.js');
-
-(function(){
-	var fromXYToLngLat = function(coordinates, transformationMatrix) {
-		return matrixUtilities.applyTransformation(coordinates, transformationMatrix);
-	};
+var self = module.exports = {
 	
-	var absoluteCoords = function(obj) {
+	absoluteCoords: function(obj) {
 		var matrix = matrixUtilities.getCMT(obj);
 		switch (obj.geometry.type) {
 	        case "Point":
@@ -44,22 +38,26 @@ var matrixUtilities = matrixUtilities || require('./matrixUtilities.js');
 	        	return undefined;
 	        	break;
 	    }
-	};
+	},
 	
-	var convertToDegrees = function(geoJSONmap, transformationMatrix) {
+	getPointAbsoluteCoords: function(object) {
+    	return matrixUtilities.applyTransformation([0, 0], object.CMT);
+	},
+
+	convertToDegrees: function(geoJSONmap, transformationMatrix) {
 		for(level in geoJSONmap) {
 			geoJSONobject = geoJSONmap[level];
 			for(feature in geoJSONobject.features) {
 				var object = geoJSONobject.features[feature];
 				switch (object.geometry.type) {
 			        case "Point":
-			            object.geometry.coordinates = fromXYToLngLat(object.geometry.coordinates, transformationMatrix);
+			            object.geometry.coordinates = self.fromXYToLngLat(object.geometry.coordinates, transformationMatrix);
 			            break;
 			        case "LineString": 
 			        	var coords = object.geometry.coordinates;
 			        	for (var i = 0; i < coords.length; i++)
 			        	{
-				        	coords[i] = fromXYToLngLat(coords[i], transformationMatrix);
+				        	coords[i] = self.fromXYToLngLat(coords[i], transformationMatrix);
 			        	}
 			            break;
 			        case "Polygon":
@@ -68,7 +66,7 @@ var matrixUtilities = matrixUtilities || require('./matrixUtilities.js');
 			        	{
 				        	for (var j = 0; j < coords[i].length; j++)
 				        	{
-				        		coords[i][j] = fromXYToLngLat(coords[i][j], transformationMatrix);
+				        		coords[i][j] = self.fromXYToLngLat(coords[i][j], transformationMatrix);
 							}
 				        }
 			            break;
@@ -79,9 +77,9 @@ var matrixUtilities = matrixUtilities || require('./matrixUtilities.js');
 			}
 		}
 		return geoJSONmap;	
-	};
+	},
 	
-	var computeGeoMatrix = function(landmarks) {
+	computeGeoMatrix: function(landmarks) {
 		var x1 = landmarks[0].local[0];
 		var y1 = landmarks[0].local[1];
 		var x2 = landmarks[1].local[0];
@@ -120,101 +118,74 @@ var matrixUtilities = matrixUtilities || require('./matrixUtilities.js');
 		];
 
 		return transformationMatrix;
-	};
+	},
 	
-	var getPointAbsoluteCoords = function(object) {
-    	return matrixUtilities.applyTransformation([0, 0], object.CMT);
-	};
+	// input: un oggetto posizione generale, output: un oggetto L.latLng
+	fromGeneralTo2D: function(genPosition, transformationMatrix) {
+	    var convertedCoordinates = self.fromXYToLngLat(genPosition.coordinates, transformationMatrix);
+	    var leafletPosition = L.latLng(convertedCoordinates[1], convertedCoordinates[0]);
+
+		return leafletPosition;
+	},
 	
-	/*
-		funzioni di traduzioni coordinate, tra generali, 3D (rotazione) e 2D (latitudine e longitudine). 
-	*/
-
-
-	// input: un oggetto posizione generale, output: un THREE.Vector3 da usare come posizione
-	var fromGeneralTo3DScene = function(genPosition) {
-		var threePosition = new THREE.Vector3(genPosition.coordinates[0], data.index[genPosition.levelId].properties.tVector[2], -genPosition.coordinates[1]);
-		return threePosition;
-	}
-
-	// trasformazione inversa della precedente.
-	var from3DSceneToGeneral = function(threePosition, actualPosition) {
-		var genPosition = {
-			coordinates: [threePosition.x, -threePosition.z],
+	// inversa
+	from2DToGeneral: function(leafletPosition, actualPosition, inverseTransformationMatrix) {
+	    var genPosition = {
+			coordinates: self.fromLngLatToXY([leafletPosition.lng, leafletPosition.lat], inverseTransformationMatrix),
 			levelId: actualPosition.levelId
 		}
 		return genPosition;
-	}
-
-
+	},
+	
 	// input: un oggetto posizione generale, output: un THREE.Vector3 da usare come posizione
-	var fromGeneralTo3D = function(genPosition) {
+	fromGeneralTo3D: function(genPosition) {
 		var threePosition = new THREE.Vector3(genPosition.coordinates[0], genPosition.coordinates[1], 0);
 		return threePosition;
-	}
-
-	// trasformazione inversa della precedente.
-	var from3DToGeneral = function(threePosition, actualPosition) {
+	},
+	
+	from3DToGeneral: function(threePosition, actualPosition) {
 		var genPosition = {
 			coordinates: [threePosition.x, threePosition.y],
 			levelId: actualPosition.levelId
 		}
 		return genPosition;
-	}
-
-	// input: un oggetto posizione generale, output: un oggetto L.latLng
-	var fromGeneralTo2D = function(genPosition, transformationMatrix) {
-	    var convertedCoordinates = fromXYToLngLat(genPosition.coordinates, transformationMatrix);
-	    var leafletPosition = L.latLng(convertedCoordinates[1], convertedCoordinates[0]);
-
-		return leafletPosition;
-	}
-
-	// inversa
-	var from2DToGeneral = function(leafletPosition, actualPosition, inverseTransformationMatrix) {
-	    var genPosition = {
-			coordinates: fromLngLatToXY([leafletPosition.lng, leafletPosition.lat], inverseTransformationMatrix),
+	},
+	
+	// input: un oggetto posizione generale, output: un THREE.Vector3 da usare come posizione
+	fromGeneralTo3DScene: function(genPosition) {
+		var threePosition = new THREE.Vector3(genPosition.coordinates[0], data.index[genPosition.levelId].properties.tVector[2], -genPosition.coordinates[1]);
+		return threePosition;
+	},
+	
+	// trasformazione inversa della precedente.
+	from3DSceneToGeneral: function(threePosition, actualPosition) {
+		var genPosition = {
+			coordinates: [threePosition.x, -threePosition.z],
 			levelId: actualPosition.levelId
 		}
 		return genPosition;
-	}
+	},
+	
+	from2Dto3D: function(leafletPosition) {
+		var genPosition = self.from2DToGeneral(leafletPosition);
+		var threePosition = self.fromGeneralTo3D(genPosition);
+		
+	    return threePosition;
+	},
 
-
-	var fromLngLatToXY = function(coordinates, inverseTransformationMatrix) {
+	from3Dto2D: function(threePosition) {
+		var genPosition = self.from3DToGeneral(threePosition);
+		var leafletPosition = self.fromGeneralTo2D(genPosition);
+		
+	    return leafletPosition;
+	},
+	
+	fromXYToLngLat: function(coordinates, transformationMatrix) {
+		return matrixUtilities.applyTransformation(coordinates, transformationMatrix);
+	},
+	
+	fromLngLatToXY: function(coordinates, inverseTransformationMatrix) {
 	    return matrixUtilities.applyTransformation(coordinates, inverseTransformationMatrix);
 	}
 
-	var from2Dto3D = function(leafletPosition) {
-		var genPosition = from2DToGeneral(leafletPosition);
-		var threePosition = fromGeneralTo3D(genPosition);
-		
-	    return threePosition;
-	}
-
-	var from3Dto2D = function(threePosition) {
-		var genPosition = from3DToGeneral(threePosition);
-		var leafletPosition = fromGeneralTo2D(genPosition);
-		
-	    return leafletPosition;
-	}
-	// end of library properties
-	
-	// exported things
-	coordinatesUtilities.absoluteCoords = absoluteCoords;
-	coordinatesUtilities.convertToDegrees = convertToDegrees;
-	coordinatesUtilities.computeGeoMatrix = computeGeoMatrix;
-	coordinatesUtilities.fromGeneralTo2D = fromGeneralTo2D;
-	coordinatesUtilities.fromGeneralTo3D = fromGeneralTo3D;
-	coordinatesUtilities.from2DToGeneral = from2DToGeneral;
-	coordinatesUtilities.fromGeneralTo3DScene = fromGeneralTo3DScene;
-	coordinatesUtilities.from3DSceneToGeneral = from3DSceneToGeneral;
-	coordinatesUtilities.getPointAbsoluteCoords = getPointAbsoluteCoords;
-	coordinatesUtilities.fromXYToLngLat = fromXYToLngLat;
-	// end of exported things
-	
-	// export the namespace object
-	if (typeof module !== 'undefined' && module.exports) {
-	  module.exports = coordinatesUtilities;
-	}
-
-})();
+}
