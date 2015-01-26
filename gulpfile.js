@@ -22,10 +22,6 @@ gulp.task('browserify', function() {
     .pipe(gulp.dest('./public/libs'));
 });
 
-gulp.task('browser-reload', function () {
-	console.log('fake reload triggered');
-});
-
 gulp.task('nodemon', ['browserify'], function () {
   return nodemon({
     ignore: [
@@ -37,6 +33,5 @@ gulp.task('nodemon', ['browserify'], function () {
 	ext: "js,jade,json",
 	verbose: true
   })
-  .on('change', ['browserify'])
-  .on('restart', ['browser-reload'])
+  .on('restart', ['browserify'])
 });
