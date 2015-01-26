@@ -1,4 +1,4 @@
-var dijkstra = require('dijkstrajs');
+var dijkstrajs = require('dijkstrajs');
 var eventEmitter = require('./modules/eventEmitter.js');
 var utilities = require('./modules/utilities.js');
 var assembler = require('./modules/assembler.js');
