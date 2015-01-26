@@ -22,7 +22,6 @@ var renderer3D = {};
 	    var stats = new Stats();
 	    stats.setMode(0); // 0: fps, 1: ms
 	    //container3D.append(stats.domElement);
-	   
 	    scene = new THREE.Scene();
 	    scene3D = scene;
 	    camera = new THREE.PerspectiveCamera(45, container3DWidth / container3DHeight, 0.1, 1000);

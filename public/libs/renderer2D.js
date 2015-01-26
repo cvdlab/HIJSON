@@ -76,7 +76,6 @@ var eventEmitter = eventEmitter || require('./eventEmitter.js');
 			var markers = new L.featureGroup();
 			markers.addTo(data.index[geoJSONlevel].layer2D);
 			data.index[geoJSONlevel].layer2D.userMarkers = markers;
-			console.log('userMarkers creato');
 		}
 	    var firstView = data.index[data.actualPosition.levelId].layer2D;
 	    firstView.addTo(data.map2D);

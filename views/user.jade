@@ -19,7 +19,6 @@ block internal_content
 			    icon: navIcon,
 			    draggable: true
 			});
-			console.log(data.index[data.actualPosition.levelId].layer2D);
 			marker.addTo(data.index[data.actualPosition.levelId].layer2D.userMarkers);	
 			marker.bindPopup('<b>[' + actualLatLng.lat + '; ' + actualLatLng.lng + ']</b>');
 			

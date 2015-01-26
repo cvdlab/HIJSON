@@ -7,7 +7,7 @@ var inputPaths = {
 	architecture: 'json_input/architecture_demo.json',
 	furniture: 'json_input/furnitures_demo.json'
 };
-
+console.log('Starting initialization...');
 /* Parsing function in parse.js module */
 console.log('Parsing data...')
 var data = parser.parse(inputPaths);
@@ -35,6 +35,6 @@ console.log('Creation of geoJSON file completed.');
 data.index = {};
 data.tree = {};
 
-
+console.log('Initialization completed.');
 /* Creating geoJSON files */
 module.exports = data;
