@@ -1181,18 +1181,14 @@ var matrixUtilities = matrixUtilities || require('./matrixUtilities.js');
 })();
 
 },{"./matrixUtilities.js":22}],20:[function(require,module,exports){
-// template for js modules that works both in node and browsers
+// (1) dependencies
 
-// (1) initialize library object (namespace)
-var eventEmitter = {};
+// (2) private things
+var handlers = {};
 
-// (2) import any dependencies (in browser must be included before this file)
-// example: var dependency = dependency || require('./dependency');
-
-(function(){
-	var handlers = {};	
-
-	var on = function (event, handler) {
+// (3) public/exported things
+var self = module.exports = {
+	on: function (event, handler) {
 		var handlers_list = handlers[event];
 		
 		if (handlers_list === undefined) {
@@ -1200,37 +1196,23 @@ var eventEmitter = {};
 		}
 		
 		handlers_list.push(handler);
-	};
+	},
 
-	var emit = function (event, data) {
+	emit: function (event, data) {
 		var handlers_list = handlers[event];
 		
 		if (handlers_list !== undefined) {
 			handlers_list.forEach(function (handler) {
 				handler(data);
 			});
-		};
-	};
-	// (4) exported things (public)
-	eventEmitter.on = on;
-	eventEmitter.emit = emit;
-	
-	// (5) export the namespace object
-	if (typeof module !== 'undefined' && module.exports) {
-	  module.exports = eventEmitter;
-	}	
-	
-})();
+		}
+	}
+} //close module.exports
 },{}],21:[function(require,module,exports){
-// template for js modules that works both in node and browsers
-
-// (1) initialize library object (namespace)
-var featureFactory = {};
-
-// (2) import any dependencies (in browser must be included before this file)
-// example: var dependency = dependency || require('./dependency');
+// (1) dependencies
 var utilities = utilities || require('./utilities.js');
 
+// (2) private things
 var featureClasses = {};
 featureClasses['Feature'] = require('../features/Feature.js');
 featureClasses['Antenna'] = require('../features/Antenna.js');
@@ -1249,28 +1231,17 @@ featureClasses['Server'] = require('../features/Server.js');
 featureClasses['SurveillanceCamera'] = require('../features/SurveillanceCamera.js');
 featureClasses['Table'] = require('../features/Table.js');
 
-(function(){
+function capitaliseFirstLetter(featureClass) {
+	return featureClass.charAt(0).toUpperCase() + featureClass.slice(1);
+}
 
-	// (3) library properties and functions (public an private)
-	var generateFeature = function(feature) {
+// (3) public/exported things
+var self = module.exports = {
+	generateFeature: function(feature) {
 		var featureClass = capitaliseFirstLetter(feature.properties.class);
 		return new featureClasses[featureClass](feature);	
 	}
-	
-	function capitaliseFirstLetter(featureClass) {
-	    return featureClass.charAt(0).toUpperCase() + featureClass.slice(1);
-	}
-
-	// (4) exported things (public)
-	featureFactory.generateFeature = generateFeature;
-
-	// (5) export the namespace object
-	if (typeof module !== 'undefined' && module.exports) {
-	  module.exports = featureFactory;
-	}	
-	
-})();
-
+} //close module.exports
 },{"../features/Antenna.js":2,"../features/BadgeReader.js":3,"../features/Chair.js":4,"../features/Door.js":5,"../features/External_wall.js":6,"../features/Feature.js":7,"../features/FireExtinguisher.js":8,"../features/GraphNode.js":9,"../features/Hotspot.js":10,"../features/Internal_wall.js":11,"../features/Level.js":12,"../features/Light.js":13,"../features/Room.js":14,"../features/Server.js":15,"../features/SurveillanceCamera.js":16,"../features/Table.js":17,"./utilities.js":25}],22:[function(require,module,exports){
 // initialize library object (namespace)
 var matrixUtilities = {};
@@ -1497,7 +1468,8 @@ var utilities = require('./utilities.js');
 var coordinatesUtilities = require('./coordinatesUtilities.js');
 
 function onWindowResize3D() {
-    container3DWidth = container3D.width();
+	var container3D = $('#container3D');
+	container3DWidth = container3D.width();
     container3DHeight = container3D.width()/4*3;
     container3D.css('height', container3DHeight);
 
@@ -1808,12 +1780,6 @@ var self = module.exports = {
 	    }
 	}
 }
-
-
-
-
-
-
 },{"./coordinatesUtilities.js":19,"./eventEmitter.js":20,"./utilities.js":25}],25:[function(require,module,exports){
 // initialize library object (namespace)
 var utilities = {};
