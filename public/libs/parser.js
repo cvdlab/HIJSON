@@ -1,7 +1,6 @@
 var fs = require('fs');
 
 function parseJSON(inputPaths) {
-	console.log('Starting C3D initialization...');
     for (input_name in inputPaths)
     {
 	    var parsedData = JSON.parse(fs.readFileSync(inputPaths[input_name], 'utf8'));
