@@ -7,21 +7,9 @@ var coordinatesUtilities = require('./coordinatesUtilities.js');
 var scene3D;
 var camera3D;
 
-function onWindowResize3D() {
-	var container3D = $('#container3D');
-	container3DWidth = container3D.width();
-    container3DHeight = container3D.width()/4*3;
-    container3D.css('height', container3DHeight);
 
-    camera.aspect = container3DWidth / container3DHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize( container3DWidth, container3DHeight );
-}
 
 var self = module.exports = {
-	scene3D: {},
-	camera3D: {},
-
 	init: function init(data) {
 		
 	    var container3D = $('#container3D');
@@ -175,6 +163,16 @@ var self = module.exports = {
 		
 		var projector = new THREE.Projector();
 		document.getElementById('container3D').addEventListener('mousedown', onDocumentMouseDown, false);
+		function onWindowResize3D() {
+			var container3D = $('#container3D');
+			container3DWidth = container3D.width();
+		    container3DHeight = container3D.width()/4*3;
+		    container3D.css('height', container3DHeight);
+
+		    camera.aspect = container3DWidth / container3DHeight;
+		    camera.updateProjectionMatrix();
+		    renderer.setSize( container3DWidth, container3DHeight );
+		}
 		
 	    function onDocumentMouseDown(event) {
 	    		var container3D = $('#container3D');
@@ -186,10 +184,9 @@ var self = module.exports = {
 	                var raycaster = new THREE.Raycaster();
 	                var direction = new THREE.Vector3( 0, 0, -1 );
 	                var rotation = new THREE.Euler(0, 0, 0, "YXZ");
-
-	                rotation.set(data.camera3D.parent.rotation.x, data.camera3D.parent.parent.rotation.y, 0);
+	                rotation.set(camera.parent.rotation.x, camera.parent.parent.rotation.y, 0);
 	                raycaster.ray.direction.copy(direction).applyEuler(rotation);
-	                raycaster.ray.origin.copy(data.camera3D.parent.parent.position);
+	                raycaster.ray.origin.copy(camera3D.parent.parent.position);
 	                
 					// var vector = new THREE.Vector3(0, 0, 0.5);
 	    			// projector.unprojectVector(vector, data.camera3D);
@@ -304,7 +301,7 @@ var self = module.exports = {
 	    //setLight();
 
 	    function setLight() {
-	        var light = data.scene3D.__lights[1];
+	        var light = self.getScene3D().__lights[1];
 	        var sceneCenter = new THREE.Object3D();
 	        sceneCenter.position = utilities.getCentroid(data.index['building'].obj3D);
 	        light.shadowCameraVisible = true;
