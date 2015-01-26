@@ -31,7 +31,8 @@ gulp.task('nodemon', ['browserify'], function () {
     ignore: [
       'gulpfile.js',
       'node_modules/',
-      'public/libs/bundle.js'
+      'public/libs/bundle.js',
+      '.git/'
     ],
 	ext: "js,jade,json",
 	verbose: true
