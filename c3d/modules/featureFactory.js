@@ -16,7 +16,7 @@ featureClasses['Door'] = require('../features/Door.js');
 featureClasses['External_wall'] = require('../features/External_wall.js');
 featureClasses['FireExtinguisher'] = require('../features/FireExtinguisher.js');
 featureClasses['GraphNode'] = require('../features/GraphNode.js');
-featureClasses['HotSpot'] = require('../features/HotSpot.js');
+featureClasses['Hotspot'] = require('../features/Hotspot.js');
 featureClasses['Internal_wall'] = require('../features/Internal_wall.js');
 featureClasses['Level'] = require('../features/Level.js');
 featureClasses['Light'] = require('../features/Light.js');
@@ -31,7 +31,6 @@ featureClasses['Table'] = require('../features/Table.js');
 	var generateFeature = function(feature) {
 		var featureClass = capitaliseFirstLetter(feature.properties.class);
 		console.log(feature.id);
-		console.log(featureClasses);
 		return new featureClasses[featureClass](feature);	
 	}
 	

@@ -21,7 +21,7 @@ Server.prototype.get3DModel = function() {
 
 	server.receiveShadow = true;
 	server.castShadow = true;
-	var model = packageModel(server);
+	var model = Feature.packageModel(server);
 
 	return model;
 }

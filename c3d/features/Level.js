@@ -17,7 +17,7 @@ Level.prototype.get3DModel = function() {
         side: THREE.DoubleSide
     });
     
-    var shape = generatePolygonShape(this.geometry);
+    var shape = Feature.generatePolygonShape(this.geometry);
     
     var extrudedGeometry = shape.extrude({
                 curveSegments: 1,

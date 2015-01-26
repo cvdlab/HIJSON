@@ -86,7 +86,724 @@ module.exports = {
     generator3D: generator3D,
     utilities: utilities
 }
-},{"./modules/assembler.js":2,"./modules/coordinatesUtilities.js":3,"./modules/eventEmitter.js":4,"./modules/renderer2D.js":7,"./modules/renderer3D.js":8,"./modules/utilities.js":9,"dijkstrajs":13}],2:[function(require,module,exports){
+},{"./modules/assembler.js":18,"./modules/coordinatesUtilities.js":19,"./modules/eventEmitter.js":20,"./modules/renderer2D.js":23,"./modules/renderer3D.js":24,"./modules/utilities.js":25,"dijkstrajs":26}],2:[function(require,module,exports){
+var Feature = require('./Feature.js');
+
+function Antenna(feature) {
+	Feature.call(this, feature);
+}
+
+Feature.inherits(Antenna, Feature);
+
+Antenna.prototype.style =	{
+								prefix: "fa",
+								icon: "signal"
+    						};
+
+Antenna.prototype.get3DModel = function() {
+	var material = new THREE.MeshLambertMaterial( {color: 0x38a9dc} );
+
+	var antenna = new THREE.Object3D();
+	var geometry = new THREE.BoxGeometry( 0.3, 0.1, 0.3 );
+	var base = new THREE.Mesh( geometry, material );
+	base.position.z += 0.3/2;
+
+
+	var geometry = new THREE.CylinderGeometry( 0.01, 0.01, 0.065, 32 );
+	var baseCylinder = new THREE.Mesh( geometry, material );
+	baseCylinder.position.y += 0.05;
+	baseCylinder.position.z += 0.3/2;
+
+	var geometry = new THREE.CylinderGeometry( 0.001, 0.01, 0.5, 32 );
+	var cylinderAntenna = new THREE.Mesh( geometry, material );
+	cylinderAntenna.rotation.x = Math.PI/2;
+	cylinderAntenna.position.z += 0.3/2 +  0.5/2;
+	cylinderAntenna.position.y += 0.08;
+
+	var geometry = new THREE.SphereGeometry( 0.01, 32, 32 );
+	var sphere = new THREE.Mesh( geometry, material );
+	sphere.position.z += 0.3/2;
+	sphere.position.y += 0.08;
+	antenna.add(base);
+	antenna.add(baseCylinder);
+	antenna.add(cylinderAntenna);
+	antenna.add( sphere );
+
+	var model = Feature.packageModel(antenna);
+	return model;
+}
+
+module.exports = Antenna;
+
+
+
+},{"./Feature.js":7}],3:[function(require,module,exports){
+var Feature = require('./Feature.js');
+
+Feature.inherits(BadgeReader, Feature);
+
+function BadgeReader(feature) {
+	Feature.call(this, feature);
+}
+
+BadgeReader.prototype.style = 	{
+									prefix: "fa",
+									icon: "ticket"
+								};
+
+BadgeReader.prototype.get3DModel = function() {
+    var geometry = new THREE.BoxGeometry( 0.2, 0.3, 0.25 );
+    var material = new THREE.MeshLambertMaterial( {color: 0x38a9dc} );
+    var badgeReader = new THREE.Mesh( geometry, material );
+    
+    var model = Feature.packageModel(badgeReader);
+
+    return model;
+}
+
+module.exports = BadgeReader;
+},{"./Feature.js":7}],4:[function(require,module,exports){
+var Feature = require('./Feature.js');
+
+Feature.inherits(Chair, Feature);
+
+function Chair(feature) {
+	Feature.call(this, feature);
+}
+
+Chair.prototype.style = {
+			    			prefix: "fa",
+	    					icon: "minus"
+						};
+						
+Chair.prototype.get3DModel = function() {
+	var chair = new THREE.Object3D();
+
+	var geometry = new THREE.CylinderGeometry( 0.015, 0.015, 0.5, 32 );
+	var material = new THREE.MeshLambertMaterial( {color: 0xd9d7d7} );
+
+	var p1 = new THREE.Mesh( geometry, material );
+	p1.rotation.x += Math.PI/2;
+	p1.position.z += 0.5/2;
+
+	var p2 = new THREE.Mesh( geometry, material );
+	p2.rotation.x += Math.PI/2;
+	p2.position.z += 0.5/2;
+	p2.position.y += 0.4;
+
+	var p3 = new THREE.Mesh( geometry, material );
+	p3.rotation.x += Math.PI/2;
+	p3.position.z += 0.5/2;
+	p3.position.x += 0.4;
+
+	var p4 = new THREE.Mesh( geometry, material );
+	p4.rotation.x += Math.PI/2;
+	p4.position.z += 0.5/2;
+	p4.position.y += 0.4;
+	p4.position.x += 0.4;
+
+	var p5 = new THREE.Mesh( geometry, material );
+	p5.rotation.x += Math.PI/2;
+	p5.position.z += 0.5*3/2;
+
+	var p6 = new THREE.Mesh( geometry, material );
+	p6.rotation.x += Math.PI/2;
+	p6.position.z += 0.5*3/2;
+	p6.position.x += 0.4;
+
+	var geometry = new THREE.BoxGeometry( 0.45, 0.45, 0.02 );
+	var material = new THREE.MeshLambertMaterial( {color: 0x9b8c75} );
+	var plane = new THREE.Mesh( geometry, material );
+	plane.position.x += 0.4/2;
+	plane.position.y += 0.4/2;
+	plane.position.z += 0.5;
+
+	var geometry = new THREE.BoxGeometry( 0.38, 0.02, 0.15);
+	var back = new THREE.Mesh( geometry, material );
+	back.position.x += 0.4/2;
+	back.position.y += 0.001;
+	back.position.z += 0.5*12/7;
+
+	chair.add(back);
+	chair.add(plane);
+	chair.add(p1);
+	chair.add(p2);
+	chair.add(p3);
+	chair.add(p4);
+	chair.add(p5);
+	chair.add(p6);
+	var model = Feature.packageModel(chair);
+
+	return model;
+}
+
+module.exports = Chair;
+},{"./Feature.js":7}],5:[function(require,module,exports){
+var Feature = require('./Feature.js');
+
+Feature.inherits(Door, Feature);
+
+function Door(feature) {
+	Feature.call(this, feature);
+}
+
+Door.prototype.style =  {
+							color: "#000000"
+    					};
+    					
+module.exports = Door;
+},{"./Feature.js":7}],6:[function(require,module,exports){
+var Feature = require('./Feature.js');
+
+Feature.inherits(External_wall, Feature);
+
+function External_wall(feature) {
+	Feature.call(this, feature);
+}
+
+External_wall.prototype.style = {
+									color: "#d8d8d8",
+    								opacity: 1
+    							};
+
+External_wall.prototype.get3DModel = function() {
+    var material = new THREE.MeshLambertMaterial({ 
+    	color: this.style.color, 
+        side: THREE.DoubleSide
+	});
+	
+	var shape = Feature.generatePolygonShape(Feature.generateWallGeometry(this));
+	
+	var extrudedGeometry = shape.extrude({
+                curveSegments: 1,
+                steps: 1,
+                amount: this.properties.thickness,
+                bevelEnabled: false
+            });
+            
+	var wall = new THREE.Mesh(extrudedGeometry, material);
+	var container = new THREE.Object3D();
+	container.add(wall);
+	container.wall = wall;
+	wall.rotation.x += Math.PI/2;
+	wall.position.y += this.properties.thickness/2;    
+
+    return container;
+}
+
+module.exports = External_wall;
+},{"./Feature.js":7}],7:[function(require,module,exports){
+var utilities = require('../modules/utilities.js')
+function Feature(feature) { 
+	this.id = feature.id;
+	this.type = 'Feature';
+	this.geometry = feature.geometry;
+	this.properties = feature.properties;
+	this.parent = {};
+	this.children = [];
+}
+
+Feature.inherits = function inherits(Child, Parent) {
+	var F = function() {};
+	F.prototype = Parent.prototype;
+	Child.prototype = new F();
+	Child.prototype.constructor = Child;
+}
+
+Feature.generateLineString = function generateLineString(geoJSONgeometry) {
+	var lineString = new THREE.Geometry();
+    for(var i = 0; i < geoJSONgeometry.coordinates.length; i++){
+        lineString.vertices.push( new THREE.Vector3( geoJSONgeometry.coordinates[i][0], geoJSONgeometry.coordinates[i][1], 0) );
+    }
+    return lineString;
+}
+
+Feature.generatePolygonShape = function generatePolygonShape(geoJSONgeometry){
+	var coords = geoJSONgeometry.coordinates;
+	var shape = new THREE.Shape();
+    for (var j = 0; j < coords[0].length; j++) //scorro le singole coordinate del perimetro esterno
+    { 
+        if (j == 0) { // primo punto
+            shape.moveTo(coords[0][j][0], coords[0][j][1]);
+        } else { // altri punti
+            shape.lineTo(coords[0][j][0], coords[0][j][1]);
+        }
+    }
+    for (var i = 1; i < coords.length; i++) { //scorro eventuali holes
+        var hole = new THREE.Path();
+        for (var j = 0; j < coords[i].length; j++) { //scorro le singole coordinate dei vari perimetri
+            if (j == 0) { // primo punto
+                hole.moveTo(coords[i][j][0], coords[i][j][1]);
+            } else { // altri punti
+                hole.lineTo(coords[i][j][0], coords[i][j][1]);
+            }  
+        }
+        shape.holes.push(hole);
+    }
+    return shape;
+}
+
+Feature.generatePolygon = function generatePolygon(geoJSONgeometry) {
+    return Feature.generatePolygonShape(geoJSONgeometry).makeGeometry();  
+}
+
+Feature.generateWallGeometry = function generateWallGeometry(wallFeature) {
+	var wallLength = wallFeature.geometry.coordinates[1][0];
+	var wallHeight = wallFeature.parent.properties.height;
+	var coordinates = [
+		[ [0, 0], [wallLength, 0], [wallLength, wallHeight], [0, wallHeight] ]
+	];
+	for (var i = 0; i < wallFeature.children.length; i++) {
+		var child = wallFeature.children[i];
+		if (child.properties.class === 'door') {
+			var doorLength = child.geometry.coordinates[1][0];
+//			var doorHeight = child.properties.height;
+			var doorHeight = 2;
+			var doorShift = child.properties.tVector[0];
+			var hole = [
+				[doorShift,0], [doorShift+doorLength, 0], [doorShift+doorLength, doorHeight], [doorShift, doorHeight]	
+			];
+			coordinates.push(hole);
+		}
+	}
+	return { coordinates: coordinates }
+}
+
+Feature.packageModel = function packageModel(model3D) {
+    
+    var bbox = new THREE.BoundingBoxHelper(model3D, 0xff0000);
+    bbox.update();
+
+    var boxGeometry = new THREE.BoxGeometry( bbox.box.size().x, bbox.box.size().y, bbox.box.size().z );
+    var boxMaterial = new THREE.MeshBasicMaterial( {color: 0x000000, transparent: true, opacity: 0} );
+    var el3D = new THREE.Mesh( boxGeometry, boxMaterial );
+
+    el3D.add(model3D);
+
+    var bboxCentroid = utilities.getCentroid(bbox);
+
+    model3D.position.set(-bboxCentroid.x,-bboxCentroid.y,-bboxCentroid.z);    
+
+    el3D.position.z = bbox.box.size().z/2;
+    el3D.package = true;
+    
+    return el3D;
+}
+
+module.exports = Feature;
+},{"../modules/utilities.js":25}],8:[function(require,module,exports){
+var Feature = require('./Feature.js');
+
+Feature.inherits(FireExtinguisher, Feature);
+
+function FireExtinguisher(feature) {
+	Feature.call(this, feature);
+}
+
+FireExtinguisher.prototype.style = {
+									    prefix: "fa",
+									    icon: "fire-extinguisher",
+									    markerColor: "red"
+									};
+
+FireExtinguisher.prototype.get3DModel = function() {
+	var fireExtinguisher = new THREE.Object3D();
+
+	var material = new THREE.MeshLambertMaterial( {color: 0xff0000} );
+	var bodyGeometry = new THREE.CylinderGeometry( 0.1, 0.1, 0.6, 32 );
+	var body = new THREE.Mesh( bodyGeometry, material );
+	body.rotation.x = Math.PI/2;
+
+	fireExtinguisher.add(body);
+
+	var geometrySphereUp = new THREE.SphereGeometry( 0.1, 32, 32 );
+	var sphereUp = new THREE.Mesh( geometrySphereUp, material );
+	sphereUp.position.z += 0.3;
+
+	fireExtinguisher.add(sphereUp);
+
+	var headGeometry = new THREE.BoxGeometry(0.02, 0.02, 0.2);
+	var materialHead = new THREE.MeshLambertMaterial( {color: 0x000000} );
+	var head = new THREE.Mesh( headGeometry, materialHead );
+	head.position.z += 0.4;
+
+	fireExtinguisher.add(head);
+
+	var materialCylinder = new THREE.MeshLambertMaterial( {color: 0x000000} );
+	var cylinderGeometry = new THREE.CylinderGeometry( 0.015, 0.08, 0.25, 32 );
+	var cylinder = new THREE.Mesh(cylinderGeometry, materialCylinder);
+	cylinder.position.z += 0.5;
+	cylinder.rotation.z = Math.PI/2;
+	cylinder.position.x += 0.1;
+
+	fireExtinguisher.add(cylinder);
+
+	var model = Feature.packageModel(fireExtinguisher);    
+	return model;
+}
+
+module.exports = FireExtinguisher;
+},{"./Feature.js":7}],9:[function(require,module,exports){
+var Feature = require('./Feature.js');
+
+Feature.inherits(GraphNode, Feature);
+
+function GraphNode(feature) {
+	Feature.call(this, feature);
+}
+
+GraphNode.prototype.style =  {
+								fillColor: "#00ff00",
+								fillOpacity: 1,
+								radius: 7
+    					};
+    					
+module.exports = GraphNode;
+},{"./Feature.js":7}],10:[function(require,module,exports){
+var Feature = require('./Feature.js');
+
+Feature.inherits(Hotspot, Feature);
+
+function Hotspot(feature) {
+	Feature.call(this, feature);	
+}
+
+Hotspot.prototype.style = {
+								prefix: "fa",
+								icon: "wifi"
+							};
+
+Hotspot.prototype.get3DModel = function() {
+	var hotspot = new THREE.Object3D();
+
+	var material = new THREE.MeshLambertMaterial( {color: 0x38a9dc} );
+	var bodyGeometry = new THREE.BoxGeometry( 0.1, 0.02, 0.1);
+	var body = new THREE.Mesh( bodyGeometry, material );
+
+
+	var antennaGeometry = new THREE.CylinderGeometry( 0.001, 0.005, 0.1 , 32);
+	var antennaDx= new THREE.Mesh(antennaGeometry, material);
+	var antennaSx= new THREE.Mesh(antennaGeometry, material);
+
+	antennaDx.rotation.x = Math.PI/2;
+	antennaSx.rotation.x = Math.PI/2;
+	antennaSx.position.x += 0.08/2;
+	antennaDx.position.x -= 0.08/2;
+
+	antennaSx.position.z += 0.05;
+	antennaDx.position.z += 0.05;
+
+	hotspot.add(body);
+	hotspot.add(antennaDx);
+	hotspot.add(antennaSx);
+
+	hotspot.receiveShadow = true;
+	hotspot.castShadow = true;
+	var model = Feature.packageModel(hotspot);
+
+	return model;
+}
+
+module.exports = Hotspot;
+},{"./Feature.js":7}],11:[function(require,module,exports){
+var Feature = require('./Feature.js');
+
+Feature.inherits(Internal_wall, Feature);
+
+function Internal_wall(feature) {
+	Feature.call(this, feature);
+}
+
+Internal_wall.prototype.style = { 
+							    	color: "#e8e8e8",
+    								opacity: 1
+    							};
+
+Internal_wall.prototype.get3DModel = function() {
+    var material = new THREE.MeshLambertMaterial({ 
+        color: this.style.color, 
+        side: THREE.DoubleSide
+    });
+    
+	var shape = Feature.generatePolygonShape(Feature.generateWallGeometry(this));
+	
+	var extrudedGeometry = shape.extrude({
+                curveSegments: 1,
+                steps: 1,
+                amount: this.properties.thickness,
+                bevelEnabled: false
+            });
+            
+	var wall = new THREE.Mesh(extrudedGeometry, material);
+	var container = new THREE.Object3D();
+	container.add(wall);
+	container.wall = wall;
+	wall.rotation.x += Math.PI/2;
+	wall.position.y += this.properties.thickness/2;
+    
+    return container; 
+}
+
+module.exports = Internal_wall;
+},{"./Feature.js":7}],12:[function(require,module,exports){
+var Feature = require('./Feature.js');
+
+Feature.inherits(Level, Feature);
+
+function Level(feature) {
+	Feature.call(this, feature);
+}
+
+Level.prototype.style = {
+			    			color: "#ffffff",
+						    opacity: 0
+					    };
+
+Level.prototype.get3DModel = function() {
+    var material = new THREE.MeshLambertMaterial({ 
+        color: this.style.color, 
+        side: THREE.DoubleSide
+    });
+    
+    var shape = Feature.generatePolygonShape(this.geometry);
+    
+    var extrudedGeometry = shape.extrude({
+                curveSegments: 1,
+                steps: 1,
+                amount: this.properties.thickness,
+                bevelEnabled: false
+    });
+            
+    var floor = new THREE.Mesh(extrudedGeometry, material);
+    var container = new THREE.Object3D();
+    container.add(floor);
+    container.floor = floor;
+	floor.position.z -= this.properties.thickness-0.01;
+    
+    return container;  	
+}
+
+module.exports = Level;
+},{"./Feature.js":7}],13:[function(require,module,exports){
+var Feature = require('./Feature.js');
+
+Feature.inherits(Light, Feature);
+
+function Light(feature) {
+	Feature.call(this, feature);
+}
+
+Light.prototype.get3DModel = function() {
+	var light = new THREE.Object3D();
+	var height = 0.05;
+	var width = 0.6;
+	var externalPlaneGeometry = new THREE.PlaneGeometry(width,width);
+	var externalPlaneMaterial = new THREE.MeshLambertMaterial({
+	                                                            color:0xE7E6DD,
+	                                                            side: THREE.DoubleSide
+	                                                        });
+
+	var plane3D = new THREE.Mesh(externalPlaneGeometry, externalPlaneMaterial);
+	plane3D.position.z += height;
+	light.add(plane3D);
+	var groupNeon = new THREE.Object3D();
+	var neonMaterial = new THREE.MeshLambertMaterial( {color: 0xffffff} );
+	var neonGeometry = new THREE.CylinderGeometry( 0.015, 0.015, 0.58, 32 );
+	var translations = [(-0.075*3), (-0.075), (0.075), (0.075*3)];
+	for(i in translations)
+	{
+	    var neon = new THREE.Mesh( neonGeometry, neonMaterial );
+	    neon.position.x += translations[i];
+	    groupNeon.add(neon);
+	}
+	light.add(groupNeon);
+
+	var model = Feature.packageModel(light);
+
+	return model;
+}
+
+module.exports = Light;
+},{"./Feature.js":7}],14:[function(require,module,exports){
+var Feature = require('./Feature.js');
+
+Feature.inherits(Room, Feature);
+
+function Room(feature) {
+	Feature.call(this, feature);
+}
+
+Room.prototype.style = {
+							weight: 0,
+							fillColor: "#b8b8b8",
+							fillOpacity: 1
+    					};
+Room.prototype.get3DModel = function() {
+    var material = new THREE.MeshLambertMaterial({
+        color: this.style.fillColor,
+        transparent: false, 
+        opacity: 0.9, 
+        side: THREE.DoubleSide
+    });
+
+    var model = new THREE.Mesh(Feature.generatePolygon(this.geometry), material);
+    
+    model.receiveShadow = true;
+
+    return model;	
+}
+
+module.exports = Room;
+},{"./Feature.js":7}],15:[function(require,module,exports){
+var Feature = require('./Feature.js');
+
+Feature.inherits(Server, Feature);
+
+function Server(feature) {
+	Feature.call(this, feature);
+}
+
+Server.prototype.style = {
+							"weight": 0,
+						    "fillColor": "#f49530",
+						    "fillOpacity": 1
+						};
+
+Server.prototype.get3DModel = function() {
+	var coords = this.geometry.coordinates;
+	var geometry = new THREE.BoxGeometry(coords[0][2][0], coords[0][2][1], this.properties.height);
+	var material = new THREE.MeshLambertMaterial( {color: 0xf49530} );
+	var wireMaterial = new THREE.MeshLambertMaterial( {color: 0x000000, wireframe: true, wireframeLinewidth: 2} );
+	var server = new THREE.Mesh(geometry, material);
+
+	server.receiveShadow = true;
+	server.castShadow = true;
+	var model = Feature.packageModel(server);
+
+	return model;
+}
+
+module.exports = Server;
+},{"./Feature.js":7}],16:[function(require,module,exports){
+var Feature = require('./Feature.js');
+
+Feature.inherits(SurveillanceCamera, Feature);
+
+function SurveillanceCamera(feature) {
+	Feature.call(this, feature);
+}
+
+SurveillanceCamera.prototype.style = {
+									    prefix: "fa",
+									    icon: "video-camera"
+    								};
+SurveillanceCamera.prototype.get3DModel = function() {
+	var material = new THREE.MeshLambertMaterial( {color: 0x38a9dc} );
+	var camera = new THREE.Object3D();
+
+	//Creazione corpo macchina
+	var widthBody = 0.2;
+	var depthBody = 0.1;
+	var heightBody = 0.1;
+
+	var bodyCameraGeometry = new THREE.BoxGeometry(widthBody, depthBody, heightBody);
+	var bodyCamera = new THREE.Mesh( bodyCameraGeometry, material );
+
+	//Creazione obiettivo
+	var radiusTopCameraLens = 0.04;
+	var radiusBottomCameraLens = 0.06;
+	var heightCylinderCamenraLens =  0.08;
+	var cameraLensGeometry = new THREE.CylinderGeometry(radiusTopCameraLens, radiusBottomCameraLens, heightCylinderCamenraLens, 32 );
+	var cameraLens = new THREE.Mesh( cameraLensGeometry, material );
+	cameraLens.rotation.z = Math.PI/2;
+	cameraLens.position.x += 2*widthBody/3;
+
+	//Creazione asse sostegno
+	var radiusTopRod = 0.005;
+	var radiusBottomRod = 0.005;
+	var heightRod = 0.15;
+
+	var rodGeometry = new THREE.CylinderGeometry(radiusTopRod, radiusBottomRod, heightRod, 32 );
+	var rod = new THREE.Mesh( rodGeometry, material );
+	rod.rotation.z = Math.PI/2;
+	rod.position.x -= widthBody/2;
+
+	camera.add(bodyCamera);
+	camera.add(cameraLens);
+
+	camera.receiveShadow = true;
+	camera.castShadow = true;
+	var box = new THREE.Box3();
+	box.setFromObject(camera);
+	camera.add(box);
+	camera.rotation.y += Math.PI*1/9;
+	var model = Feature.packageModel(camera);
+	return model;
+}
+
+module.exports = SurveillanceCamera;
+
+},{"./Feature.js":7}],17:[function(require,module,exports){
+var Feature = require('./Feature.js');
+
+Feature.inherits(Table, Feature);
+
+function Table(feature) {
+	Feature.call(this, feature);
+}
+
+Table.prototype.style =	{
+							prefix: "fa",
+							icon: "square-o"
+    					};
+
+Table.prototype.get3DModel = function() {
+	var table = new THREE.Object3D();
+
+	var geometry = new THREE.CylinderGeometry( 0.03, 0.03, 0.8, 32 );
+	var material = new THREE.MeshLambertMaterial( {color: 0xd9d7d7} );
+
+	var p1 = new THREE.Mesh( geometry, material );
+	p1.rotation.x += Math.PI/2;
+	p1.position.z += 0.8/2;
+
+	var p2 = new THREE.Mesh( geometry, material );
+	p2.rotation.x += Math.PI/2;
+	p2.position.z += 0.8/2;
+	p2.position.y += 1;
+
+	var p3 = new THREE.Mesh( geometry, material );
+	p3.rotation.x += Math.PI/2;
+	p3.position.z += 0.8/2;
+	p3.position.x += 2;
+
+	var p4 = new THREE.Mesh( geometry, material );
+	p4.rotation.x += Math.PI/2;
+	p4.position.z += 0.8/2;
+	p4.position.y += 1;
+	p4.position.x += 2;
+
+
+	var geometry = new THREE.BoxGeometry( 2.1, 1.1, 0.04 );
+	var material = new THREE.MeshLambertMaterial( {color: 0x9b8c75} );
+	var plane = new THREE.Mesh( geometry, material );
+	plane.position.x -= 0.05 - 2.1/2;
+	plane.position.y -= 0.05 - 1.1/2;
+	plane.position.z += 0.8;
+
+	table.add(p1);
+	table.add(p2);
+	table.add(p3);
+	table.add(p4);
+	table.add(plane);
+
+	var model = Feature.packageModel(table);
+
+	return model;
+}
+
+module.exports = Table;
+},{"./Feature.js":7}],18:[function(require,module,exports){
 // template for js modules that works both in node and browsers
 
 // (1) initialize library object (namespace)
@@ -252,7 +969,7 @@ var utilities = utilities || require('./utilities.js');
 	}	
 	
 })();
-},{"./coordinatesUtilities.js":3,"./featureFactory.js":5,"./matrixUtilities.js":6,"./utilities.js":9,"numeric":14}],3:[function(require,module,exports){
+},{"./coordinatesUtilities.js":19,"./featureFactory.js":21,"./matrixUtilities.js":22,"./utilities.js":25,"numeric":27}],19:[function(require,module,exports){
 // initialize library object (namespace)
 var coordinatesUtilities = {};
 
@@ -474,7 +1191,7 @@ var matrixUtilities = matrixUtilities || require('./matrixUtilities.js');
 
 })();
 
-},{"./matrixUtilities.js":6}],4:[function(require,module,exports){
+},{"./matrixUtilities.js":22}],20:[function(require,module,exports){
 // template for js modules that works both in node and browsers
 
 // (1) initialize library object (namespace)
@@ -515,8 +1232,7 @@ var eventEmitter = {};
 	}	
 	
 })();
-},{}],5:[function(require,module,exports){
-(function (__dirname){
+},{}],21:[function(require,module,exports){
 // template for js modules that works both in node and browsers
 
 // (1) initialize library object (namespace)
@@ -525,8 +1241,24 @@ var featureFactory = {};
 // (2) import any dependencies (in browser must be included before this file)
 // example: var dependency = dependency || require('./dependency');
 var utilities = utilities || require('./utilities.js');
-var requireDir = require('requiredir');
-var featureClasses = requireDir(__dirname + '/../features');
+
+var featureClasses = {};
+featureClasses['Feature'] = require('../features/Feature.js');
+featureClasses['Antenna'] = require('../features/Antenna.js');
+featureClasses['BadgeReader'] = require('../features/BadgeReader.js');
+featureClasses['Chair'] = require('../features/Chair.js');
+featureClasses['Door'] = require('../features/Door.js');
+featureClasses['External_wall'] = require('../features/External_wall.js');
+featureClasses['FireExtinguisher'] = require('../features/FireExtinguisher.js');
+featureClasses['GraphNode'] = require('../features/GraphNode.js');
+featureClasses['Hotspot'] = require('../features/Hotspot.js');
+featureClasses['Internal_wall'] = require('../features/Internal_wall.js');
+featureClasses['Level'] = require('../features/Level.js');
+featureClasses['Light'] = require('../features/Light.js');
+featureClasses['Room'] = require('../features/Room.js');
+featureClasses['Server'] = require('../features/Server.js');
+featureClasses['SurveillanceCamera'] = require('../features/SurveillanceCamera.js');
+featureClasses['Table'] = require('../features/Table.js');
 
 (function(){
 
@@ -534,7 +1266,6 @@ var featureClasses = requireDir(__dirname + '/../features');
 	var generateFeature = function(feature) {
 		var featureClass = capitaliseFirstLetter(feature.properties.class);
 		console.log(feature.id);
-		console.log(featureClasses);n
 		return new featureClasses[featureClass](feature);	
 	}
 	
@@ -552,8 +1283,7 @@ var featureClasses = requireDir(__dirname + '/../features');
 	
 })();
 
-}).call(this,"/c3d/modules")
-},{"./utilities.js":9,"requiredir":16}],6:[function(require,module,exports){
+},{"../features/Antenna.js":2,"../features/BadgeReader.js":3,"../features/Chair.js":4,"../features/Door.js":5,"../features/External_wall.js":6,"../features/Feature.js":7,"../features/FireExtinguisher.js":8,"../features/GraphNode.js":9,"../features/Hotspot.js":10,"../features/Internal_wall.js":11,"../features/Level.js":12,"../features/Light.js":13,"../features/Room.js":14,"../features/Server.js":15,"../features/SurveillanceCamera.js":16,"../features/Table.js":17,"./utilities.js":25}],22:[function(require,module,exports){
 // initialize library object (namespace)
 var matrixUtilities = {};
 
@@ -627,7 +1357,7 @@ var numeric = numeric || require('numeric');
 	  module.exports = matrixUtilities;
 	}	
 })();
-},{"numeric":14}],7:[function(require,module,exports){
+},{"numeric":27}],23:[function(require,module,exports){
 // template for js modules that works both in node and browsers
 
 // (1) initialize library object (namespace)
@@ -773,7 +1503,7 @@ var utilities = utilities || require('./utilities.js');
 	}	
 	
 })();
-},{"./eventEmitter.js":4,"./utilities.js":9}],8:[function(require,module,exports){
+},{"./eventEmitter.js":20,"./utilities.js":25}],24:[function(require,module,exports){
 var eventEmitter = require('./eventEmitter.js');
 var utilities = require('./utilities.js');
 var coordinatesUtilities = require('./coordinatesUtilities.js');
@@ -804,9 +1534,9 @@ var self = module.exports = {
 	    stats.setMode(0); // 0: fps, 1: ms
 	    //container3D.append(stats.domElement);
 	    scene = new THREE.Scene();
-	    data.scene3D = scene;
+	    scene3D = scene;
 	    camera = new THREE.PerspectiveCamera(45, container3DWidth / container3DHeight, 0.1, 1000);
-	    data.camera3D = camera;
+	    camera3D = camera;
 	    
 	    camera.position.set(40,50,40);
 	    camera.up = new THREE.Vector3(0,1,0);
@@ -1097,7 +1827,7 @@ var self = module.exports = {
 
 
 
-},{"./coordinatesUtilities.js":3,"./eventEmitter.js":4,"./utilities.js":9}],9:[function(require,module,exports){
+},{"./coordinatesUtilities.js":19,"./eventEmitter.js":20,"./utilities.js":25}],25:[function(require,module,exports){
 // initialize library object (namespace)
 var utilities = {};
 
@@ -1167,296 +1897,7 @@ var utilities = {};
 	  module.exports = utilities;
 	}	
 })();
-},{}],10:[function(require,module,exports){
-
-},{}],11:[function(require,module,exports){
-(function (process){
-// Copyright Joyent, Inc. and other Node contributors.
-//
-// Permission is hereby granted, free of charge, to any person obtaining a
-// copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to permit
-// persons to whom the Software is furnished to do so, subject to the
-// following conditions:
-//
-// The above copyright notice and this permission notice shall be included
-// in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
-// USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-// resolves . and .. elements in a path array with directory names there
-// must be no slashes, empty elements, or device names (c:\) in the array
-// (so also no leading and trailing slashes - it does not distinguish
-// relative and absolute paths)
-function normalizeArray(parts, allowAboveRoot) {
-  // if the path tries to go above the root, `up` ends up > 0
-  var up = 0;
-  for (var i = parts.length - 1; i >= 0; i--) {
-    var last = parts[i];
-    if (last === '.') {
-      parts.splice(i, 1);
-    } else if (last === '..') {
-      parts.splice(i, 1);
-      up++;
-    } else if (up) {
-      parts.splice(i, 1);
-      up--;
-    }
-  }
-
-  // if the path is allowed to go above the root, restore leading ..s
-  if (allowAboveRoot) {
-    for (; up--; up) {
-      parts.unshift('..');
-    }
-  }
-
-  return parts;
-}
-
-// Split a filename into [root, dir, basename, ext], unix version
-// 'root' is just a slash, or nothing.
-var splitPathRe =
-    /^(\/?|)([\s\S]*?)((?:\.{1,2}|[^\/]+?|)(\.[^.\/]*|))(?:[\/]*)$/;
-var splitPath = function(filename) {
-  return splitPathRe.exec(filename).slice(1);
-};
-
-// path.resolve([from ...], to)
-// posix version
-exports.resolve = function() {
-  var resolvedPath = '',
-      resolvedAbsolute = false;
-
-  for (var i = arguments.length - 1; i >= -1 && !resolvedAbsolute; i--) {
-    var path = (i >= 0) ? arguments[i] : process.cwd();
-
-    // Skip empty and invalid entries
-    if (typeof path !== 'string') {
-      throw new TypeError('Arguments to path.resolve must be strings');
-    } else if (!path) {
-      continue;
-    }
-
-    resolvedPath = path + '/' + resolvedPath;
-    resolvedAbsolute = path.charAt(0) === '/';
-  }
-
-  // At this point the path should be resolved to a full absolute path, but
-  // handle relative paths to be safe (might happen when process.cwd() fails)
-
-  // Normalize the path
-  resolvedPath = normalizeArray(filter(resolvedPath.split('/'), function(p) {
-    return !!p;
-  }), !resolvedAbsolute).join('/');
-
-  return ((resolvedAbsolute ? '/' : '') + resolvedPath) || '.';
-};
-
-// path.normalize(path)
-// posix version
-exports.normalize = function(path) {
-  var isAbsolute = exports.isAbsolute(path),
-      trailingSlash = substr(path, -1) === '/';
-
-  // Normalize the path
-  path = normalizeArray(filter(path.split('/'), function(p) {
-    return !!p;
-  }), !isAbsolute).join('/');
-
-  if (!path && !isAbsolute) {
-    path = '.';
-  }
-  if (path && trailingSlash) {
-    path += '/';
-  }
-
-  return (isAbsolute ? '/' : '') + path;
-};
-
-// posix version
-exports.isAbsolute = function(path) {
-  return path.charAt(0) === '/';
-};
-
-// posix version
-exports.join = function() {
-  var paths = Array.prototype.slice.call(arguments, 0);
-  return exports.normalize(filter(paths, function(p, index) {
-    if (typeof p !== 'string') {
-      throw new TypeError('Arguments to path.join must be strings');
-    }
-    return p;
-  }).join('/'));
-};
-
-
-// path.relative(from, to)
-// posix version
-exports.relative = function(from, to) {
-  from = exports.resolve(from).substr(1);
-  to = exports.resolve(to).substr(1);
-
-  function trim(arr) {
-    var start = 0;
-    for (; start < arr.length; start++) {
-      if (arr[start] !== '') break;
-    }
-
-    var end = arr.length - 1;
-    for (; end >= 0; end--) {
-      if (arr[end] !== '') break;
-    }
-
-    if (start > end) return [];
-    return arr.slice(start, end - start + 1);
-  }
-
-  var fromParts = trim(from.split('/'));
-  var toParts = trim(to.split('/'));
-
-  var length = Math.min(fromParts.length, toParts.length);
-  var samePartsLength = length;
-  for (var i = 0; i < length; i++) {
-    if (fromParts[i] !== toParts[i]) {
-      samePartsLength = i;
-      break;
-    }
-  }
-
-  var outputParts = [];
-  for (var i = samePartsLength; i < fromParts.length; i++) {
-    outputParts.push('..');
-  }
-
-  outputParts = outputParts.concat(toParts.slice(samePartsLength));
-
-  return outputParts.join('/');
-};
-
-exports.sep = '/';
-exports.delimiter = ':';
-
-exports.dirname = function(path) {
-  var result = splitPath(path),
-      root = result[0],
-      dir = result[1];
-
-  if (!root && !dir) {
-    // No dirname whatsoever
-    return '.';
-  }
-
-  if (dir) {
-    // It has a dirname, strip trailing slash
-    dir = dir.substr(0, dir.length - 1);
-  }
-
-  return root + dir;
-};
-
-
-exports.basename = function(path, ext) {
-  var f = splitPath(path)[2];
-  // TODO: make this comparison case-insensitive on windows?
-  if (ext && f.substr(-1 * ext.length) === ext) {
-    f = f.substr(0, f.length - ext.length);
-  }
-  return f;
-};
-
-
-exports.extname = function(path) {
-  return splitPath(path)[3];
-};
-
-function filter (xs, f) {
-    if (xs.filter) return xs.filter(f);
-    var res = [];
-    for (var i = 0; i < xs.length; i++) {
-        if (f(xs[i], i, xs)) res.push(xs[i]);
-    }
-    return res;
-}
-
-// String.prototype.substr - negative index don't work in IE8
-var substr = 'ab'.substr(-1) === 'b'
-    ? function (str, start, len) { return str.substr(start, len) }
-    : function (str, start, len) {
-        if (start < 0) start = str.length + start;
-        return str.substr(start, len);
-    }
-;
-
-}).call(this,require('_process'))
-},{"_process":12}],12:[function(require,module,exports){
-// shim for using process in browser
-
-var process = module.exports = {};
-var queue = [];
-var draining = false;
-
-function drainQueue() {
-    if (draining) {
-        return;
-    }
-    draining = true;
-    var currentQueue;
-    var len = queue.length;
-    while(len) {
-        currentQueue = queue;
-        queue = [];
-        var i = -1;
-        while (++i < len) {
-            currentQueue[i]();
-        }
-        len = queue.length;
-    }
-    draining = false;
-}
-process.nextTick = function (fun) {
-    queue.push(fun);
-    if (!draining) {
-        setTimeout(drainQueue, 0);
-    }
-};
-
-process.title = 'browser';
-process.browser = true;
-process.env = {};
-process.argv = [];
-process.version = ''; // empty string to avoid regexp issues
-
-function noop() {}
-
-process.on = noop;
-process.addListener = noop;
-process.once = noop;
-process.off = noop;
-process.removeListener = noop;
-process.removeAllListeners = noop;
-process.emit = noop;
-
-process.binding = function (name) {
-    throw new Error('process.binding is not supported');
-};
-
-// TODO(shtylman)
-process.cwd = function () { return '/' };
-process.chdir = function (dir) {
-    throw new Error('process.chdir is not supported');
-};
-process.umask = function() { return 0; };
-
-},{}],13:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 /******************************************************************************
  * Created 2008-08-19.
  *
@@ -1617,7 +2058,7 @@ if (typeof module !== 'undefined') {
   module.exports = dijkstra;
 }
 
-},{}],14:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 (function (global){
 "use strict";
 
@@ -6045,79 +6486,5 @@ numeric.svd= function svd(A) {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],15:[function(require,module,exports){
-var fs = require("fs")
-	, path = require("path");
-
-if (typeof fs.exists === "undefined") {fs.exists = path.exists;}
-if (typeof fs.existsSync === "undefined") {fs.existsSync = path.existsSync;}
-},{"fs":10,"path":11}],16:[function(require,module,exports){
-"use strict";
-var _compat = require("./node06compat")
-	, _fs = require("fs")
-	, _path = require("path");
-	
-module.exports = (function(){
-
-	var _verifyAndResolveDirectory = function(path) {
-		var stats; 
-
-		if (typeof path === "undefined"
-			|| (typeof path === "string" && path.trim().length === 0)) {
-			throw new Error("The path must be provided when instantiating the object.");
-		}
-
-		// Resolve the given require path relative to the parent module's directory.
-		// This way the user can provide paths that are relative to themselves.
-		path = _path.resolve(_path.dirname(module.parent.filename), path);
-
-		try {
-			stats = _fs.statSync(path);
-		} catch (e) {
-			throw new Error("The directory path does not exist. [" + path + "]");
-		}
-
-		if (!stats.isDirectory()){
-			throw new Error("The path provided is not a directory. [" + path + "]");
-		}
-
-		return path;
-	};
-
-	var _importFiles = function(path, files){
-
-		var moduleList = []
-			, trimmedName
-			, module
-			, obj = {};
-
-		files.forEach(function (element, index, array){
-			// Require each file, skipping dotfiles.
-			if (_fs.lstatSync(_path.join(path, element)).isFile() && element.substring(0,1) !== "."){
-				trimmedName = _path.basename(element, _path.extname(element));
-				module = require(_path.join(path, trimmedName));			
-				moduleList.push(module);
-				obj[trimmedName] = module;
-			}
-		});
-
-		obj.length = moduleList.length;
-		obj.toArray = function(){return moduleList;};
-
-		return obj;
-	};
-	
-	return function(path){
-
-		path = _verifyAndResolveDirectory(path);
-
-		var fileList = []
-			, modules = [];
-
-		var files = _fs.readdirSync(path);
-
-		return _importFiles(path, files);
-	};
-}());
-},{"./node06compat":15,"fs":10,"path":11}]},{},[1])(1)
+},{}]},{},[1])(1)
 });

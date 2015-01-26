@@ -44,7 +44,7 @@ FireExtinguisher.prototype.get3DModel = function() {
 
 	fireExtinguisher.add(cylinder);
 
-	var model = packageModel(fireExtinguisher);    
+	var model = Feature.packageModel(fireExtinguisher);    
 	return model;
 }
 

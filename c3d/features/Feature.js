@@ -1,3 +1,4 @@
+var utilities = require('../modules/utilities.js')
 function Feature(feature) { 
 	this.id = feature.id;
 	this.type = 'Feature';
@@ -14,7 +15,7 @@ Feature.inherits = function inherits(Child, Parent) {
 	Child.prototype.constructor = Child;
 }
 
-Feature.prototype.generateLineString = function generateLineString(geoJSONgeometry) {
+Feature.generateLineString = function generateLineString(geoJSONgeometry) {
 	var lineString = new THREE.Geometry();
     for(var i = 0; i < geoJSONgeometry.coordinates.length; i++){
         lineString.vertices.push( new THREE.Vector3( geoJSONgeometry.coordinates[i][0], geoJSONgeometry.coordinates[i][1], 0) );
@@ -22,7 +23,7 @@ Feature.prototype.generateLineString = function generateLineString(geoJSONgeomet
     return lineString;
 }
 
-Feature.prototype.generatePolygonShape = function generatePolygonShape(geoJSONgeometry){
+Feature.generatePolygonShape = function generatePolygonShape(geoJSONgeometry){
 	var coords = geoJSONgeometry.coordinates;
 	var shape = new THREE.Shape();
     for (var j = 0; j < coords[0].length; j++) //scorro le singole coordinate del perimetro esterno
@@ -47,11 +48,11 @@ Feature.prototype.generatePolygonShape = function generatePolygonShape(geoJSONge
     return shape;
 }
 
-Feature.prototype.generatePolygon = function generatePolygon(geoJSONgeometry) {
-    return generatePolygonShape(geoJSONgeometry).makeGeometry();  
+Feature.generatePolygon = function generatePolygon(geoJSONgeometry) {
+    return Feature.generatePolygonShape(geoJSONgeometry).makeGeometry();  
 }
 
-Feature.prototype.generateWallGeometry = function generateWallGeometry(wallFeature) {
+Feature.generateWallGeometry = function generateWallGeometry(wallFeature) {
 	var wallLength = wallFeature.geometry.coordinates[1][0];
 	var wallHeight = wallFeature.parent.properties.height;
 	var coordinates = [
@@ -73,7 +74,7 @@ Feature.prototype.generateWallGeometry = function generateWallGeometry(wallFeatu
 	return { coordinates: coordinates }
 }
 
-Feature.prototype.packageModel = function packageModel(model3D) {
+Feature.packageModel = function packageModel(model3D) {
     
     var bbox = new THREE.BoundingBoxHelper(model3D, 0xff0000);
     bbox.update();

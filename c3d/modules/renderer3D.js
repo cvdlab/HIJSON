@@ -28,9 +28,9 @@ var self = module.exports = {
 	    stats.setMode(0); // 0: fps, 1: ms
 	    //container3D.append(stats.domElement);
 	    scene = new THREE.Scene();
-	    data.scene3D = scene;
+	    scene3D = scene;
 	    camera = new THREE.PerspectiveCamera(45, container3DWidth / container3DHeight, 0.1, 1000);
-	    data.camera3D = camera;
+	    camera3D = camera;
 	    
 	    camera.position.set(40,50,40);
 	    camera.up = new THREE.Vector3(0,1,0);

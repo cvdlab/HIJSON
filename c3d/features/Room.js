@@ -19,7 +19,7 @@ Room.prototype.get3DModel = function() {
         side: THREE.DoubleSide
     });
 
-    var model = new THREE.Mesh(generatePolygon(this.geometry), material);
+    var model = new THREE.Mesh(Feature.generatePolygon(this.geometry), material);
     
     model.receiveShadow = true;
 

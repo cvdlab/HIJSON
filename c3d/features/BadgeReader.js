@@ -16,7 +16,7 @@ BadgeReader.prototype.get3DModel = function() {
     var material = new THREE.MeshLambertMaterial( {color: 0x38a9dc} );
     var badgeReader = new THREE.Mesh( geometry, material );
     
-    var model = packageModel(badgeReader);
+    var model = Feature.packageModel(badgeReader);
 
     return model;
 }

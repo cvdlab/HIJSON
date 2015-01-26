@@ -17,7 +17,7 @@ External_wall.prototype.get3DModel = function() {
         side: THREE.DoubleSide
 	});
 	
-	var shape = generatePolygonShape(generateWallGeometry(this));
+	var shape = Feature.generatePolygonShape(Feature.generateWallGeometry(this));
 	
 	var extrudedGeometry = shape.extrude({
                 curveSegments: 1,
