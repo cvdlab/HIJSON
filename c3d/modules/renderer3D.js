@@ -1,6 +1,11 @@
+// (1) dependencies
 var eventEmitter = require('./eventEmitter.js');
 var utilities = require('./utilities.js');
 var coordinatesUtilities = require('./coordinatesUtilities.js');
+
+// (2) private things
+var scene3D;
+var camera3D;
 
 function onWindowResize3D() {
 	var container3D = $('#container3D');
@@ -313,5 +318,13 @@ var self = module.exports = {
 	        light.shadowMapWidth = 4096;
 	        light.target.position = utilities.getCentroid(data.index['building'].obj3D);
 	    }
+	},
+
+	getScene3D: function() {
+		return scene3D;
+	},
+
+	getCamera3D: function() {
+		return camera3D;
 	}
 }
