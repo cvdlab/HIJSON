@@ -47,7 +47,7 @@ block internal_content
 			// the FPVmoved event is fired by the pointerlock library on position change, max 25 times/sec
 			c3dclient.eventEmitter.on( 'FPVmoved', function() {
 				// update the general position
-				data.actualPosition = c3dclient.coordinatesUtilities.from3DSceneToGeneral(c3dclient.renderer3D.camera3D.parent.parent.position.clone(), data.actualPosition);
+				data.actualPosition = c3dclient.coordinatesUtilities.from3DSceneToGeneral(data.camera3D.parent.parent.position.clone(), data.actualPosition);
 				
 				// the pointerlock library automatically moves the camera, but the user model needs to be moved manually
 				user3D.position = c3dclient.coordinatesUtilities.fromGeneralTo3D(data.actualPosition);

@@ -1,20 +1,23 @@
-// template for js modules that works both in node and browsers
+var eventEmitter = require('./eventEmitter.js');
+var utilities = require('./utilities.js');
+var coordinatesUtilities = require('./coordinatesUtilities.js');
 
-// (1) initialize library object (namespace)
-var renderer3D = {};
 
-// (2) import any dependencies (in browser must be included before this file)
-// example: var dependency = dependency || require('./dependency');
-var eventEmitter = eventEmitter || require('./eventEmitter.js');
-var utilities = utilities || require('./utilities.js');
-var coordinatesUtilities = coordinatesUtilities || require('./coordinatesUtilities.js');
-(function(){
-	
-	// (3) library properties and functions (public an private)
-	var scene3D;
-	var camera3D;
+function onWindowResize3D() {
+    container3DWidth = container3D.width();
+    container3DHeight = container3D.width()/4*3;
+    container3D.css('height', container3DHeight);
 
-	var init = function(data) {
+    camera.aspect = container3DWidth / container3DHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize( container3DWidth, container3DHeight );
+}
+
+var self = module.exports = {
+	scene3D: {},
+	camera3D: {},
+
+	init: function init(data) {
 		
 	    var container3D = $('#container3D');
 	    var container3DWidth = container3D.width();
@@ -25,9 +28,9 @@ var coordinatesUtilities = coordinatesUtilities || require('./coordinatesUtiliti
 	    stats.setMode(0); // 0: fps, 1: ms
 	    //container3D.append(stats.domElement);
 	    scene = new THREE.Scene();
-	    scene3D = scene;
+	    data.scene3D = scene;
 	    camera = new THREE.PerspectiveCamera(45, container3DWidth / container3DHeight, 0.1, 1000);
-	    camera3D = camera;
+	    data.camera3D = camera;
 	    
 	    camera.position.set(40,50,40);
 	    camera.up = new THREE.Vector3(0,1,0);
@@ -63,15 +66,7 @@ var coordinatesUtilities = coordinatesUtilities || require('./coordinatesUtiliti
 	        
 	    window.addEventListener( 'resize', onWindowResize3D, false );
 
-	    function onWindowResize3D() {
-	        container3DWidth = container3D.width();
-	        container3DHeight = container3D.width()/4*3;
-	        container3D.css('height', container3DHeight);
-	    
-	        camera.aspect = container3DWidth / container3DHeight;
-	        camera.updateProjectionMatrix();
-	        renderer.setSize( container3DWidth, container3DHeight );
-	    }
+
 
 	    eventEmitter.on('selectFeature', function(idObject) {
 	        utilities.show3DObject(data.index["building"].obj3D, false);
@@ -232,8 +227,9 @@ var coordinatesUtilities = coordinatesUtilities || require('./coordinatesUtiliti
 			renderer.render(scene, camera);
 		}
 		render();
-	};
-	var generate3DModel = function(data) {
+	},
+
+	generate3DModel: function generate3DModel(data) {
 	    var queue = [];
 	    var feature;
 	    data.index["building"].obj3D = new THREE.Object3D();
@@ -317,20 +313,10 @@ var coordinatesUtilities = coordinatesUtilities || require('./coordinatesUtiliti
 	        light.shadowMapWidth = 4096;
 	        light.target.position = utilities.getCentroid(data.index['building'].obj3D);
 	    }
+	}
+}
 
-	    // var centroid = data.getCentroid(data.index['building'].obj3D);
-	    // data.index['building'].obj3D.position.set(-centroid.x, -centroid.y, -centroid.z);
-	    
-	} // Chiude generate3DModel
-	// (4) exported things (public)
-	renderer3D.init = init;
-	renderer3D.generate3DModel = generate3DModel;
-	renderer3D.scene3D = scene3D;
-	renderer3D.camera3D = camera3D;
-	
-	// (5) export the namespace object
-	if (typeof module !== 'undefined' && module.exports) {
-	  module.exports = renderer3D;
-	}	
-	
-})();
+
+
+
+

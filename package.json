@@ -25,6 +25,6 @@
   },  
   "scripts": {
     "start": "node ./bin/www",
-    "gulp-dev": "gulp browserify"
+    "gulp": "gulp browserify"
   }
 }
