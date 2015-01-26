@@ -1,10 +1,10 @@
 var dijkstra = require('dijkstrajs');
-var eventEmitter = require('./eventEmitter.js');
-var utilities = require('./utilities.js');
-var assembler = require('./assembler.js');
-var coordinatesUtilities = require('./coordinatesUtilities.js');
-var renderer2D = require('./renderer2D.js');
-var renderer3D = require('./renderer3D.js');
+var eventEmitter = require('./modules/eventEmitter.js');
+var utilities = require('./modules/utilities.js');
+var assembler = require('./modules/assembler.js');
+var coordinatesUtilities = require('./modules/coordinatesUtilities.js');
+var renderer2D = require('./modules/renderer2D.js');
+var renderer3D = require('./modules/renderer3D.js');
 
 data.obstaclesClasses = ['room', 'internal_wall', 'external_wall'];
 data.interactiveClasses = ['server', 'surveillanceCamera', 'hotspot', 'antenna', 'fireExtinguisher', 'badgeReader', 'light'];

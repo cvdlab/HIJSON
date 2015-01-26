@@ -1,11 +1,11 @@
-var parser = require('./public/libs/parser.js');
-var graph = require('./public/libs/graphUtilities.js');
-var assembler = require('./public/libs/assembler.js');
+var parser = require('./modules/parser.js');
+var graph = require('./modules/graphUtilities.js');
+var assembler = require('./modules/assembler.js');
 
 var inputPaths = {
-	config: 'json_input/config.json',
-	architecture: 'json_input/architecture_demo.json',
-	furniture: 'json_input/furnitures_demo.json'
+	config: '../json_input/config.json',
+	architecture: '../json_input/architecture_demo.json',
+	furniture: '../json_input/furnitures_demo.json'
 };
 console.log('Starting initialization...');
 /* Parsing function in parse.js module */

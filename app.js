@@ -7,7 +7,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var data = require('./c3d_server');
+var data = require('./c3d/c3d_server');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
