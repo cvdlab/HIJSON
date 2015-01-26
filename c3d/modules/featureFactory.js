@@ -1,12 +1,7 @@
-// template for js modules that works both in node and browsers
-
-// (1) initialize library object (namespace)
-var featureFactory = {};
-
-// (2) import any dependencies (in browser must be included before this file)
-// example: var dependency = dependency || require('./dependency');
+// (1) dependencies
 var utilities = utilities || require('./utilities.js');
 
+// (2) private things
 var featureClasses = {};
 featureClasses['Feature'] = require('../features/Feature.js');
 featureClasses['Antenna'] = require('../features/Antenna.js');
@@ -25,24 +20,14 @@ featureClasses['Server'] = require('../features/Server.js');
 featureClasses['SurveillanceCamera'] = require('../features/SurveillanceCamera.js');
 featureClasses['Table'] = require('../features/Table.js');
 
-(function(){
+function capitaliseFirstLetter(featureClass) {
+	return featureClass.charAt(0).toUpperCase() + featureClass.slice(1);
+}
 
-	// (3) library properties and functions (public an private)
-	var generateFeature = function(feature) {
+// (3) public/exported things
+var self = module.exports = {
+	generateFeature: function(feature) {
 		var featureClass = capitaliseFirstLetter(feature.properties.class);
 		return new featureClasses[featureClass](feature);	
 	}
-	
-	function capitaliseFirstLetter(featureClass) {
-	    return featureClass.charAt(0).toUpperCase() + featureClass.slice(1);
-	}
-
-	// (4) exported things (public)
-	featureFactory.generateFeature = generateFeature;
-
-	// (5) export the namespace object
-	if (typeof module !== 'undefined' && module.exports) {
-	  module.exports = featureFactory;
-	}	
-	
-})();
+} //close module.exports

@@ -3,7 +3,8 @@ var utilities = require('./utilities.js');
 var coordinatesUtilities = require('./coordinatesUtilities.js');
 
 function onWindowResize3D() {
-    container3DWidth = container3D.width();
+	var container3D = $('#container3D');
+	container3DWidth = container3D.width();
     container3DHeight = container3D.width()/4*3;
     container3D.css('height', container3DHeight);
 
@@ -314,8 +315,3 @@ var self = module.exports = {
 	    }
 	}
 }
-
-
-
-
-
