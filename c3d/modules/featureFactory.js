@@ -1,5 +1,5 @@
 // (1) dependencies
-var utilities = utilities || require('./utilities.js');
+var utilities = require('./utilities.js');
 
 // (2) private things
 var featureClasses = {};

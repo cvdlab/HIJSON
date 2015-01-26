@@ -1,310 +1,304 @@
-// template for js modules that works both in node and browsers
-
-// (1) initialize library object (namespace)
-var graphUtilities = {};
-
-// (2) import any dependencies (in browser must be included before this file)
-// example: var dependency = dependency || require('./dependency');
-var poly2tri = poly2tri || require('poly2tri');
-var matrixUtilities = matrixUtilities || require('./matrixUtilities.js');
-var coordinatesUtilities = coordinatesUtilities || require('./coordinatesUtilities.js');
-var utilities = utilities || require('./utilities.js');
-
-(function(){
+// (1) dependencies
+var poly2tri = require('poly2tri');
+var matrixUtilities = require('./matrixUtilities.js');
+var coordinatesUtilities = require('./coordinatesUtilities.js');
+var utilities = require('./utilities.js');
+// (2) private things
+function getTriangles(object) {
+	if (object.geometry.type === 'Polygon') {
+		var coords = object.geometry.coordinates;
+		var perimeter = coords[0];
+		var contour = [];
 	
-	// (3) library properties and functions (public an private)
-	var createSubGraph = function(data, id) {
-		var object = data.index[id];
-		if(object.properties.class === 'door') {
-			var graphNode = {
-				type: 'graph',
-				id: 'n_' + object.id,
-				geometry: {
-					type: 'Point',
-					coordinates: [0, 0]
-				},
-				properties: {
-					class: 'graphNode',
-					tVector: [(object.geometry.coordinates[1][0]/2), 0, 0],
-					rVector: [0, 0, 0],
-					parent: object.id,
-					adj: {}
-				},
-				children: []
-			}
-	        var localMatrix = matrixUtilities.objMatrix(graphNode);
-			var globalMatrix = matrixUtilities.getCMT(data.index[graphNode.properties.parent]);
-			graphNode.CMT = matrixUtilities.matrixProduct(globalMatrix, localMatrix);
-
-			object.children.push(graphNode);
-			graphNode.parent = object;
-			object.graph.push(graphNode);
-			data.index[graphNode.id] = graphNode;
+		for(j in perimeter) {
+			contour.push(new poly2tri.Point(perimeter[j][0], perimeter[j][1]));
 		}
-
-		if(object.properties.class === 'room') {
-			var triangles = getTriangles(object);
-			
-			var i = 0;
-			
-			var bucket = {
-				main: [],
-				buckets: []
-			};
-			
-			for(tri in triangles) {
-				var idTriangle = object.id + '_' + tri; 
-				bucket.buckets[idTriangle] = {};
-				var triangle = triangles[tri];
-
-				bucket.buckets[idTriangle].mid = [];
-				for(edge in triangle.constrained_edge) {
-					var constrainedEdge = triangle.constrained_edge[edge];
-					if(!constrainedEdge) {
-						var tVect = [];
-						switch(edge) {
-							case '0': 
-								var midPoint = getMidPoint(triangle.points_[1], triangle.points_[2]);
-								break;
-							case '1': 
-								var midPoint = getMidPoint(triangle.points_[0], triangle.points_[2]);
-								break;
-							case '2': 
-								var midPoint = getMidPoint(triangle.points_[0], triangle.points_[1]);
-								break;
-						}
-						tVect = [midPoint[0], midPoint[1], 0];
-						
-						if(!(nodeInBucket(tVect,bucket))) {				
-							var graphNode = {
-								type: 'graph',
-								id: 'n_'+ i + '_' + object.id,
-								geometry: {
-									type: 'Point',
-									coordinates: [0, 0]
-								},
-								properties: {
-									class: 'graphNode',
-									tVector: tVect,
-									rVector: [0, 0, 0],
-									parent: object.id,
-									adj: {}
-								},
-								children: []
-							}
-							var localMatrix = matrixUtilities.objMatrix(graphNode);
-							var globalMatrix = matrixUtilities.getCMT(data.index[graphNode.properties.parent]);
-							graphNode.CMT = matrixUtilities.matrixProduct(globalMatrix, localMatrix);
-							
-							bucket.buckets[idTriangle].mid.push(graphNode);
-							bucket.main.push(graphNode);
-							i++;
-						}
-						else
-						{
-							bucket.buckets[idTriangle].mid.push(getNode(tVect,bucket.main));
-						}
-
-					}
-				}
-			}
-
-
-			//Collegamento tra punti medi 
-			for(id in bucket.buckets) {
-				var smallBucket = bucket.buckets[id];
-				if(smallBucket.mid.length >= 2){
-					var nodesToConnect = smallBucket.mid;
-					for(key in nodesToConnect) {
-						var selectedNode = nodesToConnect[key];
-						for (otherKey in nodesToConnect) {
-							if (otherKey !== key) {
-								var otherNode = nodesToConnect[otherKey];
-								var distance = distanceBetweenTwoNodes(selectedNode, otherNode);
-								selectedNode.properties.adj[otherNode.id] = distance;
-							}
-						}
-					}
-				}
-			}
-
-
-			//Aggiunta dei nodi all'oggetto (sottografo)
-			for(node in bucket.main) {
-				var graphNode = bucket.main[node];
-
-				graphNode.parent = data.index[graphNode.properties.parent];
-				object.children.push(graphNode);
-				object.graph.push(graphNode);
-				data.index[graphNode.id] = graphNode;
-			}
-		}
-
-		if(object.type === 'furnitures') {
-			var node;
-			if(object.geometry.type === 'Point') {
-				node = createNode([0, 0, 0], object.id, 'subNode');
-
-			}
-			if(object.geometry.type === 'Polygon') {
-				node = createNode(object.properties.nodeTVector, object.id, 'subNode');
-			}
-			var localMatrix = matrixUtilities.objMatrix(node);
-			var globalMatrix = matrixUtilities.getCMT(data.index[node.properties.parent]);
-			var nodeCMT = matrixUtilities.matrixProduct(globalMatrix, localMatrix);
-			node.CMT = nodeCMT;
-			
-			node.parent = data.index[node.properties.parent];
-			object.children.push(node);
-			object.graph.push(node);
-			data.index[node.id] = node;
-		}
-	};
-
-	var getTriangles = function(object) {
-		if (object.geometry.type === 'Polygon') {
-			var coords = object.geometry.coordinates;
-			var perimeter = coords[0];
-			var contour = [];
+		var swctx = new poly2tri.SweepContext(contour);
 		
-			for(j in perimeter) {
-				contour.push(new poly2tri.Point(perimeter[j][0], perimeter[j][1]));
-			}
-			var swctx = new poly2tri.SweepContext(contour);
-			
-		    for (var i = 1; i < coords.length; i++) { //scorro eventuali holes
-			    var perimeter = coords[i];
+	    for (var i = 1; i < coords.length; i++) { //scorro eventuali holes
+		    var perimeter = coords[i];
+	        var hole = [];
+	        for (j in perimeter) { //scorro le singole coordinate dei vari perimetri
+				hole.push(new poly2tri.Point(perimeter[j][0], perimeter[j][1]));
+	        }
+	        swctx.addHole(hole);
+	    }
+	    
+	    for (k in object.children) {
+		    var child = object.children[k];
+		    if (child.geometry.type === 'Polygon') {
+			    var perimeter = child.geometry.coordinates[0];
+			    var tVector = child.properties.tVector;
 		        var hole = [];
 		        for (j in perimeter) { //scorro le singole coordinate dei vari perimetri
-					hole.push(new poly2tri.Point(perimeter[j][0], perimeter[j][1]));
+					hole.push(new poly2tri.Point(perimeter[j][0] + tVector[0], perimeter[j][1] + tVector[1]));
 		        }
 		        swctx.addHole(hole);
 		    }
-		    
-		    for (k in object.children) {
-			    var child = object.children[k];
-			    if (child.geometry.type === 'Polygon') {
-				    var perimeter = child.geometry.coordinates[0];
-				    var tVector = child.properties.tVector;
-			        var hole = [];
-			        for (j in perimeter) { //scorro le singole coordinate dei vari perimetri
-						hole.push(new poly2tri.Point(perimeter[j][0] + tVector[0], perimeter[j][1] + tVector[1]));
-			        }
-			        swctx.addHole(hole);
-			    }
-		    }
-			
-			swctx.triangulate();
-			var triangles = swctx.getTriangles();
+	    }
 		
-			return triangles;
-		} else {
-			console.log('error, you can triangulate only polygons');
+		swctx.triangulate();
+		var triangles = swctx.getTriangles();
+	
+		return triangles;
+	} else {
+		console.log('error, you can triangulate only polygons');
+	}
+}
+
+function getNearestNode(sourceNode, graphRoom) {
+	var distanceNodes = [];
+	var i = 0;
+	for(idNode in graphRoom) {
+		var nodeRoom = graphRoom[idNode];
+		distanceNodes[i] = {
+			node: nodeRoom,
+			distance: distanceBetweenTwoNodes(sourceNode, nodeRoom)
 		}
-	};
+		i++;
+	}
 
+	var nearestNode = {
+		node: distanceNodes[0].node,
+		distance: distanceNodes[0].distance
+	}
 
-	var getNearestNode = function(sourceNode, graphRoom) {
-		var distanceNodes = [];
-		var i = 0;
-		for(idNode in graphRoom) {
-			var nodeRoom = graphRoom[idNode];
-			distanceNodes[i] = {
-				node: nodeRoom,
-				distance: distanceBetweenTwoNodes(sourceNode, nodeRoom)
-			}
-			i++;
+	for(var j=0; j<distanceNodes.length; j++) {
+		if(distanceNodes[j].distance<nearestNode.distance) {
+			nearestNode.distance = distanceNodes[j].distance;
+			nearestNode.node = distanceNodes[j].node;
 		}
+	}
+	return nearestNode;
+};
 
-		var nearestNode = {
-			node: distanceNodes[0].node,
-			distance: distanceNodes[0].distance
+
+function createNode(tVector, objectId, triangleId) {
+	var graphNode = {
+		type: 'graph',
+		id: 'c_' + triangleId + '_' + objectId,
+		geometry: {
+			type: 'Point',
+			coordinates: [0, 0]
+		},
+		properties: {
+			class: 'graphNode',
+			tVector: [0, 0, 0],
+			rVector: [0, 0, 0],
+			parent: objectId,
+			adj: {}
+		},
+		children: []
+	}
+	graphNode.properties.tVector = tVector;
+	return graphNode;
+};
+
+
+function getNode(tVect, mainBucket) {
+	for(idNode in mainBucket) {
+		var bucketNode = mainBucket[idNode];
+		if(tVect[0] === bucketNode.properties.tVector[0] && tVect[1] === bucketNode.properties.tVector[1]) {
+			return bucketNode;			
 		}
+	}
+	console.log('Error');
+};
 
-		for(var j=0; j<distanceNodes.length; j++) {
-			if(distanceNodes[j].distance<nearestNode.distance) {
-				nearestNode.distance = distanceNodes[j].distance;
-				nearestNode.node = distanceNodes[j].node;
-			}
+function distanceBetweenTwoNodes(node_0, node_1) {
+	return distanceBetweenTwoPoints(coordinatesUtilities.getPointAbsoluteCoords(node_0), coordinatesUtilities.getPointAbsoluteCoords(node_1));
+};
+
+function distanceBetweenTwoPoints(point_0, point_1) {
+	return Math.sqrt( 
+		Math.pow( (point_1[0] - point_0[0]), 2) 
+		+ 
+		Math.pow( (point_1[1] - point_0[1]), 2)
+	);	
+};
+
+
+function nodeInBucket(tVect, bucket) {
+	var bool = false;
+	
+	for(node in bucket.main) {
+		var graphNode = bucket.main[node];
+		if(tVect[0] === graphNode.properties.tVector[0] && tVect[1] === graphNode.properties.tVector[1] ) {
+			bool = true;
 		}
-		return nearestNode;
-	};
+	}
+	return bool;
+};
 
+function getMidPoint(point1, point2) {
+	return [((point1.x + point2.x)/2), ((point1.y + point2.y)/2)]
+};
 
-	var createNode = function(tVector, objectId, triangleId) {
+function createSubGraph(data, id) {
+	var object = data.index[id];
+	if(object.properties.class === 'door') {
 		var graphNode = {
 			type: 'graph',
-			id: 'c_' + triangleId + '_' + objectId,
+			id: 'n_' + object.id,
 			geometry: {
 				type: 'Point',
 				coordinates: [0, 0]
 			},
 			properties: {
 				class: 'graphNode',
-				tVector: [0, 0, 0],
+				tVector: [(object.geometry.coordinates[1][0]/2), 0, 0],
 				rVector: [0, 0, 0],
-				parent: objectId,
+				parent: object.id,
 				adj: {}
 			},
 			children: []
 		}
-		graphNode.properties.tVector = tVector;
-		return graphNode;
-	};
+        var localMatrix = matrixUtilities.objMatrix(graphNode);
+		var globalMatrix = matrixUtilities.getCMT(data.index[graphNode.properties.parent]);
+		graphNode.CMT = matrixUtilities.matrixProduct(globalMatrix, localMatrix);
 
+		object.children.push(graphNode);
+		graphNode.parent = object;
+		object.graph.push(graphNode);
+		data.index[graphNode.id] = graphNode;
+	}
 
-	var getNode = function(tVect, mainBucket) {
-		for(idNode in mainBucket) {
-			var bucketNode = mainBucket[idNode];
-			if(tVect[0] === bucketNode.properties.tVector[0] && tVect[1] === bucketNode.properties.tVector[1]) {
-				return bucketNode;			
+	if(object.properties.class === 'room') {
+		var triangles = getTriangles(object);
+		
+		var i = 0;
+		
+		var bucket = {
+			main: [],
+			buckets: []
+		};
+		
+		for(tri in triangles) {
+			var idTriangle = object.id + '_' + tri; 
+			bucket.buckets[idTriangle] = {};
+			var triangle = triangles[tri];
+
+			bucket.buckets[idTriangle].mid = [];
+			for(edge in triangle.constrained_edge) {
+				var constrainedEdge = triangle.constrained_edge[edge];
+				if(!constrainedEdge) {
+					var tVect = [];
+					switch(edge) {
+						case '0': 
+							var midPoint = getMidPoint(triangle.points_[1], triangle.points_[2]);
+							break;
+						case '1': 
+							var midPoint = getMidPoint(triangle.points_[0], triangle.points_[2]);
+							break;
+						case '2': 
+							var midPoint = getMidPoint(triangle.points_[0], triangle.points_[1]);
+							break;
+					}
+					tVect = [midPoint[0], midPoint[1], 0];
+					
+					if(!(nodeInBucket(tVect,bucket))) {				
+						var graphNode = {
+							type: 'graph',
+							id: 'n_'+ i + '_' + object.id,
+							geometry: {
+								type: 'Point',
+								coordinates: [0, 0]
+							},
+							properties: {
+								class: 'graphNode',
+								tVector: tVect,
+								rVector: [0, 0, 0],
+								parent: object.id,
+								adj: {}
+							},
+							children: []
+						}
+						var localMatrix = matrixUtilities.objMatrix(graphNode);
+						var globalMatrix = matrixUtilities.getCMT(data.index[graphNode.properties.parent]);
+						graphNode.CMT = matrixUtilities.matrixProduct(globalMatrix, localMatrix);
+						
+						bucket.buckets[idTriangle].mid.push(graphNode);
+						bucket.main.push(graphNode);
+						i++;
+					}
+					else
+					{
+						bucket.buckets[idTriangle].mid.push(getNode(tVect,bucket.main));
+					}
+
+				}
 			}
 		}
-		console.log('Error');
-	};
-
-	var distanceBetweenTwoNodes = function(node_0, node_1) {
-		return distanceBetweenTwoPoints(coordinatesUtilities.getPointAbsoluteCoords(node_0), coordinatesUtilities.getPointAbsoluteCoords(node_1));
-	};
-
-	var distanceBetweenTwoPoints = function(point_0, point_1) {
-		return Math.sqrt( 
-			Math.pow( (point_1[0] - point_0[0]), 2) 
-			+ 
-			Math.pow( (point_1[1] - point_0[1]), 2)
-		);	
-	};
 
 
-	var nodeInBucket = function(tVect, bucket) {
-		var bool = false;
-		
+		//Collegamento tra punti medi 
+		for(id in bucket.buckets) {
+			var smallBucket = bucket.buckets[id];
+			if(smallBucket.mid.length >= 2){
+				var nodesToConnect = smallBucket.mid;
+				for(key in nodesToConnect) {
+					var selectedNode = nodesToConnect[key];
+					for (otherKey in nodesToConnect) {
+						if (otherKey !== key) {
+							var otherNode = nodesToConnect[otherKey];
+							var distance = distanceBetweenTwoNodes(selectedNode, otherNode);
+							selectedNode.properties.adj[otherNode.id] = distance;
+						}
+					}
+				}
+			}
+		}
+
+
+		//Aggiunta dei nodi all'oggetto (sottografo)
 		for(node in bucket.main) {
 			var graphNode = bucket.main[node];
-			if(tVect[0] === graphNode.properties.tVector[0] && tVect[1] === graphNode.properties.tVector[1] ) {
-				bool = true;
-			}
-		}
-		return bool;
-	};
 
-	var getMidPoint = function(point1, point2) {
-		return [((point1.x + point2.x)/2), ((point1.y + point2.y)/2)]
-	};
-	var assembleGraph = function(data) {
-		var map = {};
-		for(id in data.index) {
-			for(idNode in data.index[id].graph) {
-				map[data.index[id].graph[idNode].id] = data.index[id].graph[idNode].properties.adj;
-			}
+			graphNode.parent = data.index[graphNode.properties.parent];
+			object.children.push(graphNode);
+			object.graph.push(graphNode);
+			data.index[graphNode.id] = graphNode;
 		}
-		data.graph = map;
-	};
+	}
 
-	var createGraph = function(data) {
+	if(object.type === 'furnitures') {
+		var node;
+		if(object.geometry.type === 'Point') {
+			node = createNode([0, 0, 0], object.id, 'subNode');
+
+		}
+		if(object.geometry.type === 'Polygon') {
+			node = createNode(object.properties.nodeTVector, object.id, 'subNode');
+		}
+		var localMatrix = matrixUtilities.objMatrix(node);
+		var globalMatrix = matrixUtilities.getCMT(data.index[node.properties.parent]);
+		var nodeCMT = matrixUtilities.matrixProduct(globalMatrix, localMatrix);
+		node.CMT = nodeCMT;
+		
+		node.parent = data.index[node.properties.parent];
+		object.children.push(node);
+		object.graph.push(node);
+		data.index[node.id] = node;
+	}
+}
+
+function assembleGraph(data) {
+	var map = {};
+	for(id in data.index) {
+		for(idNode in data.index[id].graph) {
+			map[data.index[id].graph[idNode].id] = data.index[id].graph[idNode].properties.adj;
+		}
+	}
+	data.graph = map;
+}
+
+// (3) public/exported things
+var self = module.exports = {
+	createGraph:  function(data) {
 		//Creazione sottografi
 		for(id in data.index) {
-			if(data.index[id].properties.class === 'door' || data.index[id].properties.class === 'room' || data.index[id].type === 'furnitures') {
+			var obj = data.index[id];
+			if(obj.properties.class === 'door' || obj.properties.class === 'room' || obj.type === 'furnitures') {
 				createSubGraph(data, id);
 			}
 		}
@@ -346,13 +340,4 @@ var utilities = utilities || require('./utilities.js');
 		}	
 		assembleGraph(data);
 	}
-
-	// (4) exported things (public)
-	graphUtilities.createGraph = createGraph;
-	
-	// (5) export the namespace object
-	if (typeof module !== 'undefined' && module.exports) {
-	  module.exports = graphUtilities;
-	}	
-	
-})();
+} //close module.exports
