@@ -22,25 +22,20 @@ gulp.task('browserify', function() {
     .pipe(gulp.dest('./public/libs'));
 });
 
-gulp.task('nodemon', ['browserify'], function (cb) {
-  var called = false;
+gulp.task('browser-reload', function () {
+	console.log('fake reload triggered');
+});
+
+gulp.task('nodemon', ['browserify'], function () {
   return nodemon({
-    script: './bin/www',
     ignore: [
       'gulpfile.js',
-      'node_modules/'
+      'node_modules/',
+      'public/libs/bundle.js'
     ],
 	ext: "js,jade,json",
 	verbose: true
   })
-  .on('start', function () {
-    if (!called) {
-      called = true;
-      cb();
-    }
-  });
-});
-
-gulp.task('default', ['nodemon'], function () {
-  gulp.watch(['./**/*'], ['nodemon']);
+  .on('change', ['browserify'])
+  .on('restart', ['browser-reload'])
 });

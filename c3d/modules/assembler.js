@@ -1,43 +1,42 @@
-// template for js modules that works both in node and browsers
+// (1) dependencies
+var coordinatesUtilities = require('./coordinatesUtilities.js');
+var featureFactory = require('./featureFactory.js');
+var numeric = require('numeric');
+var matrixUtilities = require('./matrixUtilities.js');
+var utilities = require('./utilities.js');
 
-// (1) initialize library object (namespace)
-var assembler = {};
 
-// (2) import any dependencies (in browser must be included before this file)
-// example: var dependency = dependency || require('./dependency');
-var coordinatesUtilities = coordinatesUtilities || require('./coordinatesUtilities.js');
-var featureFactory = featureFactory || require('./featureFactory.js');
-var numeric = numeric || require('numeric');
-var matrixUtilities = matrixUtilities || require('./matrixUtilities.js');
-var utilities = utilities || require('./utilities.js');
+// (2) private things
+var tree = {
+    id: 'building',
+    properties: {
+        class: 'building'
+    },
+    children: []
+};
 
-(function(){
-	var tree = {
-	    id: 'building',
-	    properties: {
-	        class: 'building'
-	    },
-	    children: []
-	};
-	var index = {
-		building: tree
-	};
+var index = {
+	building: tree
+};
 
-	// (3) library properties and functions (public an private)
-	var assembleStructure = function(data) {
+
+// (3) public/exported things
+var self = module.exports = {
+	
+	assembleStructure: function(data) {
 		data.config.transformationMatrix = coordinatesUtilities.computeGeoMatrix(data.config.landmarks);
 		console.log('Matrix: ' + data.config.transformationMatrix);
 		data.config.inverseTransformationMatrix = numeric.inv(data.config.transformationMatrix);
 		console.log('Inverse matrix: ' + data.config.inverseTransformationMatrix);
 
-		assembleFeatureCollection(data.input.architecture);
-		assembleFeatureCollection(data.input.furniture);
+		self.assembleFeatureCollection(data.input.architecture);
+		self.assembleFeatureCollection(data.input.furniture);
 
 		data.index = index;
 		data.tree = tree;
-	};
-
-	var assembleFeatureCollection = function(featureCollection) {
+	},
+	
+	assembleFeatureCollection: function(featureCollection) {
 		for(var key in featureCollection.features) {
 			var feature = featureCollection.features[key];
 			var obj = featureFactory.generateFeature(feature);
@@ -49,9 +48,9 @@ var utilities = utilities || require('./utilities.js');
 			obj.CMT = matrixUtilities.matrixProduct(globalMatrix, localMatrix);	
 			obj.graph = [];
 		}
-	};
-
-	var generateGeoJSON = function(data) {
+	},
+	
+	generateGeoJSON: function(data) {
 		var geoJSONmap = {};
 	    var includedArchitectureClasses = ['level', 'room', 'door', 'internal_wall', 'external_wall'];
 	    var includedFurtituresClasses = ['server', 'surveillanceCamera','fireExtinguisher','hotspot','antenna','badgeReader', 'server_polygon'];
@@ -133,9 +132,9 @@ var utilities = utilities || require('./utilities.js');
 		}
 		// put the map in real-world coordinates
 		data.geoJSONmap = coordinatesUtilities.convertToDegrees(geoJSONmap, data.config.transformationMatrix);
-	}
-
-	var packageGraph = function(data) {
+	},
+	
+	packageGraph: function(data) {
 		var graph = {
 			id: 'graph',
 			type: 'FeatureCollection',
@@ -151,15 +150,5 @@ var utilities = utilities || require('./utilities.js');
 		}
 		data.input.graph = graph;
 	}
-
-	// (4) exported things (public)
-	assembler.assembleStructure = assembleStructure;
-	assembler.generateGeoJSON = generateGeoJSON;
-	assembler.packageGraph = packageGraph;
-	assembler.assembleFeatureCollection = assembleFeatureCollection;
-	// (5) export the namespace object
-	if (typeof module !== 'undefined' && module.exports) {
-		module.exports = assembler;
-	}	
 	
-})();
+} //close module.exports

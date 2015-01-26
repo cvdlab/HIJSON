@@ -2,7 +2,6 @@ var eventEmitter = require('./eventEmitter.js');
 var utilities = require('./utilities.js');
 var coordinatesUtilities = require('./coordinatesUtilities.js');
 
-
 function onWindowResize3D() {
     container3DWidth = container3D.width();
     container3DHeight = container3D.width()/4*3;
@@ -186,7 +185,7 @@ var self = module.exports = {
 	                raycaster.ray.direction.copy(direction).applyEuler(rotation);
 	                raycaster.ray.origin.copy(data.camera3D.parent.parent.position);
 	                
-	       //          var vector = new THREE.Vector3(0, 0, 0.5);
+					// var vector = new THREE.Vector3(0, 0, 0.5);
 	    			// projector.unprojectVector(vector, data.camera3D);
 	    			// var raycaster = new THREE.Raycaster( vector, pointerLockControls.getDirection( new THREE.Vector3(0, 0, 0) ).clone() );
 	    		} else {

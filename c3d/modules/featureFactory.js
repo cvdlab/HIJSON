@@ -30,7 +30,6 @@ featureClasses['Table'] = require('../features/Table.js');
 	// (3) library properties and functions (public an private)
 	var generateFeature = function(feature) {
 		var featureClass = capitaliseFirstLetter(feature.properties.class);
-		console.log(feature.id);
 		return new featureClasses[featureClass](feature);	
 	}
 	
