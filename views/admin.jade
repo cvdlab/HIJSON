@@ -7,7 +7,7 @@ block internal_content
 		var mapUsersConnected;
 		// init for 2D
 		if (#{enable_2D}) {
-			var userIcon =  L.AwesomeMarkers.icon( C3D.config.style['user'] );
+			var userIcon =  L.AwesomeMarkers.icon( data.config.style['user'] );
 		}
 		
 		socket.on('updateMapUsersConnected', function(usersConnected) {
@@ -15,52 +15,52 @@ block internal_content
 			// update 2D
 			if (#{enable_2D}) {
 				// clear all markers
-				for(id in C3D.index) {
-					if(C3D.index[id].properties.class === 'level') {
-						C3D.index[id].layer2D.userMarkers.clearLayers();
+				for(id in data.index) {
+					if(data.index[id].properties.class === 'level') {
+						data.index[id].layer2D.userMarkers.clearLayers();
 					}
 				}
 				
 				// put new markers
-				for(userToUpdate in usersConnected) { 
+				for(userToUpdate in usersConnected) {
 					var user = usersConnected[userToUpdate];
-					var latLng = coordinatesUtilities.fromGeneralTo2D(user.position, C3D.config.transformationMatrix);
+					var latLng = c3dclient.coordinatesUtilities.fromGeneralTo2D(user.position, data.config.transformationMatrix);
 					var marker = L.marker(latLng, { icon: userIcon });
 					marker.bindPopup("<b>User: </b>" + user.id +'<br><b>[' + latLng.lat + '; ' + latLng.lng + ']</b>');
-					marker.addTo(C3D.index[user.position.levelId].layer2D.userMarkers);
+					marker.addTo(data.index[user.position.levelId].layer2D.userMarkers);
 				}
 			}
 			
 			// update 3D
 			if (#{enable_3D}) {
 				// clear all models
-				for(id in C3D.index) {
-					if(C3D.index[id].properties.class === 'level') {
-						C3D.index[id].obj3D.remove(C3D.index[id].obj3D.userModels);
-						C3D.index[id].obj3D.userModels = new THREE.Object3D();
-						C3D.index[id].obj3D.add(C3D.index[id].obj3D.userModels);
+				for(id in data.index) {
+					if(data.index[id].properties.class === 'level') {
+						data.index[id].obj3D.remove(data.index[id].obj3D.userModels);
+						data.index[id].obj3D.userModels = new THREE.Object3D();
+						data.index[id].obj3D.add(data.index[id].obj3D.userModels);
 					}
 				}
 				// put new models
 				for(userToUpdate in usersConnected) { 
 					var user = usersConnected[userToUpdate];
-					var model = C3D.generator3D['cube']('0xFF0000');
-					C3D.index[user.position.levelId].obj3D.userModels.add(model);
-					model.position = coordinatesUtilities.fromGeneralTo3D(user.position);
-					if ((user.position.levelId === C3D.actualPosition.levelId) || (C3D.actualPosition.levelId === 'building')) {
-						C3D.show3DObject(model, true);
+					var model = c3dclient.generator3D['cube']('0xFF0000');
+					data.index[user.position.levelId].obj3D.userModels.add(model);
+					model.position = c3dclient.coordinatesUtilities.fromGeneralTo3D(user.position);
+					if ((user.position.levelId === data.actualPosition.levelId) || (data.actualPosition.levelId === 'building')) {
+						c3dclient.utilities.show3DObject(model, true);
 					} else {
-						C3D.show3DObject(model, false);
+						c3dclient.utilities.show3DObject(model, false);
 					}
 				}
 			}
 		});
 		
 		// level change
-		C3D.on('selectFeature', function(idObject) {
-			if((C3D.index[idObject].properties.class === 'level') || (C3D.index[idObject].properties.class === 'building')) {
+		c3dclient.eventEmitter.on('selectFeature', function(idObject) {
+			if((data.index[idObject].properties.class === 'level') || (data.index[idObject].properties.class === 'building')) {
 				// update the general position
-				C3D.actualPosition.levelId = idObject;
+				data.actualPosition.levelId = idObject;
 			}
 		});
 

@@ -41,6 +41,7 @@ var self = module.exports = {
 			var feature = featureCollection.features[key];
 			var obj = featureFactory.generateFeature(feature);
 			index[obj.id] = obj;
+			obj.type = featureCollection.id;
 			obj.parent = index[obj.properties.parent];
 			obj.parent.children.push(obj);
 			var localMatrix = matrixUtilities.objMatrix(obj);
