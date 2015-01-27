@@ -13,7 +13,8 @@ var nodemon = require('gulp-nodemon');
 
 gulp.task('browserify', function() {
     return browserify('./c3d/c3d_client.js', {
-    	standalone: 'c3dclient'
+    	standalone: 'c3dclient',
+    	debug: true
     })
     .bundle()
     //Pass desired output filename to vinyl-source-stream

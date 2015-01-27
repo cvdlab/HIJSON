@@ -8,24 +8,11 @@ block head
 		include ./includes/css_3d.jade
 
 block content
+	// GUI
 	.container-fluid
-		// Default JavaScript libraries
-		script(src='/socket.io/socket.io.js')
-		script(src='/assets/js/graph.js')
-
-		include ./includes/js_libraries_2d.jade
-		
-		include ./includes/js_libraries_3d.jade
-		
-		script.
-			var data = JSON.parse('!{data}');
-
-		
-		// C3D Library
-		script(src='/libs/bundle.js')
-
 		.page-header
 			h1= title
+
 		.row
 			if (enable_2D && enable_3D)	
 				.col-md-6
@@ -49,16 +36,6 @@ block content
 						#pointer
 						#plerror
 
-		if enable_2D
-			script.
-				c3dclient.renderer2D.init(data);
-				c3dclient.renderer2D.generate2DModel(data);
-				
-		if enable_3D 
-			script.
-				c3dclient.renderer3D.init(data);
-				c3dclient.renderer3D.generate3DModel(data);
-		
 		hr
 		
 		.row
@@ -73,158 +50,186 @@ block content
 				select.form-control#directionsFrom
 				select.form-control#directionsTo
 				button.btn.btn-default#getDirections Get Directions
-				
-				script.
-					var fromSelect = document.getElementById('directionsFrom');
-					var toSelect = document.getElementById('directionsTo');
-					for(id in data.graph) {
-						var optionElement = document.createElement('option');
-						optionElement.value = id;
-						optionElement.innerHTML = id;
-						fromSelect.appendChild(optionElement);
-						var clonedElement = optionElement.cloneNode(true);
-						toSelect.appendChild(clonedElement);
-					}
-					document.getElementById('getDirections').addEventListener('click', function()  {
-						var fromValue = fromSelect.value;
-						var toValue = toSelect.value;
-						var directionInfo = {
-							fromNodeId: fromValue,
-							toNodeId: toValue
-						}
-						c3dclient.eventEmitter.emit('getDirections', directionInfo);
-					});
-					
+		include ./includes/footer.jade
+
+
+	// SCRIPTS
+	
+	if enable_2D
+		include ./includes/js_libraries_2d.jade
+	if enable_3D
+		include ./includes/js_libraries_3d.jade
+	
+	script var data = JSON.parse('!{data}');
+	
+	script(src='/libs/bundle.js')
+	script(src='/socket.io/socket.io.js')
+	
+	if enable_2D
 		script.
-			var menuArray = [];
-			var notShowThisFeatures = ['internal_wall', 'external_wall'];
-			var indexSelectElement = 0;
-			var selectElement = document.createElement('select');
-			selectElement.indexValue = indexSelectElement;
-			selectElement.className = 'form-control';
-
-			menuArray.push(selectElement);
+			c3dclient.renderer2D.init(data);
+			c3dclient.renderer2D.generate2DModel(data);
 			
-			$("#navigator").append(selectElement);
-			
-			var optionElement = document.createElement('option');
-			optionElement.value = 'building';
-			optionElement.innerHTML = 'building';
-			selectElement.appendChild(optionElement);
-
-			for(id in data.tree.children) {
-				var optionElement = document.createElement('option');
-				optionElement.value = data.tree.children[id].id;
-				optionElement.innerHTML = data.tree.children[id].id;
-				selectElement.appendChild(optionElement);
-			}
-
-			selectElement.addEventListener('change', function()  {
-				generateSelectOption(selectElement);
-			});
-
-			function generateSelectOption(selectElement) {
-				//1. get dell'id del select selezionato e del rispettivo valore
-				var idSelect = selectElement.indexValue;
-				var idObject = selectElement.value;
-				//2. emit evento della selezione avvenuta per la visualizzazione 
-				c3dclient.eventEmitter.emit('selectFeature', idObject);
-				
-				//3. Rimozione select successivi
-				for(var i=(idSelect + 1); i < menuArray.length; i++) {
-					menuArray[i].remove();
-				}
-
-				//4. Riduzione array
-				var removed = menuArray.splice(idSelect+1, menuArray.length-idSelect-1);
-
-				//5. Inserimento nuovo select
-				if(idSelect < menuArray.length)
-					indexSelectElement = idSelect + 1;
-				else
-					indexSelectElement = (menuArray.length);
-
-				if(data.index[idObject].children.length > 0) {
-					var newSelectElement = document.createElement('select');
-					newSelectElement.indexValue = indexSelectElement;
-					newSelectElement.className = 'form-control';
-					for(id in data.index[idObject].children) {
-						if(!(notShowThisFeatures.indexOf(data.index[idObject].children[id].properties.class)> -1)){
-							var optionElement = document.createElement('option');
-							optionElement.value = data.index[idObject].children[id].id;
-							optionElement.innerHTML = data.index[idObject].children[id].id;
-							newSelectElement.appendChild(optionElement);
-						}
-					}
-					$("#navigator").append(newSelectElement);
-					menuArray.push(newSelectElement);
-					//6. Aggiunta eventListener
-					newSelectElement.addEventListener('change', function()  {
-						generateSelectOption(newSelectElement);
-					});
-				}
-			}
-
-			$( "#startFPV" ).on('click', function() {
-				c3dclient.eventEmitter.emit('startFPV');
-			});
-
-			c3dclient.eventEmitter.on('showFeatureInfo', function(idObject){
-				showFeatureInfo = {};
-
-				showFeatureInfo['badgeReader'] = function(s) {
-					if(!(jQuery.isEmptyObject(mapUsersConnected))) {
-						s = s.concat('<p class="lead">Users connected</p>');
-						s = s.concat('<table class="table table-hover">');
-							s = s.concat('<tr>');
-								s = s.concat('<th>ID</th>');
-								s = s.concat('<th>level</th>');
-							s = s.concat('</tr>');
-
-						for(var i in mapUsersConnected) {
-							s = s.concat('<tr>');
-								s = s.concat('<th>' + mapUsersConnected[i].id + '</th>');
-								s = s.concat('<th>' + mapUsersConnected[i].position.levelId +'</th>');
-							s = s.concat('</tr>');						
-							}
-						s = s.concat('</table>');
-					}
-					else {
-						s = s.concat('<p>No users are connected.</p>');
-					}
-					return s;
-				}
-
-				showFeatureInfo['light'] = function(s) {
-					s = s.concat('<h4>Light Options</h4>');
-					return s;
-				}
-
-				$('#info').empty();
-				var feature = data.index[idObject];
-				if($.inArray(feature.properties.class, data.interactiveClasses) !== -1) {
-					var s = '<dl class="dl-horizontal">';
-					s = s.concat('<dt>id</dt><dd>' + feature.id +'</dd>');
-					s = s.concat('<dt>class</dt><dd>'+ feature.properties.class +'</dd>');
-					s = s.concat('<dt>Position</dt><dd>[' + feature.obj3D.position.x + '; ' +  feature.obj3D.position.y + ']</dd>');
-					if(feature.properties.url !== undefined)
-						s = s.concat('<dt>url</dt><dd>'+ feature.properties.url +'</dd>');					
-					s = s.concat('</dl>');
-					if(feature.properties.class in showFeatureInfo)
-						s = showFeatureInfo[feature.properties.class](s);
-					$('#info').append(s);
-				}
-			});	
+	if enable_3D 
+		script.
+			c3dclient.renderer3D.init(data);
+			c3dclient.renderer3D.generate3DModel(data);
+	
+	// start FPV Button logic
+	script.
+		$( "#startFPV" ).on('click', function() {
+			c3dclient.eventEmitter.emit('startFPV');
+		});
+	
+	// navigator logic
+	script.
+		var menuArray = [];
+		var notShowThisFeatures = ['internal_wall', 'external_wall'];
+		var indexSelectElement = 0;
+		var selectElement = document.createElement('select');
+		selectElement.indexValue = indexSelectElement;
+		selectElement.className = 'form-control';
+	
+		menuArray.push(selectElement);
 		
-			c3dclient.eventEmitter.on('selectFeature', function(idObject) {
-				c3dclient.eventEmitter.emit('showFeatureInfo',idObject);
-			});	
+		$("#navigator").append(selectElement);
+		
+		var optionElement = document.createElement('option');
+		optionElement.value = 'building';
+		optionElement.innerHTML = 'building';
+		selectElement.appendChild(optionElement);
+	
+		for(id in data.tree.children) {
+			var optionElement = document.createElement('option');
+			optionElement.value = data.tree.children[id].id;
+			optionElement.innerHTML = data.tree.children[id].id;
+			selectElement.appendChild(optionElement);
+		}
+	
+		selectElement.addEventListener('change', function()  {
+			generateSelectOption(selectElement);
+		});
+	
+		function generateSelectOption(selectElement) {
+			//1. get dell'id del select selezionato e del rispettivo valore
+			var idSelect = selectElement.indexValue;
+			var idObject = selectElement.value;
+			//2. emit evento della selezione avvenuta per la visualizzazione 
+			c3dclient.eventEmitter.emit('selectFeature', idObject);
+			
+			//3. Rimozione select successivi
+			for (var i = (idSelect + 1); i < menuArray.length; i++) {
+				menuArray[i].remove();
+			};
+	
+			//4. Riduzione array
+			var removed = menuArray.splice(idSelect+1, menuArray.length-idSelect-1);
+	
+			//5. Inserimento nuovo select
+			if(idSelect < menuArray.length)
+				indexSelectElement = idSelect + 1;
+			else
+				indexSelectElement = (menuArray.length);
+	
+			if(data.index[idObject].children.length > 0) {
+				var newSelectElement = document.createElement('select');
+				newSelectElement.indexValue = indexSelectElement;
+				newSelectElement.className = 'form-control';
+				for(id in data.index[idObject].children) {
+					if(!(notShowThisFeatures.indexOf(data.index[idObject].children[id].properties.class)> -1)){
+						var optionElement = document.createElement('option');
+						optionElement.value = data.index[idObject].children[id].id;
+						optionElement.innerHTML = data.index[idObject].children[id].id;
+						newSelectElement.appendChild(optionElement);
+					}
+				}
+				$("#navigator").append(newSelectElement);
+				menuArray.push(newSelectElement);
+				//6. Aggiunta eventListener
+				newSelectElement.addEventListener('change', function()  {
+					generateSelectOption(newSelectElement);
+				});
+			}
+		}
+	
+	// show feature info logic
+	script.
+		c3dclient.eventEmitter.on('showFeatureInfo', function(idObject){
+			showFeatureInfo = {};
+	
+			showFeatureInfo['badgeReader'] = function(s) {
+				if(!(jQuery.isEmptyObject(mapUsersConnected))) {
+					s = s.concat('<p class="lead">Users connected</p>');
+					s = s.concat('<table class="table table-hover">');
+						s = s.concat('<tr>');
+							s = s.concat('<th>ID</th>');
+							s = s.concat('<th>level</th>');
+						s = s.concat('</tr>');
+	
+					for(var i in mapUsersConnected) {
+						s = s.concat('<tr>');
+							s = s.concat('<th>' + mapUsersConnected[i].id + '</th>');
+							s = s.concat('<th>' + mapUsersConnected[i].position.levelId +'</th>');
+						s = s.concat('</tr>');						
+						}
+					s = s.concat('</table>');
+				}
+				else {
+					s = s.concat('<p>No users are connected.</p>');
+				}
+				return s;
+			}
+	
+			showFeatureInfo['light'] = function(s) {
+				s = s.concat('<h4>Light Options</h4>');
+				return s;
+			}
+	
+			$('#info').empty();
+			var feature = data.index[idObject];
+			if($.inArray(feature.properties.class, data.interactiveClasses) !== -1) {
+				var s = '<dl class="dl-horizontal">';
+				s = s.concat('<dt>id</dt><dd>' + feature.id +'</dd>');
+				s = s.concat('<dt>class</dt><dd>'+ feature.properties.class +'</dd>');
+				s = s.concat('<dt>Position</dt><dd>[' + feature.obj3D.position.x + '; ' +  feature.obj3D.position.y + ']</dd>');
+				if(feature.properties.url !== undefined)
+					s = s.concat('<dt>url</dt><dd>'+ feature.properties.url +'</dd>');					
+				s = s.concat('</dl>');
+				if(feature.properties.class in showFeatureInfo)
+					s = showFeatureInfo[feature.properties.class](s);
+				$('#info').append(s);
+			}
+		});	
+	
+		c3dclient.eventEmitter.on('selectFeature', function(idObject) {
+			c3dclient.eventEmitter.emit('showFeatureInfo',idObject);
+		});	
+	
+		c3dclient.eventEmitter.on('clearFeatureInfo', function(idObject) {
+			$('#info').empty();
+		});	
+		
+	// get directions logic			  
+	script.
+		var fromSelect = document.getElementById('directionsFrom');
+		var toSelect = document.getElementById('directionsTo');
+		for(id in data.graph) {
+			var optionElement = document.createElement('option');
+			optionElement.value = id;
+			optionElement.innerHTML = id;
+			fromSelect.appendChild(optionElement);
+			var clonedElement = optionElement.cloneNode(true);
+			toSelect.appendChild(clonedElement);
+		}
+		document.getElementById('getDirections').addEventListener('click', function()  {
+			var fromValue = fromSelect.value;
+			var toValue = toSelect.value;
+			var directionInfo = {
+				fromNodeId: fromValue,
+				toNodeId: toValue
+			}
+			c3dclient.eventEmitter.emit('getDirections', directionInfo);
+		});
 
-			c3dclient.eventEmitter.on('clearFeatureInfo', function(idObject) {
-				$('#info').empty();
-			});				  
-
-		block internal_content
-		hr
-		footer
-			p &copy; CVDlab - 2014
+	// additional scripts (user/admin)
+	block additional_scripts

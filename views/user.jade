@@ -1,6 +1,7 @@
 extends main
 
-block internal_content
+block additional_scripts
+	// additional scripts for user interface
 	script.
 		// init socket
 		var socket = io('/users');
@@ -33,17 +34,18 @@ block internal_content
 				if(#{enable_3D}) {
 					user3D.position = c3dclient.coordinatesUtilities.fromGeneralTo3D(data.actualPosition);
 				}
-				
 				// emit the new position to the server for admins update
 				socket.emit('updatePosition', data.actualPosition);
 			});
 		}
 		
 		if(#{enable_3D}) {
+			// 3D Setup: set the model for the navigation
 			var user3D = c3dclient.generator3D['cube']('0x00FF00');
 			data.index[data.actualPosition.levelId].obj3D.userModels.add(user3D);
 			user3D.position = c3dclient.coordinatesUtilities.fromGeneralTo3D(data.actualPosition);
-			// 3D movingbe
+			
+			// 3D moving
 			// the FPVmoved event is fired by the pointerlock library on position change, max 25 times/sec
 			c3dclient.eventEmitter.on( 'FPVmoved', function() {
 				// update the general position

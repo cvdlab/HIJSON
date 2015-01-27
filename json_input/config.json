@@ -5,7 +5,7 @@
     	"lng": 12
     },
     
-    "showGraph": true,
+    "showGraph": false,
 
     "landmarks": 
 	[
@@ -32,6 +32,7 @@
         "coordinates": [13.5, 1], 
         "levelId": "level_0"
     },
+    
 	"style":
     {
 	    "background": 
