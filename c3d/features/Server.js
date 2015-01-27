@@ -1,5 +1,5 @@
 var Feature = require('./Feature.js');
-
+var React = require('react');
 Feature.inherits(Server, Feature);
 
 function Server(feature) {
@@ -31,6 +31,15 @@ Server.prototype.get3DModel = function() {
 	var model = Feature.packageModel(server);
 
 	return model;
+}
+
+Server.prototype.getInfo = function() {
+	Feature.getInfo();
+	console.log('Server info');
+    // React.render(
+    //     React.createElement('hr', null, null),
+    //     document.getElementById('info')
+    // );
 }
 
 module.exports = Server;

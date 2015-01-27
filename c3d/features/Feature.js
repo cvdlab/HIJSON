@@ -1,4 +1,6 @@
 var utilities = require('../modules/utilities.js')
+var React = require('react');
+
 function Feature(feature) { 
 	this.id = feature.id;
 	this.type = 'Feature';
@@ -110,6 +112,14 @@ Feature.packageModel = function packageModel(model3D) {
     
     return el3D;
 
+}
+
+Feature.getInfo = function () {
+    console.log('Info feature');
+    React.render(
+        React.createElement('h1', null, 'Feature Info'),
+        document.getElementById('info')
+    );
 }
 
 module.exports = Feature;
