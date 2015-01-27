@@ -8,7 +8,7 @@ var inputPaths = {
 	furniture: __dirname + '/../json_input/furnitures_demo.json'
 };
 
-console.log('Starting initialization...');
+console.log('--- Starting initialization... ---');
 
 /* Parsing function in parse.js module */
 console.log('Parsing data...')
@@ -16,27 +16,27 @@ var data = parser.parse(inputPaths);
 console.log('Parsing completed.');
 
 /* Assembling structure */
-console.log('Assembling structure...')
+process.stdout.write('Assembling structure... ');
 assembler.assembleStructure(data);
-console.log('Assembling completed.');
+console.log('Done.');
 
 /* Creating graph */
-console.log('Creating graph...');
+process.stdout.write('Creating graph... ');
 graph.createGraph(data);
-console.log('Creation of graph completed.');
+console.log('Done.');
 
 /* Creating geoJSON files */
-console.log('Creating geoJSON file...');
+process.stdout.write('Creating geoJSON file... ');
 assembler.generateGeoJSON(data);
-console.log('Creation of geoJSON file completed.');
+console.log('Done.');
 
-console.log('Generating xGeoJSON graph...')
+process.stdout.write('Generating xGeoJSON graph... ');
 assembler.packageGraph(data);
-console.log('Creation of xGeoJSON graph completed.');
+console.log('Done.');
 
 data.index = {};
 data.tree = {};
 
-console.log('Initialization completed.');
+console.log('--- Initialization completed. ---');
 
 module.exports = data;

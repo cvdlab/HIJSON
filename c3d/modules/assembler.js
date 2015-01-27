@@ -25,9 +25,9 @@ var self = module.exports = {
 	
 	assembleStructure: function(data) {
 		data.config.transformationMatrix = coordinatesUtilities.computeGeoMatrix(data.config.landmarks);
-		console.log('Matrix: ' + data.config.transformationMatrix);
+		// console.log('Matrix: ' + data.config.transformationMatrix);
 		data.config.inverseTransformationMatrix = numeric.inv(data.config.transformationMatrix);
-		console.log('Inverse matrix: ' + data.config.inverseTransformationMatrix);
+		// console.log('Inverse matrix: ' + data.config.inverseTransformationMatrix);
 
 		self.assembleFeatureCollection(data.input.architecture);
 		self.assembleFeatureCollection(data.input.furniture);
