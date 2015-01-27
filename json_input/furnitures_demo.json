@@ -18,7 +18,7 @@
             {
                 "parent": "room_0.1",
                 "class": "server",
-                "height": 3,
+                "height": 1,
                 "tVector": [1, 5.5, 0],
                 "rVector": [0, 0, 0],
                 "nodeTVector": [1, 0, 0]

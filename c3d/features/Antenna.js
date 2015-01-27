@@ -40,6 +40,7 @@ Antenna.prototype.get3DModel = function() {
 	antenna.add(cylinderAntenna);
 	antenna.add( sphere );
 
+	antenna.feature = this;
 	var model = Feature.packageModel(antenna);
 	return model;
 }

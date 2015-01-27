@@ -13,14 +13,21 @@ Server.prototype.style = {
 						};
 
 Server.prototype.get3DModel = function() {
-	var coords = this.geometry.coordinates;
-	var geometry = new THREE.BoxGeometry(coords[0][2][0], coords[0][2][1], this.properties.height);
+	var shape = Feature.generatePolygonShape(this.geometry);
+	var geometry = shape.extrude({
+                curveSegments: 1,
+                steps: 1,
+                amount: this.properties.height,
+                bevelEnabled: false
+            });
+
 	var material = new THREE.MeshLambertMaterial( {color: 0xf49530} );
 	var wireMaterial = new THREE.MeshLambertMaterial( {color: 0x000000, wireframe: true, wireframeLinewidth: 2} );
-	var server = new THREE.Mesh(geometry, material);
 
+	var server = new THREE.Mesh(geometry, material);
 	server.receiveShadow = true;
 	server.castShadow = true;
+	server.feature = this;
 	var model = Feature.packageModel(server);
 
 	return model;

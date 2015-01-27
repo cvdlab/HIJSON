@@ -75,24 +75,41 @@ Feature.generateWallGeometry = function generateWallGeometry(wallFeature) {
 }
 
 Feature.packageModel = function packageModel(model3D) {
+    var geometry;
+    var material = new THREE.MeshBasicMaterial( {color: 0xff0000, transparent: true, opacity: 0} );
+    var el3D;
+    var feature = model3D.feature;
+    if(feature.geometry.type === "Polygon") {
+
+        var shape = Feature.generatePolygonShape(feature.geometry);
+        geometry = shape.extrude({
+            curveSegments: 1,
+            steps: 1,
+            amount: feature.properties.height,
+            bevelEnabled: false
+        });
     
-    var bbox = new THREE.BoundingBoxHelper(model3D, 0xff0000);
-    bbox.update();
+        el3D = new THREE.Mesh( geometry, material );
+        el3D.add(model3D);
+    }
+    else {
+        var bbox = new THREE.BoundingBoxHelper(model3D, 0xff0000);
+        bbox.update();
+        var bboxSize = bbox.box.size();
+        geometry = new THREE.BoxGeometry( bboxSize.x, bboxSize.y, bboxSize.z );
+        el3D = new THREE.Mesh( geometry, material );
 
-    var boxGeometry = new THREE.BoxGeometry( bbox.box.size().x, bbox.box.size().y, bbox.box.size().z );
-    var boxMaterial = new THREE.MeshBasicMaterial( {color: 0x000000, transparent: true, opacity: 0} );
-    var el3D = new THREE.Mesh( boxGeometry, boxMaterial );
+        el3D.add(model3D);
 
-    el3D.add(model3D);
-
-    var bboxCentroid = utilities.getCentroid(bbox);
-
-    model3D.position.set(-bboxCentroid.x,-bboxCentroid.y,-bboxCentroid.z);    
-
-    el3D.position.z = bbox.box.size().z/2;
+        var bboxCentroid = utilities.getCentroid(bbox);
+        model3D.position.set(-bboxCentroid.x,-bboxCentroid.y,-bboxCentroid.z);    
+        el3D.position.z = bbox.box.size().z/2;
+        
+    }
     el3D.package = true;
     
     return el3D;
+
 }
 
 module.exports = Feature;

@@ -50,7 +50,10 @@ SurveillanceCamera.prototype.get3DModel = function() {
 	box.setFromObject(camera);
 	camera.add(box);
 	camera.rotation.y += Math.PI*1/9;
+	
+	camera.feature = this;
 	var model = Feature.packageModel(camera);
+	
 	return model;
 }
 

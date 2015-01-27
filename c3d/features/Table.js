@@ -51,6 +51,8 @@ Table.prototype.get3DModel = function() {
 	table.add(p4);
 	table.add(plane);
 
+	table.feature = this;
+	
 	var model = Feature.packageModel(table);
 
 	return model;
