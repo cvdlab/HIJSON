@@ -36,15 +36,40 @@ var self = module.exports = {
 	},
 
 	setOpacity: function(obj3D, opacity) {
-		console.log(obj3D);
 		obj3D.traverse(function(object) {
 			if(object.material !== undefined) {
-				object.visible = true;
-				object.material.transparent = true;
-				object.material.opacity = opacity;
+				if(!object.package) {
+					object.visible = true;
+					object.material.transparent = true;
+					object.material.opacity = opacity;
+				}
+			}	
+		});
+	},
+
+	fadeArchitecture: function(level) {
+		level.traverse(function(object) {
+			if(object.feature !== undefined && object.feature.type === 'architectures') {
+				object.traverse(function(object) {
+					if(object.material !== undefined) {
+						if(!object.package) {
+							object.visible = true;
+							object.material.transparent = true;
+							object.material.opacity = 0.1;
+						}
+					}	
+				});
 			}
 		});
 	},
+
+	highlightFeature: function(idObject) {
+		self.show3DObject(data.index['building'].obj3D, false);
+		var idLevel =self.getActualLevelId(idObject);
+		self.fadeArchitecture(data.index[idLevel].obj3D);
+		self.setOpacity(data.index[idObject].obj3D, 1);
+	},
+
 	getActualLevelId: function() {
 		var id;
 		for(idLayer in data.map2D._layers){

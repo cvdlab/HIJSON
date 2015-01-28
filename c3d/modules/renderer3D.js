@@ -59,18 +59,7 @@ var self = module.exports = {
 	        
 	    window.addEventListener( 'resize', onWindowResize3D, false );
 
-
-
-	    eventEmitter.on('selectFeature', function highlightFeature(idObject) {
-	    	utilities.show3DObject(data.index['building'].obj3D, false);
-			utilities.show3DObject(data.index[idObject].obj3D, true);
-
-			for(var i in data.index) {
-	        	if(i !== idObject && data.index[i].obj3D !==undefined) {
-		        	utilities.setOpacity(data.index[i].obj3D);
-		    	}
-		    }
-	    });
+	    eventEmitter.on('selectFeature', utilities.highlightFeature);
 
 		var havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
 		
