@@ -63,6 +63,7 @@ block content
 	script var data = JSON.parse('!{data}');
 	
 	script(src='/libs/bundle.js')
+	script(src='/assets/js/react.js')
 	script(src='/socket.io/socket.io.js')
 	
 	if enable_2D
@@ -155,64 +156,15 @@ block content
 	// show feature info logic
 	script.
 		c3dclient.eventEmitter.on('showFeatureInfo', function(idObject){
-			console.log('passa da show');
-			console.log(idObject);
 			var feature = data.index[idObject];
-			feature.getInfo();
-		// 	showFeatureInfo = {};
-	
-		// 	showFeatureInfo['badgeReader'] = function(s) {
-		// 		if(!(jQuery.isEmptyObject(mapUsersConnected))) {
-		// 			s = s.concat('<p class="lead">Users connected</p>');
-		// 			s = s.concat('<table class="table table-hover">');
-		// 				s = s.concat('<tr>');
-		// 					s = s.concat('<th>ID</th>');
-		// 					s = s.concat('<th>level</th>');
-		// 				s = s.concat('</tr>');
-	
-		// 			for(var i in mapUsersConnected) {
-		// 				s = s.concat('<tr>');
-		// 					s = s.concat('<th>' + mapUsersConnected[i].id + '</th>');
-		// 					s = s.concat('<th>' + mapUsersConnected[i].position.levelId +'</th>');
-		// 				s = s.concat('</tr>');						
-		// 				}
-		// 			s = s.concat('</table>');
-		// 		}
-		// 		else {
-		// 			s = s.concat('<p>No users are connected.</p>');
-		// 		}
-		// 		return s;
-		// 	}
-	
-		// 	showFeatureInfo['light'] = function(s) {
-		// 		s = s.concat('<h4>Light Options</h4>');
-		// 		return s;
-		// 	}
-	
-		// 	$('#info').empty();
-		// 	var feature = data.index[idObject];
-		// 	if($.inArray(feature.properties.class, data.interactiveClasses) !== -1) {
-		// 		var s = '<dl class="dl-horizontal">';
-		// 		s = s.concat('<dt>id</dt><dd>' + feature.id +'</dd>');
-		// 		s = s.concat('<dt>class</dt><dd>'+ feature.properties.class +'</dd>');
-		// 		s = s.concat('<dt>Position</dt><dd>[' + feature.obj3D.position.x + '; ' +  feature.obj3D.position.y + ']</dd>');
-		// 		if(feature.properties.url !== undefined)
-		// 			s = s.concat('<dt>url</dt><dd>'+ feature.properties.url +'</dd>');					
-		// 		s = s.concat('</dl>');
-		// 		if(feature.properties.class in showFeatureInfo)
-		// 			s = showFeatureInfo[feature.properties.class](s);
-		// 		$('#info').append(s);
-		// 	}
-		// });	
+			React.render(
+						React.createElement( feature.getInfo() ), 
+						document.getElementById('info') 
+					);
 		});
 		c3dclient.eventEmitter.on('selectFeature', function(idObject) {
 			c3dclient.eventEmitter.emit('showFeatureInfo',idObject);
 		});	
-	
-		c3dclient.eventEmitter.on('clearFeatureInfo', function(idObject) {
-			$('#info').empty();
-		});	
-		
 	// get directions logic			  
 	script.
 		var fromSelect = document.getElementById('directionsFrom');

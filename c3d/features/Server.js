@@ -33,13 +33,4 @@ Server.prototype.get3DModel = function() {
 	return model;
 }
 
-Server.prototype.getInfo = function() {
-	Feature.getInfo();
-	console.log('Server info');
-    // React.render(
-    //     React.createElement('hr', null, null),
-    //     document.getElementById('info')
-    // );
-}
-
 module.exports = Server;

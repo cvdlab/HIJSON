@@ -114,12 +114,31 @@ Feature.packageModel = function packageModel(model3D) {
 
 }
 
-Feature.getInfo = function () {
-    console.log('Info feature');
-    React.render(
-        React.createElement('h1', null, 'Feature Info'),
-        document.getElementById('info')
-    );
+Feature.prototype.getCreateElement = function() {
+    var feature = this;
+    var x = feature.obj3D.position.x;
+    var y = feature.obj3D.position.y;
+    var position = '[' + x + '; ' +  y + ']';
+    return (React.createElement("dl", {className: "dl-horizontal"}, 
+                        React.createElement("dt", null, "id:"), 
+                        React.createElement("dd", null, feature.id), 
+                        React.createElement("dt", null, "class:"), 
+                        React.createElement("dd", null, feature.properties.class), 
+                        React.createElement("dt", null, "Position"), 
+                        React.createElement("dd", null, position)
+                    )
+                    )
+}
+
+Feature.prototype.getInfo = function () {
+    var feature = this;
+    var featureInfoComponent = React.createClass({displayName: "featureInfoComponent",
+        render: function() {
+            return feature.getCreateElement();
+            }
+    });
+    return featureInfoComponent;
+
 }
 
 module.exports = Feature;
