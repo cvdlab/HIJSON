@@ -1,4 +1,5 @@
 var self = module.exports = {
+	
 	getLevel: function(obj) {
 		var ancestor = obj;
 		while (ancestor.properties.class !== 'level') {
@@ -14,7 +15,8 @@ var self = module.exports = {
 
 	getRoom: function(obj) {
 	    var ancestor = obj;
-	    if(obj.properties.class !== 'building' && obj.properties.class !== 'level') {
+	    var objClass = obj.properties.class;
+	    if(objClass !== 'building' && objClass !== 'level') {
 	        while(ancestor.properties.class !== 'room') {
 	            ancestor = ancestor.parent;
 	        }
@@ -25,51 +27,14 @@ var self = module.exports = {
 	getCentroid: function(object3D) {
     	var boundingBox = new THREE.BoundingBoxHelper(object3D,0xff0000 );
     	boundingBox.update();
-    	var center = new THREE.Vector3( (boundingBox.box.min.x + boundingBox.box.max.x)/2, (boundingBox.box.min.y + boundingBox.box.max.y)/2, (boundingBox.box.min.z + boundingBox.box.max.z)/2 );
+    	var center = new THREE.Vector3( 
+    					(boundingBox.box.min.x + boundingBox.box.max.x)/2,
+    					(boundingBox.box.min.y + boundingBox.box.max.y)/2, 
+    					(boundingBox.box.min.z + boundingBox.box.max.z)/2
+    				);
     	return center;
 	},
-
-	show3DObject: function(obj3D, booleanValue) {
-		obj3D.traverse(function(object) { 
-        	object.visible = booleanValue;
-    	});
-	},
-
-	setOpacity: function(obj3D, opacity) {
-		obj3D.traverse(function(object) {
-			if(object.material !== undefined) {
-				if(!object.package) {
-					object.visible = true;
-					object.material.transparent = true;
-					object.material.opacity = opacity;
-				}
-			}	
-		});
-	},
-
-	fadeArchitecture: function(level) {
-		level.traverse(function(object) {
-			if(object.feature !== undefined && object.feature.type === 'architectures') {
-				object.traverse(function(object) {
-					if(object.material !== undefined) {
-						if(!object.package) {
-							object.visible = true;
-							object.material.transparent = true;
-							object.material.opacity = 0.1;
-						}
-					}	
-				});
-			}
-		});
-	},
-
-	highlightFeature: function(idObject) {
-		self.show3DObject(data.index['building'].obj3D, false);
-		var idLevel =self.getActualLevelId(idObject);
-		self.fadeArchitecture(data.index[idLevel].obj3D);
-		self.setOpacity(data.index[idObject].obj3D, 1);
-	},
-
+	
 	getActualLevelId: function() {
 		var id;
 		for(idLayer in data.map2D._layers){
@@ -80,8 +45,47 @@ var self = module.exports = {
 		}   
 		return id;
 	},
+	
+	isPackage: function(obj3D) {
+		var pack = false;
+		if ( obj3D.package === true ) {
+			pack = true;
+		}
+		return pack;
+	},
 
-	trasparenceModel: function(data, idObject) {
-		self.setOpacity(data.index["building"].obj3D, 0.1);
+	setVisibility: function(obj3D, booleanValue) {
+		obj3D.traverse(function(object) { 
+        	if(!self.isPackage(object)) {	// act only if not package
+	        	object.visible = booleanValue;
+	        	if (object.material !== undefined) {
+		        	object.material.transparent = false;
+		        	object.material.opacity = 1;
+	        	}
+        	}
+    	});
+	},
+
+	setOpacity: function(obj3D, opacity) {
+		obj3D.traverse(function(object) {
+        	if(!self.isPackage(object)) {	// act only if not package
+	        	object.visible = true;
+	        	if (object.material !== undefined) {
+		        	object.material.transparent = true;
+		        	object.material.opacity = opacity;
+	        	}
+        	}
+    	});
+	},
+
+	highlightFeature: function(idObject) {
+		// hide all
+		self.setVisibility(data.index['building'].obj3D, false);
+		// get level id and show the level in transparency
+		var idLevel = self.getLevel( data.index[idObject] );
+		self.setOpacity(data.index[idLevel].obj3D, 0.2);
+		// highlight feature
+		self.setVisibility(data.index[idObject].obj3D, true);
 	}
+
 }

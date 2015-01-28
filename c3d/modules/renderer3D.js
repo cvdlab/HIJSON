@@ -90,7 +90,7 @@ var self = module.exports = {
 			//questo evento viene richiamato ad ogni attivazione/disattivazione del pointerlock, in paricolare il blocco if all'avvio del pointerlock, il blocco else alla disattivazione del pointerlock
 			var pointerlockchange = function(event) {
 				if (document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element) {
-					utilities.show3DObject(data.index["building"].obj3D, true);
+					utilities.setVisibility(data.index["building"].obj3D, true);
 	                //data.index['building'].obj3D.rotation.x = -Math.PI/2;
 					pointerLockControls = new THREE.PointerLockControls(camera, {
 	                    cameraHeight: 1.7,
