@@ -37,7 +37,7 @@ Hotspot.prototype.get3DModel = function() {
 
 	hotspot.receiveShadow = true;
 	hotspot.castShadow = true;
-	
+	hotspot.name = this.id;
 	hotspot.feature = this;
 	var model = Feature.packageModel(hotspot);
 

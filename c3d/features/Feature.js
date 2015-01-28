@@ -108,6 +108,8 @@ Feature.packageModel = function packageModel(model3D) {
         el3D.position.z = bbox.box.size().z/2;
         
     }
+    el3D.name = 'package_' + model3D.name;
+    el3D.visible = false;
     el3D.package = true;
     
     return el3D;

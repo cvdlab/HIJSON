@@ -155,14 +155,14 @@ block content
 	
 	// show feature info logic
 	script.
-		c3dclient.eventEmitter.on('showFeatureInfo', function(idObject){
+		c3dclient.eventEmitter.on('showFeatureInfo', function renderReact(idObject){
 			var feature = data.index[idObject];
 			React.render(
 						React.createElement( feature.getInfo() ), 
 						document.getElementById('info') 
 					);
 		});
-		c3dclient.eventEmitter.on('selectFeature', function(idObject) {
+		c3dclient.eventEmitter.on('selectFeature', function emitShowFeatureInfo(idObject) {
 			c3dclient.eventEmitter.emit('showFeatureInfo',idObject);
 		});	
 	// get directions logic			  

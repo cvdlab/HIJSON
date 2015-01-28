@@ -17,6 +17,7 @@ BadgeReader.prototype.get3DModel = function() {
     var badgeReader = new THREE.Mesh( geometry, material );
     
     badgeReader.feature = this;
+    badgeReader.name = this.id;
     var model = Feature.packageModel(badgeReader);
 
     return model;

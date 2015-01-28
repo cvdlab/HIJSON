@@ -20,7 +20,7 @@ Room.prototype.get3DModel = function() {
     });
 
     var model = new THREE.Mesh(Feature.generatePolygon(this.geometry), material);
-    
+    model.name = this.id;    
     model.receiveShadow = true;
 
     return model;	

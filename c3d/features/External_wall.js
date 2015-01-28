@@ -32,7 +32,8 @@ External_wall.prototype.get3DModel = function() {
 	container.wall = wall;
 	wall.rotation.x += Math.PI/2;
 	wall.position.y += this.properties.thickness/2;    
-
+	wall.name = this.id;
+	container.name = 'package_' + this.id;
     return container;
 }
 

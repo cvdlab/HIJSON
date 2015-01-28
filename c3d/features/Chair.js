@@ -69,6 +69,7 @@ Chair.prototype.get3DModel = function() {
 	chair.add(p6);
 	
 	chair.feature = this;
+	chair.name = this.id;
 	var model = Feature.packageModel(chair);
 
 	return model;

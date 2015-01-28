@@ -23,5 +23,7 @@ var self = module.exports = {
 				handler(data);
 			});
 		}
-	}
+	},
+
+	handlers: handlers
 } //close module.exports

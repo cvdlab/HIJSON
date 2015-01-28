@@ -67,7 +67,7 @@ block additional_scripts
 		}
 
 		// level change
-		c3dclient.eventEmitter.on('selectFeature', function(idObject) {
+		c3dclient.eventEmitter.on('selectFeature', function changeUserLevel(idObject) {
 			if(data.index[idObject].properties.class === 'level') {
 				
 				if (#{enable_2D}) { 

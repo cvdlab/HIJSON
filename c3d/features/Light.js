@@ -30,7 +30,7 @@ Light.prototype.get3DModel = function() {
 	    groupNeon.add(neon);
 	}
 	light.add(groupNeon);
-
+	light.name = this.id;
 	light.feature = this;
 	var model = Feature.packageModel(light);
 

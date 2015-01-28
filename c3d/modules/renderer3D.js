@@ -61,17 +61,14 @@ var self = module.exports = {
 
 
 
-	    eventEmitter.on('selectFeature', function(idObject) {
-	        utilities.show3DObject(data.index["building"].obj3D, false);
-	        utilities.show3DObject(data.index[idObject].obj3D, true);
-		    
-		    for(var i in data.index) {
-		        var elementClass = data.index[i].properties.class;
-		        if((elementClass === "internal_wall") || (elementClass === "external_wall")) {
-		            if($.inArray(idObject, data.index[i].properties.connections) !== -1) {
-		                utilities.show3DObject(data.index[i].obj3D, true);
-		            }   
-		        }
+	    eventEmitter.on('selectFeature', function highlightFeature(idObject) {
+	    	utilities.show3DObject(data.index['building'].obj3D, false);
+			utilities.show3DObject(data.index[idObject].obj3D, true);
+
+			for(var i in data.index) {
+	        	if(i !== idObject && data.index[i].obj3D !==undefined) {
+		        	utilities.setOpacity(data.index[i].obj3D);
+		    	}
 		    }
 	    });
 
@@ -235,7 +232,7 @@ var self = module.exports = {
 	    var queue = [];
 	    var feature;
 	    data.index["building"].obj3D = new THREE.Object3D();
-
+	    data.index["building"].obj3D.feature = data.index["building"];
 	    for (var i=0; i < data.tree.children.length; i++) {
 	        queue.push(data.tree.children[i]);
 	    }
@@ -244,8 +241,8 @@ var self = module.exports = {
 	        feature = queue.shift();
 	        if(feature.get3DModel !== undefined) {
 	           	var el3D = feature.get3DModel();
-	            feature.obj3D = el3D;
 	            el3D.feature = feature;
+	            feature.obj3D = el3D;
 	            if (feature.properties.rVector !== undefined) {
 	                var conv = Math.PI/180;
 	                var rotation = [

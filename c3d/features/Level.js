@@ -31,7 +31,8 @@ Level.prototype.get3DModel = function() {
     container.add(floor);
     container.floor = floor;
 	floor.position.z -= this.properties.thickness-0.01;
-    
+    floor.name = this.id;
+    container.name = 'package_' + this.id;
     return container;  	
 }
 

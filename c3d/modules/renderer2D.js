@@ -36,7 +36,7 @@ var self = module.exports = {
 	        container2D.css('height', container2DHeight);
 	    }
 	    
-        eventEmitter.on('selectFeature', function(idObject) {
+        eventEmitter.on('selectFeature', function fitBounds2D(idObject) {
         	var obj = data.index[idObject];
 		    if(obj.properties.class === 'level' || obj.properties.class === 'building') {
                 data.map2D.removeLayer(data.index[data.actualPosition.levelId].layer2D); 

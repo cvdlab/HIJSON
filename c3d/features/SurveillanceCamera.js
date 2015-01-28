@@ -52,8 +52,9 @@ SurveillanceCamera.prototype.get3DModel = function() {
 	camera.rotation.y += Math.PI*1/9;
 	
 	camera.feature = this;
+	camera.name = this.id;
+
 	var model = Feature.packageModel(camera);
-	
 	return model;
 }
 
