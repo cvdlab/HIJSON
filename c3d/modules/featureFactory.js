@@ -27,7 +27,13 @@ function capitaliseFirstLetter(featureClass) {
 // (3) public/exported things
 var self = module.exports = {
 	generateFeature: function(feature) {
+		var newFeature;
 		var featureClass = capitaliseFirstLetter(feature.properties.class);
-		return new featureClasses[featureClass](feature);	
+		if (featureClass in featureClasses) {
+			newFeature = new featureClasses[featureClass](feature);
+		} else {
+			newFeature = new featureClasses['Feature'](feature);
+		}
+		return newFeature;
 	}
 } //close module.exports

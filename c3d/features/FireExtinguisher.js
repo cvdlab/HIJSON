@@ -59,8 +59,8 @@ FireExtinguisher.prototype.getInfo = function () {
         render: function() {
             var root = Feature.prototype.getCreateElement.call(feature);
             var child = React.createElement("dl", {className: "dl-horizontal"}, 
-                        	React.createElement("dt", null, "Turbofregna"), 
-                        	React.createElement("dd", null, 'true')
+                        	React.createElement("dt", null, "Last Check:"), 
+                        	React.createElement("dd", null, '01/01/1970')
                         );
             var result = React.createElement("div", null, root, child);
             

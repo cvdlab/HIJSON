@@ -143,4 +143,11 @@ Feature.prototype.getInfo = function () {
 
 }
 
+Feature.prototype.get3DModel = function() {
+	var model = new THREE.Object3D();
+	model.name = this.id;
+	model.feature = this;
+	return model;
+}
+
 module.exports = Feature;

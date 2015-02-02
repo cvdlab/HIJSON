@@ -166,7 +166,7 @@ var self = module.exports = {
 	            var container3DHeight = container3D.width()/4*3;
 	            event.preventDefault();
 	    		if (document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element) {
-	    			console.log('clickPL');
+	    			//console.log('clickPL');
 	                var raycaster = new THREE.Raycaster();
 	                var direction = new THREE.Vector3( 0, 0, -1 );
 	                var rotation = new THREE.Euler(0, 0, 0, "YXZ");
@@ -178,7 +178,7 @@ var self = module.exports = {
 	    			// projector.unprojectVector(vector, data.camera3D);
 	    			// var raycaster = new THREE.Raycaster( vector, pointerLockControls.getDirection( new THREE.Vector3(0, 0, 0) ).clone() );
 	    		} else {
-	                console.log('clickTB');
+	                //console.log('clickTB');
 	    			var vector = new THREE.Vector3((event.clientX / container3DWidth) * 2 - 1, -(event.clientY / container3DHeight) * 2 + 1, 0.5);
 	    			projector.unprojectVector(vector, camera);
 	    			var raycaster = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
@@ -228,29 +228,29 @@ var self = module.exports = {
 	    
 	    while (queue.length>0) {
 	        feature = queue.shift();
-	        if(feature.get3DModel !== undefined) {
-	           	var el3D = feature.get3DModel();
-	            el3D.feature = feature;
-	            feature.obj3D = el3D;
-	            if (feature.properties.rVector !== undefined) {
-	                var conv = Math.PI/180;
-	                var rotation = [
-	                            feature.properties.rVector[0]*conv, 
-	                            feature.properties.rVector[1]*conv,
-	                            feature.properties.rVector[2]*conv
-	                            ];
-	                //el3D.rotation.set(rotation[0], rotation[1], rotation[2]);
-	                el3D.rotation.x += rotation[0];
-	                el3D.rotation.y += rotation[1];
-	                el3D.rotation.z += rotation[2];
-	            }
-	            if (feature.properties.tVector !== undefined) {
-	                el3D.position.x += feature.properties.tVector[0];
-	                el3D.position.y += feature.properties.tVector[1];
-	                el3D.position.z += feature.properties.tVector[2];
-	            }
-	            data.index[feature.parent.id].obj3D.add(el3D);
-	        }
+	        
+           	var el3D = feature.get3DModel();
+            el3D.feature = feature;
+            feature.obj3D = el3D;
+            if (feature.properties.rVector !== undefined) {
+                var conv = Math.PI/180;
+                var rotation = [
+                            feature.properties.rVector[0]*conv, 
+                            feature.properties.rVector[1]*conv,
+                            feature.properties.rVector[2]*conv
+                            ];
+                //el3D.rotation.set(rotation[0], rotation[1], rotation[2]);
+                el3D.rotation.x += rotation[0];
+                el3D.rotation.y += rotation[1];
+                el3D.rotation.z += rotation[2];
+            }
+            if (feature.properties.tVector !== undefined) {
+                el3D.position.x += feature.properties.tVector[0];
+                el3D.position.y += feature.properties.tVector[1];
+                el3D.position.z += feature.properties.tVector[2];
+            }
+            data.index[feature.parent.id].obj3D.add(el3D);
+	        
 	        if(feature.properties.class === 'level') {
 		        var userModels = new THREE.Object3D();
 		        el3D.add(userModels);

@@ -49,7 +49,6 @@ var self = module.exports = {
            	orderLayers();
         });
         
-        
         L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
             maxZoom: 50, //A quanto fissarlo?
             attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
@@ -90,22 +89,17 @@ var self = module.exports = {
 		}
 		
 		function furnitureMarker(feature, latlng) {
-			
 			if (feature.properties.class === 'graphNode') {
 				return L.circleMarker(latlng);
-			} 
-			else {
+			} else {
 				var obj = data.index[feature.id];
 				var style;
 				if(obj!== undefined && obj.style !== undefined) {
 					style = data.index[feature.id].style;
-				}
-				else if (data.config.style[feature.properties.class] !== undefined) {
+				} else if (data.config.style[feature.properties.class] !== undefined) {
 					style = data.config.style[feature.properties.class];
-					
 				} else {
 					style = { icon: "asterisk" };
-
 				}
 				var markerIcon = L.AwesomeMarkers.icon(style);
 				return L.marker(latlng, {icon: markerIcon});
@@ -114,8 +108,6 @@ var self = module.exports = {
 		
 		function onEachFeature(feature, layer) {
 	        layer.on({
-	            //mouseover: highlightFeature,
-	            //mouseout: resetHighlight,
 	            click: selectFeature
 	        });
 	        if (data.index[feature.id]) {

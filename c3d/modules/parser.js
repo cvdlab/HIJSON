@@ -1,4 +1,5 @@
 var fs = require('fs');
+var colors = require('colors/safe');
 
 var self = module.exports = {
 	
@@ -7,8 +8,6 @@ var self = module.exports = {
 	    {
 		    var parsedData = JSON.parse(fs.readFileSync(inputPaths[input_name], 'utf8'));
 		    
-		    process.stdout.write('Parsing: ' + input_name + '... ');
-		    
 		    if (input_name === 'config') {
 			    var config = parsedData;
 		    } else if(input_name === 'architecture') {
@@ -16,7 +15,7 @@ var self = module.exports = {
 		    } else if(input_name === 'furniture') {
 		    	var furniture = parsedData;
 		    }
-			console.log('Done.');
+			process.stdout.write(input_name + '... ');
 	    }
 		var data = {
 			config: config,
@@ -25,7 +24,6 @@ var self = module.exports = {
 				furniture: furniture
 			}
 		}
-		
 		return data;
 	}
 	
