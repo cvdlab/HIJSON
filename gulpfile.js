@@ -32,6 +32,7 @@ gulp.task('nodemon', ['browserify'], function () {
       'gulpfile.js',
       'node_modules/',
       'public/libs/bundle.js',
+      'public/libs/bundle.js.map',
       '.git/'
     ],
 	ext: "js,jade,json"
