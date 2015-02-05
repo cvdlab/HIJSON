@@ -6,6 +6,7 @@ var coordinatesUtilities = require('./coordinatesUtilities.js');
 // (2) private things
 var scene3D;
 var camera3D;
+var trackballControls3D;
 
 
 
@@ -25,11 +26,13 @@ var self = module.exports = {
 	    camera = new THREE.PerspectiveCamera(45, container3DWidth / container3DHeight, 0.1, 1000);
 	    camera3D = camera;
 	    
+	    scene.add(camera);
 	    camera.position.set(40,50,40);
 	    camera.up = new THREE.Vector3(0,1,0);
 	    camera.lookAt(scene.position);
 		
 	    var trackballControls = new THREE.TrackballControls(camera, container3D[0]);
+	    trackballControls3D = trackballControls;
 	    trackballControls.enabled = true;
 	    var pointerLockControls = { enabled: false };
 	    
@@ -309,5 +312,9 @@ var self = module.exports = {
 
 	getCamera3D: function() {
 		return camera3D;
+	},
+	
+	getTrackballControls3D: function() {
+		return trackballControls3D;
 	}
 }
