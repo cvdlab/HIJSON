@@ -13,6 +13,7 @@ for (key in parsedData) {
 	index[element.id] = element;
 }
 
+// definizione di funzioni per identificare classi
 function isLevel(element) {
 	return element.id.match(/^Edificio-Piano_[0-9]$/);
 }
@@ -55,12 +56,12 @@ for (id in index) {
 la struttura gerarchica originale è del tipo
 
 -level
--piano completo (inutile, duplicato di level)
+-piano completo (non utile, duplicato di level)
 -settore (ala)
--box contenimento stanze (inutile, non provvisto della altezza che sarebbe la unica cosa utile)
+-box contenimento stanze (non utile, non provvisto della altezza che sarebbe la unica cosa utile)
 -stanze
 
-bisogna bypassare ed eliminare le cose inutili
+bisogna bypassare ed eliminare le cose non utili
 */
 
 for (id in index) {
@@ -90,18 +91,20 @@ lavorare sulle coordinate
 
 
 
-
+// creo la struttura del file di uscita
 var output = {
 	id: "architectures",
 	type: "FeatureCollection",
 	features: []
 }
 
+// inserisco gli elementi sopravvissuti nella struttura
 for (id in index) {
 	var element = index[id];
 	output.features.push(element);
 }
 
+// scrivo il file
 var outputJSON = JSON.stringify(output, null, 4);
 outputPath = './json_input/architecture_sogei.json';
 fs.writeFileSync(outputPath, outputJSON);
