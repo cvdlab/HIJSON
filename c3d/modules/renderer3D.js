@@ -27,7 +27,7 @@ var self = module.exports = {
 	    camera3D = camera;
 	    
 	    scene.add(camera);
-	    camera.position.set(40,50,40);
+	    camera.position.set(30,25,13);
 	    camera.up = new THREE.Vector3(0,1,0);
 	    camera.lookAt(scene.position);
 		

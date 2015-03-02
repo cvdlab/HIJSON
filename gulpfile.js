@@ -35,7 +35,7 @@ gulp.task('nodemon', ['browserify'], function () {
       'public/libs/bundle.js.map',
       '.git/'
     ],
-	ext: "js,jade,json"
+	ext: "js,jade, json"
   })
   .on('change', ['browserify'])
 });

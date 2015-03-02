@@ -23,7 +23,7 @@ console.log(colors.green('Done')+'.');
 
 /* Creating graph */
 process.stdout.write('Creating graph... ');
-graph.createGraph(data);
+//2graph.createGraph(data);
 console.log(colors.green('Done')+'.');
 
 /* Creating geoJSON files */
