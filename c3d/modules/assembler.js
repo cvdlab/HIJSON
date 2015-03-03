@@ -54,7 +54,7 @@ var self = module.exports = {
 	generateGeoJSON: function(data) {
 		var geoJSONmap = {};
 	    var includedArchitectureClasses = ['level', 'room', 'door', 'internal_wall', 'external_wall'];
-	    var includedFurtituresClasses = ['server', 'surveillanceCamera','fireExtinguisher','hotspot','antenna','badgeReader', 'server_polygon'];
+	    var includedFurtituresClasses = ['server', 'surveillanceCamera','fireExtinguisher','hotspot','antenna','badgeReader','table'];
 		var includedClasses = includedArchitectureClasses.concat(includedFurtituresClasses);
 		
 		if (data.config.showGraph) {

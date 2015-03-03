@@ -934,22 +934,7 @@
                 "rVector": [0, 0, 90]
             }
         },
-        {
-            "id": "table_1_room_0.3",
-            "type": "Feature",
-            "geometry": 
-            {
-                "type": "Point",
-                "coordinates": [0, 0]
-            },
-            "properties": 
-            {
-                "parent": "room_0.3",
-                "class": "table",
-                "tVector": [7, 4, 0],
-                "rVector": [0, 0, 90]
-            }
-        },
+
         {
             "id": "chair_1_room_0.3",
             "type": "Feature",
@@ -987,62 +972,17 @@
             "type": "Feature",
             "geometry": 
             {
-                "type": "Point",
-                "coordinates": [0, 0]
+                "type": "Polygon",
+                "coordinates": [
+                	[ [0, 0], [4, 0], [4, 2], [0, 2], [0, 0] ]
+                ]
             },
             "properties": 
             {
                 "parent": "room_0.4",
                 "class": "table",
+                "height": 0.8,
                 "tVector": [6, 3, 0],
-                "rVector": [0, 0, 0]
-            }
-        },
-        {
-            "id": "table_2_room_0.4",
-            "type": "Feature",
-            "geometry": 
-            {
-                "type": "Point",
-                "coordinates": [0, 0]
-            },
-            "properties": 
-            {
-                "parent": "room_0.4",
-                "class": "table",
-                "tVector": [6, 4, 0],
-                "rVector": [0, 0, 0]
-            }
-        },
-        {
-            "id": "table_3_room_0.4",
-            "type": "Feature",
-            "geometry": 
-            {
-                "type": "Point",
-                "coordinates": [0, 0]
-            },
-            "properties": 
-            {
-                "parent": "room_0.4",
-                "class": "table",
-                "tVector": [8, 3, 0],
-                "rVector": [0, 0, 0]
-            }
-        },
-        {
-            "id": "table_4_room_0.4",
-            "type": "Feature",
-            "geometry": 
-            {
-                "type": "Point",
-                "coordinates": [0, 0]
-            },
-            "properties": 
-            {
-                "parent": "room_0.4",
-                "class": "table",
-                "tVector": [8, 4, 0],
                 "rVector": [0, 0, 0]
             }
         },
@@ -1076,56 +1016,6 @@
                 "class": "chair",
                 "tVector": [2, 3, 0],
                 "rVector": [0, 0, -90]
-            }
-        },
-        {
-            "id": "table_1_room_1.1",
-            "type": "Feature",
-            "geometry": 
-            {
-                "type": "Point",
-                "coordinates": [0, 0]
-            },
-            "properties": 
-            {
-                "parent": "room_1.1",
-                "class": "table",
-                "tVector": [3.5, 2.5, 0],
-                "rVector": [0, 0, 0]
-            }
-        },
-        
-        {
-            "id": "table_2_room_1.1",
-            "type": "Feature",
-            "geometry": 
-            {
-                "type": "Point",
-                "coordinates": [0, 0]
-            },
-            "properties": 
-            {
-                "parent": "room_1.1",
-                "class": "table",
-                "tVector": [5.5, 2.5, 0],
-                "rVector": [0, 0, 0]
-            }
-        },
-
-        {
-            "id": "table_3_room_1.1",
-            "type": "Feature",
-            "geometry": 
-            {
-                "type": "Point",
-                "coordinates": [0, 0]
-            },
-            "properties": 
-            {
-                "parent": "room_1.1",
-                "class": "table",
-                "tVector": [7.5, 2.5, 0],
-                "rVector": [0, 0, 0]
             }
         },
 
@@ -1432,22 +1322,7 @@
             }
         },
 
-        {
-            "id": "table_room_1.3",
-            "type": "Feature",
-            "geometry": 
-            {
-                "type": "Point",
-                "coordinates": [0, 0]
-            },
-            "properties": 
-            {
-                "parent": "room_1.3",
-                "class": "table",
-                "tVector": [2, 2, 0],
-                "rVector": [0, 0, 0]
-            }
-        },
+
         
         {
             "id": "antenna_1_room1.3",

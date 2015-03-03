@@ -48,7 +48,7 @@ Table.prototype.get3DModel = function() {
 	p4.rotation.x += Math.PI/2;
 	p4.position.z += tableZ/2;
 	p4.position.x += 0.05;
-	p4.position.y += tabley - 0.05;
+	p4.position.y += tableY - 0.05;
 
 	var geometry = new THREE.BoxGeometry( tableX, tableY, 0.04 );
 	var material = new THREE.MeshLambertMaterial( {color: 0x9b8c75} );
