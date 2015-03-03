@@ -20,8 +20,7 @@
                 "class": "server",
                 "height": 3,
                 "tVector": [1, 5.5, 0],
-                "rVector": [0, 0, 0],
-                "nodeTVector": [1, 0, 0]
+                "rVector": [0, 0, 0]
             }
         },
         {
@@ -974,7 +973,7 @@
             {
                 "type": "Polygon",
                 "coordinates": [
-                	[ [0, 0], [4, 0], [4, 2], [0, 2], [0, 0] ]
+                	[ [0, 0], [4, 0], [4, 2], [0, 2] ]
                 ]
             },
             "properties": 

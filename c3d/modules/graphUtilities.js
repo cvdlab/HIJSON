@@ -262,14 +262,7 @@ function createSubGraph(data, id) {
 	}
 
 	if(object.type === 'furnitures') {
-		var node;
-		if(object.geometry.type === 'Point') {
-			node = createNode([0, 0, 0], object.id, 'subNode');
-
-		}
-		if(object.geometry.type === 'Polygon') {
-			node = createNode(object.properties.nodeTVector, object.id, 'subNode');
-		}
+		var node = object.getGraphNode(object);
 		var localMatrix = matrixUtilities.objMatrix(node);
 		var globalMatrix = matrixUtilities.getCMT(data.index[node.properties.parent]);
 		var nodeCMT = matrixUtilities.matrixProduct(globalMatrix, localMatrix);

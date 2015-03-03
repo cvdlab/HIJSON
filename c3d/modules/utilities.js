@@ -86,6 +86,29 @@ var self = module.exports = {
 		self.setOpacity(data.index[idLevel].obj3D, 0.2);
 		// highlight feature
 		self.setVisibility(data.index[idObject].obj3D, true);
-	}
+	},
 
+	getMidPointLineString: function(featureGeometry) {
+		var p1 = featureGeometry[0][0];
+		var p2 = featureGeometry[0][1];
+		var midX = (p1[0] + p2[0])/2;
+		var midY = (p1[1] + p2[1])/2;
+		var midPoint = [midX, midY];
+		return midPoint;
+	},
+
+	getMidPointPolygon: function(featureGeometry) {
+		var midPoint = [0, 0];
+		var p;
+		var c = 0;
+		for(i in featureGeometry[0]) {
+			p = featureGeometry[0][i];
+			c++
+			midPoint[0] += p[0];
+			midPoint[1] += p[1];
+		}
+		midPoint[0] = midPoint[0]/c;
+		midPoint[1] = midPoint[1]/c;
+		return midPoint;
+	}
 }

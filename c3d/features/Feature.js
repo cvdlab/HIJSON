@@ -150,4 +150,51 @@ Feature.prototype.get3DModel = function() {
 	return model;
 }
 
+Feature.prototype.getGraphNode = function(feature) {
+    var graphNode;
+    if(feature.properties.nodeTVector === undefined) {
+        switch(feature.geometry.type) {
+            case 'Point':
+                graphNode = createNode([0, 0, 0], feature.id, 'subNode');
+                break;
+            case 'LineString':
+                var midPointLineString = utilities.getMidPointLineString(feature.geometry.coordinates);
+                graphNode = createNode(midPointLineString, feature.id, 'subNode');
+                break;
+            case 'Polygon':
+                var midPointPolygon = utilities.getMidPointPolygon(feature.geometry.coordinates);
+                graphNode = createNode(midPointPolygon, feature.id, 'subNode');
+                break;
+            default:
+                graphNode = createNode([0, 0, 0], feature.id, 'subNode');
+        }
+    }
+    else {
+        graphNode = createNode(feature.properties.nodeTVector, feature.id, 'subNode');
+    }
+
+    return graphNode;
+}
+
+function createNode(tVector, objectId, triangleId) {
+    var graphNode = {
+        type: 'graph',
+        id: 'c_' + triangleId + '_' + objectId,
+        geometry: {
+            type: 'Point',
+            coordinates: [0, 0]
+        },
+        properties: {
+            class: 'graphNode',
+            tVector: [0, 0, 0],
+            rVector: [0, 0, 0],
+            parent: objectId,
+            adj: {}
+        },
+        children: []
+    }
+    graphNode.properties.tVector = tVector;
+    return graphNode;
+}
+
 module.exports = Feature;
