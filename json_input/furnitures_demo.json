@@ -128,7 +128,6 @@
                 "nodeTVector": [1, 0, 0]
             }
         },
-
         {
             "id": "server_1_room_0.2",
             "type": "Feature",
@@ -137,7 +136,7 @@
                 "type": "Polygon",
                 "coordinates": 
                 [
-                   [ [0, 0], [2, 0], [2, 3], [0, 3] ]
+                   [ [0, 0], [6, 0], [6, 1.5], [0, 1.5] ]
                 ]
             },
             "properties": 
@@ -145,12 +144,11 @@
                 "parent": "room_0.2",
                 "class": "server",
                 "height": 3,
-                "tVector": [2, 4, 0],
-                "rVector": [0, 0, 0],
+                "tVector": [2, 1, 0],
+                "rVector": [0, 0, 90],
                 "nodeTVector": [1, 0, 0]
             }
         },
-
         {
             "id": "camera_room_0.1",
             "type": "Feature",
@@ -847,8 +845,8 @@
             {
                 "parent": "room_0.2",
                 "class": "fireExtinguisher",
-                "tVector": [0.25, 2, 0.5],
-                "rVector": [0, 0, 90]
+                "tVector": [6, 7.75, 0.5],
+                "rVector": [0, 0, 0]
             }
         },
         
@@ -946,7 +944,7 @@
             {
                 "parent": "room_0.3",
                 "class": "chair",
-                "tVector": [8, 4, 0],
+                "tVector": [4, 4, 0],
                 "rVector": [0, 0, 90]
             }
         },
@@ -962,7 +960,7 @@
             {
                 "parent": "room_0.3",
                 "class": "chair",
-                "tVector": [6, 4, 0],
+                "tVector": [2, 4, 0],
                 "rVector": [0, 0, -90]
             }
         },
@@ -981,8 +979,46 @@
                 "parent": "room_0.4",
                 "class": "table",
                 "height": 0.8,
-                "tVector": [6, 3, 0],
+                "tVector": [5, 3, 0],
                 "rVector": [0, 0, 0]
+            }
+        },
+        {
+            "id": "table_1_room_0.3",
+            "type": "Feature",
+            "geometry": 
+            {
+                "type": "Polygon",
+                "coordinates": [
+                    [ [0, 0], [3, 0], [3, 1], [0, 1]  ]
+                ]
+            },
+            "properties": 
+            {
+                "parent": "room_0.3",
+                "class": "table",
+                "height": 0.8,
+                "tVector": [3.5, 3, 0],
+                "rVector": [0, 0, 90]
+            }
+        },
+        {
+            "id": "table_2_room_0.3",
+            "type": "Feature",
+            "geometry": 
+            {
+                "type": "Polygon",
+                "coordinates": [
+                    [ [0, 0], [1, 0], [1, 1.5], [0, 1.5]   ]
+                ]
+            },
+            "properties": 
+            {
+                "parent": "room_0.3",
+                "class": "table",
+                "height": 0.8,
+                "tVector": [2.5, 5, 0],
+                "rVector": [0, 0, 90]
             }
         },
         {
@@ -997,7 +1033,7 @@
             {
                 "parent": "room_0.4",
                 "class": "chair",
-                "tVector": [4, 3, 0],
+                "tVector": [9, 4, 0],
                 "rVector": [0, 0, 90]
             }
         },
@@ -1013,8 +1049,56 @@
             {
                 "parent": "room_0.4",
                 "class": "chair",
-                "tVector": [2, 3, 0],
+                "tVector": [5, 4, 0],
                 "rVector": [0, 0, -90]
+            }
+        },
+        {
+            "id": "chair_3_room_0.4",
+            "type": "Feature",
+            "geometry": 
+            {
+                "type": "Point",
+                "coordinates": [0, 0]
+            },
+            "properties": 
+            {
+                "parent": "room_0.4",
+                "class": "chair",
+                "tVector": [6, 3, 0],
+                "rVector": [0, 0, 0]
+            }
+        },
+        {
+            "id": "chair_4_room_0.4",
+            "type": "Feature",
+            "geometry": 
+            {
+                "type": "Point",
+                "coordinates": [0, 0]
+            },
+            "properties": 
+            {
+                "parent": "room_0.4",
+                "class": "chair",
+                "tVector": [7, 3, 0],
+                "rVector": [0, 0, 0]
+            }
+        },
+        {
+            "id": "chair_5_room_0.4",
+            "type": "Feature",
+            "geometry": 
+            {
+                "type": "Point",
+                "coordinates": [0, 0]
+            },
+            "properties": 
+            {
+                "parent": "room_0.4",
+                "class": "chair",
+                "tVector": [8, 3, 0],
+                "rVector": [0, 0, 0]
             }
         },
 
@@ -1637,6 +1721,54 @@
                 "rVector": [0, 0, 0],
                 "nodeTVector": [1, 0, 0],
                 "height": 2
+            }
+        },
+        {
+            "id": "camera_1_room_0.4",
+            "type": "Feature",
+            "geometry": 
+            {
+                "type": "Point",
+                "coordinates": [0, 0]
+            },
+            "properties": 
+            {
+                "parent": "room_0.4",
+                "class": "surveillanceCamera",
+                "tVector": [1, 7.8, 2.8],
+                "rVector": [0, 0, -90]
+            }
+        },
+        {
+            "id": "fireExtinguisher_1_room_0.4",
+            "type": "Feature",
+            "geometry": 
+            {
+                "type": "Point",
+                "coordinates": [0, 0]
+            },
+            "properties": 
+            {
+                "parent": "room_0.4",
+                "class": "fireExtinguisher",
+                "tVector": [6.5, 7.8, 0.3],
+                "rVector": [0, 0, 180]
+            }
+        },
+        {
+            "id": "camera_2_room_0.4",
+            "type": "Feature",
+            "geometry": 
+            {
+                "type": "Point",
+                "coordinates": [0, 0]
+            },
+            "properties": 
+            {
+                "parent": "room_0.4",
+                "class": "surveillanceCamera",
+                "tVector": [13, 7.8, 2.8],
+                "rVector": [0, 0, -90]
             }
         }
     ]
