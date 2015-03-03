@@ -1002,25 +1002,7 @@
                 "rVector": [0, 0, 90]
             }
         },
-        {
-            "id": "table_2_room_0.3",
-            "type": "Feature",
-            "geometry": 
-            {
-                "type": "Polygon",
-                "coordinates": [
-                    [ [0, 0], [1, 0], [1, 1.5], [0, 1.5]   ]
-                ]
-            },
-            "properties": 
-            {
-                "parent": "room_0.3",
-                "class": "table",
-                "height": 0.8,
-                "tVector": [2.5, 5, 0],
-                "rVector": [0, 0, 90]
-            }
-        },
+
         {
             "id": "chair_1_room_0.4",
             "type": "Feature",
