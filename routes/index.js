@@ -4,13 +4,13 @@ var data = require('../c3d/c3d_server');
 
 router.get('/', function(req, res) {
 	res.render('index', {
-		title: 'IoT 3D - Index'
+		title: 'HIJSON Web Framework'
 	});
 });
 
 router.get('/admin', function(req, res) {
 	res.render('admin', {
-		title: 'IoT 3D - Admin',
+		title: 'HIJSON Web Framework - Supervisor',
 		enable_2D: true,
 		enable_3D: true,
 		data: JSON.stringify(data)
@@ -19,7 +19,7 @@ router.get('/admin', function(req, res) {
 
 router.get('/user', function(req, res) {
 	res.render('user', {
-		title: 'IoT 3D - user',
+		title: 'HIJSON Web Framework - Explorer',
 		enable_2D: true,
 		enable_3D: true,
 		data: JSON.stringify(data)

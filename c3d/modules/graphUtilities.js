@@ -28,10 +28,13 @@ function getTriangles(object) {
 		    var child = object.children[k];
 		    if (child.geometry.type === 'Polygon') {
 			    var perimeter = child.geometry.coordinates[0];
-			    var tVector = child.properties.tVector;
+			    var objMatrix = matrixUtilities.objMatrix(child);
+			    //var tVector = child.properties.tVector;
 		        var hole = [];
 		        for (j in perimeter) { //scorro le singole coordinate dei vari perimetri
-					hole.push(new poly2tri.Point(perimeter[j][0] + tVector[0], perimeter[j][1] + tVector[1]));
+					//hole.push(new poly2tri.Point(perimeter[j][0] + tVector[0], perimeter[j][1] + tVector[1]));
+					var newPoint = matrixUtilities.applyTransformation(perimeter[j], objMatrix);
+					hole.push(new poly2tri.Point(newPoint[0], newPoint[1]));
 		        }
 		        swctx.addHole(hole);
 		    }
