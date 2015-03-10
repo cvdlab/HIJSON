@@ -7,7 +7,7 @@ function Window(feature) {
 }
 
 Window.prototype.style =  {
-							color: "#000000"
+							color: "#0000FF"
     					};
     					
 module.exports = Window;
