@@ -10,6 +10,10 @@ SurveillanceCamera.prototype.style = {
 									    prefix: "fa",
 									    icon: "video-camera"
     								};
+
+SurveillanceCamera.prototype.in_graph = true;
+SurveillanceCamera.prototype.in_2D_map = true;
+
 SurveillanceCamera.prototype.get3DModel = function() {
 	var material = new THREE.MeshLambertMaterial( {color: 0x38a9dc} );
 	var camera = new THREE.Object3D();

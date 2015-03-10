@@ -9,5 +9,8 @@ function Window(feature) {
 Window.prototype.style =  {
 							color: "#0000FF"
     					};
-    					
+
+Window.prototype.in_graph = false;
+Window.prototype.in_2D_map = false;
+					
 module.exports = Window;

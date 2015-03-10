@@ -11,5 +11,6 @@ GraphNode.prototype.style =  {
 								fillOpacity: 1,
 								radius: 7
     					};
-    					
+GraphNode.prototype.in_graph = false;
+GraphNode.prototype.in_2D_map = false;    					
 module.exports = GraphNode;

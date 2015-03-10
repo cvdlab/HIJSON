@@ -11,6 +11,9 @@ External_wall.prototype.style = {
     								opacity: 1
     							};
 
+External_wall.prototype.in_graph = false;
+External_wall.prototype.in_2D_map = true;
+
 External_wall.prototype.get3DModel = function() {
     var material = new THREE.MeshLambertMaterial({ 
     	color: this.style.color, 

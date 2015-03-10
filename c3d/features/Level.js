@@ -10,6 +10,8 @@ Level.prototype.style = {
 			    			color: "#ffffff",
 						    opacity: 0
 					    };
+Level.prototype.in_graph = false;
+Level.prototype.in_2D_map = true;
 
 Level.prototype.get3DModel = function() {
     var material = new THREE.MeshLambertMaterial({ 

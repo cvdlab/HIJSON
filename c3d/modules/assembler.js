@@ -53,10 +53,6 @@ var self = module.exports = {
 	
 	generateGeoJSON: function(data) {
 		var geoJSONmap = {};
-	    var includedArchitectureClasses = ['level', 'room', 'door', 'window', 'internal_wall', 'external_wall'];
-	    var includedFurtituresClasses = ['server', 'surveillanceCamera','fireExtinguisher','hotspot','antenna','badgeReader','table'];
-		var includedClasses = includedArchitectureClasses.concat(includedFurtituresClasses);
-		
 		if (data.config.showGraph) {
 			includedClasses.push('graphNode');
 		
@@ -72,9 +68,8 @@ var self = module.exports = {
 	    
 	    while(queue.length > 0) {
 	        obj = queue.shift();
-	        
-
-	        if(includedClasses.indexOf(obj.properties.class) > -1)
+	        var feature = featureFactory.generateFeature(obj);
+	        if(feature.in_2D_map)
 	        {
 
 				var level = utilities.getLevel(obj);

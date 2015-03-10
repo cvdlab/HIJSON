@@ -11,6 +11,8 @@ Table.prototype.style =	{
 						    "fillColor": "#9b8c75",
 						    "fillOpacity": 1
 						};
+Table.prototype.in_graph = true;
+Table.prototype.in_2D_map = true;
 
 Table.prototype.get3DModel = function() {
 	var table = new THREE.Object3D();

@@ -12,6 +12,9 @@ Server.prototype.style = {
 						    "fillOpacity": 1
 						};
 
+Server.prototype.in_graph = true;
+Server.prototype.in_2D_map = true;
+
 Server.prototype.get3DModel = function() {
 	var shape = Feature.generatePolygonShape(this.geometry);
 	var geometry = shape.extrude({

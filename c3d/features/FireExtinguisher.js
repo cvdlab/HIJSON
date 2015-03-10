@@ -12,6 +12,9 @@ FireExtinguisher.prototype.style = {
 									    markerColor: "red"
 									};
 
+FireExtinguisher.prototype.in_graph = true;
+FireExtinguisher.prototype.in_2D_map = true;
+
 FireExtinguisher.prototype.get3DModel = function() {
 	var fireExtinguisher = new THREE.Object3D();
 

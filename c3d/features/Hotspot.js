@@ -11,6 +11,9 @@ Hotspot.prototype.style = {
 								icon: "wifi"
 							};
 
+Hotspot.prototype.in_graph = true;
+Hotspot.prototype.in_2D_map = true;
+
 Hotspot.prototype.get3DModel = function() {
 	var hotspot = new THREE.Object3D();
 

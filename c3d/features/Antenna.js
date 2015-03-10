@@ -1,5 +1,6 @@
 var Feature = require('./Feature.js');
 
+
 function Antenna(feature) {
 	Feature.call(this, feature);
 }
@@ -10,6 +11,8 @@ Antenna.prototype.style =	{
 								prefix: "fa",
 								icon: "signal"
     						};
+Antenna.prototype.in_graph = true;
+Antenna.prototype.in_2D_map = true;
 
 Antenna.prototype.get3DModel = function() {
 	var material = new THREE.MeshLambertMaterial( {color: 0x38a9dc} );

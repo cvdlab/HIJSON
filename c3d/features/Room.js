@@ -11,6 +11,10 @@ Room.prototype.style = {
 							fillColor: "#b8b8b8",
 							fillOpacity: 1
     					};
+
+Room.prototype.in_graph = true;
+Room.prototype.in_2D_map = true;
+
 Room.prototype.get3DModel = function() {
     var material = new THREE.MeshLambertMaterial({
         color: this.style.fillColor,

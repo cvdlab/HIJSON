@@ -11,6 +11,8 @@ BadgeReader.prototype.style = 	{
 									icon: "ticket"
 								};
 
+BadgeReader.prototype.in_graph = true;
+BadgeReader.prototype.in_2D_map = true;
 BadgeReader.prototype.get3DModel = function() {
     var geometry = new THREE.BoxGeometry( 0.2, 0.3, 0.25 );
     var material = new THREE.MeshLambertMaterial( {color: 0x38a9dc} );

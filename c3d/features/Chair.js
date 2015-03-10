@@ -10,7 +10,10 @@ Chair.prototype.style = {
 			    			prefix: "fa",
 	    					icon: "minus"
 						};
-						
+
+Chair.prototype.in_graph = true;
+Chair.prototype.in_2D_map = false;
+
 Chair.prototype.get3DModel = function() {
 	var chair = new THREE.Object3D();
 

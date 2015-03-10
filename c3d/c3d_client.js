@@ -45,7 +45,7 @@ eventEmitter.on('getDirections', function(directionInfo) {
     var fromNodeId = directionInfo.fromNodeId;
     var toNodeId = directionInfo.toNodeId; 
     var path = dijkstrajs.find_path(data.graph, fromNodeId, toNodeId);
-    console.log(path);
+    // console.log(path);
     var pathsGeoJSON = {};
     
     for(id in path) {
@@ -68,7 +68,7 @@ eventEmitter.on('getDirections', function(directionInfo) {
         var geographicalCoordinates = coordinatesUtilities.fromXYToLngLat(nodeCoordinates, data.config.transformationMatrix);
         pathsGeoJSON[level].geometry.coordinates.push(geographicalCoordinates);
     }
-    console.log(pathsGeoJSON);
+    //console.log(pathsGeoJSON);
 
     for(idLevel in pathsGeoJSON) {
         var layer = L.geoJson(pathsGeoJSON[idLevel]);

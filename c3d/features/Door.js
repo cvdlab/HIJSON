@@ -9,5 +9,8 @@ function Door(feature) {
 Door.prototype.style =  {
 							color: "#000000"
     					};
-    					
+
+Door.prototype.in_graph = true;
+Door.prototype.in_2D_map = true;
+
 module.exports = Door;

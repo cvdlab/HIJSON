@@ -17,6 +17,9 @@ Feature.inherits = function inherits(Child, Parent) {
 	Child.prototype.constructor = Child;
 }
 
+Feature.prototype.in_graph = false;
+Feature.prototype.in_2D_map = false;
+
 Feature.generateLineString = function generateLineString(geoJSONgeometry) {
 	var lineString = new THREE.Geometry();
     for(var i = 0; i < geoJSONgeometry.coordinates.length; i++){

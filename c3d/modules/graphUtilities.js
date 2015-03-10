@@ -3,6 +3,8 @@ var poly2tri = require('poly2tri');
 var matrixUtilities = require('./matrixUtilities.js');
 var coordinatesUtilities = require('./coordinatesUtilities.js');
 var utilities = require('./utilities.js');
+var featureFactory = require('./featureFactory.js');
+
 // (2) private things
 function getTriangles(object) {
 	if (object.geometry.type === 'Polygon') {
@@ -60,7 +62,6 @@ function getNearestNode(sourceNode, graphRoom) {
 		}
 		i++;
 	}
-
 	var nearestNode = {
 		node: distanceNodes[0].node,
 		distance: distanceNodes[0].distance
@@ -166,11 +167,21 @@ function createSubGraph(data, id) {
 		data.index[graphNode.id] = graphNode;
 	}
 
+	if(object.type === 'furnitures') {
+		var node = object.getGraphNode(object);
+		var localMatrix = matrixUtilities.objMatrix(node);
+		var globalMatrix = matrixUtilities.getCMT(data.index[node.properties.parent]);
+		var nodeCMT = matrixUtilities.matrixProduct(globalMatrix, localMatrix);
+		node.CMT = nodeCMT;
+		
+		node.parent = data.index[node.properties.parent];
+		object.children.push(node);
+		object.graph.push(node);
+		data.index[node.id] = node;
+	}
 	if(object.properties.class === 'room') {
 		var triangles = getTriangles(object);
-		
 		var i = 0;
-		
 		var bucket = {
 			main: [],
 			buckets: []
@@ -232,8 +243,6 @@ function createSubGraph(data, id) {
 				}
 			}
 		}
-
-
 		//Collegamento tra punti medi 
 		for(id in bucket.buckets) {
 			var smallBucket = bucket.buckets[id];
@@ -263,19 +272,6 @@ function createSubGraph(data, id) {
 			data.index[graphNode.id] = graphNode;
 		}
 	}
-
-	if(object.type === 'furnitures') {
-		var node = object.getGraphNode(object);
-		var localMatrix = matrixUtilities.objMatrix(node);
-		var globalMatrix = matrixUtilities.getCMT(data.index[node.properties.parent]);
-		var nodeCMT = matrixUtilities.matrixProduct(globalMatrix, localMatrix);
-		node.CMT = nodeCMT;
-		
-		node.parent = data.index[node.properties.parent];
-		object.children.push(node);
-		object.graph.push(node);
-		data.index[node.id] = node;
-	}
 }
 
 function assembleGraph(data) {
@@ -294,19 +290,21 @@ var self = module.exports = {
 		//Creazione sottografi
 		for(id in data.index) {
 			var obj = data.index[id];
-			if(obj.properties.class === 'door' || obj.properties.class === 'room' || obj.type === 'furnitures') {
+			var feature = featureFactory.generateFeature(obj);
+			if(feature.in_graph) {
 				createSubGraph(data, id);
 			}
 		}
-
 		//Collegamenti porte-stanze
 
 		for(id in data.index) {
 			if(data.index[id].properties.class === 'door') {
+
 				var door = data.index[id];
 				var doorNode = door.graph[0];
 				if(door.properties.connections === undefined) {
 					var connections = data.index[door.properties.parent].properties.connections;
+
 				}
 				else {
 					var connections = door.properties.connections;
