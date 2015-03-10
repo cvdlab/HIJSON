@@ -49,9 +49,9 @@ block additional_scripts
 					data.index[user.position.levelId].obj3D.userModels.add(model);
 					model.position = c3dclient.coordinatesUtilities.fromGeneralTo3D(user.position);
 					if ((user.position.levelId === data.actualPosition.levelId) || (data.actualPosition.levelId === 'building')) {
-						c3dclient.utilities.show3DObject(model, true);
+						c3dclient.utilities.setVisibility(model, true);
 					} else {
-						c3dclient.utilities.show3DObject(model, false);
+						c3dclient.utilities.setVisibility(model, false);
 					}
 				}
 			}

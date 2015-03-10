@@ -2,13 +2,13 @@ var self = module.exports = {
 	
 	getLevel: function(obj) {
 		var ancestor = obj;
-		while (ancestor.properties.class !== 'level') {
-			ancestor = ancestor.parent;
-		}
-
+		
 		if (ancestor.properties.class === 'building') {
 			return undefined;
 		} else {
+			while (ancestor.properties.class !== 'level') {
+				ancestor = ancestor.parent;
+			}
 			return ancestor.id;
 		}
 	},
@@ -79,13 +79,18 @@ var self = module.exports = {
 	},
 
 	highlightFeature: function(idObject) {
-		// hide all
-		self.setVisibility(data.index['building'].obj3D, false);
-		// get level id and show the level in transparency
-		var idLevel = self.getLevel( data.index[idObject] );
-		self.setOpacity(data.index[idLevel].obj3D, 0.2);
-		// highlight feature
-		self.setVisibility(data.index[idObject].obj3D, true);
+		if (data.index[idObject].properties.class === 'building') {
+			self.setVisibility(data.index[idObject].obj3D, true);
+		} else {
+			// hide all
+			self.setVisibility(data.index['building'].obj3D, false);
+			// get level id and show the level in transparency
+			var idLevel = self.getLevel( data.index[idObject] );
+			self.setOpacity(data.index[idLevel].obj3D, 0.2);
+			// highlight feature
+			self.setVisibility(data.index[idObject].obj3D, true);
+		}
+
 	},
 
 	getMidPointLineString: function(featureGeometry) {

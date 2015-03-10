@@ -163,7 +163,9 @@ block content
 					);
 		});
 		c3dclient.eventEmitter.on('selectFeature', function emitShowFeatureInfo(idObject) {
-			c3dclient.eventEmitter.emit('showFeatureInfo',idObject);
+			if (data.index[idObject].properties.class !== 'building') {
+				c3dclient.eventEmitter.emit('showFeatureInfo',idObject);
+			}
 		});	
 	// get directions logic			  
 	script.
