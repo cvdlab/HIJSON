@@ -7,7 +7,7 @@ function Internal_wall(feature) {
 }
 
 Internal_wall.prototype.style = { 
-							    	color: "#e8e8e8",
+							    	color: "#E9E0D6",
     								opacity: 1
     							};
 

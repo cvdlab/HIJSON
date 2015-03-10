@@ -828,7 +828,7 @@
             {
                 "parent": "room_0.1",
                 "class": "fireExtinguisher",
-                "tVector": [0.25, 1, 0.5],
+                "tVector": [0.25, 3, 0.5],
                 "rVector": [0, 0, 90]
             }
         },
@@ -862,8 +862,8 @@
             {
                 "parent": "hall_0.1",
                 "class": "fireExtinguisher",
-                "tVector": [4, 0.25, 0.5],
-                "rVector": [0, 0, 180]
+                "tVector": [0.2, 5, 0.5],
+                "rVector": [0, 0, 90]
             }
         },
         {
@@ -944,7 +944,7 @@
             {
                 "parent": "room_0.3",
                 "class": "chair",
-                "tVector": [4, 4, 0],
+                "tVector": [4, 4.5, 0],
                 "rVector": [0, 0, 90]
             }
         },
@@ -962,25 +962,6 @@
                 "class": "chair",
                 "tVector": [2, 4, 0],
                 "rVector": [0, 0, -90]
-            }
-        },
-        {
-            "id": "table_1_room_0.4",
-            "type": "Feature",
-            "geometry": 
-            {
-                "type": "Polygon",
-                "coordinates": [
-                	[ [0, 0], [4, 0], [4, 2], [0, 2] ]
-                ]
-            },
-            "properties": 
-            {
-                "parent": "room_0.4",
-                "class": "table",
-                "height": 0.8,
-                "tVector": [5, 3, 0],
-                "rVector": [0, 0, 0]
             }
         },
         {
@@ -1002,7 +983,25 @@
                 "rVector": [0, 0, 90]
             }
         },
-
+        {
+            "id": "table_1_room_0.4",
+            "type": "Feature",
+            "geometry": 
+            {
+                "type": "Polygon",
+                "coordinates": [
+                	[ [0, 0], [4, 0], [4, 2], [0, 2] ]
+                ]
+            },
+            "properties": 
+            {
+                "parent": "room_0.4",
+                "class": "table",
+                "height": 0.8,
+                "tVector": [5, 3, 0],
+                "rVector": [0, 0, 0]
+            }
+        },
         {
             "id": "chair_1_room_0.4",
             "type": "Feature",
@@ -1733,7 +1732,7 @@
             {
                 "parent": "room_0.4",
                 "class": "fireExtinguisher",
-                "tVector": [6.5, 7.8, 0.3],
+                "tVector": [5.5, 7.8, 0.3],
                 "rVector": [0, 0, 180]
             }
         },
@@ -1751,6 +1750,57 @@
                 "class": "surveillanceCamera",
                 "tVector": [13, 7.8, 2.8],
                 "rVector": [0, 0, -90]
+            }
+        },
+            {
+            "id": "chair_1_room_0.2",
+            "type": "Feature",
+            "geometry": 
+            {
+                "type": "Point",
+                "coordinates": [0, 0]
+            },
+            "properties": 
+            {
+                "parent": "room_0.2",
+                "class": "chair",
+                "tVector": [8, 4, 0],
+                "rVector": [0, 0, 90]
+            }
+        },
+        {
+            "id": "chair_2_room_0.2",
+            "type": "Feature",
+            "geometry": 
+            {
+                "type": "Point",
+                "coordinates": [0, 0]
+            },
+            "properties": 
+            {
+                "parent": "room_0.2",
+                "class": "chair",
+                "tVector": [6, 4, 0],
+                "rVector": [0, 0, -90]
+            }
+        },
+        {
+            "id": "table_1_room_0.2",
+            "type": "Feature",
+            "geometry": 
+            {
+                "type": "Polygon",
+                "coordinates": [
+                    [ [0, 0], [2, 0], [2, 1], [0, 1]  ]
+                ]
+            },
+            "properties": 
+            {
+                "parent": "room_0.2",
+                "class": "table",
+                "height": 0.8,
+                "tVector": [7.5, 3, 0],
+                "rVector": [0, 0, 90]
             }
         }
     ]

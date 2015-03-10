@@ -57,8 +57,8 @@ var self = module.exports = {
 	    spotLight2.position.set(50,50,60);
 	    scene.add( spotLight2 );
 
-	    var axisHelper = new THREE.AxisHelper(3);
-	    scene.add(axisHelper); 
+	    //var axisHelper = new THREE.AxisHelper(3);
+	    //scene.add(axisHelper); 
 	        
 	    window.addEventListener( 'resize', onWindowResize3D, false );
 
