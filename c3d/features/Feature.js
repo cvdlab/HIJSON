@@ -72,6 +72,21 @@ Feature.generateWallGeometry = function generateWallGeometry(wallFeature) {
 			];
 			coordinates.push(hole);
 		}
+		if (child.properties.class === 'window') {
+			var windowLength = child.geometry.coordinates[1][0];
+			var windowHeight = child.properties.height;
+			
+			var windowHorizontalShift = child.properties.tVector[0];
+			var windowVerticalShift = child.properties.tVector[2];
+			
+			var hole = [
+				[windowHorizontalShift, windowVerticalShift], 
+				[windowHorizontalShift+windowLength, windowVerticalShift], 
+				[windowHorizontalShift+windowLength, windowVerticalShift+windowHeight], 
+				[windowHorizontalShift, windowVerticalShift+windowHeight]
+			];
+			coordinates.push(hole);
+		}
 	}
 	return { coordinates: coordinates }
 }
