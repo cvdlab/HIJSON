@@ -8,7 +8,8 @@ function External_wall(feature) {
 
 External_wall.prototype.style = {
 									color: "#d8d8d8",
-    								opacity: 1
+    								opacity: 1,
+    								zIndex: 4
     							};
 
 External_wall.prototype.in_graph = false;

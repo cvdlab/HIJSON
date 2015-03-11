@@ -9,7 +9,8 @@ function FireExtinguisher(feature) {
 FireExtinguisher.prototype.style = {
 									    prefix: "fa",
 									    icon: "fire-extinguisher",
-									    markerColor: "red"
+									    markerColor: "red",
+									    zIndex: 3
 									};
 
 FireExtinguisher.prototype.in_graph = true;

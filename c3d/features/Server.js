@@ -7,9 +7,10 @@ function Server(feature) {
 }
 
 Server.prototype.style = {
-							"weight": 0,
-						    "fillColor": "#f49530",
-						    "fillOpacity": 1
+							weight: 0,
+						    fillColor: "#f49530",
+						    fillOpacity: 1,
+						    zIndex: 2
 						};
 
 Server.prototype.in_graph = true;

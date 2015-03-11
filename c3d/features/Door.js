@@ -7,7 +7,8 @@ function Door(feature) {
 }
 
 Door.prototype.style =  {
-							color: "#000000"
+							color: "#000000",
+							zIndex: 6
     					};
 
 Door.prototype.in_graph = true;

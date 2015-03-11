@@ -9,7 +9,8 @@ Feature.inherits(Antenna, Feature);
 
 Antenna.prototype.style =	{
 								prefix: "fa",
-								icon: "signal"
+								icon: "signal",
+								zIndex: 3
     						};
 Antenna.prototype.in_graph = true;
 Antenna.prototype.in_2D_map = true;

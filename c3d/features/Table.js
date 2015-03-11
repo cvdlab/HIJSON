@@ -7,10 +7,12 @@ function Table(feature) {
 }
 
 Table.prototype.style =	{
-							"weight": 0,
-						    "fillColor": "#9b8c75",
-						    "fillOpacity": 1
+							weight: 0,
+						    fillColor: "#9b8c75",
+						    fillOpacity: 1,
+						    zIndex: 3
 						};
+
 Table.prototype.in_graph = true;
 Table.prototype.in_2D_map = true;
 

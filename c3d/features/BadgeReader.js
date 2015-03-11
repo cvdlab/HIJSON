@@ -8,7 +8,8 @@ function BadgeReader(feature) {
 
 BadgeReader.prototype.style = 	{
 									prefix: "fa",
-									icon: "ticket"
+									icon: "ticket",
+                                    zIndex: 3
 								};
 
 BadgeReader.prototype.in_graph = true;

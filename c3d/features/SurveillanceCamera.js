@@ -8,7 +8,8 @@ function SurveillanceCamera(feature) {
 
 SurveillanceCamera.prototype.style = {
 									    prefix: "fa",
-									    icon: "video-camera"
+									    icon: "video-camera",
+									    zIndex: 3
     								};
 
 SurveillanceCamera.prototype.in_graph = true;

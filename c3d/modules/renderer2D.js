@@ -11,7 +11,7 @@ var orderLayers = function() {
 				layer.bringToFront();
 			}
     	}
-	}
+    }
 };
 
 var self = module.exports = {

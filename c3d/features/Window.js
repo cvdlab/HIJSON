@@ -7,10 +7,11 @@ function Window(feature) {
 }
 
 Window.prototype.style =  {
-							color: "#0000FF"
+							color: "#0000FF",
+							zIndex: 7
     					};
 
 Window.prototype.in_graph = false;
 Window.prototype.in_2D_map = false;
-					
+
 module.exports = Window;

@@ -5,6 +5,11 @@ Feature.inherits(Light, Feature);
 function Light(feature) {
 	Feature.call(this, feature);
 }
+Light.prototype.style = {
+			    			color: "#ffffff",
+						    opacity: 0,
+                            zIndex: 3
+					    };
 
 Light.prototype.in_graph = true;
 Light.prototype.in_2D_map = false;

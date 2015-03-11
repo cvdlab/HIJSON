@@ -9,7 +9,8 @@ function Room(feature) {
 Room.prototype.style = {
 							weight: 0,
 							fillColor: "#b8b8b8",
-							fillOpacity: 1
+							fillOpacity: 1,
+                            zIndex: 1
     					};
 
 Room.prototype.in_graph = true;

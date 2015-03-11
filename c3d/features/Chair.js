@@ -8,7 +8,8 @@ function Chair(feature) {
 
 Chair.prototype.style = {
 			    			prefix: "fa",
-	    					icon: "minus"
+	    					icon: "minus",
+	    					zIndex: 3
 						};
 
 Chair.prototype.in_graph = true;

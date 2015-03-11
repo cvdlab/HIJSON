@@ -8,7 +8,8 @@ function Internal_wall(feature) {
 
 Internal_wall.prototype.style = { 
 							    	color: "#E9E0D6",
-    								opacity: 1
+    								opacity: 1,
+                                    zIndex: 5
     							};
 
 Internal_wall.prototype.in_graph = false;

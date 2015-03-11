@@ -8,7 +8,8 @@ function Hotspot(feature) {
 
 Hotspot.prototype.style = {
 								prefix: "fa",
-								icon: "wifi"
+								icon: "wifi",
+								zIndex: 3
 							};
 
 Hotspot.prototype.in_graph = true;
