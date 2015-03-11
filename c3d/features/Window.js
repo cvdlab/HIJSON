@@ -12,6 +12,6 @@ Window.prototype.style =  {
     					};
 
 Window.prototype.in_graph = false;
-Window.prototype.in_2D_map = false;
+Window.prototype.in_2D_map = true;
 
 module.exports = Window;

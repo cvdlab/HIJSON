@@ -20,6 +20,7 @@ featureClasses['Server'] = require('../features/Server.js');
 featureClasses['SurveillanceCamera'] = require('../features/SurveillanceCamera.js');
 featureClasses['Table'] = require('../features/Table.js');
 featureClasses['Window'] = require('../features/Window.js');
+featureClasses['Stair'] = require('../features/Stair.js');
 
 function capitaliseFirstLetter(featureClass) {
 	return featureClass.charAt(0).toUpperCase() + featureClass.slice(1);

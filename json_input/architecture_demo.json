@@ -553,7 +553,7 @@
                     "parent": "wall_0.3-H",
                     "thickness": 5,
                     "description": "Porta Room0.3-H",
-                    "tVector": [4, 0, 0],
+                    "tVector": [0.2, 0, 0],
                     "rVector": [0, 0, 0]
               }
         }, 
@@ -1987,6 +1987,30 @@
                     "height": 1.5,
                     "description": "finestra",
                     "tVector": [4, 0, 1],
+                    "rVector": [0, 0, 0]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "stair_hall_0.1_1",
+              "geometry": 
+              {
+                    "type": "Polygon",
+                    "coordinates": 
+                    [ 
+                      [ [0, 0], [2, 0], [2, 6], [0, 6] ]
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "stair",
+                    "parent": "room_0.3",
+                    "nSteps": 10,
+                    "stepDimension" : [1.5, 0.4, 0.2],
+                    "description": "stair hall",
+                    "connections": ["room_0.3","room_1.3"],
+                    "tVector": [3.6, 0.15, 0],
                     "rVector": [0, 0, 0]
               }
         }

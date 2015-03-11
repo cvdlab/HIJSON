@@ -231,8 +231,13 @@ var self = module.exports = {
 	    
 	    while (queue.length>0) {
 	        feature = queue.shift();
-	        
+	        if(feature.id === 'stair_0.3') {
+	        	console.log(feature.id);
+	        }
            	var el3D = feature.get3DModel();
+	        if(feature.id === 'stair_0.3') {
+	        	console.log(el3D);
+	        }
             el3D.feature = feature;
             feature.obj3D = el3D;
             if (feature.properties.rVector !== undefined) {
