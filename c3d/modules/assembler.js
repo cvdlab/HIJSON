@@ -53,10 +53,6 @@ var self = module.exports = {
 	
 	generateGeoJSON: function(data) {
 		var geoJSONmap = {};
-		if (data.config.showGraph) {
-			includedClasses.push('graphNode');
-		
-		}
 	    var queue = [];
 	    var obj;
 

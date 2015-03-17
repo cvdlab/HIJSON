@@ -1,4 +1,6 @@
-var utilities = require('../modules/utilities.js')
+var utilities = require('../modules/utilities.js');
+var matrixUtilities = require('../modules/matrixUtilities.js');
+
 var React = require('react');
 
 function Feature(feature) { 
@@ -193,7 +195,32 @@ Feature.prototype.getGraphNode = function(feature) {
 
     return graphNode;
 }
+Feature.prototype.getLocalCoordinates = function() {
+    var objMatrix = matrixUtilities.objMatrix(this);
+    switch(this.geometry.type) {
+            case 'Point':
+                return matrixUtilities.applyTransformation(this.geometry.coordinates, objMatrix);
+                break;
+            case 'LineString':
+                var newCoordinates = [];
+                for(var i in this.geometry.coordinates) {
+                    newCoordinates.push(matrixUtilities.applyTransformation(this.geometry.coordinates[i], objMatrix)); 
+                }
+                return newCoordinates;       
+                break;
+            case 'Polygon':
+                var newCoordinates = [];
+                for(var i in this.geometry.coordinates) {
+                    for(j in this.geometry.coordinates[i]) { 
+                        newCoordinates.push(matrixUtilities.applyTransformation(this.geometry.coordinates[i][j], objMatrix)); 
+                    }
+                }
+                return newCoordinates; 
+                break;
+            default:
 
+    }       
+}
 function createNode(tVector, objectId, triangleId) {
     var graphNode = {
         type: 'graph',
@@ -214,5 +241,6 @@ function createNode(tVector, objectId, triangleId) {
     graphNode.properties.tVector = tVector;
     return graphNode;
 }
+
 
 module.exports = Feature;

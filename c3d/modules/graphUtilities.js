@@ -1,20 +1,56 @@
 // (1) dependencies
 var poly2tri = require('poly2tri');
+var ClipperLib = require('js-clipper');
+
 var matrixUtilities = require('./matrixUtilities.js');
 var coordinatesUtilities = require('./coordinatesUtilities.js');
 var utilities = require('./utilities.js');
 var featureFactory = require('./featureFactory.js');
 
+
 // (2) private things
+
+function computeWalkableArea(object) {
+	var cpr = new ClipperLib.Clipper();
+	var coords = object.geometry.coordinates;
+	var perimeter = coords[0];
+	
+	var subj_paths = [fromJsonToClipper(perimeter)];
+	var clip_paths = [];
+
+	for (var i = 1; i < coords.length; i++) {
+	    var internal_hole = coords[i];
+	 	clip_paths.push(fromJsonToClipper(internal_hole));
+    }
+	
+	for (k in object.children) {
+		var child = object.children[k];
+		if (child.geometry.type === 'Polygon') {
+			clip_paths.push(fromJsonToClipper(child.getLocalCoordinates()));
+		}
+	}
+	// console.log(subj_paths);
+	//console.log(clip_paths);
+	cpr.AddPaths(subj_paths, ClipperLib.PolyType.ptSubject, true);  // true means closed path
+	cpr.AddPaths(clip_paths, ClipperLib.PolyType.ptClip, true);
+
+	var walkableArea = new ClipperLib.Paths();
+	var succeeded = cpr.Execute(ClipperLib.ClipType.ctDifference, walkableArea, 
+		ClipperLib.PolyFillType.pftNonZero, ClipperLib.PolyFillType.pftNonZero);
+	walkableArea = walkableArea.map(fromClipperToJson);
+	return walkableArea;
+}
+
 function getTriangles(object) {
 	if (object.geometry.type === 'Polygon') {
-		var coords = object.geometry.coordinates;
+		var coords = computeWalkableArea(object);
 		var perimeter = coords[0];
 		var contour = [];
 	
 		for(j in perimeter) {
 			contour.push(new poly2tri.Point(perimeter[j][0], perimeter[j][1]));
 		}
+
 		var swctx = new poly2tri.SweepContext(contour);
 		
 	    for (var i = 1; i < coords.length; i++) { //scorro eventuali holes
@@ -26,27 +62,12 @@ function getTriangles(object) {
 	        swctx.addHole(hole);
 	    }
 	    
-	    for (k in object.children) {
-		    var child = object.children[k];
-		    if (child.geometry.type === 'Polygon') {
-			    var perimeter = child.geometry.coordinates[0];
-			    var objMatrix = matrixUtilities.objMatrix(child);
-			    //var tVector = child.properties.tVector;
-		        var hole = [];
-		        for (j in perimeter) { //scorro le singole coordinate dei vari perimetri
-					//hole.push(new poly2tri.Point(perimeter[j][0] + tVector[0], perimeter[j][1] + tVector[1]));
-					var newPoint = matrixUtilities.applyTransformation(perimeter[j], objMatrix);
-					hole.push(new poly2tri.Point(newPoint[0], newPoint[1]));
-		        }
-		        swctx.addHole(hole);
-		    }
-	    }
-		
-		swctx.triangulate();
+	    swctx.triangulate();
 		var triangles = swctx.getTriangles();
 	
 		return triangles;
-	} else {
+	} 
+	else {
 		console.log('error, you can triangulate only polygons');
 	}
 }

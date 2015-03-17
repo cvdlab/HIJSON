@@ -24,6 +24,26 @@
             }
         },
         {
+            "id": "server_0_room_0.1",
+            "type": "Feature",
+            "geometry": 
+            {
+                "type": "Polygon",
+                "coordinates": 
+                [
+                   [ [0, 0], [2, 0], [2, 3], [0, 3] ]
+                ]
+            },
+            "properties": 
+            {
+                "parent": "room_0.1",
+                "class": "server",
+                "height": 3,
+                "tVector": [0, 0, 0],
+                "rVector": [0, 0, 0]
+            }
+        },
+        {
             "id": "server_2_room_0.1",
             "type": "Feature",
             "geometry": 
