@@ -101,6 +101,7 @@ var output = {
 // inserisco gli elementi sopravvissuti nella struttura
 for (id in index) {
 	var element = index[id];
+	console.log(element);
 	output.features.push(element);
 }
 
