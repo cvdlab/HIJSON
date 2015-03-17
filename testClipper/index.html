@@ -8,7 +8,11 @@
     <div id="svgcontainer"></div>
     <script>
 var subj_paths = [[{X:0,Y:0},{X:150,Y:0},{X:150,Y:150},{X:0,Y:150}]]; 
-var clip_paths = [[{X:30,Y:30},{X:60,Y:30},{X:60,Y:60},{X:30,Y:60}]];
+var clip_paths = [
+					[{X:30,Y:30},{X:60,Y:30},{X:60,Y:60},{X:30,Y:60}],
+					[{X:60,Y:40},{X:90,Y:40},{X:90,Y:70},{X:60,Y:70}],
+					[{X:0,Y:0},{X:10,Y:0},{X:10,Y:10},{X:0,Y:10}]
+				];
 
 var cpr = new ClipperLib.Clipper();
 
@@ -22,7 +26,7 @@ cpr.AddPaths(clip_paths, ClipperLib.PolyType.ptClip, true);
 var solution_paths = new ClipperLib.Paths();
 var succeeded = cpr.Execute(ClipperLib.ClipType.ctDifference, solution_paths, ClipperLib.PolyFillType.pftNonZero, ClipperLib.PolyFillType.pftNonZero);
 
-// console.log(JSON.stringify(solution_paths));
+console.log(JSON.stringify(solution_paths));
 
 // Scale down coordinates and draw ...
 var svg = '<svg style="background-color:#dddddd" width="160" height="160">';

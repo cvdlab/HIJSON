@@ -284,6 +284,35 @@ function assembleGraph(data) {
 	data.graph = map;
 }
 
+function fromJsonToClipper(coordList) {
+	var clipperCoords = [];
+	
+	for (pointKey in coordList) {
+		var newPoint = {
+			X: coordList[pointKey][0],
+			Y: coordList[pointKey][1]
+		}
+		clipperCoords.push(newPoint);
+	}
+	
+	return clipperCoords;
+}
+
+function fromClipperToJson(coordList) {
+	var jsonCoords = [];
+	
+	for (pointKey in coordList) {
+		var newPoint = [
+			coordList[pointKey].X,
+			coordList[pointKey].Y
+		]
+
+		jsonCoords.push(newPoint);
+	}
+	
+	return jsonCoords;
+}
+
 // (3) public/exported things
 var self = module.exports = {
 	createGraph:  function(data) {
