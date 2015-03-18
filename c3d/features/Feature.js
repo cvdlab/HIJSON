@@ -101,7 +101,6 @@ Feature.packageModel = function packageModel(model3D) {
     var material = new THREE.MeshBasicMaterial( {color: 0xff0000, transparent: true, opacity: 0} );
     var el3D;
     var feature = model3D.feature;
-    console.log(feature.id);
     if(feature.geometry.type === "Polygon") {
         var shape = Feature.generatePolygonShape(feature.geometry);
         geometry = shape.extrude({

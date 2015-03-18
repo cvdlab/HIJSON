@@ -27,7 +27,7 @@ var self = module.exports = {
 	    camera3D = camera;
 	    
 	    scene.add(camera);
-	    camera.position.set(30,25,13);
+	    camera.position.set(42,35,42);
 	    camera.up = new THREE.Vector3(0,1,0);
 	    camera.lookAt(scene.position);
 		
@@ -50,11 +50,11 @@ var self = module.exports = {
 	    scene.add(ambientLight);
 	    
 	    var spotLight = new THREE.SpotLight(0xFFFFFF);
-	    spotLight.position.set(-40,50,-50);
+	    spotLight.position.set(-40,80,-50);
 	    scene.add( spotLight );
 	    
 	    var spotLight2 = new THREE.SpotLight(0xFFFFFF);
-	    spotLight2.position.set(50,50,60);
+	    spotLight2.position.set(50,80,60);
 	    scene.add( spotLight2 );
 
 	    //var axisHelper = new THREE.AxisHelper(3);
