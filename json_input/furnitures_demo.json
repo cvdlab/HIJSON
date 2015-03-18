@@ -24,26 +24,6 @@
             }
         },
         {
-            "id": "server_0_room_0.1",
-            "type": "Feature",
-            "geometry": 
-            {
-                "type": "Polygon",
-                "coordinates": 
-                [
-                   [ [0, 0], [2, 0], [2, 3], [0, 3] ]
-                ]
-            },
-            "properties": 
-            {
-                "parent": "room_0.1",
-                "class": "server",
-                "height": 3,
-                "tVector": [0, 0, 0],
-                "rVector": [0, 0, 0]
-            }
-        },
-        {
             "id": "server_2_room_0.1",
             "type": "Feature",
             "geometry": 
@@ -1855,26 +1835,6 @@
             }
         },
         {
-            "id": "server_0_room_5.1",
-            "type": "Feature",
-            "geometry": 
-            {
-                "type": "Polygon",
-                "coordinates": 
-                [
-                   [ [0, 0], [2, 0], [2, 3], [0, 3] ]
-                ]
-            },
-            "properties": 
-            {
-                "parent": "room_5.1",
-                "class": "server",
-                "height": 3,
-                "tVector": [0, 0, 0],
-                "rVector": [0, 0, 0]
-            }
-        },
-        {
             "id": "server_2_room_5.1",
             "type": "Feature",
             "geometry": 
@@ -2363,7 +2323,7 @@
             {
                 "parent": "room_5.1",
                 "class": "fireExtinguisher",
-                "tVector": [0.25, 3, 0.5],
+                "tVector": [0.25, 2.5, 0.5],
                 "rVector": [0, 0, 90]
             }
         },
@@ -2380,7 +2340,7 @@
             {
                 "parent": "room_5.2",
                 "class": "fireExtinguisher",
-                "tVector": [6, 7.75, 0.5],
+                "tVector": [8, 7.75, 0.5],
                 "rVector": [0, 0, 0]
             }
         },
@@ -2429,7 +2389,7 @@
             {
                 "parent": "room_5.1",
                 "class": "hotspot",
-                "tVector": [0.2, 5, 2.3],
+                "tVector": [0.2, 7, 2.3],
                 "rVector": [0, 0, 90]
             }
         },
