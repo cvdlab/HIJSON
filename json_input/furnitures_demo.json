@@ -3697,6 +3697,26 @@
                 "tVector": [7.5, 3, 0],
                 "rVector": [0, 0, 90]
             }
+        },
+        {
+            "id": "server_1_room_5.4",
+            "type": "Feature",
+            "geometry": 
+            {
+                "type": "Polygon",
+                "coordinates": 
+                [
+                   [ [0, 0], [2, 0], [2, 7], [0, 7] ]
+                ]
+            },
+            "properties": 
+            {
+                "parent": "room_5.4",
+                "class": "server",
+                "height": 3,
+                "tVector": [12, 0.5, 0],
+                "rVector": [0, 0, 0]
+            }
         }
     ]
 }

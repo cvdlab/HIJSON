@@ -5,7 +5,7 @@
     	"lng": 12
     },
     
-    "showGraph": true,
+    "showGraph": false,
 
     "landmarks": 
 	[
