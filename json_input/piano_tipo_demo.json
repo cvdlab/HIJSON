@@ -1,0 +1,799 @@
+,
+        {
+            "type": "Feature",
+            "id": "level_5",
+            "geometry": 
+            {
+                "type": "Polygon",
+                "coordinates": 
+                [ 
+                    [ [0, 0], [31, 0], [31, 19], [0, 19], [0, 0] ]
+                ]  
+            },
+            "properties": 
+            {
+                "class": "level",
+                "parent": "building",
+                "description": "Mura perimetrali level_5",
+                "height": 3.5,
+                "thickness": 0.3,
+                "tVector": [0, 0, 17],
+                "rVector": [0, 0, 0]
+            }
+        },
+        {
+              "type": "Feature",
+              "id": "wall_5.1-S",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [11, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "external_wall",
+                    "thickness": 0.3,
+                    "parent": "level_5",
+                    "description": "Mura esterne",
+                    "tVector": [0, 0, 0],
+                    "rVector": [0, 0, 0],
+                    "connections": ["room_5.1"]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "wall_5.1-W",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [19, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "external_wall",
+                    "thickness": 0.3,
+                    "parent": "level_5",
+                    "description": "mura esterne",
+                    "tVector": [0, 0, 0],
+                    "rVector": [0, 0, 90],
+                    "connections": ["room_5.1"]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "wall_5.1-N",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [11, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "external_wall",
+                    "thickness": 0.3,
+                    "parent": "level_5",
+                    "description": "mura esterne",
+                    "tVector": [0, 19, 0],
+                    "rVector": [0, 0, 0],
+                    "connections": ["room_5.1"]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "wall_5.2-N",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [10, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "external_wall",
+                    "thickness": 0.3,
+                    "parent": "level_5",
+                    "description": "mura interne",
+                    "tVector": [11, 19, 0],
+                    "rVector": [0, 0, 0],
+                    "connections": ["room_5.2"]
+              }
+        },
+            {
+              "type": "Feature",
+              "id": "wall_5.3-N",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [10, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "external_wall",
+                    "thickness": 0.3,
+                    "parent": "level_5",
+                    "description": "mura interne",
+                    "tVector": [21, 19, 0],
+                    "rVector": [0, 0, 0],
+                    "connections": ["room_5.3"]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "wall_5.3-E",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [8, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "external_wall",
+                    "thickness": 0.3,
+                    "parent": "level_5",
+                    "description": "mura interne",
+                    "tVector": [31, 11, 0],
+                    "rVector": [0, 0, 90],
+                    "connections": ["room_5.3"]
+              }
+        },
+
+        {
+              "type": "Feature",
+              "id": "wall_5.H-E",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [3, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "external_wall",
+                    "thickness": 0.3,
+                    "parent": "level_5",
+                    "description": "mura interne",
+                    "tVector": [31, 8, 0],
+                    "rVector": [0, 0, 90],
+                    "connections": ["elevator_5.1"]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "wall_5.4-E",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [8, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "external_wall",
+                    "thickness": 0.3,
+                    "parent": "level_5",
+                    "description": "mura interne",
+                    "tVector": [31, 0, 0],
+                    "rVector": [0, 0, 90],
+                    "connections": ["room_5.4"]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "wall_5.4-S",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [15, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "external_wall",
+                    "thickness": 0.3,
+                    "parent": "level_5",
+                    "description": "mura interne",
+                    "tVector": [16, 0, 0],
+                    "rVector": [0, 0, 0],
+                    "connections": ["room_5.4"]
+              }
+        },
+
+        {
+              "type": "Feature",
+              "id": "wall_5.H-S",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [5, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "external_wall",
+                    "thickness": 0.3,
+                    "parent": "level_5",
+                    "description": "mura interne",
+                    "tVector": [11, 0, 0],
+                    "rVector": [0, 0, 0],
+                    "connections": ["hall_5.1"]
+              }
+        },
+
+        {
+              "type": "Feature",
+              "id": "wall_5.2-H",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [10, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "internal_wall",
+                    "thickness": 0.1,
+                    "parent": "level_5",
+                    "description": "mura interne",
+                    "tVector": [11, 11, 0],
+                    "rVector": [0, 0, 0],
+                    "connections": ["room_5.2", "hall_5.1"]
+              }
+        },
+
+        {
+              "type": "Feature",
+              "id": "wall_5.3-H",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [7, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "internal_wall",
+                    "thickness": 0.1,
+                    "parent": "level_5",
+                    "description": "mura interne",
+                    "tVector": [21, 11, 0],
+                    "rVector": [0, 0, 0],
+                    "connections": ["room_5.3", "hall_5.1"]
+              }
+        },
+
+        {
+              "type": "Feature",
+              "id": "wall_5.3-elevator_5.1",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [3, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "internal_wall",
+                    "thickness": 0.1,
+                    "parent": "level_5",
+                    "description": "mura interne",
+                    "tVector": [28, 11, 0],
+                    "rVector": [0, 0, 0],
+                    "connections": ["room_5.3", "elevator_5.1"]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "wall_5.2-3",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [8, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "internal_wall",
+                    "thickness": 0.1,
+                    "parent": "level_5",
+                    "description": "mura interne",
+                    "tVector": [21, 11, 0],
+                    "rVector": [0, 0, 90],
+                    "connections": ["room_5.2", "room_5.3"]
+              }
+        },
+
+        {
+              "type": "Feature",
+              "id": "wall_5.4-H-W",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [8, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "internal_wall",
+                    "thickness": 0.1,
+                    "parent": "level_5",
+                    "description": "mura interne",
+                    "tVector": [16, 0, 0],
+                    "rVector": [0, 0, 90],
+                    "connections": ["room_5.4", "hall_5.1"]
+              }
+        },
+
+        {
+              "type": "Feature",
+              "id": "wall_5.4-H-N",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [12, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "internal_wall",
+                    "thickness": 0.1,
+                    "parent": "level_5",
+                    "description": "mura interne",
+                    "tVector": [16, 8, 0],
+                    "rVector": [0, 0, 0],
+                    "connections": ["room_5.4", "hall_5.1"]
+              }
+        },
+
+        {
+              "type": "Feature",
+              "id": "wall_5.4-H-Elevator_5.1",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [3, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "internal_wall",
+                    "thickness": 0.1,
+                    "parent": "level_5",
+                    "description": "mura interne",
+                    "tVector": [28, 8, 0],
+                    "rVector": [0, 0, 0],
+                    "connections": ["room_5.4", "elevator_5.1"]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "wall_5.1-2",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [8, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "internal_wall",
+                    "thickness": 0.1,
+                    "parent": "level_5",
+                    "description": "mura interne",
+                    "tVector": [11, 11, 0],
+                    "rVector": [0, 0, 90],
+                    "connections": ["room_5.1", "room_5.2"]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "wall_5.1-H",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [11, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "internal_wall",
+                    "thickness": 0.1,
+                    "parent": "level_5",
+                    "description": "mura interne",
+                    "tVector": [11, 0, 0],
+                    "rVector": [0, 0, 90],
+                    "connections": ["room_5.1", "hall_5.1"]
+              }
+        },
+
+        {
+              "type": "Feature",
+              "id": "door_5.1-H",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [1, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "door",
+                    "parent": "wall_5.1-H",
+                    "thickness": 5,
+                    "description": "Porta room1.1-H",
+                    "tVector": [3, 0, 0],
+                    "rVector": [0, 0, 0]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "door_5.2-H",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [1, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "door",
+                    "parent": "wall_5.2-H",
+                    "thickness": 5,
+                    "description": "Porta room1.2-H",
+                    "tVector": [4, 0, 0],
+                    "rVector": [0, 0, 0]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "door_5.3-H",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [1, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "door",
+                    "parent": "wall_5.3-H",
+                    "thickness": 5,
+                    "description": "Porta room1.3-H",
+                    "tVector": [4, 0, 0],
+                    "rVector": [0, 0, 0]
+              }
+        }, 
+
+        {
+              "type": "Feature",
+              "id": "door_5.4-H",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [1, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "door",
+                    "parent": "wall_5.4-H-N",
+                    "thickness": 5,
+                    "description": "Porta room1.4-H",
+                    "tVector": [7, 0, 0],
+                    "rVector": [0, 0, 0]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "room_5.1",
+              "geometry": 
+              {
+                    "type": "Polygon",
+                    "coordinates": 
+                    [ 
+                       [ [0, 0], [11, 0], [11, 19], [0, 19] ]
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "room",
+                    "parent": "level_5",
+                    "description": "room_5.1",
+                    "tVector": [0, 0, 0],
+                    "rVector": [0, 0, 0]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "room_5.2",
+              "geometry": 
+              {
+                    "type": "Polygon",
+                    "coordinates": 
+                    [ 
+                       [ [0, 0], [10, 0], [10, 8], [0, 8] ]
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "room",
+                    "parent": "level_5",
+                    "description": "room_5.2",
+                    "tVector": [11, 11, 0],
+                    "rVector": [0, 0, 0]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "room_5.3",
+              "geometry": 
+              {
+                    "type": "Polygon",
+                    "coordinates": 
+                    [ 
+                       [ [0, 0], [10, 0], [10, 8], [0, 8] ]
+                    ]  
+                  
+              },
+              "properties":
+              {
+                    "class": "room",
+                    "parent": "level_5",
+                    "description": "room_5.3",
+                    "tVector": [21, 11, 0],
+                    "rVector": [0, 0, 0]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "room_5.4",
+              "geometry": 
+              {
+                    "type": "Polygon",
+                    "coordinates": 
+                    [ 
+                       [ [0, 0], [15, 0], [15, 8], [0, 8] ]
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "room",
+                    "parent": "level_5",
+                    "description": "room_5.4",
+                    "tVector": [16, 0, 0],
+                    "rVector": [0, 0, 0]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "hall_5.1",
+              "geometry": 
+              {
+                    "type": "Polygon",
+                    "coordinates": 
+                    [ 
+                       [ [0, 0], [5, 0], [5, 8], [20, 8], [20, 11], [0, 11] ]
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "room",
+                    "parent": "level_5",
+                    "description": "hall_5.1",
+                    "tVector": [11, 0, 0],
+                    "rVector": [0, 0, 0]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "elevator_0.1",
+              "geometry": 
+              {
+                    "type": "Polygon",
+                    "coordinates": 
+                    [ 
+                       [ [0, 0], [3, 0], [3, 3], [0, 3] ]
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "room",
+                    "parent": "level_0",
+                    "description": "elevator_0.1",
+                    "tVector": [28, 8, 0],
+                    "rVector": [0, 0, 0]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "wall_elevator_0.1",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [3, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "internal_wall",
+                    "thickness": 0.1,
+                    "parent": "level_0",
+                    "description": "mura elevator",
+                    "tVector": [28, 8, 0],
+                    "rVector": [0, 0, 90],
+                    "connections": ["hall_0.1", "elevator_0.1"]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "door_elevator_0.1",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [1, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "door",
+                    "parent": "wall_elevator_0.1",
+                    "thickness": 5,
+                    "description": "Porta ascensore level_0",
+                    "tVector": [1, 0, 0],
+                    "rVector": [0, 0, 0],
+                    "connections" : ["hall_0.1", "elevator_5.1", "elevator_0.1"]
+              }
+        },
+
+
+        {
+              "type": "Feature",
+              "id": "elevator_5.1",
+              "geometry": 
+              {
+                    "type": "Polygon",
+                    "coordinates": 
+                    [ 
+                       [ [0, 0], [3, 0], [3, 3], [0, 3] ]
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "room",
+                    "parent": "level_5",
+                    "description": "elevator_5.1",
+                    "tVector": [28, 8, 0],
+                    "rVector": [0, 0, 0]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "wall_elevator_5.1",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [3, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "internal_wall",
+                    "thickness": 0.1,
+                    "parent": "level_5",
+                    "description": "mura elevator",
+                    "tVector": [28, 8, 0],
+                    "rVector": [0, 0, 90],
+                    "connections": ["hall_5.1", "elevator_5.1"]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "door_elevator_5.1",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [1, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "door",
+                    "parent": "wall_elevator_5.1",
+                    "thickness": 5,
+                    "description": "Porta ascensore level_5",
+                    "tVector": [1, 0, 0],
+                    "rVector": [0, 0, 0],
+                    "connections" : ["hall_5.1", "elevator_0.1", "elevator_5.1"]
+              }
+        }
