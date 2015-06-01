@@ -1,4 +1,4 @@
-# C3D@CVDLab
+# HIJSON@CVDLab
 
 ## 3D server farm monitoring and navigation
 In una server farm sono collocati in un unico ambiente numerosi server al fine di centralizzarne la gestione, la manutenzione e la sicurezza.
@@ -31,4 +31,4 @@ Tra le tecnologie coinvolte figurano:
 3. avviare il web framework con il comando `npm start`
 4. Accedere al web framework dall'indirizzo http://localhost:3000
 
-_C3D - CVDLab - Università degli Studi Roma Tre_
+_HIJSON - CVDLab - Università degli Studi Roma Tre_
