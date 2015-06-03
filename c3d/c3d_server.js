@@ -31,7 +31,7 @@ process.stdout.write('Creating geoJSON file... ');
 assembler.generateGeoJSON(data);
 console.log(colors.green('Done')+'.');
 
-process.stdout.write('Generating xGeoJSON graph... ');
+process.stdout.write('Generating HIJSON graph... ');
 assembler.packageGraph(data);
 console.log(colors.green('Done')+'.');
 
