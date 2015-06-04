@@ -1,0 +1,66 @@
+{
+    "originCoordinates":
+    {
+    	"lat": 41,
+    	"lng": 12
+    },
+    
+    "showGraph": false,
+
+    "landmarks": 
+	[
+		{
+			"local": [ 0.8, 7.675],
+			"lnglat": [12.486648, 41.798813]
+		},
+		
+		{
+			"local": [ 9.725, 0.875],
+			"lnglat": [12.486731, 41.798735]
+		
+		},
+		
+		{
+			"local": [ 16.525, 9.8],
+			"lnglat": [12.486834, 41.798795]
+
+		}
+	],
+
+    "startPosition": 
+    {
+        "coordinates": [1, 3], 
+        "levelId": "level_0"
+    },
+    
+	"style":
+    {
+	    "background": 
+	    {
+	    	"color": "#f8f8f8"
+		},
+		"user": 
+	    {
+		    "prefix": "fa",
+		    "icon": "male",
+		    "markerColor": "green"
+	    },
+
+	    "location": 
+	    {
+		    "prefix": "fa",
+		    "icon": "location-arrow",
+		    "markerColor": "green"
+	    },
+	    "graphNode": 
+	    {
+		    "fillColor": "#00ff00",
+		    "fillOpacity": 1,
+		    "radius": 7
+	    },
+	    "graphArc": 
+	    {
+		    "color": "#00ff00"
+	    }
+	}
+}
