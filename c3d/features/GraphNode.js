@@ -13,5 +13,5 @@ GraphNode.prototype.style =  {
 								zIndex: 8
     					};
 GraphNode.prototype.in_graph = false;
-GraphNode.prototype.in_2D_map = false;    					
+GraphNode.prototype.in_2D_map = true;    					
 module.exports = GraphNode;

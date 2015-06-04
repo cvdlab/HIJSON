@@ -2,7 +2,7 @@ var eventEmitter = require('./eventEmitter.js');
 var utilities = require('./utilities.js');
 
 var orderLayers = function() {
-	var orderClass = ['room','server','table','external_wall','internal_wall','stair','door','window','graphNode','graphArc','path'];
+	var orderClass = ['server','table','external_wall','internal_wall','stair','door','window','graphNode','graphArc','path'];
 	while(orderClass.length !== 0) {
 		var classElement = orderClass.shift();
 		for(idLayer in data.map2D._layers) {
