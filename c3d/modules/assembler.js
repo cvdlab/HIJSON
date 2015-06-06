@@ -131,7 +131,7 @@ var self = module.exports = {
 			id: 'graph',
 			type: 'FeatureCollection',
 			features: []
-		}
+		};
 		for(var id in data.index) {
 			var obj = data.index[id];
 			if(obj.properties.class === 'graphNode') {
@@ -143,4 +143,4 @@ var self = module.exports = {
 		data.input.graph = graph;
 	}
 	
-} //close module.exports
+}; //close module.exports

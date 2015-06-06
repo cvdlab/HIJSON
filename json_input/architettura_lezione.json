@@ -1,0 +1,746 @@
+{
+    "id": "architectures",
+    "type": "FeatureCollection",
+    "features": 
+    [
+        {
+            "type": "Feature",
+            "id": "level_0",
+            "geometry": 
+            {
+                "type": "Polygon",
+                "coordinates": 
+                [ 
+                    [ [0, 0], [12, 0], [12, 12], [0, 12], [0, 0] ]
+                ]  
+            },
+            "properties": 
+            {
+                "class": "level",
+                "parent": "building",
+                "description": "Mura perimetrali appartamento",
+                "height": 3.5,
+                "thickness": 0.3,
+                "tVector": [0, 0, 0],
+                "rVector": [0, 0, 0]
+            }
+        },
+        {
+              "type": "Feature",
+              "id": "cucina",
+              "geometry": 
+              {
+                    "type": "Polygon",
+                    "coordinates": 
+                    [ 
+                       [ [0, 0], [5, 0], [5, 5], [0, 5], [0, 0] ]
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "room",
+                    "parent": "level_0",
+                    "description": "cucina",
+                    "tVector": [0, 0, 0],
+                    "rVector": [0, 0, 0]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "corridoio",
+              "geometry": 
+              {
+                    "type": "Polygon",
+                    "coordinates": 
+                    [ 
+                       [ [0, 0], [2, 0], [2,5], [3, 5], [3, 8], [0, 8], [0, 0] ]
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "room",
+                    "parent": "level_0",
+                    "description": "cucina",
+                    "tVector": [5, 0, 0],
+                    "rVector": [0, 0, 0]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "camera_1",
+              "geometry": 
+              {
+                    "type": "Polygon",
+                    "coordinates": 
+                    [ 
+                       [ [0, 0], [5, 0], [5, 5], [0, 5], [0, 0] ]
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "room",
+                    "parent": "level_0",
+                    "description": "cucina",
+                    "tVector": [7, 0, 0],
+                    "rVector": [0, 0, 0]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "camera_2",
+              "geometry": 
+              {
+                    "type": "Polygon",
+                    "coordinates": 
+                    [ 
+                       [ [0, 0], [7, 0], [7, 4], [0, 4], [0, 0] ]
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "room",
+                    "parent": "level_0",
+                    "description": "cucina",
+                    "tVector": [5, 8, 0],
+                    "rVector": [0, 0, 0]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "bagno",
+              "geometry": 
+              {
+                    "type": "Polygon",
+                    "coordinates": 
+                    [ 
+                       [ [0, 0], [4, 0], [4, 3], [0, 3], [0, 0] ]
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "room",
+                    "parent": "level_0",
+                    "description": "bagno",
+                    "tVector": [8, 5, 0],
+                    "rVector": [0, 0, 0]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "soggiorno",
+              "geometry": 
+              {
+                    "type": "Polygon",
+                    "coordinates": 
+                    [ 
+                       [ [0, 0], [5, 0], [5, 7], [0, 7], [0, 0] ]
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "room",
+                    "parent": "level_0",
+                    "description": "bagno",
+                    "tVector": [0, 5, 0],
+                    "rVector": [0, 0, 0]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "cucina_sud",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [5, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "external_wall",
+                    "parent": "level_0",
+                    "thickness": 0.3,
+                    "description": "wall cucina-esterno",
+                    "tVector": [0, 0, 0],
+                    "rVector": [0, 0, 0],
+                    "connections": ["cucina"]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "cucina-soggiorno",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [5, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "internal_wall",
+                    "parent": "level_0",
+                    "thickness": 0.1,
+                    "description": "wall cucina-soggiorno",
+                    "tVector": [0, 5, 0],
+                    "rVector": [0, 0, 0],
+                    "connections": ["cucina"]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "camera_1-sud",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [5, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "external_wall",
+                    "parent": "level_0",
+                    "thickness": 0.3,
+                    "description": "wall 2camera_1 esterno nord",
+                    "tVector": [7, 0, 0],
+                    "rVector": [0, 0, 0],
+                    "connections": ["camera_1"]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "camera_1-bagno",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [4, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "internal_wall",
+                    "parent": "level_0",
+                    "thickness": 0.1,
+                    "description": "muro camera_1-bagno",
+                    "tVector": [8, 5, 0],
+                    "rVector": [0, 0, 0],
+                    "connections": ["camera_1","bagno"]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "camera_2-nord",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [6, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "external_wall",
+                    "parent": "level_0",
+                    "thickness": 0.3,
+                    "description": "wall 2camera_1 esterno nord",
+                    "tVector": [6, 12, 0],
+                    "rVector": [0, 0, 0],
+                    "connections": ["camera_2"]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "camera_2-bagno",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [4, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "internal_wall",
+                    "parent": "level_0",
+                    "thickness": 0.1,
+                    "description": "wall 2camera_1 interno sud",
+                    "tVector": [8, 8, 0],
+                    "rVector": [0, 0, 0],
+                    "connections": ["camera_2","bagno"]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "camera_2-corridoio",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [3, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "internal_wall",
+                    "parent": "level_0",
+                    "thickness": 0.1,
+                    "description": "wall 2camera_1 interno sud",
+                    "tVector": [5, 8, 0],
+                    "rVector": [0, 0, 0],
+                    "connections": ["camera_2","corridoio"]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "soggiorno-nord",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [6, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "external_wall",
+                    "parent": "level_0",
+                    "thickness": 0.3,
+                    "description": "wall 2camera_1 esterno nord",
+                    "tVector": [0, 12, 0],
+                    "rVector": [0, 0, 0],
+                    "connections": ["soggiorno"]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "cucina-ovest",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [5, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "external_wall",
+                    "thickness": 0.3,
+                    "parent": "level_0",
+                    "description": "wall esterno-cucina-ovest",
+                    "tVector": [0, 0, 0],
+                    "rVector": [0, 0, 90],
+                    "connections": ["cucina"]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "soggiorno-ovest",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [7, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "external_wall",
+                    "thickness": 0.3,
+                    "parent": "level_0",
+                    "description": "wall esterno-soggiorno-ovest",
+                    "tVector": [0, 5, 0],
+                    "rVector": [0, 0, 90],
+                    "connections": ["soggiorno"]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "camera_2-soggiorno",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [4, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "internal_wall",
+                    "thickness": 0.1,
+                    "parent": "level_0",
+                    "description": "wall interno soggiorno-camera_2",
+                    "tVector": [5, 8, 0],
+                    "rVector": [0, 0, 90],
+                    "connections": ["soggiorno","camera_2"]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "bagno-corridoio",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [3, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "internal_wall",
+                    "thickness": 0.1,
+                    "parent": "level_0",
+                    "description": "wall interno bagno-corridoio",
+                    "tVector": [8.5, 5, 0],
+                    "rVector": [0, 0, 90],
+                    "connections": ["bagno","corridoio"]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "camera_1-corridoio",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [5, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "internal_wall",
+                    "thickness": 0.1,
+                    "parent": "level_0",
+                    "description": "wall interno camera_1-corriodio",
+                    "tVector": [7, 0, 0],
+                    "rVector": [0, 0, 90],
+                    "connections": ["camera_1","corridoio"]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "cucina-corridoio",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [5, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "internal_wall",
+                    "thickness": 0.1,
+                    "parent": "level_0",
+                    "description": "wall interno cucina-corriodio",
+                    "tVector": [5, 0, 0],
+                    "rVector": [0, 0, 90],
+                    "connections": ["cucina","corridoio"]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "corridoio-sud",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [2, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "external_wall",
+                    "thickness": 0.3,
+                    "parent": "level_0",
+                    "description": "wall esterno corriodio-sud",
+                    "tVector": [5, 0, 0],
+                    "rVector": [0, 0, 0],
+                    "connections": ["corridoio"]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "camera_1-corridoio-2",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [1, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "internal_wall",
+                    "thickness": 0.1,
+                    "parent": "level_0",
+                    "description": "wall camera_1-corridoio_2",
+                    "tVector": [7, 5, 0],
+                    "rVector": [0, 0, 0],
+                    "connections": ["camera_1","corridoio"]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "muro_camera_1_esterno_EST",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [5, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "external_wall",
+                    "thickness": 0.3,
+                    "parent": "level_0",
+                    "description": "wall esterno camera_1-2",
+                    "tVector": [12, 0, 0],
+                    "rVector": [0, 0, 90],
+                    "connections": ["camera_1"]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "camera_2-est",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [4, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "external_wall",
+                    "thickness": 0.3,
+                    "parent": "level_0",
+                    "description": "wall esterno camera_2-2",
+                    "tVector": [12, 8, 0],
+                    "rVector": [0, 0, 90],
+                    "connections": ["camera_2"]
+              }
+        },
+        {
+              "type":"bagno-est",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [3, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "external_wall",
+                    "thickness": 0.3,
+                    "parent": "level_0",
+                    "description": "wall esterno bagno",
+                    "tVector": [12, 5, 0],
+                    "rVector": [0, 0, 90],
+                    "connections": ["bagno"]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "soggiorno-corridoio",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [3, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "internal_wall",
+                    "thickness": 0.1,
+                    "parent": "level_0",
+                    "description": "wall soggiorno-corriodio_2",
+                    "tVector": [5, 5, 0],
+                    "rVector": [0, 0, 90],
+                    "connections": ["soggiorno","corridoio"]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "porta_ingresso",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [1, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "door",
+                    "parent": "corridoio-sud",
+                    "thickness": 5,
+                    "description": "Porta ingresso",
+                    "tVector": [0.5, 0, 0],
+                    "rVector": [0, 0, 0]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "porta_cucina",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [1, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "door",
+                    "parent": "cucina-corridoio",
+                    "thickness": 5,
+                    "description": "Porta cucina",
+                    "tVector": [2, 0, 0],
+                    "rVector": [0, 0, 0]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "porta_soggiorno",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [2.9, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "door",
+                    "parent": "soggiorno-corridoio",
+                    "thickness": 5,
+                    "description": "Porta soggiorno",
+                    "tVector": [0, 0, 0],
+                    "rVector": [0, 0, 0]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "porta_bagno",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [1, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "door",
+                    "parent": "bagno-corridoio",
+                    "thickness": 5,
+                    "description": "Porta bagno",
+                    "tVector": [0.5, 0, 0],
+                    "rVector": [0, 0, 0]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "porta_camera_1",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [0.8, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "door",
+                    "parent": "camera_1-corridoio-2",
+                    "thickness": 5,
+                    "description": "Porta camera_1",
+                    "tVector": [0.2, 0, 0],
+                    "rVector": [0, 0, 0]
+              }
+        },
+        {
+              "type": "Feature",
+              "id": "porta_camera_2",
+              "geometry": 
+              {
+                    "type": "LineString",
+                    "coordinates": 
+                    [ 
+                       [0, 0], [1, 0] 
+                    ]  
+                  
+              },
+              "properties": 
+              {
+                    "class": "door",
+                    "parent": "camera_2-corridoio",
+                    "thickness": 5,
+                    "description": "Porta camera_2",
+                    "tVector": [1, 0, 0],
+                    "rVector": [0, 0, 0]
+              }
+        }
+    ]
+}

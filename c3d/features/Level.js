@@ -36,6 +36,6 @@ Level.prototype.get3DModel = function() {
     floor.name = this.id;
     container.name = 'package_' + this.id;
     return container;  	
-}
+};
 
 module.exports = Level;

@@ -56,15 +56,15 @@ Chair.prototype.get3DModel = function() {
 	p6.position.z += 0.5*3/2;
 	p6.position.x += 0.4;
 
-	var geometry = new THREE.BoxGeometry( 0.45, 0.45, 0.02 );
-	var material = new THREE.MeshLambertMaterial( {color: 0x9b8c75} );
+	geometry = new THREE.BoxGeometry( 0.45, 0.45, 0.02 );
+	material = new THREE.MeshLambertMaterial( {color: 0x9b8c75} );
 	var plane = new THREE.Mesh( geometry, material );
 	plane.name = "plane_" + this.id;
 	plane.position.x += 0.4/2;
 	plane.position.y += 0.4/2;
 	plane.position.z += 0.5;
 
-	var geometry = new THREE.BoxGeometry( 0.38, 0.02, 0.15);
+	geometry = new THREE.BoxGeometry( 0.38, 0.02, 0.15);
 	var back = new THREE.Mesh( geometry, material );
 	back.name = "back_" + this.id;
 	back.position.x += 0.4/2;
@@ -85,6 +85,6 @@ Chair.prototype.get3DModel = function() {
 	var model = Feature.packageModel(chair);
 
 	return model;
-}
+};
 
 module.exports = Chair;

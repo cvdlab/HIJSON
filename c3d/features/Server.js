@@ -36,6 +36,6 @@ Server.prototype.get3DModel = function() {
 	var model = Feature.packageModel(server);
 
 	return model;
-}
+};
 
 module.exports = Server;

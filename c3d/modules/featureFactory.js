@@ -21,6 +21,7 @@ featureClasses['SurveillanceCamera'] = require('../features/SurveillanceCamera.j
 featureClasses['Table'] = require('../features/Table.js');
 featureClasses['Window'] = require('../features/Window.js');
 featureClasses['Stair'] = require('../features/Stair.js');
+featureClasses['Bed'] = require('../features/Bed.js');
 
 function capitaliseFirstLetter(featureClass) {
 	return featureClass.charAt(0).toUpperCase() + featureClass.slice(1);
@@ -38,4 +39,4 @@ var self = module.exports = {
 		}
 		return newFeature;
 	}
-} //close module.exports
+}; //close module.exports

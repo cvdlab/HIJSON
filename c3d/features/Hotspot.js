@@ -49,6 +49,6 @@ Hotspot.prototype.get3DModel = function() {
 
 
 	return model;
-}
+};
 
 module.exports = Hotspot;

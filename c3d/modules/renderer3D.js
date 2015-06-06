@@ -80,7 +80,7 @@ var self = module.exports = {
 							document.removeEventListener('mozfullscreenchange', fullscreenchange);
 							element.requestPointerLock();
 						}
-					}
+					};
 					document.addEventListener('fullscreenchange', fullscreenchange, false);
 					document.addEventListener('mozfullscreenchange', fullscreenchange, false);
 					element.requestFullscreen = element.requestFullscreen || element.mozRequestFullscreen || element.mozRequestFullScreen || element.webkitRequestFullscreen;
@@ -126,11 +126,11 @@ var self = module.exports = {
 					$("#pointer").css('display', 'none');
 					trackballControls.reset();
 				}
-			}
+			};
 		
 			var pointerlockerror = function(event) {
 				alert('PointerLock error');
-			}
+			};
 		
 			document.addEventListener('pointerlockchange', pointerlockchange, false);
 			document.addEventListener('mozpointerlockchange', pointerlockchange, false);
@@ -322,4 +322,4 @@ var self = module.exports = {
 	getTrackballControls3D: function() {
 		return trackballControls3D;
 	}
-}
+};

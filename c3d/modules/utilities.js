@@ -37,7 +37,7 @@ var self = module.exports = {
 	
 	getActualLevelId: function() {
 		var id;
-		for(idLayer in data.map2D._layers){
+		for(var idLayer in data.map2D._layers){
 			layer = data.map2D._layers[idLayer];
 			if(layer.feature !== undefined && layer.feature.properties.class === 'level') {
 				id = layer.feature.id; 
@@ -106,9 +106,9 @@ var self = module.exports = {
 		var midPoint = [0, 0];
 		var p;
 		var c = 0;
-		for(i in featureGeometry[0]) {
+		for(var i in featureGeometry[0]) {
 			p = featureGeometry[0][i];
-			c++
+			c++;
 			midPoint[0] += p[0];
 			midPoint[1] += p[1];
 		}
@@ -116,4 +116,4 @@ var self = module.exports = {
 		midPoint[1] = midPoint[1]/c;
 		return midPoint;
 	}
-}
+};

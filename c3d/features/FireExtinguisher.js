@@ -55,7 +55,7 @@ FireExtinguisher.prototype.get3DModel = function() {
 	fireExtinguisher.feature = this;
 	var model = Feature.packageModel(fireExtinguisher);    
 	return model;
-}
+};
 
 FireExtinguisher.prototype.getInfo = function () {
     var feature = this;
@@ -73,6 +73,6 @@ FireExtinguisher.prototype.getInfo = function () {
     });
 
     return featureInfoComponent;
-}
+};
 
 module.exports = FireExtinguisher;

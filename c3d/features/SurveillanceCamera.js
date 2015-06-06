@@ -62,6 +62,6 @@ SurveillanceCamera.prototype.get3DModel = function() {
 
 	var model = Feature.packageModel(camera);
 	return model;
-}
+};
 
 module.exports = SurveillanceCamera;

@@ -4,15 +4,15 @@ var assembler = require('./modules/assembler.js');
 var colors = require('colors/safe');
 
 var inputPaths = {
-	config: __dirname + '/../json_input/configurazione_androne.json',
-	architecture: __dirname + '/../json_input/architettura_androne.json',
-	furniture: __dirname + '/../json_input/arredamento_androne.json'
+	config: __dirname + '/../json_input/config.json',
+	architecture: __dirname + '/../json_input/architecture_demo.json',
+	furniture: __dirname + '/../json_input/furnitures_demo.json'
 };
 
 console.log('--- Starting initialization... ---');
 
 /* Parsing function in parse.js module */
-process.stdout.write('Parsing data: ')
+process.stdout.write('Parsing data: ');
 var data = parser.parse(inputPaths);
 console.log(colors.green('Done')+'.');
 

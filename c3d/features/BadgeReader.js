@@ -24,6 +24,6 @@ BadgeReader.prototype.get3DModel = function() {
     var model = Feature.packageModel(badgeReader);
 
     return model;
-}
+};
 
 module.exports = BadgeReader;

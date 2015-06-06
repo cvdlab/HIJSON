@@ -30,6 +30,6 @@ Stair.prototype.get3DModel = function() {
     stair.position.z += dim[2]/2;
     stair.position.y += dim[0]/2;
     return stair;
-}
+};
 
 module.exports = Stair;

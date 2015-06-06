@@ -17,7 +17,7 @@ Feature.inherits = function inherits(Child, Parent) {
 	F.prototype = Parent.prototype;
 	Child.prototype = new F();
 	Child.prototype.constructor = Child;
-}
+};
 
 Feature.prototype.in_graph = false;
 Feature.prototype.in_2D_map = false;
@@ -28,14 +28,14 @@ Feature.generateLineString = function generateLineString(geoJSONgeometry) {
         lineString.vertices.push( new THREE.Vector3( geoJSONgeometry.coordinates[i][0], geoJSONgeometry.coordinates[i][1], 0) );
     }
     return lineString;
-}
+};
 
 Feature.generatePolygonShape = function generatePolygonShape(geoJSONgeometry){
 	var coords = geoJSONgeometry.coordinates;
 	var shape = new THREE.Shape();
     for (var j = 0; j < coords[0].length; j++) //scorro le singole coordinate del perimetro esterno
     { 
-        if (j == 0) { // primo punto
+        if (j === 0) { // primo punto
             shape.moveTo(coords[0][j][0], coords[0][j][1]);
         } else { // altri punti
             shape.lineTo(coords[0][j][0], coords[0][j][1]);
@@ -43,21 +43,21 @@ Feature.generatePolygonShape = function generatePolygonShape(geoJSONgeometry){
     }
     for (var i = 1; i < coords.length; i++) { //scorro eventuali holes
         var hole = new THREE.Path();
-        for (var j = 0; j < coords[i].length; j++) { //scorro le singole coordinate dei vari perimetri
-            if (j == 0) { // primo punto
-                hole.moveTo(coords[i][j][0], coords[i][j][1]);
+        for (var k = 0; k < coords[i].length; k++) { //scorro le singole coordinate dei vari perimetri
+            if (k === 0) { // primo punto
+                hole.moveTo(coords[i][k][0], coords[i][k][1]);
             } else { // altri punti
-                hole.lineTo(coords[i][j][0], coords[i][j][1]);
+                hole.lineTo(coords[i][k][0], coords[i][k][1]);
             }  
         }
         shape.holes.push(hole);
     }
     return shape;
-}
+};
 
 Feature.generatePolygon = function generatePolygon(geoJSONgeometry) {
     return Feature.generatePolygonShape(geoJSONgeometry).makeGeometry();  
-}
+};
 
 Feature.generateWallGeometry = function generateWallGeometry(wallFeature) {
 	var wallLength = wallFeature.geometry.coordinates[1][0];
@@ -84,17 +84,17 @@ Feature.generateWallGeometry = function generateWallGeometry(wallFeature) {
 			var windowHorizontalShift = child.properties.tVector[0];
 			var windowVerticalShift = child.properties.tVector[2];
 			
-			var hole = [
+			var newHole = [
 				[windowHorizontalShift, windowVerticalShift], 
 				[windowHorizontalShift+windowLength, windowVerticalShift], 
 				[windowHorizontalShift+windowLength, windowVerticalShift+windowHeight], 
 				[windowHorizontalShift, windowVerticalShift+windowHeight]
 			];
-			coordinates.push(hole);
+			coordinates.push(newHole);
 		}
 	}
-	return { coordinates: coordinates }
-}
+	return { coordinates: coordinates };
+};
 
 Feature.packageModel = function packageModel(model3D) {
     var geometry;
@@ -133,7 +133,7 @@ Feature.packageModel = function packageModel(model3D) {
     
     return el3D;
 
-}
+};
 
 Feature.prototype.getCreateElement = function() {
     var feature = this;
@@ -148,8 +148,8 @@ Feature.prototype.getCreateElement = function() {
                         React.createElement("dt", null, "Position"), 
                         React.createElement("dd", null, position)
                     )
-                    )
-}
+                    );
+};
 
 Feature.prototype.getInfo = function () {
     var feature = this;
@@ -160,14 +160,14 @@ Feature.prototype.getInfo = function () {
     });
     return featureInfoComponent;
 
-}
+};
 
 Feature.prototype.get3DModel = function() {
 	var model = new THREE.Object3D();
 	model.name = this.id;
 	model.feature = this;
 	return model;
-}
+};
 
 Feature.prototype.getGraphNode = function(feature) {
     var graphNode;
@@ -193,7 +193,7 @@ Feature.prototype.getGraphNode = function(feature) {
     }
 
     return graphNode;
-}
+};
 Feature.prototype.getLocalCoordinates = function() {
     var objMatrix = matrixUtilities.objMatrix(this);
     switch(this.geometry.type) {
@@ -219,7 +219,7 @@ Feature.prototype.getLocalCoordinates = function() {
             default:
 
     }       
-}
+};
 function createNode(tVector, objectId, triangleId) {
     var graphNode = {
         type: 'graph',
@@ -236,7 +236,7 @@ function createNode(tVector, objectId, triangleId) {
             adj: {}
         },
         children: []
-    }
+    };
     graphNode.properties.tVector = tVector;
     return graphNode;
 }

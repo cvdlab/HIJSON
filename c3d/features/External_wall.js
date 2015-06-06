@@ -39,6 +39,6 @@ External_wall.prototype.get3DModel = function() {
 	wall.name = this.id;
 	container.name = 'package_' + this.id;
     return container;
-}
+};
 
 module.exports = External_wall;

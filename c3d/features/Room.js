@@ -29,6 +29,6 @@ Room.prototype.get3DModel = function() {
     model.receiveShadow = true;
 
     return model;	
-}
+};
 
 module.exports = Room;

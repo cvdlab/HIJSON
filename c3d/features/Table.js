@@ -54,8 +54,8 @@ Table.prototype.get3DModel = function() {
 	p4.position.x += 0.05;
 	p4.position.y += tableY - 0.05;
 
-	var geometry = new THREE.BoxGeometry( tableX, tableY, 0.04 );
-	var material = new THREE.MeshLambertMaterial( {color: 0x9b8c75} );
+	geometry = new THREE.BoxGeometry( tableX, tableY, 0.04 );
+	material = new THREE.MeshLambertMaterial( {color: 0x9b8c75} );
 	var plane = new THREE.Mesh( geometry, material );
 	plane.name = "plane_" + this.id;
 	plane.position.x += tableX/2;
@@ -73,6 +73,6 @@ Table.prototype.get3DModel = function() {
 	var model = Feature.packageModel(table);
 
 	return model;
-}
+};
 
 module.exports = Table;
