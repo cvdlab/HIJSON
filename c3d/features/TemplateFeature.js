@@ -1,22 +1,22 @@
 var Feature = require('./Feature.js');
 
-Feature.inherits(featureName, Feature);
+Feature.inherits(ExampleName, Feature);
 
-function featureName(feature) {
+function ExampleName(feature) {
 	Feature.call(this, feature);
 }
 
-featureName.prototype.style = {
+ExampleName.prototype.style = {
 			    			prefix: "fa",
 	    					icon: "minus",
 	    					zIndex: 3
 						};
 
-featureName.prototype.in_graph = true;
+ExampleName.prototype.in_graph = true;
 
-featureName.prototype.in_2D_map = false;
+ExampleName.prototype.in_2D_map = false;
 
-featureName.prototype.get3DModel = function() {
+ExampleName.prototype.get3DModel = function() {
 	//TO DO
 	var objectThreejs;
 	var model = Feature.packageModel(objectThreejs);
@@ -24,4 +24,4 @@ featureName.prototype.get3DModel = function() {
 	return model;
 };
 
-module.exports = featureName;
+module.exports = ExampleName;
