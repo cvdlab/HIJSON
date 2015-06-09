@@ -1,0 +1,10 @@
+body {
+   margin: 0;
+    overflow: hidden;
+  }
+
+  #stats {  /* Align stats top-left */
+    position: absolute;
+    left: 0px;
+    top: 0px;
+  }
