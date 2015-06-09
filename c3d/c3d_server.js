@@ -4,9 +4,9 @@ var assembler = require('./modules/assembler.js');
 var colors = require('colors/safe');
 
 var inputPaths = {
-	config: __dirname + '/../json_input/config.json',
-	architecture: __dirname + '/../json_input/architecture_demo.json',
-	furniture: __dirname + '/../json_input/furnitures_demo.json'
+	config: __dirname + '/../json_input/config_lezione.json',
+	architecture: __dirname + '/../json_input/architettura_lezione.json',
+	furniture: __dirname + '/../json_input/arredamento_lezione.json'
 };
 
 console.log('--- Starting initialization... ---');

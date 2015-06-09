@@ -51,6 +51,25 @@
                 "rVector": [0, 0, 90],
                 "nodeTVector": [1, 0, 0]
             }
+        },
+        {
+            "id": "tavolo_cucina",
+            "type": "Feature",
+            "geometry": 
+            {
+                "type": "Polygon",
+                "coordinates": [
+                    [ [0,0], [2,0], [2,2], [0,2] ]
+                ]
+            },
+            "properties": 
+            {
+                "parent": "cucina",
+                "class": "table",
+                "height": 0.8,
+                "tVector": [1, 1, 0],
+                "rVector": [0, 0, 0]
+            }
         }
     ]
 }
