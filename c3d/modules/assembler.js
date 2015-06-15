@@ -4,6 +4,7 @@ var featureFactory = require('./featureFactory.js');
 var numeric = require('numeric');
 var matrixUtilities = require('./matrixUtilities.js');
 var utilities = require('./utilities.js');
+var fs = require('fs');
 
 
 // (2) private things
@@ -124,6 +125,20 @@ var self = module.exports = {
 		}
 		// put the map in real-world coordinates
 		data.geoJSONmap = coordinatesUtilities.convertToDegrees(geoJSONmap, data.config.transformationMatrix);
+
+		// export GeoJSON files
+
+		var output_path = './geojson_output';
+
+		if (!fs.existsSync(output_path)) 
+			fs.mkdirSync(output_path);
+		else {
+			var filenames = fs.readdirSync(output_path);
+			for (var key in filenames) fs.unlinkSync(output_path+'/'+filenames[key]);
+		}
+		for (var level_id in geoJSONmap) {
+			fs.writeFileSync(output_path+'/'+level_id+'.json', JSON.stringify(geoJSONmap[level_id], null, 4));
+		}
 	},
 	
 	packageGraph: function(data) {
