@@ -12,7 +12,7 @@ Light.prototype.style = {
 					    };
 
 Light.prototype.in_graph = true;
-Light.prototype.in_2D_map = false;
+Light.prototype.in_2D_map = true;
 Light.prototype.get3DModel = function() {
 	var light = new THREE.Object3D();
 	var height = 0.05;
@@ -45,6 +45,33 @@ Light.prototype.get3DModel = function() {
 	var model = Feature.packageModel(light);
 
 	return model;
+};
+
+Light.prototype.getInfo = function () {
+    var feature = this;
+    var featureInfoComponent = React.createClass({displayName: "featureInfoComponent",
+        render: function() {
+
+            var root = Feature.prototype.getCreateElement.call(feature);
+            var child = React.createElement("dl", {className: "dl-horizontal"}, 
+                        	React.createElement("dt", null, "Status: "), 
+                        	React.createElement("dd", null,
+                        		React.createElement("div", {className: "onoffswitch"},
+                        			React.createElement("input", {type: "checkbox", name:"onoffswitch", className:"onoffswitch-checkbox", id:"myonoffswitch", defaultChecked: true},
+                        				React.createElement("label", {className:"onoffswitch-label", htmlFor:"myonoffswitch"},
+                        					React.createElement("span", {className: "onoffswitch-inner"}, null),
+                            				React.createElement("span", {className: "onoffswitch-switch"}, null)
+                        				)
+                        			)
+                        		)
+                        	)
+                        );
+            var result = React.createElement("div", null, root, child);
+            return result;
+    	}
+    });
+
+    return featureInfoComponent;
 };
 
 module.exports = Light;
