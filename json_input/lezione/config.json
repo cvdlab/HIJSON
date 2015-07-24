@@ -1,4 +1,5 @@
 {
+	"computeGraph": true,
     "showGraph": true,
 
     "landmarks": 
@@ -39,7 +40,6 @@
 		    "icon": "male",
 		    "markerColor": "green"
 	    },
-
 	    "location": 
 	    {
 		    "prefix": "fa",

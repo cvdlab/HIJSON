@@ -13,29 +13,28 @@ data.interactiveClasses = ['server', 'surveillanceCamera', 'hotspot', 'antenna',
 data.interactiveFeatures = [];
 data.obstaclesFeatures = [];
 assembler.assembleStructure(data);
-assembler.assembleFeatureCollection(data.input.graph);
+if (data.config.computeGraph) assembler.assembleFeatureCollection(data.input.graph);
 
 data.actualPosition = {
     coordinates: [data.config.startPosition.coordinates[0], data.config.startPosition.coordinates[1]],
     levelId: data.config.startPosition.levelId  
-}
+};
 
 var generator3D = {};
 
 
-generator3D['cube'] = function(color) {
+generator3D.cube = function(color) {
 	var geometry = new THREE.BoxGeometry(0.5, 0.5, 1.8);
     var material = new THREE.MeshLambertMaterial( {color: 0x00ff00} );
     var cube = new THREE.Mesh(geometry, material);
     cube.position.z += 0.9;
     var container = new THREE.Object3D();
     container.add(cube);
-    return container;
-    
-}
+    return container;   
+};
 
 eventEmitter.on('getDirections', function(directionInfo) {
-    for(id in data.index) {
+    for(var id in data.index) {
         var obj = data.index[id];
         if(obj.properties.class === 'level' && obj.layer2D.directionsLayer !== undefined) {
             obj.layer2D.removeLayer(obj.layer2D.directionsLayer);
@@ -62,7 +61,7 @@ eventEmitter.on('getDirections', function(directionInfo) {
                 properties: {
                     class: 'path'
                 }
-            }
+            };
         }
         var nodeCoordinates = coordinatesUtilities.getPointAbsoluteCoords(node);
         var geographicalCoordinates = coordinatesUtilities.fromXYToLngLat(nodeCoordinates, data.config.transformationMatrix);
@@ -70,7 +69,7 @@ eventEmitter.on('getDirections', function(directionInfo) {
     }
     //console.log(pathsGeoJSON);
 
-    for(idLevel in pathsGeoJSON) {
+    for(var idLevel in pathsGeoJSON) {
         var layer = L.geoJson(pathsGeoJSON[idLevel]);
         data.index[idLevel].layer2D.addLayer(layer);
         data.index[idLevel].layer2D.directionsLayer = layer;
@@ -84,4 +83,4 @@ module.exports = {
     coordinatesUtilities: coordinatesUtilities,
     generator3D: generator3D,
     utilities: utilities
-}
+};

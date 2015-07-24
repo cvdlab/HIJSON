@@ -4,9 +4,9 @@ var assembler = require('./modules/assembler.js');
 var colors = require('colors/safe');
 
 var inputPaths = {
-	config: __dirname + '/../json_input/demo/config.json',
-	architecture: __dirname + '/../json_input/demo/architecture.json',
-	furniture: __dirname + '/../json_input/demo/furnitures.json'
+	config: __dirname + '/../json_input/sogei/config.json',
+	architecture: __dirname + '/../json_input/sogei/architecture.json',
+	furniture: __dirname + '/../json_input/sogei/furnitures.json'
 };
 
 console.log('--- Starting initialization... ---');
@@ -22,18 +22,22 @@ assembler.assembleStructure(data);
 console.log(colors.green('Done')+'.');
 
 /* Creating graph */
-process.stdout.write('Creating graph... ');
-graph.createGraph(data);
-console.log(colors.green('Done')+'.');
+if (data.config.computeGraph) {
+	process.stdout.write('Creating graph... ');
+	graph.createGraph(data);
+	console.log(colors.green('Done')+'.');
+}
 
 /* Creating geoJSON files */
 process.stdout.write('Creating geoJSON file... ');
 assembler.generateGeoJSON(data);
 console.log(colors.green('Done')+'.');
 
-process.stdout.write('Generating HIJSON graph... ');
-assembler.packageGraph(data);
-console.log(colors.green('Done')+'.');
+if (data.config.computeGraph) {
+	process.stdout.write('Generating HIJSON graph... ');
+	assembler.packageGraph(data);
+	console.log(colors.green('Done')+'.');
+}
 
 data.index = {};
 data.tree = {};

@@ -1,10 +1,5 @@
 {
-    "originCoordinates":
-    {
-    	"lat": 41,
-    	"lng": 12
-    },
-    
+	"computeGraph": true,
     "showGraph": true,
 
     "landmarks": 
