@@ -39,6 +39,14 @@ if (data.config.computeGraph) {
 	console.log(colors.green('Done')+'.');
 }
 
+data.proxies = {};
+for(var obj in data.index) {
+	var object = data.index[obj];
+	if(object.getProxy !== undefined) {
+		data.proxies[object.id] = object.getProxy(object.id);
+	}
+}
+
 data.index = {};
 data.tree = {};
 
