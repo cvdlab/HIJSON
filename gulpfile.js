@@ -38,5 +38,5 @@ gulp.task('nodemon', ['browserify'], function () {
     ],
 	ext: "js,jade,json"
   })
-  .on('change', ['browserify'])
+  .on('change', ['browserify']);
 });
