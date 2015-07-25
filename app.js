@@ -7,10 +7,10 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var routes = require('./routes/index');
-var users = require('./routes/users');
-
 var app = express();
+
+var router = express.Router();
+var data = require('./c3d/c3d_server');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -24,8 +24,49 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', routes);
-//sapp.use('/users', users);
+router.get('/', function(req, res) {
+    res.render('index', {
+        title: 'FIVE Web Framework'
+    });
+});
+
+router.get('/admin', function(req, res) {
+    res.render('admin', {
+        title: 'FIVE Web Framework - Supervisor',
+        enable_2D: true,
+        enable_3D: true,
+        data: JSON.stringify(data)
+    });
+});
+
+router.get('/user', function(req, res) {
+    res.render('user', {
+        title: 'FIVE Web Framework - Explorer',
+        enable_2D: true,
+        enable_3D: true,
+        data: JSON.stringify(data)
+    });
+});
+
+router.get('/user3D', function(req, res) {
+    res.render('user', {
+        title: 'FIVE Web Framework - Explorer',
+        enable_2D: false,
+        enable_3D: true,
+        data: JSON.stringify(data)
+    });
+});
+
+router.get('/user2D', function(req, res) {
+    res.render('user', {
+        title: 'FIVE Web Framework - Explorer',
+        enable_2D: true,
+        enable_3D: false,
+        data: JSON.stringify(data)
+    });
+});
+
+app.use('/', router);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -47,7 +88,6 @@ if (app.get('env') === 'development') {
         });
     });
 }
-
 // production error handler
 // no stacktraces leaked to user
 app.use(function(err, req, res, next) {
@@ -58,5 +98,6 @@ app.use(function(err, req, res, next) {
     });
 });
 
+app.data = data;
 
 module.exports = app;

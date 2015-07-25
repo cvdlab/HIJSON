@@ -8,7 +8,11 @@ function Light(feature) {
 Light.prototype.style = {
 			    			color: "#ffffff",
 						    opacity: 0,
-                            zIndex: 3
+                            zIndex: 3,
+                            prefix: "fa",
+                            markerColor: "cadetblue",
+                            icon: "lightbulb-o",
+                            iconColor: "yellow"
 					    };
 
 Light.prototype.in_graph = true;
@@ -47,17 +51,72 @@ Light.prototype.get3DModel = function() {
 	return model;
 };
 
+Light.prototype.getProxy = function(idObject) {
+	var self = this;
+	return {
+		state: true,
+		name: idObject,
+		getState: function() {
+			return this.state;
+		},
+		setState: function(value) {
+			state = value;
+			console.log('New state for: ' + idObject + ": " + state);
+		}
+	};
+};
+
 Light.prototype.getInfo = function () {
     var feature = this;
     var featureInfoComponent = React.createClass({displayName: "featureInfoComponent",
-        render: function() {
+    	getInitialState: function() {
+    		return {
+    			on: true
+    		};
+    	},
+    	on_before_hide: function() {
 
-            var root = Feature.prototype.getCreateElement.call(feature);
+    	},
+    	on_hide: function() {
+
+        },
+        on_before_show: function() {
+			socket.emit('client2server',{
+				type: 'getInitialState',
+				id: feature.id
+			});     	
+        },
+        on_show: function() {
+
+        },
+    	componentWillMount: function() {
+    		var self = this;
+    		this.on_before_show();
+    		socket.on('server2client',function(dataObject) {
+    			if(dataObject.type === 'setInitialState') {
+    				self.setState({on: dataObject.state});
+    				console.log(self.state);
+    			}
+    		});
+    	},
+    	onChange: function(e) {
+    		var oldState = this.state.on;
+    		var newState = !oldState;
+    		socket.emit('client2server', {
+    			id: feature.id,
+    			type: "changeState",
+    			value: newState
+    		});
+    		console.log(newState);
+    		this.setState({on: newState});
+    	},
+		render: function() {
+			var root = Feature.prototype.getCreateElement.call(feature);
             var child = React.createElement("dl", {className: "dl-horizontal"}, 
                         	React.createElement("dt", null, "Status: "), 
                         	React.createElement("dd", null,
                         		React.createElement("div", {className: "onoffswitch"},
-                        			React.createElement("input", {type: "checkbox", name:"onoffswitch", className:"onoffswitch-checkbox", id:"myonoffswitch", defaultChecked: true},
+                        			React.createElement("input", {type: "checkbox", name:"onoffswitch", className:"onoffswitch-checkbox", id:"myonoffswitch", defaultChecked: true,  onChange: this.onChange},
                         				React.createElement("label", {className:"onoffswitch-label", htmlFor:"myonoffswitch"},
                         					React.createElement("span", {className: "onoffswitch-inner"}, null),
                             				React.createElement("span", {className: "onoffswitch-switch"}, null)
