@@ -27,7 +27,7 @@ var self = module.exports = {
 
 		data.map2D = L.map('container2D').setView([0, 0], 3);
 		$(".leaflet-container").css({"background": data.config.style.background.color});
-        $(".leaflet-control-attribution").css({"visibility": "hidden"});
+        //$(".leaflet-control-attribution").css({"visibility": "hidden"});
 	    window.addEventListener('resize', onWindowResize2D, false);
 	
 	    function onWindowResize2D() {

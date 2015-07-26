@@ -1,6 +1,7 @@
 {
 	"computeGraph": true,
     "showGraph": true,
+    "centerPosition": [15,10,0],
 
     "landmarks": 
 	[

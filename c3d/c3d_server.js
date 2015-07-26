@@ -4,9 +4,9 @@ var assembler = require('./modules/assembler.js');
 var colors = require('colors/safe');
 
 var inputPaths = {
-	config: __dirname + '/../json_input/sogei/config.json',
-	architecture: __dirname + '/../json_input/sogei/architecture.json',
-	furniture: __dirname + '/../json_input/sogei/furnitures.json'
+	config: __dirname + '/../json_input/demo/config.json',
+	architecture: __dirname + '/../json_input/demo/architecture.json',
+	furniture: __dirname + '/../json_input/demo/furnitures.json'
 };
 
 console.log('--- Starting initialization... ---');

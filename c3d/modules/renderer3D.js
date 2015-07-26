@@ -8,8 +8,6 @@ var scene3D;
 var camera3D;
 var trackballControls3D;
 
-
-
 var self = module.exports = {
 	init: function init(data) {
 		
@@ -49,16 +47,22 @@ var self = module.exports = {
 	    var ambientLight = new THREE.AmbientLight(ambiColor);
 	    scene.add(ambientLight);
 	    
+	    
+
 	    var spotLight = new THREE.SpotLight(0xFFFFFF);
-	    spotLight.position.set(-40,80,-50);
+	    spotLight.position.set(80,55,-80);
 	    scene.add( spotLight );
 	    
-	    var spotLight2 = new THREE.SpotLight(0xFFFFFF);
-	    spotLight2.position.set(50,80,60);
-	    scene.add( spotLight2 );
+	    
+	    
+	    //var spotLight2 = new THREE.SpotLight(0xFFFFFF);
+	    //spotLight2.position.set(0,80,0);
+	    //scene.add( spotLight2 );
+	    
+	    
 
-	    //var axisHelper = new THREE.AxisHelper(3);
-	    //scene.add(axisHelper); 
+	    var axisHelper = new THREE.AxisHelper(3);
+	    scene.add(axisHelper); 
 	        
 	    window.addEventListener( 'resize', onWindowResize3D, false );
 
@@ -93,8 +97,8 @@ var self = module.exports = {
 			//questo evento viene richiamato ad ogni attivazione/disattivazione del pointerlock, in paricolare il blocco if all'avvio del pointerlock, il blocco else alla disattivazione del pointerlock
 			var pointerlockchange = function(event) {
 				if (document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element) {
-					utilities.setVisibility(data.index["building"].obj3D, true);
-	                //data.index['building'].obj3D.rotation.x = -Math.PI/2;
+					utilities.setVisibility(data.index.building.obj3D, true);
+	                //data.index.building.obj3D.rotation.x = -Math.PI/2;
 					pointerLockControls = new THREE.PointerLockControls(camera, {
 	                    cameraHeight: 1.7,
 	                    jumpEnabled: false,
@@ -116,7 +120,7 @@ var self = module.exports = {
 				} else {
 	                var actualLevel = data.actualPosition.levelId;
 	                eventEmitter.emit('selectFeature', actualLevel);
-	                //data.index['building'].obj3D.rotation.x = 0;
+	                //data.index.building.obj3D.rotation.x = 0;
 					scene.add(camera); //ripristina la camera originaria
 					camera.position.set(-40,-40,40);
 					camera.lookAt(scene.position);
@@ -140,9 +144,9 @@ var self = module.exports = {
 			document.addEventListener('mozpointerlockerror', pointerlockerror, false);
 			document.addEventListener('webkitpointerlockerror', pointerlockerror, false);
 		
-			function computePointerLockControls() {
+			var computePointerLockControls = function() {
 				pointerLockControls.update();
-			}
+			};
 		} 
 	    else {
 	        alert('Your browser doesn\'t seem to support Pointer Lock API');
@@ -168,9 +172,10 @@ var self = module.exports = {
 	            var container3DWidth = container3D.width();
 	            var container3DHeight = container3D.width()/4*3;
 	            event.preventDefault();
+	            var raycaster;
 	    		if (document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element) {
 	    			//console.log('clickPL');
-	                var raycaster = new THREE.Raycaster();
+	                raycaster = new THREE.Raycaster();
 	                var direction = new THREE.Vector3( 0, 0, -1 );
 	                var rotation = new THREE.Euler(0, 0, 0, "YXZ");
 	                rotation.set(camera.parent.rotation.x, camera.parent.parent.rotation.y, 0);
@@ -184,7 +189,7 @@ var self = module.exports = {
 	                //console.log('clickTB');
 	    			var vector = new THREE.Vector3((event.clientX / container3DWidth) * 2 - 1, -(event.clientY / container3DHeight) * 2 + 1, 0.5);
 	    			projector.unprojectVector(vector, camera);
-	    			var raycaster = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
+	    			raycaster = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
 	    		}
 
 	    		var intersects = raycaster.intersectObjects(data.unionFeatures);
@@ -223,8 +228,8 @@ var self = module.exports = {
 	generate3DModel: function generate3DModel(data) {
 	    var queue = [];
 	    var feature;
-	    data.index["building"].obj3D = new THREE.Object3D();
-	    data.index["building"].obj3D.feature = data.index["building"];
+	    data.index.building.obj3D = new THREE.Object3D();
+	    data.index.building.obj3D.feature = data.index.building;
 	    for (var i=0; i < data.tree.children.length; i++) {
 	        queue.push(data.tree.children[i]);
 	    }
@@ -264,7 +269,7 @@ var self = module.exports = {
 		        el3D.add(userModels);
 		        el3D.userModels = userModels;
 	        }
-	        for(var i=0;i< feature.children.length;i++) {
+	        for(i = 0; i< feature.children.length; i++) {
 	            queue.push(feature.children[i]);
 	        }
 
@@ -288,26 +293,36 @@ var self = module.exports = {
 
 	        }
 	    }
-	    data.index['building'].obj3D.rotation.x = -Math.PI/2;
+	    data.index.building.obj3D.rotation.x = -Math.PI/2;
 
-	    scene3D.add(data.index["building"].obj3D);
+	    scene3D.add(data.index.building.obj3D);
 	    data.unionFeatures = data.obstaclesFeatures.concat(data.interactiveFeatures);
-	    //setLight();
+	    setLightAndCamera();
 
-	    function setLight() {
+	    function setLightAndCamera() {
 	        var light = self.getScene3D().__lights[1];
 	        var sceneCenter = new THREE.Object3D();
-	        sceneCenter.position = utilities.getCentroid(data.index['building'].obj3D);
+	        var pos;
+	        if (data.config.centerPosition) {
+	        	pos = data.config.centerPosition;
+	        	sceneCenter.position.copy(new THREE.Vector3(pos[0],pos[2],-1*pos[1]));
+	        } else {
+	        	pos = [40,40,0];
+	        	sceneCenter.position.copy(new THREE.Vector3(40,0,-40));
+	        }
+	        
 	        light.shadowCameraVisible = true;
-	        light.position.set(sceneCenter.position.x*2 + 10,sceneCenter.position.y + 20,sceneCenter.position.z);
-	        light.castShadow = true;
+	        light.position.set(sceneCenter.position.x*2.5, 70, sceneCenter.position.z*2.5);
+	        light.castShadow = false;
 	        light.shadowCameraNear = 0.1;
 	        light.shadowCameraFar = light.position.y*2;
 	        light.shadowCameraFov = sceneCenter.position.x*4;
-	        light.intensity = 2;
-	        light.shadowMapHeight = 4096;
-	        light.shadowMapWidth = 4096;
-	        light.target.position = utilities.getCentroid(data.index['building'].obj3D);
+	        light.intensity = 1.3;
+	        //light.shadowMapHeight = 4096;
+	        //light.shadowMapWidth = 4096;
+	        
+	        light.target.position.copy(sceneCenter.position);
+	        trackballControls3D.target.copy(new THREE.Vector3(pos[0],pos[2],-1*pos[1]));
 	    }
 	},
 
