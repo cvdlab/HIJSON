@@ -28,7 +28,7 @@ Tra le tecnologie coinvolte figurano:
 0. installare node.js
 1. clonare il repository e posizionarsi nella root della cartella
 2. installare le dipendenze con il comando `npm install`
-3. avviare il web framework con il comando `npm start`
+3. avviare il web framework con il comando `npm run develop`
 4. Accedere al web framework dall'indirizzo http://localhost:3000
 
 _HIJSON - CVDLab - Università degli Studi Roma Tre_
