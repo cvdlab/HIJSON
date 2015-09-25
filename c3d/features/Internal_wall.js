@@ -22,11 +22,13 @@ Internal_wall.prototype.get3DModel = function() {
     });
     
 	var shape = Feature.generatePolygonShape(Feature.generateWallGeometry(this));
+
+    var thickness = this.properties.thickness || 0.10;
 	
 	var extrudedGeometry = shape.extrude({
                 curveSegments: 1,
                 steps: 1,
-                amount: this.properties.thickness,
+                amount: thickness,
                 bevelEnabled: false
             });
             
@@ -35,7 +37,7 @@ Internal_wall.prototype.get3DModel = function() {
 	container.add(wall);
 	container.wall = wall;
 	wall.rotation.x += Math.PI/2;
-	wall.position.y += this.properties.thickness/2;
+	wall.position.y += thickness/2;
     
     wall.name = this.id;
     container.name = 'package_' + this.id;

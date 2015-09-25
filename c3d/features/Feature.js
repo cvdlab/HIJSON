@@ -61,7 +61,7 @@ Feature.generatePolygon = function generatePolygon(geoJSONgeometry) {
 
 Feature.generateWallGeometry = function generateWallGeometry(wallFeature) {
 	var wallLength = wallFeature.geometry.coordinates[1][0];
-	var wallHeight = wallFeature.parent.properties.height;
+	var wallHeight = wallFeature.properties.height || wallFeature.parent.properties.height; // altezza del piano
 	var coordinates = [
 		[ [0, 0], [wallLength, 0], [wallLength, wallHeight], [0, wallHeight] ]
 	];
@@ -69,8 +69,7 @@ Feature.generateWallGeometry = function generateWallGeometry(wallFeature) {
 		var child = wallFeature.children[i];
 		if (child.properties.class === 'door') {
 			var doorLength = child.geometry.coordinates[1][0];
-//			var doorHeight = child.properties.height;
-			var doorHeight = 2;
+			var doorHeight = child.properties.height || wallHeight*2/3;
 			var doorShift = child.properties.tVector[0];
 			var hole = [
 				[doorShift,0], [doorShift+doorLength, 0], [doorShift+doorLength, doorHeight], [doorShift, doorHeight]	
@@ -79,10 +78,15 @@ Feature.generateWallGeometry = function generateWallGeometry(wallFeature) {
 		}
 		if (child.properties.class === 'window') {
 			var windowLength = child.geometry.coordinates[1][0];
-			var windowHeight = child.properties.height;
+			var windowHeight = child.properties.height || wallHeight*3/8;
 			
 			var windowHorizontalShift = child.properties.tVector[0];
-			var windowVerticalShift = child.properties.tVector[2];
+			var windowVerticalShift;
+            if (child.properties.tVector[2] === 0) {
+                windowVerticalShift = wallHeight*3/8;
+            } else {
+                windowVerticalShift = child.properties.tVector[2];
+            }
 			
 			var newHole = [
 				[windowHorizontalShift, windowVerticalShift], 
