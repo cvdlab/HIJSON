@@ -1,0 +1,1015 @@
+{
+    "id": "architectures",
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "id": "level_0",
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [
+                            2,
+                            6
+                        ],
+                        [
+                            0,
+                            4
+                        ],
+                        [
+                            0,
+                            2
+                        ],
+                        [
+                            2,
+                            0
+                        ],
+                        [
+                            4,
+                            0
+                        ],
+                        [
+                            6,
+                            2
+                        ],
+                        [
+                            6,
+                            4
+                        ],
+                        [
+                            4,
+                            6
+                        ]
+                    ]
+                ]
+            },
+            "properties": {
+                "class": "level",
+                "parent": "building",
+                "description": "",
+                "tVector": [
+                    0,
+                    0,
+                    0
+                ],
+                "rVector": [
+                    0,
+                    0,
+                    0
+                ],
+                "height": "3"
+            }
+        },
+        {
+            "type": "Feature",
+            "id": "hall",
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [
+                            0,
+                            0
+                        ],
+                        [
+                            0,
+                            6
+                        ],
+                        [
+                            2,
+                            6
+                        ],
+                        [
+                            2,
+                            0
+                        ]
+                    ]
+                ]
+            },
+            "properties": {
+                "class": "room",
+                "parent": "level_0",
+                "description": "",
+                "tVector": [
+                    2,
+                    0,
+                    0
+                ],
+                "rVector": [
+                    0,
+                    0,
+                    0
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "id": "wall_0.1-H",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        0,
+                        0
+                    ],
+                    [
+                        2,
+                        0
+                    ]
+                ]
+            },
+            "properties": {
+                "class": "internal_wall",
+                "parent": "level_0",
+                "description": "",
+                "tVector": [
+                    2,
+                    0,
+                    0
+                ],
+                "rVector": [
+                    0,
+                    0,
+                    90
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "id": "wall_0.2-H",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        0,
+                        0
+                    ],
+                    [
+                        2,
+                        0
+                    ]
+                ]
+            },
+            "properties": {
+                "class": "internal_wall",
+                "parent": "level_0",
+                "description": "",
+                "tVector": [
+                    2,
+                    2,
+                    0
+                ],
+                "rVector": [
+                    0,
+                    0,
+                    90
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "id": "wall_0.3-H",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        0,
+                        0
+                    ],
+                    [
+                        2,
+                        0
+                    ]
+                ]
+            },
+            "properties": {
+                "class": "internal_wall",
+                "parent": "level_0",
+                "description": "",
+                "tVector": [
+                    2,
+                    4,
+                    0
+                ],
+                "rVector": [
+                    0,
+                    0,
+                    90
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "id": "wall_0.4-H",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        0,
+                        0
+                    ],
+                    [
+                        2,
+                        0
+                    ]
+                ]
+            },
+            "properties": {
+                "class": "internal_wall",
+                "parent": "level_0",
+                "description": "",
+                "tVector": [
+                    4,
+                    0,
+                    0
+                ],
+                "rVector": [
+                    0,
+                    0,
+                    90
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "id": "wall_0.5-H",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        0,
+                        0
+                    ],
+                    [
+                        2,
+                        0
+                    ]
+                ]
+            },
+            "properties": {
+                "class": "internal_wall",
+                "parent": "level_0",
+                "description": "",
+                "tVector": [
+                    4,
+                    2,
+                    0
+                ],
+                "rVector": [
+                    0,
+                    0,
+                    90
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "id": "wall_0.6-H",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        0,
+                        0
+                    ],
+                    [
+                        2,
+                        0
+                    ]
+                ]
+            },
+            "properties": {
+                "class": "internal_wall",
+                "parent": "level_0",
+                "description": "",
+                "tVector": [
+                    4,
+                    4,
+                    0
+                ],
+                "rVector": [
+                    0,
+                    0,
+                    90
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "id": "door_0.6",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        0,
+                        0
+                    ],
+                    [
+                        0.8,
+                        0
+                    ]
+                ]
+            },
+            "properties": {
+                "class": "door",
+                "parent": "wall_0.6-H",
+                "description": "",
+                "tVector": [
+                    0.40000000000000036,
+                    0,
+                    0
+                ],
+                "rVector": [
+                    0,
+                    0,
+                    0
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "id": "room_0.1",
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [
+                            0,
+                            0
+                        ],
+                        [
+                            2,
+                            0
+                        ],
+                        [
+                            2,
+                            -2
+                        ]
+                    ]
+                ]
+            },
+            "properties": {
+                "class": "room",
+                "parent": "level_0",
+                "description": "",
+                "tVector": [
+                    0,
+                    2,
+                    0
+                ],
+                "rVector": [
+                    0,
+                    0,
+                    0
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "id": "wall_0.1-0.2",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        0,
+                        0
+                    ],
+                    [
+                        2,
+                        0
+                    ]
+                ]
+            },
+            "properties": {
+                "class": "internal_wall",
+                "parent": "level_0",
+                "description": "",
+                "tVector": [
+                    0,
+                    2,
+                    0
+                ],
+                "rVector": [
+                    0,
+                    0,
+                    0
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "id": "room_0.2",
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [
+                            0,
+                            0
+                        ],
+                        [
+                            0,
+                            2
+                        ],
+                        [
+                            2,
+                            2
+                        ],
+                        [
+                            2,
+                            0
+                        ]
+                    ]
+                ]
+            },
+            "properties": {
+                "class": "room",
+                "parent": "level_0",
+                "description": "",
+                "tVector": [
+                    0,
+                    2,
+                    0
+                ],
+                "rVector": [
+                    0,
+                    0,
+                    0
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "id": "wall_0.2-0.3",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        0,
+                        0
+                    ],
+                    [
+                        2,
+                        0
+                    ]
+                ]
+            },
+            "properties": {
+                "class": "internal_wall",
+                "parent": "level_0",
+                "description": "",
+                "tVector": [
+                    0,
+                    4,
+                    0
+                ],
+                "rVector": [
+                    0,
+                    0,
+                    0
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "id": "room_0.3",
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [
+                            0,
+                            0
+                        ],
+                        [
+                            2,
+                            2
+                        ],
+                        [
+                            2,
+                            0
+                        ]
+                    ]
+                ]
+            },
+            "properties": {
+                "class": "room",
+                "parent": "level_0",
+                "description": "",
+                "tVector": [
+                    0,
+                    4,
+                    0
+                ],
+                "rVector": [
+                    0,
+                    0,
+                    0
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "id": "room_0.4",
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [
+                            0,
+                            0
+                        ],
+                        [
+                            0,
+                            2
+                        ],
+                        [
+                            2,
+                            2
+                        ]
+                    ]
+                ]
+            },
+            "properties": {
+                "class": "room",
+                "parent": "level_0",
+                "description": "",
+                "tVector": [
+                    4,
+                    0,
+                    0
+                ],
+                "rVector": [
+                    0,
+                    0,
+                    0
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "id": "wall_0.4-0.5",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        0,
+                        0
+                    ],
+                    [
+                        2,
+                        0
+                    ]
+                ]
+            },
+            "properties": {
+                "class": "internal_wall",
+                "parent": "level_0",
+                "description": "",
+                "tVector": [
+                    4,
+                    2,
+                    0
+                ],
+                "rVector": [
+                    0,
+                    0,
+                    0
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "id": "room_0.5",
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [
+                            0,
+                            0
+                        ],
+                        [
+                            0,
+                            2
+                        ],
+                        [
+                            2,
+                            2
+                        ],
+                        [
+                            2,
+                            0
+                        ]
+                    ]
+                ]
+            },
+            "properties": {
+                "class": "room",
+                "parent": "level_0",
+                "description": "",
+                "tVector": [
+                    4,
+                    2,
+                    0
+                ],
+                "rVector": [
+                    0,
+                    0,
+                    0
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "id": "wall_0.5-0.6",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        0,
+                        0
+                    ],
+                    [
+                        2,
+                        0
+                    ]
+                ]
+            },
+            "properties": {
+                "class": "internal_wall",
+                "parent": "level_0",
+                "description": "",
+                "tVector": [
+                    4,
+                    4,
+                    0
+                ],
+                "rVector": [
+                    0,
+                    0,
+                    0
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "id": "room_0.6",
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [
+                            0,
+                            0
+                        ],
+                        [
+                            0,
+                            2
+                        ],
+                        [
+                            2,
+                            0
+                        ]
+                    ]
+                ]
+            },
+            "properties": {
+                "class": "room",
+                "parent": "level_0",
+                "description": "",
+                "tVector": [
+                    4,
+                    4,
+                    0
+                ],
+                "rVector": [
+                    0,
+                    0,
+                    0
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "id": "wall_H-S",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        0,
+                        0
+                    ],
+                    [
+                        2,
+                        0
+                    ]
+                ]
+            },
+            "properties": {
+                "class": "external_wall",
+                "parent": "level_0",
+                "description": "",
+                "tVector": [
+                    2,
+                    0,
+                    0
+                ],
+                "rVector": [
+                    0,
+                    0,
+                    0
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "id": "door_H-S",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        0,
+                        0
+                    ],
+                    [
+                        1,
+                        0
+                    ]
+                ]
+            },
+            "properties": {
+                "class": "door",
+                "parent": "wall_H-S",
+                "description": "",
+                "tVector": [
+                    0.5,
+                    0,
+                    0
+                ],
+                "rVector": [
+                    0,
+                    0,
+                    0
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "id": "wall_0.1-SW",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        0,
+                        0
+                    ],
+                    [
+                        2.8284271247461903,
+                        0
+                    ]
+                ]
+            },
+            "properties": {
+                "class": "external_wall",
+                "parent": "level_0",
+                "description": "",
+                "tVector": [
+                    0,
+                    2,
+                    0
+                ],
+                "rVector": [
+                    0,
+                    0,
+                    -45
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "id": "wall_0.2-W",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        0,
+                        0
+                    ],
+                    [
+                        2,
+                        0
+                    ]
+                ]
+            },
+            "properties": {
+                "class": "external_wall",
+                "parent": "level_0",
+                "description": "",
+                "tVector": [
+                    0,
+                    2,
+                    0
+                ],
+                "rVector": [
+                    0,
+                    0,
+                    90
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "id": "wall_0.3-NW",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        0,
+                        0
+                    ],
+                    [
+                        2.8284271247461903,
+                        0
+                    ]
+                ]
+            },
+            "properties": {
+                "class": "external_wall",
+                "parent": "level_0",
+                "description": "",
+                "tVector": [
+                    0,
+                    4,
+                    0
+                ],
+                "rVector": [
+                    0,
+                    0,
+                    45
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "id": "wall_H-N",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        0,
+                        0
+                    ],
+                    [
+                        2,
+                        0
+                    ]
+                ]
+            },
+            "properties": {
+                "class": "external_wall",
+                "parent": "level_0",
+                "description": "",
+                "tVector": [
+                    2,
+                    6,
+                    0
+                ],
+                "rVector": [
+                    0,
+                    0,
+                    0
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "id": "wall_0.4-SE",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        0,
+                        0
+                    ],
+                    [
+                        2.8284271247461903,
+                        0
+                    ]
+                ]
+            },
+            "properties": {
+                "class": "external_wall",
+                "parent": "level_0",
+                "description": "",
+                "tVector": [
+                    4,
+                    0,
+                    0
+                ],
+                "rVector": [
+                    0,
+                    0,
+                    45
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "id": "wall_0.5-E",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        0,
+                        0
+                    ],
+                    [
+                        2,
+                        0
+                    ]
+                ]
+            },
+            "properties": {
+                "class": "external_wall",
+                "parent": "level_0",
+                "description": "",
+                "tVector": [
+                    6,
+                    2,
+                    0
+                ],
+                "rVector": [
+                    0,
+                    0,
+                    90
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "id": "wall_0.6-NE",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        0,
+                        0
+                    ],
+                    [
+                        2.8284271247461903,
+                        0
+                    ]
+                ]
+            },
+            "properties": {
+                "class": "external_wall",
+                "parent": "level_0",
+                "description": "",
+                "tVector": [
+                    4,
+                    6,
+                    0
+                ],
+                "rVector": [
+                    0,
+                    0,
+                    -45
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "id": "window_0.6",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        0,
+                        0
+                    ],
+                    [
+                        1.697056274847714,
+                        0
+                    ]
+                ]
+            },
+            "properties": {
+                "class": "window",
+                "parent": "wall_0.6-NE",
+                "description": "",
+                "tVector": [
+                    0.5656854249492385,
+                    0,
+                    0
+                ],
+                "rVector": [
+                    0,
+                    0,
+                    0
+                ]
+            }
+        }
+    ]
+}
