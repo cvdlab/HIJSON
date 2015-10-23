@@ -16,7 +16,7 @@ Light.prototype.style = {
 					    };
 
 Light.prototype.in_graph = true;
-Light.prototype.in_2D_map = true;
+Light.prototype.in_2D_map = false;
 Light.prototype.get3DModel = function() {
 	var light = new THREE.Object3D();
 	var height = 0.05;
