@@ -39,6 +39,11 @@ if (data.config.computeGraph) {
 	console.log(colors.green('Done')+'.');
 }
 
+process.stdout.write('Creating map Color... ');
+assembler.createMapColor(data);
+console.log(colors.green('Done')+'.');
+
+
 data.proxies = {};
 for(var obj in data.index) {
 	var object = data.index[obj];

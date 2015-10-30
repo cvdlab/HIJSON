@@ -76,6 +76,36 @@ eventEmitter.on('getDirections', function(directionInfo) {
     }
 });
 
+//Setting canvas
+var canvas = document.createElement("canvas");
+var ctx = canvas.getContext("2d");
+
+document.getElementById("canvasMapColor").appendChild(canvas);
+
+for(var id in data.index) {
+    var element = data.index[id];
+    if(element.properties.class === 'room') {
+        drawArea(ctx,coordinatesUtilities.absoluteCoords(element), element.color);
+    }
+}
+
+function drawArea(ctx, coordinates, color) {
+    ctx.beginPath();
+    console.log(coordinates);
+    for(var i in coordinates[0]) {
+        var c = coordinates[0][i];
+        if(i === 0) {
+            ctx.moveTo(c[0],c[1]);
+        }
+        else {
+            ctx.lineTo(c[0],c[1]);
+        }
+    }
+    ctx.fillStyle = color;
+    ctx.fill();
+    ctx.closePath();
+}
+
 module.exports = {
     renderer2D: renderer2D,
     renderer3D: renderer3D,

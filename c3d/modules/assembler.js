@@ -21,6 +21,7 @@ var index = {
 };
 
 
+
 // (3) public/exported things
 var self = module.exports = {
 	
@@ -156,6 +157,30 @@ var self = module.exports = {
 			}
 		}
 		data.input.graph = graph;
+	},
+
+	createMapColor: function(data) {
+		var mapColor = {};
+		var i = 0;
+		
+		function getNewColor(i) {
+			var stringNew = i.toString(16);
+			var length = stringNew.length;
+			while(length<6) {
+				stringNew = '0' + stringNew;
+				length = stringNew.length;
+			}
+			var colorHex = '#' + stringNew;
+			return colorHex;
+		}
+		for(var id in data.index) {
+			var element = data.index[id];
+			if(element.properties.class == 'room') {
+				i++;
+				mapColor[getNewColor(i)] = element.id;
+				element.color = mapColor[getNewColor[i]];
+			}
+		}
+		data.mapColor = mapColor;
 	}
-	
 }; //close module.exports
