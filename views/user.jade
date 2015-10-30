@@ -8,6 +8,7 @@ block additional_scripts
 		
 		// emit the initial position to the server for admins update
 		socket.emit('updatePosition', data.actualPosition);
+		c3dclient.eventEmitter.emit('updatePosition', data.actualPosition);
 		
 		var marker;
 		var user3D;
@@ -36,6 +37,7 @@ block additional_scripts
 				}
 				// emit the new position to the server for admins update
 				socket.emit('updatePosition', data.actualPosition);
+				c3dclient.eventEmitter.emit('updatePosition', data.actualPosition);
 			});
 		}
 		
@@ -62,7 +64,8 @@ block additional_scripts
 					marker.bindPopup('<b>[' + actualLatLng.lat + '; ' + actualLatLng.lng + ']</b>');
 				}
 				// emit the new position to the server for admins update
-				socket.emit('updatePosition', data.actualPosition);	
+				socket.emit('updatePosition', data.actualPosition);
+				c3dclient.eventEmitter.emit('updatePosition', data.actualPosition);
 			});
 		}
 
@@ -87,5 +90,6 @@ block additional_scripts
 				
 				// emit the new position to the server for admins update
 				socket.emit('updatePosition', data.actualPosition);
+				c3dclient.eventEmitter.emit('updatePosition', data.actualPosition);
 			}
 		});

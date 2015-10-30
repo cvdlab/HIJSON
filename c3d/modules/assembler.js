@@ -178,7 +178,8 @@ var self = module.exports = {
 			if(element.properties.class == 'room') {
 				i++;
 				mapColor[getNewColor(i)] = element.id;
-				element.color = mapColor[getNewColor[i]];
+				element.properties.pixelColor = getNewColor(i);
+				console.log(element.id+': '+element.properties.pixelColor);
 			}
 		}
 		data.mapColor = mapColor;

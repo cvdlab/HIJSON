@@ -5,7 +5,6 @@ var assembler = require('./modules/assembler.js');
 var coordinatesUtilities = require('./modules/coordinatesUtilities.js');
 var renderer2D = require('./modules/renderer2D.js');
 var renderer3D = require('./modules/renderer3D.js');
-
 data.obstaclesClasses = ['room', 'internal_wall', 'external_wall'];
 data.interactiveClasses = ['server', 'surveillanceCamera', 'hotspot', 'antenna', 'fireExtinguisher', 'badgeReader', 'light'];
 
@@ -15,9 +14,11 @@ data.obstaclesFeatures = [];
 assembler.assembleStructure(data);
 if (data.config.computeGraph) assembler.assembleFeatureCollection(data.input.graph);
 
+//var startRoomId =  data.mapColor[getAreaColor(ctx, [data.config.startPosition.coordinates[0], data.config.startPosition.coordinates[1]])];
 data.actualPosition = {
     coordinates: [data.config.startPosition.coordinates[0], data.config.startPosition.coordinates[1]],
-    levelId: data.config.startPosition.levelId  
+    levelId: data.config.startPosition.levelId,
+    roomId: "undef"  
 };
 
 var generator3D = {};
@@ -76,35 +77,62 @@ eventEmitter.on('getDirections', function(directionInfo) {
     }
 });
 
-//Setting canvas
-var canvas = document.createElement("canvas");
-var ctx = canvas.getContext("2d");
-
-document.getElementById("canvasMapColor").appendChild(canvas);
-
-for(var id in data.index) {
-    var element = data.index[id];
-    if(element.properties.class === 'room') {
-        drawArea(ctx,coordinatesUtilities.absoluteCoords(element), element.color);
-    }
-}
+var canvas_maps = {};
 
 function drawArea(ctx, coordinates, color) {
     ctx.beginPath();
-    console.log(coordinates);
+    //console.log(coordinates);
     for(var i in coordinates[0]) {
         var c = coordinates[0][i];
-        if(i === 0) {
-            ctx.moveTo(c[0],c[1]);
-        }
-        else {
-            ctx.lineTo(c[0],c[1]);
-        }
+        if (i === 0) { ctx.moveTo(c[0], c[1]); }
+        else { ctx.lineTo(c[0], c[1]); }
     }
     ctx.fillStyle = color;
     ctx.fill();
     ctx.closePath();
 }
+
+function getAreaColor(ctx, coords) {
+    function rgbToHex(r, g, b) {
+        function componentToHex(c) {
+            var hex = c.toString(16);
+            return hex.length == 1 ? "0" + hex : hex;
+        }
+        return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+    }
+    var data = ctx.getImageData(coords[0], coords[1], 1, 1).data;
+    return rgbToHex(data[0],data[1],data[2]);
+}
+
+for (var id_level in data.geoJSONmap) {
+    canvas_maps[id_level] = document.createElement("canvas");
+    var ctx = canvas_maps[id_level].getContext("2d");
+
+    for(var id in data.index) {
+        var element = data.index[id];
+        if(element.properties.class === 'room' && utilities.getLevel(element) === id_level) {
+            drawArea(ctx, coordinatesUtilities.absoluteCoords(element), element.properties.pixelColor);
+            console.log(element.id+': '+element.properties.pixelColor);
+        }
+    }
+}
+
+data.canvas_maps = canvas_maps;
+
+document.getElementById("canvasMapColor").appendChild(canvas_maps.level_0);
+
+eventEmitter.on('updatePosition', function(actualPosition) {
+    var canvas = canvas_maps[actualPosition.levelId];
+    var ctx = canvas.getContext('2d');
+    var color = getAreaColor(ctx, actualPosition.coordinates);
+    var actualRoomId = data.mapColor[color];
+    //console.log("Actual room position: " + data.actualPosition.roomId + " room: " + actualRoomId);
+    if(data.actualPosition.roomId !== actualRoomId) {
+        //console.log('variazione: '+"Actual room position: " + data.actualPosition.roomId + " room: " + actualRoomId);
+        data.actualPosition.roomId = actualRoomId;
+        console.log('nuova impostazione: '+"Actual room position: " + data.actualPosition.roomId + " room: " + actualRoomId);
+    }
+});
 
 module.exports = {
     renderer2D: renderer2D,

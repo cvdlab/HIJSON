@@ -132,7 +132,8 @@ var self = module.exports = {
 	from2DToGeneral: function(leafletPosition, actualPosition, inverseTransformationMatrix) {
 	    var genPosition = {
 			coordinates: self.fromLngLatToXY([leafletPosition.lng, leafletPosition.lat], inverseTransformationMatrix),
-			levelId: actualPosition.levelId
+			levelId: actualPosition.levelId,
+			roomId: actualPosition.roomId
 		}
 		return genPosition;
 	},
@@ -146,7 +147,8 @@ var self = module.exports = {
 	from3DToGeneral: function(threePosition, actualPosition) {
 		var genPosition = {
 			coordinates: [threePosition.x, threePosition.y],
-			levelId: actualPosition.levelId
+			levelId: actualPosition.levelId,
+			roomId: actualPosition.roomId
 		}
 		return genPosition;
 	},
@@ -161,7 +163,8 @@ var self = module.exports = {
 	from3DSceneToGeneral: function(threePosition, actualPosition) {
 		var genPosition = {
 			coordinates: [threePosition.x, -threePosition.z],
-			levelId: actualPosition.levelId
+			levelId: actualPosition.levelId,
+			roomId: actualPosition.roomId
 		}
 		return genPosition;
 	},
