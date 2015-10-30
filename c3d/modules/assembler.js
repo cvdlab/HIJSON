@@ -76,10 +76,10 @@ var self = module.exports = {
 					geoJSONmap[level] = {
 						type: "FeatureCollection",
 						features: []
-					}
+					};
 				}
 				
-				var newObj = {};
+				newObj = {};
 				newObj.type = "Feature";
 				newObj.id = obj.id;
 				newObj.geometry = {
@@ -94,9 +94,9 @@ var self = module.exports = {
 				// add representation of graph arcs
 				if (data.config.showGraph && obj.properties.class === 'graphNode') {
 					var k = 0;
-					for (node in obj.properties.adj) {
+					for (var node in obj.properties.adj) {
 						var adiacent = data.index[node];
-						var newObj = {};
+						newObj = {};
 						
 						newObj.type = "Feature";
 						newObj.id = obj.id + "_arc_" + k;
@@ -119,8 +119,8 @@ var self = module.exports = {
 				}
 			}
 			
-			for(var i = 0; i < obj.children.length; i++) {
-	            queue.push(obj.children[i]);
+			for(var j = 0; j < obj.children.length; j++) {
+	            queue.push(obj.children[j]);
 	        }
 		}
 		// put the map in real-world coordinates
