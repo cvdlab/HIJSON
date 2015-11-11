@@ -28,7 +28,6 @@ THREE.PointerLockControls = function ( camera, parameters ) {
 	this.stepHeight = 2.5;
 	this.obstaclesArray = [];
 	
-	
 	if (typeof parameters !== 'undefined') {
 		for (var key in parameters) {
 			var newValue = parameters[ key ];
@@ -247,7 +246,7 @@ THREE.PointerLockControls = function ( camera, parameters ) {
 		collisionsRaycaster.ray.direction.copy( computeCollisionDirection[direction]() );
 		collisionsRaycaster.near = 0;
 		collisionsRaycaster.far = collisionDistances[direction];
-		
+		console.log(obstacles);
 		var intersections = collisionsRaycaster.intersectObjects( obstacles, true );
 		var collision = (intersections.length > 0);
 		if (direction !== 'up' && direction !== 'down') {

@@ -280,7 +280,7 @@ var self = module.exports = {
 	        if($.inArray(feature.properties.class, data.obstaclesClasses)> -1) {
 	            if(feature.properties.class === 'internal_wall' || feature.properties.class === 'external_wall')
 	            {
-	                data.obstaclesFeatures.push(el3D.wall);
+	                data.obstaclesFeatures.push(el3D.wall); 
 	            }
 	            else if(feature.properties.class === 'level')
 	            {
@@ -290,6 +290,7 @@ var self = module.exports = {
 	            {
 	                data.obstaclesFeatures.push(el3D);
 	            }
+	            console.log(feature.id);
 
 	        }
 	    }
@@ -324,6 +325,8 @@ var self = module.exports = {
 	        light.target.position.copy(sceneCenter.position);
 	        trackballControls3D.target.copy(new THREE.Vector3(pos[0],pos[2],-1*pos[1]));
 	    }
+
+	    console.log(data.obstaclesFeatures);
 	},
 
 	getScene3D: function() {

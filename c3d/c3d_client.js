@@ -112,16 +112,45 @@ for (var id_level in data.geoJSONmap) {
         var element = data.index[id];
         if(element.properties.class === 'room' && utilities.getLevel(element) === id_level) {
             drawArea(ctx, coordinatesUtilities.absoluteCoords(element), element.properties.pixelColor);
-            console.log(element.id+': '+element.properties.pixelColor);
+            //console.log(element.id+': '+element.properties.pixelColor);
         }
     }
 }
 
 data.canvas_maps = canvas_maps;
 
-document.getElementById("canvasMapColor").appendChild(canvas_maps.level_0);
+//document.getElementById("canvasMapColor").appendChild(canvas_maps.level_0);
+
 
 eventEmitter.on('updatePosition', function(actualPosition) {
+    
+    function updateObstaclesArray(roomId) {
+        var element;
+        data.obstaclesFeatures = [];
+        var room3D = data.index[roomId].obj3D;
+        console.log(data.obstaclesClasses);
+        data.obstaclesFeatures.push(room3D);
+        for(var i in room3D.children) {
+            var child = room3D.children[i];
+            child.traverse(function(obj) {
+                data.obstaclesFeatures.push(obj);
+            });
+            data.obstaclesFeatures.push(child);
+        }
+
+        var levelObj3D = data.index[actualPosition.levelId].obj3D;
+        levelObj3D.traverse(function(object) {
+            console.log(object.feature);
+            if(utilities.isPackage(object)) {
+                if(object.feature.properties.class === 'internal_wall' || 
+                    object.feature.properties.class === 'external_wall'){
+                    data.obstaclesFeatures.push(object);
+                }
+            }
+        });
+        console.log(data.obstaclesFeatures);
+    }
+
     var canvas = canvas_maps[actualPosition.levelId];
     var ctx = canvas.getContext('2d');
     var color = getAreaColor(ctx, actualPosition.coordinates);
@@ -130,7 +159,14 @@ eventEmitter.on('updatePosition', function(actualPosition) {
     if(data.actualPosition.roomId !== actualRoomId) {
         //console.log('variazione: '+"Actual room position: " + data.actualPosition.roomId + " room: " + actualRoomId);
         data.actualPosition.roomId = actualRoomId;
+
         console.log('nuova impostazione: '+"Actual room position: " + data.actualPosition.roomId + " room: " + actualRoomId);
+        //Aggiorna info react component
+        updateObstaclesArray(data.actualPosition.roomId);
+
+        eventEmitter.emit('showFeatureInfo', data.actualPosition.roomId);
+        //Aggiorna array ostacoli
+
     }
 });
 

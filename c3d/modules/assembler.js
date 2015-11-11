@@ -179,7 +179,7 @@ var self = module.exports = {
 				i++;
 				mapColor[getNewColor(i)] = element.id;
 				element.properties.pixelColor = getNewColor(i);
-				console.log(element.id+': '+element.properties.pixelColor);
+				//console.log(element.id+': '+element.properties.pixelColor);
 			}
 		}
 		data.mapColor = mapColor;
