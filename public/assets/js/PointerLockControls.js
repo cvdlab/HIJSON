@@ -246,7 +246,7 @@ THREE.PointerLockControls = function ( camera, parameters ) {
 		collisionsRaycaster.ray.direction.copy( computeCollisionDirection[direction]() );
 		collisionsRaycaster.near = 0;
 		collisionsRaycaster.far = collisionDistances[direction];
-		console.log(obstacles);
+		//console.log(obstacles);
 		var intersections = collisionsRaycaster.intersectObjects( obstacles, true );
 		var collision = (intersections.length > 0);
 		if (direction !== 'up' && direction !== 'down') {

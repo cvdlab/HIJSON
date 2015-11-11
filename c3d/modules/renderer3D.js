@@ -290,7 +290,7 @@ var self = module.exports = {
 	            {
 	                data.obstaclesFeatures.push(el3D);
 	            }
-	            console.log(feature.id);
+	            //console.log(feature.id);
 
 	        }
 	    }
@@ -326,7 +326,7 @@ var self = module.exports = {
 	        trackballControls3D.target.copy(new THREE.Vector3(pos[0],pos[2],-1*pos[1]));
 	    }
 
-	    console.log(data.obstaclesFeatures);
+	    //console.log(data.obstaclesFeatures);
 	},
 
 	getScene3D: function() {

@@ -162,7 +162,7 @@ eventEmitter.on('updatePosition', function(actualPosition) {
 
         console.log('nuova impostazione: '+"Actual room position: " + data.actualPosition.roomId + " room: " + actualRoomId);
         //Aggiorna info react component
-        updateObstaclesArray(data.actualPosition.roomId);
+        //updateObstaclesArray(data.actualPosition.roomId);
 
         eventEmitter.emit('showFeatureInfo', data.actualPosition.roomId);
         //Aggiorna array ostacoli
