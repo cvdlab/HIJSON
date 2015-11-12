@@ -124,30 +124,21 @@ data.canvas_maps = canvas_maps;
 
 eventEmitter.on('updatePosition', function(actualPosition) {
     
-    function updateObstaclesArray(roomId) {
-        var element;
-        data.obstaclesFeatures = [];
-        var room3D = data.index[roomId].obj3D;
-        console.log(data.obstaclesClasses);
-        data.obstaclesFeatures.push(room3D);
-        for(var i in room3D.children) {
-            var child = room3D.children[i];
-            child.traverse(function(obj) {
-                data.obstaclesFeatures.push(obj);
-            });
-            data.obstaclesFeatures.push(child);
-        }
+    function updateObstaclesArray(actualPosition) {
+        newObstaclesFeatures = [];
+        var room = data.index[actualPosition.roomId];
+        var level = data.index[actualPosition.levelId];
+        newObstaclesFeatures.push(room.obj3D);
 
-        var levelObj3D = data.index[actualPosition.levelId].obj3D;
-        levelObj3D.traverse(function(object) {
-            console.log(object.feature);
-            if(utilities.isPackage(object)) {
-                if(object.feature.properties.class === 'internal_wall' || 
-                    object.feature.properties.class === 'external_wall'){
-                    data.obstaclesFeatures.push(object);
-                }
+        for (var childKey in level.children) {
+            var child = level.children[childKey];
+            if ( (child.properties.class === 'internal_wall' || child.properties.class === 'external_wall') && 
+                  child.properties.connections.indexOf(actualPosition.roomId) > -1 ) {
+                newObstaclesFeatures.push(child.obj3D);
             }
-        });
+        }
+        eventEmitter.emit('updateObstacles', newObstaclesFeatures);
+        data.obstaclesFeatures = newObstaclesFeatures;
         console.log(data.obstaclesFeatures);
     }
 
@@ -155,18 +146,12 @@ eventEmitter.on('updatePosition', function(actualPosition) {
     var ctx = canvas.getContext('2d');
     var color = getAreaColor(ctx, actualPosition.coordinates);
     var actualRoomId = data.mapColor[color];
-    //console.log("Actual room position: " + data.actualPosition.roomId + " room: " + actualRoomId);
+
     if(data.actualPosition.roomId !== actualRoomId) {
-        //console.log('variazione: '+"Actual room position: " + data.actualPosition.roomId + " room: " + actualRoomId);
         data.actualPosition.roomId = actualRoomId;
-
-        console.log('nuova impostazione: '+"Actual room position: " + data.actualPosition.roomId + " room: " + actualRoomId);
-        //Aggiorna info react component
-        //updateObstaclesArray(data.actualPosition.roomId);
-
+        console.log('nuova impostazione: '+"Actual room position: " + data.actualPosition.roomId);
         eventEmitter.emit('showFeatureInfo', data.actualPosition.roomId);
-        //Aggiorna array ostacoli
-
+        updateObstaclesArray(data.actualPosition);
     }
 });
 

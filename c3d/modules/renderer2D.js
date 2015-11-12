@@ -49,10 +49,11 @@ var self = module.exports = {
            	orderLayers();
         });
 
-        var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+/*        var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 		var osmAttrib='Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
 		var osm = new L.TileLayer(osmUrl, {minZoom: 8, maxZoom: 25, attribution: osmAttrib});	
-        osm.addTo(data.map2D);
+        osm.addTo(data.map2D);*/
+        
 /*        L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 50, //A quanto fissarlo?
             attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +

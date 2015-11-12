@@ -108,6 +108,10 @@ var self = module.exports = {
 	                    stepHeight: 0.1,
 	                    obstaclesArray: data.obstaclesFeatures
 	                });
+
+	                eventEmitter.on('updateObstacles', function updateObstacles(obstacles){
+	                	pointerLockControls.obstaclesArray = obstacles;
+	                });
 	                
 	                scene.add(pointerLockControls.getObject());
 					trackballControls.enabled = false;
@@ -270,7 +274,8 @@ var self = module.exports = {
 		        el3D.userModels = userModels;
 	        }
 	        for(i = 0; i< feature.children.length; i++) {
-	            queue.push(feature.children[i]);
+	        	if (feature.children[i].properties.class !== "graphNode")
+	            	queue.push(feature.children[i]);
 	        }
 
 	        if($.inArray(feature.properties.class, data.interactiveClasses)> -1) {
