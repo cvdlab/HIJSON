@@ -24,11 +24,22 @@ var self = module.exports = {
 	    camera = new THREE.PerspectiveCamera(45, container3DWidth / container3DHeight, 0.1, 1000);
 	    camera3D = camera;
 	    
+	    var cameraLightTarget = new THREE.Object3D();
+
+    	camera.add(cameraLightTarget);
+    	cameraLightTarget.position.set(0,0,-2);
+	    
 	    scene.add(camera);
+
 	    camera.position.set(42,35,42);
 	    camera.up = new THREE.Vector3(0,1,0);
 	    camera.lookAt(scene.position);
 		
+		var cameraLight = new THREE.SpotLight(0xFFFFFF);
+	    camera.add(cameraLight);
+	    cameraLight.position.set(0,0,0.5);
+	    cameraLight.target = cameraLightTarget;
+
 	    var trackballControls = new THREE.TrackballControls(camera, container3D[0]);
 	    trackballControls3D = trackballControls;
 	    trackballControls.enabled = true;
@@ -47,19 +58,9 @@ var self = module.exports = {
 	    var ambientLight = new THREE.AmbientLight(ambiColor);
 	    scene.add(ambientLight);
 	    
-	    
-
-	    var spotLight = new THREE.SpotLight(0xFFFFFF);
-	    spotLight.position.set(80,55,-80);
-	    scene.add( spotLight );
-	    
-	    
-	    
-	    //var spotLight2 = new THREE.SpotLight(0xFFFFFF);
-	    //spotLight2.position.set(0,80,0);
-	    //scene.add( spotLight2 );
-	    
-	    
+	    var directionalLight = new THREE.DirectionalLight(0xFFFFFF);
+	    directionalLight.position.set(0, 1000, 0);
+	    scene.add( directionalLight );
 
 	    var axisHelper = new THREE.AxisHelper(3);
 	    scene.add(axisHelper); 
@@ -178,7 +179,7 @@ var self = module.exports = {
 	            event.preventDefault();
 	            var raycaster;
 	    		if (document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element) {
-	    			//console.log('clickPL');
+	    			console.log('clickPL');
 	                raycaster = new THREE.Raycaster();
 	                var direction = new THREE.Vector3( 0, 0, -1 );
 	                var rotation = new THREE.Euler(0, 0, 0, "YXZ");
@@ -186,27 +187,32 @@ var self = module.exports = {
 	                raycaster.ray.direction.copy(direction).applyEuler(rotation);
 	                raycaster.ray.origin.copy(camera3D.parent.parent.position);
 	                
-					// var vector = new THREE.Vector3(0, 0, 0.5);
-	    			// projector.unprojectVector(vector, data.camera3D);
-	    			// var raycaster = new THREE.Raycaster( vector, pointerLockControls.getDirection( new THREE.Vector3(0, 0, 0) ).clone() );
+	                //instersect
+	                var intersects = raycaster.intersectObjects(data.unionFeatures);
+		    		console.log("intersections: "+intersects.length);
+		            console.log(intersects);
+
+		            if((intersects.length > 0)&&(intersects[0].object.feature !== undefined)) {
+		                if($.inArray(intersects[0].object.feature.properties.class, data.interactiveClasses)> -1) {
+		                    eventEmitter.emit('showFeatureInfo', intersects[0].object.feature.id);
+		                }
+		            }
+		            else {
+		                eventEmitter.emit('clearFeatureInfo');
+		            }  
+		            //endintersect
+					
 	    		} else {
-	                //console.log('clickTB');
-	    			var vector = new THREE.Vector3((event.clientX / container3DWidth) * 2 - 1, -(event.clientY / container3DHeight) * 2 + 1, 0.5);
-	    			projector.unprojectVector(vector, camera);
-	    			raycaster = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
+	                console.log('clickTB');
+/*	                var vector = new THREE.Vector3();
+	                vector.x = 2 * (event.clientX / container3DWidth) - 1;
+					vector.y = 1 - 2 * ( event.clientY / container3DHeight );
+	    			raycaster = projector.pickingRay( vector.clone(), camera );*/
+	    			// projector.unprojectVector(vector, camera);
+	    			// raycaster = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
 	    		}
 
-	    		var intersects = raycaster.intersectObjects(data.unionFeatures);
-	            //console.log(intersects[0].object.feature.id);
 
-	            if((intersects.length > 0)&&(intersects[0].object.feature !== undefined)) {
-	                if($.inArray(intersects[0].object.feature.properties.class, data.interactiveClasses)> -1) {
-	                    eventEmitter.emit('showFeatureInfo', intersects[0].object.feature.id);
-	                }
-	            }
-	            else {
-	                eventEmitter.emit('clearFeatureInfo');
-	            }  
 		}
 	    
 		/*
@@ -303,7 +309,7 @@ var self = module.exports = {
 
 	    scene3D.add(data.index.building.obj3D);
 	    data.unionFeatures = data.obstaclesFeatures.concat(data.interactiveFeatures);
-	    setLightAndCamera();
+	    //setLightAndCamera();
 
 	    function setLightAndCamera() {
 	        var light = self.getScene3D().__lights[1];
